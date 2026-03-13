@@ -72,6 +72,7 @@ jobs:
           fi
 
       - name: Update GitHub Issue Title with Jira Ticket Number
+        if: always() && steps.create.outputs.issue
         uses: actions-cool/issues-helper@v3
         with:
           actions: 'update-issue'
