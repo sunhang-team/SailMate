@@ -34,7 +34,7 @@ jobs:
         id: parse-epic
         shell: bash
         run: |
-          EPIC_KEY_RAW=$(echo "${{ github.event.issue.body }}" | grep -oP '(?<=🎟️ 상위 작업 \(에픽 키\)\s{0,100})SM-\d+' || true)
+          EPIC_KEY_RAW=$(echo "${{ github.event.issue.body }}" | grep -oE 'SM-[0-9]+' | head -1 || true)
           if [ -z "$EPIC_KEY_RAW" ]; then
             echo "HAS_EPIC=false" >> $GITHUB_ENV
           else
