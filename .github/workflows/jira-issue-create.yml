@@ -56,9 +56,8 @@ jobs:
         if: env.HAS_EPIC == 'true'
         shell: bash
         run: |
-          AUTH=$(echo -n "${{ secrets.JIRA_USER_EMAIL }}:${{ secrets.JIRA_API_TOKEN }}" | base64)
           RESPONSE=$(curl -s -w "\n%{http_code}" -X PUT \
-            -H "Authorization: Basic $AUTH" \
+            -u "${{ secrets.JIRA_USER_EMAIL }}:${{ secrets.JIRA_API_TOKEN }}" \
             -H "Content-Type: application/json" \
             -d "{\"fields\":{\"parent\":{\"key\":\"${{ env.EPIC_KEY }}\"}}}" \
             "${{ secrets.JIRA_BASE_URL }}/rest/api/3/issue/${{ steps.create.outputs.issue }}")
