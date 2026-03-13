@@ -1,0 +1,69 @@
+name: 'Jira Issue Create on GitHub Issue Opened'
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  create-jira-issue:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Login to Jira
+        uses: atlassian/gajira-login@v3
+        env:
+          JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
+          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+          JIRA_USER_EMAIL: ${{ secrets.JIRA_USER_EMAIL }}
+
+      - name: Convert Markdown to Jira Syntax
+        uses: peter-evans/jira2md@v1
+        id: md2jira
+        with:
+          input-text: |
+            ### GitHub Issue Link
+            - ${{ github.event.issue.html_url }}
+
+            ${{ github.event.issue.body }}
+          mode: md2jira
+
+      - name: Parse Epic Key
+        id: parse-epic
+        shell: bash
+        run: |
+          EPIC_KEY_RAW=$(echo "${{ github.event.issue.body }}" | grep -oP '(?<=🎟️ 상위 작업 \(에픽 키\)\s{0,100})SM-\d+' || true)
+          if [ -z "$EPIC_KEY_RAW" ]; then
+            echo "HAS_EPIC=false" >> $GITHUB_ENV
+          else
+            echo "HAS_EPIC=true" >> $GITHUB_ENV
+            echo "EPIC_KEY=$EPIC_KEY_RAW" >> $GITHUB_ENV
+          fi
+
+      - name: Set Fields
+        shell: bash
+        run: |
+          if [ "$HAS_EPIC" = "true" ]; then
+            echo "FIELDS={\"parent\":{\"key\":\"${EPIC_KEY}\"}}" >> $GITHUB_ENV
+          else
+            echo "FIELDS={}" >> $GITHUB_ENV
+          fi
+
+      - name: Create Jira Issue
+        id: create
+        uses: atlassian/gajira-create@v3
+        with:
+          project: SM
+          issuetype: Task
+          summary: '${{ github.event.issue.title }}'
+          description: '${{ steps.md2jira.outputs.output-text }}'
+          fields: ${{ env.FIELDS }}
+
+      - name: Update GitHub Issue Title with Jira Ticket Number
+        uses: actions-cool/issues-helper@v3
+        with:
+          actions: 'update-issue'
+          token: ${{ secrets.GITHUB_TOKEN }}
+          title: '[${{ steps.create.outputs.issue }}] ${{ github.event.issue.title }}'
