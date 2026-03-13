@@ -1,0 +1,41 @@
+name: 'Jira Issue Transition on GitHub Issue Close'
+
+on:
+  issues:
+    types: [closed]
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  transition-jira-issue:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Extract Jira Ticket Number
+        id: extract-ticket
+        shell: bash
+        run: |
+          TICKET=$(echo "${{ github.event.issue.title }}" | grep -oP '(?<=\[)SM-\d+(?=\])')
+          if [ -z "$TICKET" ]; then
+            echo "No Jira ticket number found in the issue title."
+            exit 1
+          fi
+          echo "TICKET_NUMBER=$TICKET" >> $GITHUB_ENV
+
+      - name: Login to Jira
+        uses: atlassian/gajira-login@v3
+        env:
+          JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
+          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+          JIRA_USER_EMAIL: ${{ secrets.JIRA_USER_EMAIL }}
+
+      - name: Transition Jira Issue to Done
+        uses: atlassian/gajira-transition@v3
+        with:
+          issue: ${{ env.TICKET_NUMBER }}
+          transition: '완료'
+        env:
+          JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
+          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+          JIRA_USER_EMAIL: ${{ secrets.JIRA_USER_EMAIL }}
