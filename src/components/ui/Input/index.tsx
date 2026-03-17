@@ -1,5 +1,5 @@
 import React, { forwardRef, useId } from 'react';
-import { cn } from '../../../lib/utils'; // cn 유틸리티 사용 가정
+import { cn } from '@/lib/cn'; // cn 유틸리티 사용 가정
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string; // 라벨 텍스트

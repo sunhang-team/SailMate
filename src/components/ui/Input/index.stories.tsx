@@ -1,8 +1,8 @@
-import type { Meta, StoryObj } from '@storybook/nextjs';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { Input } from './index';
 
 const meta: Meta<typeof Input> = {
-  title: 'Common/Input', // 스토리북 좌측 메뉴 구조
+  title: 'Components/Input', // 스토리북 좌측 메뉴 구조
   component: Input,
   tags: ['autodocs'], // 자동으로 Props 문서 생성
   argTypes: {
