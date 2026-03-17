@@ -1,3 +1,4 @@
+'use client';
 import React, { forwardRef, useId } from 'react';
 import { cn } from '@/lib/cn'; // cn 유틸리티 사용 가정
 
