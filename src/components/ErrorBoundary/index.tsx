@@ -3,6 +3,30 @@
 import { Component, type ErrorInfo, type ReactNode } from 'react';
 import type { ErrorBoundaryProps, ErrorBoundaryState } from './types';
 
+/**
+ * 자식 컴포넌트의 렌더링 에러를 잡아 fallback UI를 표시하는 에러 경계 컴포넌트.
+ *
+ * @example
+ * // prefetch된 공개 데이터 — 에러만 대비
+ * <ErrorBoundary fallback={<div>에러가 발생했습니다.</div>}>
+ *   <GatheringList />
+ * </ErrorBoundary>
+ *
+ * @example
+ * // 함수형 fallback — error 정보 + 재시도 버튼
+ * <ErrorBoundary
+ *   fallback={(error, reset) => (
+ *     <div>
+ *       <p>{error.message}</p>
+ *       <button onClick={reset}>재시도</button>
+ *     </div>
+ *   )}
+ *   onError={(error) => sendToSentry(error)}
+ *   resetKeys={[userId]}
+ * >
+ *   <UserProfile />
+ * </ErrorBoundary>
+ */
 export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   constructor(props: ErrorBoundaryProps) {
     super(props);
