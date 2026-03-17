@@ -20,7 +20,10 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement>, VariantProps
   error?: string;
 }
 
-export const Input = forwardRef<HTMLInputElement, InputProps>(({ label, error, className, type, ...props }, ref) => {
+export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
+  { label, error, className, type, ...props },
+  ref,
+) {
   const id = useId();
   const hasError = !!error;
 
@@ -36,5 +39,3 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(({ label, error, c
     </div>
   );
 });
-
-Input.displayName = 'Input';
