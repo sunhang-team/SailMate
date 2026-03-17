@@ -2,20 +2,16 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { Input } from './index';
 
 const meta: Meta<typeof Input> = {
-  title: 'components/Input', // 스토리북 좌측 메뉴 구조
+  title: 'components/Input',
   component: Input,
-  tags: ['autodocs'], // 자동으로 Props 문서 생성
+  tags: ['autodocs'],
   argTypes: {
-    // 스토리북 제어판에서 테스트할 속성들
     type: {
       control: 'select',
       options: ['text', 'password', 'email'],
     },
-    error: {
-      control: 'text',
-    },
   },
-};
+} satisfies Meta<typeof Input>;
 
 export default meta;
 type Story = StoryObj<typeof Input>;
@@ -51,7 +47,7 @@ export const Password: Story = {
   args: {
     label: '비밀번호',
     type: 'password',
-    placeholder: '비밀번호를 입력해주세요',
+    placeholder: '영문, 숫자, 특수문자 포함 8자 이상 입력해주세요',
   },
 };
 
