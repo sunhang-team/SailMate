@@ -1,48 +1,41 @@
 'use client';
-
-import { useId, forwardRef, type ComponentPropsWithoutRef } from 'react';
-import { fieldControlVariants, fieldGradientFocusWrapperClass } from '@/components/ui/fieldControlVariants';
+import { cva, type VariantProps } from 'class-variance-authority';
+import { forwardRef, useId, type InputHTMLAttributes } from 'react';
 import { cn } from '@/lib/cn';
 
-type InputProps = ComponentPropsWithoutRef<'input'> & {
-  label?: React.ReactNode;
+const inputVariants = cva('w-full border rounded px-3 py-2 outline-none', {
+  variants: {
+    hasError: {
+      true: 'border-red-500', // 에러 시 빨간 테두리만 미리 지정
+      false: 'border-gray-300', // 기본 상태
+    },
+  },
+  defaultVariants: {
+    hasError: false,
+  },
+});
+
+interface InputProps extends InputHTMLAttributes<HTMLInputElement>, VariantProps<typeof inputVariants> {
+  label?: string;
   error?: string;
-};
+}
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
-  { label, error, className, type, id: idProp, ...props },
+  { label, error, className, type, ...props },
   ref,
 ) {
-  const uid = useId();
-  const id = idProp ?? uid;
+  const id = useId();
   const hasError = !!error;
-
-  const control = (
-    <input
-      id={id}
-      type={type}
-      ref={ref}
-      aria-invalid={hasError || undefined}
-      className={cn(fieldControlVariants({ state: hasError ? 'error' : 'default' }), className)}
-      {...props}
-    />
-  );
 
   return (
     <div className='flex flex-col gap-1.5'>
       {label && (
-        <label htmlFor={id} className='text-sm font-bold text-gray-900'>
+        <label htmlFor={id} className='text-sm font-bold'>
           {label}
         </label>
       )}
-      <div className={cn(hasError ? 'w-full' : fieldGradientFocusWrapperClass)}>{control}</div>
-      {error && (
-        <p className='text-xs text-red-200' role='alert'>
-          {error}
-        </p>
-      )}
+      <input id={id} type={type} ref={ref} className={cn(inputVariants({ hasError }), className)} {...props} />
+      {error && <p className='text-xs text-red-500'>{error}</p>}
     </div>
   );
 });
-
-Input.displayName = 'Input';
