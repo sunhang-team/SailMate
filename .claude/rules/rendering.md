@@ -9,14 +9,14 @@ paths:
 
 ## 페이지별 렌더링 전략
 
-| 페이지       | 렌더링 | 캐시                                        | 비고                                     |
-| ------------ | ------ | ------------------------------------------- | ---------------------------------------- |
-| 랜딩         | Static | 없음                                        | 정적 페이지                              |
-| 로그인       | Static | 없음                                        | 폼은 클라이언트 컴포넌트                 |
-| 회원가입     | Static | 없음                                        | 폼은 클라이언트 컴포넌트                 |
-| 메인         | ISR    | 온디맨드(updateTag) + revalidate: 3600 보험 | prefetchQuery + HydrationBoundary        |
-| 모임 상세    | ISR    | 온디맨드(updateTag) + revalidate: 3600 보험 | 모임 설명, 주차별 계획 등 정적 정보 캐시 |
-| 그 외 페이지 | 미정   | 미정                                        | 추후 확정                                |
+| 페이지       | 렌더링 | 캐시                                            | 비고                                     |
+| ------------ | ------ | ----------------------------------------------- | ---------------------------------------- |
+| 랜딩         | Static | 없음                                            | 정적 페이지                              |
+| 로그인       | Static | 없음                                            | 폼은 클라이언트 컴포넌트                 |
+| 회원가입     | Static | 없음                                            | 폼은 클라이언트 컴포넌트                 |
+| 메인         | ISR    | 온디맨드(revalidateTag) + revalidate: 3600 보험 | prefetchQuery + HydrationBoundary        |
+| 모임 상세    | ISR    | 온디맨드(revalidateTag) + revalidate: 3600 보험 | 모임 설명, 주차별 계획 등 정적 정보 캐시 |
+| 그 외 페이지 | 미정   | 미정                                            | 추후 확정                                |
 
 ## 서버/클라이언트 컴포넌트 분리
 
@@ -36,27 +36,15 @@ paths:
 
 ## 데이터 페칭 패턴
 
-### 공개 데이터 + SEO 필요 (메인, 모임 상세 등 외부 노출 페이지)
+### 공개 데이터 (인증 불필요)
 
 - page.tsx에서 getQueryClient() → prefetchQuery (queryFn에 fetch + next.tags 지정) → HydrationBoundary로 감싸기
 - 클라이언트 컴포넌트에서 동일한 queryKey로 useQuery → 캐시 히트
-
-### 공개 데이터 + SEO 불필요 (로그인 후 내부 페이지)
-
-- 서버 prefetch 불필요. SuspenseBoundary + useSuspenseQuery 사용
-- 예: 유저 프로필 내 리뷰 목록, 검색 결과 등
 
 ### 유저별 데이터 (인증 필요)
 
 - page.tsx에서 SuspenseBoundary로 감싸기 (fallback: Skeleton, errorFallback: ErrorFallback)
 - 클라이언트 컴포넌트에서 useSuspenseQuery → Suspense 연동 자동 로딩 처리
-
-## 컴포넌트는 성공 상태만 렌더
-
-- 컴포넌트 내부에서 `isLoading`, `isError` 분기 작성 금지
-- 로딩 처리는 Suspense (또는 prefetch), 에러 처리는 ErrorBoundary에 위임
-- 컴포넌트는 데이터가 있는 상태만 가정하고 렌더링 로직에 집중
-- **예외 — 선택적 인증 UI 분기**: `useAuth` 훅은 로그인/비로그인 상태에 따라 다른 UI를 보여줘야 하므로 `useQuery` + `isError` 체크를 의도적으로 사용. `useSuspenseQuery`를 사용하면 비로그인 시 에러가 ErrorBoundary로 전파되어 레이아웃 전체가 깨지므로 이 패턴은 허용
 
 ## ErrorBoundary / SuspenseBoundary 사용 규칙
 
@@ -72,4 +60,4 @@ paths:
 
 - **MUST**: 서버에서 axios 사용 금지 (Next.js Data Cache 연동 불가, fetch만 사용)
 - **MUST**: page.tsx에서 직접 useQuery 금지 (서버 컴포넌트)
-- Mutation 성공 시 이중 캐시 무효화: invalidateQueries + updateTag
+- Mutation 성공 시 이중 캐시 무효화: invalidateQueries + revalidateTag
