@@ -1,10 +1,7 @@
 import { withSentryConfig } from '@sentry/nextjs';
 import type { NextConfig } from 'next';
 
-const nextConfig: NextConfig = {
-  transpilePackages: ['until-async'],
-  serverExternalPackages: ['msw'],
-};
+const nextConfig: NextConfig = {};
 
 export default withSentryConfig(nextConfig, {
   org: 'completionisland',
