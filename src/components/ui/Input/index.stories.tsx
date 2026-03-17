@@ -1,0 +1,59 @@
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import { Input } from './index';
+
+const meta: Meta<typeof Input> = {
+  title: 'components/Input',
+  component: Input,
+  tags: ['autodocs'],
+  argTypes: {
+    type: {
+      control: 'select',
+      options: ['text', 'password', 'email'],
+    },
+  },
+} satisfies Meta<typeof Input>;
+
+export default meta;
+type Story = StoryObj<typeof Input>;
+
+// 1. 이메일 타입 (Email)
+export const Email: Story = {
+  args: {
+    label: '이메일',
+    placeholder: '이메일을 입력해주세요',
+  },
+};
+
+// 2. 닉네임 타입 (Nickname)
+export const Nickname: Story = {
+  args: {
+    label: '닉네임',
+    placeholder: '닉네임을 입력해주세요',
+  },
+};
+
+// 3. 에러 발생 상태 (Error)
+export const WithError: Story = {
+  args: {
+    label: '이메일',
+    placeholder: '이메일을 입력해주세요',
+    error: '올바른 이메일 형식이 아닙니다.',
+    defaultValue: 'wrong-email@',
+  },
+};
+
+// 4. 비밀번호 타입 (Password)
+export const Password: Story = {
+  args: {
+    label: '비밀번호',
+    type: 'password',
+    placeholder: '영문, 숫자, 특수문자 포함 8자 이상 입력해주세요',
+  },
+};
+
+// 5. 라벨 없는 상태 (No Label)
+export const NoLabel: Story = {
+  args: {
+    placeholder: '',
+  },
+};
