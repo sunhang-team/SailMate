@@ -50,6 +50,8 @@
 - 커밋: Conventional Commits (`feat:`, `fix:`, `chore:`, `style:`, `refactor:`, `docs:`)
 - Jira 이슈 키: SM-XX 형식
 - **IMPORTANT**: PR은 Squash and Merge만 사용 (PR 제목 = 최종 커밋 메시지)
+- PR 전 base 브랜치(dev) 최신화: `git fetch origin && git rebase origin/dev`
+- 충돌 발생 시: 충돌 해결 → `git add .` → `git rebase --continue`
 
 ## 코드 스타일
 
