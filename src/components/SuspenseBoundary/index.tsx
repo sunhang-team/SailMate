@@ -1,3 +1,5 @@
+'use client';
+
 import { Suspense } from 'react';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import type { SuspenseBoundaryProps } from './types';
