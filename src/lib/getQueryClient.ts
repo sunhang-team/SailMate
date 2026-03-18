@@ -1,7 +1,7 @@
 import { QueryClient, defaultShouldDehydrateQuery, isServer } from '@tanstack/react-query';
 import { cache } from 'react';
 
-function makeQueryClient() {
+const makeQueryClient = () => {
   return new QueryClient({
     defaultOptions: {
       queries: {
@@ -12,7 +12,7 @@ function makeQueryClient() {
       },
     },
   });
-}
+};
 
 const getServerQueryClient = cache(() => makeQueryClient());
 
