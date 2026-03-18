@@ -1,4 +1,5 @@
 import './globals.css';
+import { QueryParamsProvider } from '@/providers/QueryParamsProvider';
 import { QueryProvider } from '@/providers/QueryProvider';
 
 export default function RootLayout({
@@ -9,7 +10,9 @@ export default function RootLayout({
   return (
     <html lang='ko'>
       <body>
-        <QueryProvider>{children}</QueryProvider>
+        <QueryProvider>
+          <QueryParamsProvider>{children}</QueryParamsProvider>
+        </QueryProvider>
       </body>
     </html>
   );
