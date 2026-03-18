@@ -1,6 +1,15 @@
 'use client';
 
-import { createContext, useContext, useEffect, useId, useRef, type ReactNode } from 'react';
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  useSyncExternalStore,
+  type ReactNode,
+} from 'react';
 import { createPortal } from 'react-dom';
 
 import { cn } from '@/lib/cn';
@@ -145,7 +154,13 @@ function ModalBase({ isOpen, onClose, children, className }: ModalProps) {
 
   useFocusTrap(dialogRef, isOpen);
 
-  if (!isOpen) return null;
+  const isMounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
+
+  if (!isMounted || !isOpen) return null;
 
   const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
