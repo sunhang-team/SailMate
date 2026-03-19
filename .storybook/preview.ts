@@ -1,5 +1,4 @@
 import type { Preview } from '@storybook/nextjs-vite';
-import { pretendard } from '../src/app/fonts';
 import '../src/app/globals.css';
 
 const preview: Preview = {

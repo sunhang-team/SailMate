@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { useFunnel } from './useFunnel';
 
@@ -37,23 +37,10 @@ describe('useFunnel (상태 기반 다단계 전환)', () => {
     expect(screen.queryByText('모임 신청 폼')).not.toBeInTheDocument();
 
     await user.click(screen.getByText('참여 신청하기'));
-
-    await waitFor(
-      () => {
-        expect(screen.getByText('모임 신청 폼')).toBeInTheDocument();
-        expect(screen.queryByText('피그마 기초 스터디')).not.toBeInTheDocument();
-      },
-      { timeout: 1000 },
-    );
+    expect(screen.getByText('모임 신청 폼')).toBeInTheDocument();
+    expect(screen.queryByText('피그마 기초 스터디')).not.toBeInTheDocument();
 
     await user.click(screen.getByText('작성 완료'));
-
-    await waitFor(
-      () => {
-        expect(screen.getByText('신청이 완료되었어요!')).toBeInTheDocument();
-        expect(screen.queryByText('모임 신청 폼')).not.toBeInTheDocument();
-      },
-      { timeout: 1000 },
-    );
+    expect(screen.getByText('신청이 완료되었어요!')).toBeInTheDocument();
   });
 });

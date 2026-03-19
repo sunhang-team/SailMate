@@ -1,6 +1,6 @@
 import React, { isValidElement, useMemo, type ReactElement, type ReactNode } from 'react';
 
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 
 export interface StepProps<S extends string> {
   name: S;
@@ -16,18 +16,7 @@ function StepComponent<S extends string>({ children }: StepProps<S>): ReactEleme
 }
 
 export const useFunnel = <S extends string>(defaultStep: S) => {
-  const [step, setStepState] = useState<S>(defaultStep);
-  const [isAnimating, setIsAnimating] = useState(false);
-
-  // Transition handler that wraps the actual state update
-  const setStep = useCallback((nextStep: S) => {
-    setIsAnimating(true);
-    // 300ms match the duration in globals.css (.animate-funnel-out)
-    setTimeout(() => {
-      setStepState(nextStep);
-      setIsAnimating(false);
-    }, 300);
-  }, []);
+  const [step, setStep] = useState<S>(defaultStep);
 
   const Funnel = useMemo(() => {
     return function FunnelComponent({ children }: FunnelProps<S>) {
@@ -35,15 +24,9 @@ export const useFunnel = <S extends string>(defaultStep: S) => {
 
       const targetStep = childArray.find((childStep) => childStep.props.name === step);
 
-      if (!targetStep) return null;
-
-      return (
-        <div key={step} className={isAnimating ? 'animate-funnel-out' : 'animate-funnel-in'}>
-          {targetStep}
-        </div>
-      );
+      return targetStep || null;
     };
-  }, [step, isAnimating]);
+  }, [step]);
 
   return { Funnel, Step: StepComponent<S>, setStep, currentStep: step };
 };

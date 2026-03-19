@@ -1,6 +1,7 @@
 import './globals.css';
 import { QueryParamsProvider } from '@/providers/QueryParamsProvider';
 import { QueryProvider } from '@/providers/QueryProvider';
+import { OverlayProvider } from '@/providers/OverlayProvider';
 
 export default function RootLayout({
   children,
@@ -11,7 +12,11 @@ export default function RootLayout({
     <html lang='ko'>
       <body>
         <QueryProvider>
-          <QueryParamsProvider>{children}</QueryParamsProvider>
+          <QueryParamsProvider>
+            {children}
+            <OverlayProvider />
+            <div id='modal-root' />
+          </QueryParamsProvider>
         </QueryProvider>
       </body>
     </html>
