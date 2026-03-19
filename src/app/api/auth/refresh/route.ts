@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
   if (!baseUrl) throw new Error('BACKEND_BASE_URL is not defined');
   const backendBaseUrl = baseUrl.replace(/\/+$/, '');
 
-  const backendResponse = await fetch(`${backendBaseUrl}/auth/refresh-token`, {
+  const backendResponse = await fetch(`${backendBaseUrl}/auth/refresh`, {
     method: 'POST',
     headers: {
       'content-type': 'application/json',
