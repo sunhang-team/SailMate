@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, ReactNode, useContext, useState } from 'react';
+import React, { createContext, ReactNode, useContext, useEffect, useRef, useState } from 'react';
 import { cn } from '@/lib/cn';
 
 // context
@@ -26,13 +26,26 @@ interface DropdownProps {
 
 function DropdownBase({ children, className }: DropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const toggle = () => setIsOpen((prev) => !prev);
   const close = () => setIsOpen(false);
 
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (!containerRef.current?.contains(e.target as Node)) {
+        close();
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   return (
     <DropdownContext.Provider value={{ isOpen, toggle, close }}>
-      <div className={cn('relative inline-block', className)}>{children}</div>
+      <div ref={containerRef} className={cn('relative inline-block', className)}>
+        {children}
+      </div>
     </DropdownContext.Provider>
   );
 }
@@ -45,7 +58,12 @@ interface TriggerProps {
 function Trigger({ children }: TriggerProps) {
   const { toggle, isOpen } = useDropdown();
   return (
-    <button onClick={toggle} className={cn('', isOpen && 'border border-black')}>
+    <button
+      aria-expanded={isOpen}
+      aria-haspopup='listbox'
+      onClick={toggle}
+      className={cn('', isOpen && 'border border-black')}
+    >
       {children}
     </button>
   );
@@ -62,7 +80,7 @@ function Menu({ children, className }: MenuProps) {
   if (!isOpen) return null;
 
   return (
-    <div className={cn('absolute mt-2', className)}>
+    <div role='listbox' className={cn('absolute mt-2', className)}>
       <ul>{children}</ul>
     </div>
   );
@@ -82,7 +100,16 @@ function Item({ children, onClick, className }: ItemProps) {
     close(); // 선택하면 자동 닫기
   };
   return (
-    <li onClick={handleClick} className={cn('', className)}>
+    <li
+      role='option'
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') handleClick();
+        if (e.key === 'Escape') close();
+      }}
+      onClick={handleClick}
+      className={cn('', className)}
+    >
       {children}
     </li>
   );
