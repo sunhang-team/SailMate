@@ -59,10 +59,11 @@ function Trigger({ children }: TriggerProps) {
   const { toggle, isOpen } = useDropdown();
   return (
     <button
+      type='button'
       aria-expanded={isOpen}
       aria-haspopup='listbox'
       onClick={toggle}
-      className={cn('', isOpen && 'border border-black')}
+      className={cn(isOpen && 'border border-black')}
     >
       {children}
     </button>
@@ -104,11 +105,14 @@ function Item({ children, onClick, className }: ItemProps) {
       role='option'
       tabIndex={0}
       onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') handleClick();
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          handleClick();
+        }
         if (e.key === 'Escape') close();
       }}
       onClick={handleClick}
-      className={cn('', className)}
+      className={cn(className)}
     >
       {children}
     </li>
