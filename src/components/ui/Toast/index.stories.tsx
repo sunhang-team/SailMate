@@ -1,9 +1,13 @@
-import type { Meta, StoryObj } from '@storybook/nextjs-vite';
-import { ToastProvider, useToast } from './ToastProvider';
 import { Button } from '../Button';
+import { Toast } from './index';
+import { ToastProvider } from './ToastProvider';
+import { useToastStore } from './useToastStore';
+
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 
 const meta = {
   title: 'components/Toast',
+  component: Toast,
   parameters: {
     layout: 'centered',
   },
@@ -23,7 +27,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Interactive: Story = {
   render: () => {
-    const { showToast } = useToast();
+    const showToast = useToastStore((state) => state.showToast);
 
     return (
       <div style={{ display: 'flex', gap: '10px' }}>
@@ -32,7 +36,7 @@ export const Interactive: Story = {
             showToast({
               variant: 'success',
               title: '성공!',
-              description: '데이터가 저장되었습니다.',
+              description: '성공하였습니다.',
             })
           }
         >
@@ -44,7 +48,7 @@ export const Interactive: Story = {
             showToast({
               variant: 'error',
               title: '에러 발생',
-              description: '다시 시도해 주세요.',
+              description: '에러가 발생하였습니다.',
             })
           }
         >

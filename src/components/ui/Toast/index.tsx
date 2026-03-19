@@ -24,27 +24,20 @@ interface ToastProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'>, Vari
 }
 
 export function Toast({ variant = 'info', title, description, action, onClose, className, ...props }: ToastProps) {
-  const role = variant === 'error' || variant === 'warning' ? 'alert' : 'status';
-
   return (
-    <div
-      role={role}
-      aria-live={role === 'alert' ? 'assertive' : 'polite'}
-      className={cn(toastVariants({ variant }), className)}
-      {...props}
-    >
+    <div role='status' className={cn(toastVariants({ variant }), className)} {...props}>
       {(title || onClose) && (
-        <div>
-          {title && <div>{title}</div>}
+        <div className='toast-header'>
+          {title && <strong className='toast-title'>{title}</strong>}
           {onClose && (
-            <button type='button' onClick={onClose} aria-label='닫기'>
-              닫기
+            <button type='button' onClick={onClose}>
+              X
             </button>
           )}
         </div>
       )}
-      {description && <div>{description}</div>}
-      {action && <div>{action}</div>}
+      {description && <div className='toast-description'>{description}</div>}
+      {action && <div className='toast-action'>{action}</div>}
     </div>
   );
 }
