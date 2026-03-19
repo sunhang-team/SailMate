@@ -7,13 +7,32 @@ const ACCESS_TOKEN_COOKIE = 'accessToken';
 const REFRESH_TOKEN_COOKIE = 'refreshToken';
 const isSecureCookie = process.env.NODE_ENV === 'production';
 
+const clearAuthCookies = (response: NextResponse) => {
+  response.cookies.set(ACCESS_TOKEN_COOKIE, '', {
+    httpOnly: true,
+    secure: isSecureCookie,
+    sameSite: 'lax',
+    path: '/',
+    maxAge: 0,
+  });
+  response.cookies.set(REFRESH_TOKEN_COOKIE, '', {
+    httpOnly: true,
+    secure: isSecureCookie,
+    sameSite: 'lax',
+    path: '/',
+    maxAge: 0,
+  });
+};
+
 export async function POST(request: NextRequest) {
   const refreshToken = request.cookies.get(REFRESH_TOKEN_COOKIE)?.value ?? null;
   if (!refreshToken) {
-    return NextResponse.json(
+    const response = NextResponse.json(
       { success: false, data: null, message: 'Refresh token not found', errorCode: 'NO_REFRESH_TOKEN' },
       { status: 401 },
     );
+    clearAuthCookies(response);
+    return response;
   }
   // httpOnly 쿠키에서 Next.js 서버가 직접 토큰을 꺼냄. 토큰 없을 시 즉시 401 에러
 
@@ -42,6 +61,12 @@ export async function POST(request: NextRequest) {
 
   const response = NextResponse.json(stripped, { status: backendResponse.status });
   // extractTokens 유틸 함수를 통해 응답 JSON에서 token 추출 후 token 데이터 제거
+
+  if (backendResponse.status === 401 || backendResponse.status === 403) {
+    clearAuthCookies(response);
+    return response;
+  }
+
   if (nextAccessToken) {
     const expires = getExpirationDate(nextAccessToken) ?? undefined;
     response.cookies.set(ACCESS_TOKEN_COOKIE, nextAccessToken, {
