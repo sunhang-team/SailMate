@@ -1,9 +1,19 @@
 'use client';
 
-import { createContext, useContext, useEffect, useId, useRef, useSyncExternalStore, type ReactNode } from 'react';
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  useSyncExternalStore,
+  type ReactNode,
+} from 'react';
 import { createPortal } from 'react-dom';
 
 import { cn } from '@/lib/cn';
+import { OVERLAY_ANIMATION_DURATION } from '@/constants/overlay';
 
 const MODAL_ROOT_ID = 'modal-root';
 
@@ -117,6 +127,21 @@ function ModalBase({ isOpen, onClose, children, className }: ModalProps) {
   const titleId = useId();
   const dialogRef = useRef<HTMLDivElement>(null);
 
+  const [shouldRender, setShouldRender] = useState(isOpen);
+
+  if (isOpen && !shouldRender) {
+    setShouldRender(true);
+  }
+
+  useEffect(() => {
+    if (!isOpen && shouldRender) {
+      const timer = setTimeout(() => {
+        setShouldRender(false);
+      }, OVERLAY_ANIMATION_DURATION);
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen, shouldRender]);
+
   useEffect(() => {
     if (!isOpen) return;
 
@@ -151,7 +176,7 @@ function ModalBase({ isOpen, onClose, children, className }: ModalProps) {
     () => false,
   );
 
-  if (!isMounted || !isOpen) return null;
+  if (!isMounted || !shouldRender) return null;
 
   const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
@@ -162,7 +187,10 @@ function ModalBase({ isOpen, onClose, children, className }: ModalProps) {
   return createPortal(
     <ModalContext.Provider value={{ titleId }}>
       <div
-        className='fixed inset-0 z-50 flex items-center justify-center bg-black/50'
+        className={cn(
+          'fixed inset-0 z-50 flex items-center justify-center bg-black/50',
+          isOpen ? 'animate-modal-fade-in' : 'animate-modal-fade-out pointer-events-none',
+        )}
         onClick={handleOverlayClick}
         data-testid='modal-overlay'
       >
@@ -174,6 +202,7 @@ function ModalBase({ isOpen, onClose, children, className }: ModalProps) {
           tabIndex={-1}
           className={cn(
             'mx-4 flex max-h-[90vh] w-full max-w-md flex-col rounded-lg bg-white shadow-lg outline-none',
+            isOpen ? 'animate-modal-slide-in' : 'animate-modal-slide-out',
             className,
           )}
         >
