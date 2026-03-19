@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { getExpirationDate } from '@/lib/getExpirationDate';
-import { requestBackend } from '@/lib/axiosServer';
+import { requestBackend } from '@/lib/serverFetch';
 import { isJsonResponse, extractTokens } from '@/lib/tokenUtils';
 
 const ACCESS_TOKEN_COOKIE = 'accessToken';
@@ -72,22 +72,21 @@ async function proxy(request: NextRequest, params: { endpoint: string[] }) {
   return response;
 }
 
-export async function GET(request: NextRequest, ctx: { params: { endpoint: string[] } }) {
-  return await proxy(request, ctx.params);
+export async function GET(request: NextRequest, { params }: { params: Promise<{ endpoint: string[] }> }) {
+  return await proxy(request, await params);
+}
+export async function POST(request: NextRequest, { params }: { params: Promise<{ endpoint: string[] }> }) {
+  return await proxy(request, await params);
 }
 
-export async function POST(request: NextRequest, ctx: { params: { endpoint: string[] } }) {
-  return await proxy(request, ctx.params);
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ endpoint: string[] }> }) {
+  return await proxy(request, await params);
 }
 
-export async function PUT(request: NextRequest, ctx: { params: { endpoint: string[] } }) {
-  return await proxy(request, ctx.params);
+export async function PATCH(request: NextRequest, { params }: { params: Promise<{ endpoint: string[] }> }) {
+  return await proxy(request, await params);
 }
 
-export async function PATCH(request: NextRequest, ctx: { params: { endpoint: string[] } }) {
-  return await proxy(request, ctx.params);
-}
-
-export async function DELETE(request: NextRequest, ctx: { params: { endpoint: string[] } }) {
-  return await proxy(request, ctx.params);
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ endpoint: string[] }> }) {
+  return await proxy(request, await params);
 }
