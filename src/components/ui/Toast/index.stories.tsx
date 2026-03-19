@@ -1,9 +1,10 @@
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+
 import { Button } from '../Button';
+
 import { Toast } from './index';
 import { ToastProvider } from './ToastProvider';
 import { useToastStore } from './useToastStore';
-
-import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 
 const meta = {
   title: 'components/Toast',
@@ -30,7 +31,7 @@ export const Interactive: Story = {
     const showToast = useToastStore((state) => state.showToast);
 
     return (
-      <div style={{ display: 'flex', gap: '10px' }}>
+      <div className='flex gap-[10px]'>
         <Button
           onClick={() =>
             showToast({
