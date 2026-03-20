@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { Dropdown } from '.';
 
 const TestDropdown = () => (
@@ -32,7 +32,7 @@ describe('Dropdown', () => {
     expect(screen.getByRole('listbox')).toBeInTheDocument();
   });
 
-  test('Item 클릭 시 Menu가 닫힌다', () => {
+  test('Item 클릭 시 Menu가 닫힌다', async () => {
     render(<TestDropdown />);
 
     const trigger = screen.getByRole('button');
@@ -41,10 +41,10 @@ describe('Dropdown', () => {
     const item = screen.getByText('항목 1');
     fireEvent.click(item);
 
-    expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+    await waitForElementToBeRemoved(() => screen.queryByRole('listbox'));
   });
 
-  test('외부 영역 클릭 시 Menu가 닫힌다', () => {
+  test('외부 영역 클릭 시 Menu가 닫힌다', async () => {
     render(<TestDropdown />);
 
     const trigger = screen.getByRole('button');
@@ -52,6 +52,6 @@ describe('Dropdown', () => {
     fireEvent.click(trigger);
     fireEvent.mouseDown(document.body);
 
-    expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+    await waitForElementToBeRemoved(() => screen.queryByRole('listbox'));
   });
 });
