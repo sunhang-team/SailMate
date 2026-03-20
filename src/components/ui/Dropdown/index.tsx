@@ -43,7 +43,7 @@ function DropdownBase({ children, className }: DropdownProps) {
 
   return (
     <DropdownContext.Provider value={{ isOpen, toggle, close }}>
-      <div ref={containerRef} className={cn('relative inline-block', className)}>
+      <div ref={containerRef} data-dropdown className={cn('relative inline-block', className)}>
         {children}
       </div>
     </DropdownContext.Provider>
@@ -56,13 +56,28 @@ interface TriggerProps {
 }
 
 function Trigger({ children }: TriggerProps) {
-  const { toggle, isOpen } = useDropdown();
+  const { toggle, isOpen, close } = useDropdown();
+  const triggerRef = useRef<HTMLButtonElement>(null);
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'ArrowDown' && isOpen) {
+      e.preventDefault();
+      const firstItem = triggerRef.current?.closest('[data-dropdown]')?.querySelector('[role="option"]') as HTMLElement;
+      firstItem?.focus();
+    }
+    if (e.key === 'Tab' && isOpen) {
+      close();
+    }
+  };
+
   return (
     <button
+      ref={triggerRef}
       type='button'
       aria-expanded={isOpen}
       aria-haspopup='listbox'
       onClick={toggle}
+      onKeyDown={handleKeyDown}
       className={cn(isOpen && 'border border-black')}
     >
       {children}
@@ -77,11 +92,29 @@ interface MenuProps {
 }
 
 function Menu({ children, className }: MenuProps) {
-  const { isOpen } = useDropdown();
+  const menuRef = useRef<HTMLDivElement>(null);
+  const { isOpen, close } = useDropdown();
   if (!isOpen) return null;
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    const items = Array.from(menuRef.current?.querySelectorAll('[role="option"]') ?? []) as HTMLElement[];
+    const currentIndex = items.indexOf(document.activeElement as HTMLElement);
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      items[(currentIndex + 1) % items.length]?.focus();
+    }
+    if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      items[(currentIndex - 1 + items.length) % items.length]?.focus();
+    }
+    if (e.key === 'Tab') {
+      close();
+    }
+  };
+
   return (
-    <div role='listbox' className={cn('absolute mt-2', className)}>
+    <div ref={menuRef} role='listbox' onKeyDown={handleKeyDown} className={cn('absolute mt-2', className)}>
       <ul>{children}</ul>
     </div>
   );
@@ -98,12 +131,12 @@ function Item({ children, onClick, className }: ItemProps) {
 
   const handleClick = () => {
     onClick?.();
-    close(); // 선택하면 자동 닫기
+    close();
   };
   return (
     <li
       role='option'
-      tabIndex={0}
+      tabIndex={-1}
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
