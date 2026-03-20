@@ -32,6 +32,7 @@ function DropdownBase({ children, className }: DropdownProps) {
   const close = () => setIsOpen(false);
 
   useEffect(() => {
+    if (!isOpen) return;
     const handleClickOutside = (e: MouseEvent) => {
       if (!containerRef.current?.contains(e.target as Node)) {
         close();
@@ -39,7 +40,7 @@ function DropdownBase({ children, className }: DropdownProps) {
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  }, [isOpen]);
 
   return (
     <DropdownContext.Provider value={{ isOpen, toggle, close }}>
