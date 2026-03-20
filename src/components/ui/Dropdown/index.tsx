@@ -1,6 +1,8 @@
 'use client';
 
 import React, { createContext, ReactNode, useContext, useEffect, useRef, useState } from 'react';
+
+import { OVERLAY_ANIMATION_DURATION } from '@/constants/overlay';
 import { cn } from '@/lib/cn';
 
 // context
@@ -79,7 +81,8 @@ function Trigger({ children }: TriggerProps) {
       aria-haspopup='listbox'
       onClick={toggle}
       onKeyDown={handleKeyDown}
-      className={cn(isOpen && 'border border-black')}
+      style={{ transitionDuration: `${OVERLAY_ANIMATION_DURATION}ms` }}
+      className={cn('border transition-colors', isOpen ? 'border-black' : 'border-transparent')}
     >
       {children}
     </button>
@@ -95,7 +98,18 @@ interface MenuProps {
 function Menu({ children, className }: MenuProps) {
   const menuRef = useRef<HTMLDivElement>(null);
   const { isOpen, close } = useDropdown();
-  if (!isOpen) return null;
+  const [shouldRender, setShouldRender] = useState(isOpen);
+
+  if (isOpen && !shouldRender) setShouldRender(true);
+
+  useEffect(() => {
+    if (!isOpen && shouldRender) {
+      const timer = setTimeout(() => setShouldRender(false), OVERLAY_ANIMATION_DURATION);
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen, shouldRender]);
+
+  if (!shouldRender) return null;
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     const items = Array.from(menuRef.current?.querySelectorAll('[role="option"]') ?? []) as HTMLElement[];
@@ -115,7 +129,12 @@ function Menu({ children, className }: MenuProps) {
   };
 
   return (
-    <div ref={menuRef} role='listbox' onKeyDown={handleKeyDown} className={cn('absolute mt-2', className)}>
+    <div
+      ref={menuRef}
+      role='listbox'
+      onKeyDown={handleKeyDown}
+      className={cn('absolute mt-2', isOpen ? 'animate-modal-fade-in' : 'animate-modal-fade-out', className)}
+    >
       <ul>{children}</ul>
     </div>
   );
@@ -146,7 +165,7 @@ function Item({ children, onClick, className }: ItemProps) {
         if (e.key === 'Escape') close();
       }}
       onClick={handleClick}
-      className={cn(className)}
+      className={cn('transition-colors', className)}
     >
       {children}
     </li>
