@@ -4,6 +4,10 @@
     {
       "name": "@theme",
       "description": "Tailwind CSS v4 theme configuration directive for defining design tokens."
+    },
+    {
+      "name": "@utility",
+      "description": "Tailwind CSS v4 directive for defining custom utility classes."
     }
   ]
 }
