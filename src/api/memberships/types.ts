@@ -11,8 +11,8 @@ export interface MyGatheringsParams {
 export type GatheringStatus = 'RECRUITING' | 'IN_PROGRESS' | 'COMPLETED';
 export type MemberRole = 'LEADER' | 'MEMBER';
 
-// 개별 모임 항목
-export interface Gathering {
+// 개별 모임 항목 (GET /users/me/gatherings 응답 내 모임)
+export interface MembershipGathering {
   id: number;
   type: string;
   category: string;
@@ -30,7 +30,7 @@ export interface Gathering {
 
 // GET /users/me/gatherings 응답
 export interface MyGatheringList {
-  gatherings: Gathering[];
+  gatherings: MembershipGathering[];
   totalCount: number;
   totalPages: number;
   currentPage: number;
