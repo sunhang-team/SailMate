@@ -1,6 +1,5 @@
 import { http, HttpResponse, delay } from 'msw';
 
-import type { ApiResponse } from '@/api/common/types';
 import type {
   Todo,
   TodoListResponse,
