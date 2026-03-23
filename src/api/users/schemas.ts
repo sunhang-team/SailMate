@@ -22,17 +22,22 @@ const newPasswordField = z
 
 export const updateProfileRequestSchema = z.object({
   nickname: nicknameField,
-  profileImage: z.union([
-    z.string().url('프로필 이미지 URL 형식이 올바르지 않습니다.'),
-    z
-      .string()
-      .refine(
-        (value) => value.match(/^https?:\/\/.+\.(jpg|png|webp)$/i),
-        '프로필 이미지는 jpg, png, webp 형식이어야 합니다.',
-      ),
-    z.string().refine((value) => value.length <= 5 * 1024 * 1024, '프로필 이미지는 5MB 이하여야 합니다.'),
-    z.literal(''),
-  ]),
+  profileImage: z
+    .string()
+    .refine(
+      (value) => {
+        if (value === '') return true;
+        // URL 형식 체크
+        try {
+          new URL(value);
+        } catch {
+          return false;
+        }
+        // 파일 확장자 체크
+        return /\.(jpg|png|webp)$/i.test(value);
+      },
+      { message: '프로필 이미지는 유효한 URL이어야 하며 jpg, png, webp 형식이어야 합니다.' },
+    ),
 });
 
 export const updateProfileFormSchema = updateProfileRequestSchema;
