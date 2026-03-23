@@ -1,5 +1,7 @@
 import { http, HttpResponse, delay } from 'msw';
 
+import { createApiResponse } from '../utils';
+
 import type {
   Todo,
   TodoListResponse,
@@ -7,9 +9,8 @@ import type {
   CreateTodoResponse,
   UpdateTodoResponse,
 } from '@/api/todos/types';
-import { createApiResponse } from '../utils';
 
-const mockTodos: Todo[] = [
+let mockTodos: Todo[] = [
   {
     id: 1,
     userId: 1,
@@ -84,15 +85,25 @@ export const todosHandlers = [
     await delay(200);
 
     const body = (await request.json()) as { week: number; content: string };
+    const newTodo: Todo = {
+      id: Date.now(),
+      userId: 1,
+      nickname: '김코딩',
+      week: body.week,
+      content: body.content,
+      isCompleted: false,
+      createdAt: new Date().toISOString(),
+    };
+    mockTodos.push(newTodo);
 
     return HttpResponse.json(
       createApiResponse<CreateTodoResponse>({
         todo: {
-          id: Date.now(),
-          week: body.week,
-          content: body.content,
-          isCompleted: false,
-          createdAt: new Date().toISOString(),
+          id: newTodo.id,
+          week: newTodo.week,
+          content: newTodo.content,
+          isCompleted: newTodo.isCompleted,
+          createdAt: newTodo.createdAt,
         },
       }),
       { status: 201 },
@@ -105,15 +116,31 @@ export const todosHandlers = [
 
     const body = (await request.json()) as { content?: string; isCompleted?: boolean };
     const todoId = Number(params.todoId);
+    const todo = mockTodos.find((t) => t.id === todoId);
+
+    if (todo) {
+      if (body.content !== undefined) todo.content = body.content;
+      if (body.isCompleted !== undefined) todo.isCompleted = body.isCompleted;
+    }
 
     return HttpResponse.json(
       createApiResponse<UpdateTodoResponse>({
         todo: {
           id: todoId,
-          content: body.content ?? '수정된 내용',
-          isCompleted: body.isCompleted ?? false,
+          content: todo?.content ?? body.content ?? '',
+          isCompleted: todo?.isCompleted ?? body.isCompleted ?? false,
         },
       }),
     );
+  }),
+
+  /** DELETE /api/v1/gatherings/:gatheringId/todos/:todoId — Todo 삭제 */
+  http.delete(`${BASE}/:todoId`, async ({ params }) => {
+    await delay(200);
+
+    const todoId = Number(params.todoId);
+    mockTodos = mockTodos.filter((t) => t.id !== todoId);
+
+    return new HttpResponse(null, { status: 204 });
   }),
 ];
