@@ -1,3 +1,4 @@
 import { todosHandlers } from './todos';
+import { authHandlers } from './auth';
 
-export const handlers = [...todosHandlers];
+export const handlers = [...todosHandlers, ...authHandlers];
