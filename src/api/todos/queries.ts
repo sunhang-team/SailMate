@@ -1,7 +1,9 @@
-import { queryOptions } from '@tanstack/react-query';
+import { queryOptions, useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { getTodoList, getMyTodoList, createTodo, updateTodo, deleteTodo } from './index';
-import type { CreateTodoForm, TodoListParams, UpdateTodoForm } from './types';
+
+import type { UseMutationOptions } from '@tanstack/react-query';
+import type { CreateTodoForm, CreateTodoResponse, UpdateTodoForm, UpdateTodoResponse, TodoListParams } from './types';
 
 export const todoKeys = {
   all: (gatheringId: number) => ['todos', gatheringId] as const,
@@ -24,17 +26,50 @@ export const todoQueries = {
     }),
 };
 
-export const todoMutations = {
-  /** POST /gatherings/:gatheringId/todos — Todo 생성 */
-  create: (gatheringId: number) => ({
+/** POST /gatherings/:gatheringId/todos — Todo 생성 */
+export const useCreateTodo = (
+  gatheringId: number,
+  options?: UseMutationOptions<CreateTodoResponse, Error, CreateTodoForm, unknown>,
+) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
     mutationFn: (body: CreateTodoForm) => createTodo(gatheringId, body),
-  }),
-  /** PATCH /gatherings/:gatheringId/todos/:todoId — Todo 수정/체크 */
-  update: (gatheringId: number, todoId: number) => ({
-    mutationFn: (body: UpdateTodoForm) => updateTodo(gatheringId, todoId, body),
-  }),
-  /** DELETE /gatherings/:gatheringId/todos/:todoId — Todo 삭제 */
-  delete: (gatheringId: number, todoId: number) => ({
-    mutationFn: () => deleteTodo(gatheringId, todoId),
-  }),
+    ...options,
+    onSuccess: (data, variables, onMutateResult, context) => {
+      queryClient.invalidateQueries({ queryKey: todoKeys.all(gatheringId) });
+      options?.onSuccess?.(data, variables, onMutateResult, context);
+    },
+  });
+};
+
+/** PATCH /gatherings/:gatheringId/todos/:todoId — Todo 수정/체크 */
+export const useUpdateTodo = (
+  gatheringId: number,
+  options?: UseMutationOptions<UpdateTodoResponse, Error, { todoId: number; body: UpdateTodoForm }, unknown>,
+) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ todoId, body }: { todoId: number; body: UpdateTodoForm }) => updateTodo(gatheringId, todoId, body),
+    ...options,
+    onSuccess: (data, variables, onMutateResult, context) => {
+      queryClient.invalidateQueries({ queryKey: todoKeys.all(gatheringId) });
+      options?.onSuccess?.(data, variables, onMutateResult, context);
+    },
+  });
+};
+
+/** DELETE /gatherings/:gatheringId/todos/:todoId — Todo 삭제 */
+export const useDeleteTodo = (gatheringId: number, options?: UseMutationOptions<void, Error, number, unknown>) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (todoId: number) => deleteTodo(gatheringId, todoId),
+    ...options,
+    onSuccess: (data, variables, onMutateResult, context) => {
+      queryClient.invalidateQueries({ queryKey: todoKeys.all(gatheringId) });
+      options?.onSuccess?.(data, variables, onMutateResult, context);
+    },
+  });
 };
