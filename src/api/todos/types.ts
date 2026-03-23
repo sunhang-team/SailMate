@@ -19,17 +19,16 @@ export interface Todo {
   createdAt: string;
 }
 
-// 요청 타입
+// 요청 타입 (Form 타입 재사용)
 /** POST `/gatherings/:gatheringId/todos` — Todo 생성 요청 바디 */
-export interface CreateTodoRequest {
-  week: number;
-  content: string;
-}
+export type CreateTodoRequest = CreateTodoForm;
 
 /** PATCH `/gatherings/:gatheringId/todos/:todoId` — Todo 수정 요청 바디 */
-export interface UpdateTodoRequest {
-  content?: string;
-  isCompleted?: boolean;
+export type UpdateTodoRequest = UpdateTodoForm;
+
+/** GET `/gatherings/:gatheringId/todos` — 쿼리 파라미터 */
+export interface TodoListParams {
+  week?: number;
 }
 
 /** GET `/gatherings/:gatheringId/todos` — 쿼리 파라미터 */
