@@ -98,6 +98,26 @@
   background: linear-gradient(to right, #f1f8ff, #dfefff);
 }
 
+@utility bg-gradient-dashboard-blue {
+  background: linear-gradient(to right, #3779fe, #77a4ff);
+}
+
+@utility bg-gradient-dashboard-red {
+  background: linear-gradient(to right, #ff5757, #ff9090);
+}
+
+@utility bg-gradient-dashboard-disabled {
+  background: linear-gradient(to right, #dbf0ff, #dbf0ff70);
+}
+
+@utility bg-gradient-dashboard-focus {
+  background: linear-gradient(to right, #3779fe, #3779fe70);
+}
+
+@utility bg-gradient-dashboard-bg {
+  background: linear-gradient(to right, #e8f4ff, #ffffff00);
+}
+
 @keyframes modal-slide-in-right {
   from {
     opacity: 0;
