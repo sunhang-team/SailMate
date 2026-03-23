@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-/** 날짜 문자열 공통 스키마 (YYYY-MM-DD) */
+/** 날짜 문자열 스키마 (YYYY-MM-DD) */
 const dateStringSchema = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, '날짜 형식이 올바르지 않습니다. (YYYY-MM-DD)');
 
 /** 주차별 가이드 스키마 (모임 생성 폼용) */
@@ -28,7 +28,7 @@ export const gatheringFormSchema = z.object({
   recruitDeadline: dateStringSchema,
   startDate: dateStringSchema,
   endDate: dateStringSchema,
-  weeklyGuides: z.array(weeklyGuideSchema).optional(),
+  weeklyGuides: z.array(weeklyGuideSchema).min(1, '최소 1주차 계획은 입력해 주세요.'),
   images: z
     .array(z.instanceof(File, { message: '유효한 파일이 아닙니다.' }))
     .max(6, '이미지는 최대 6장까지 업로드 가능합니다.')
