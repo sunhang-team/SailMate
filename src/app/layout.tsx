@@ -1,4 +1,5 @@
 import './globals.css';
+import { pretendard } from './fonts';
 import { MSWProvider } from '@/providers/MSWProvider';
 import { QueryParamsProvider } from '@/providers/QueryParamsProvider';
 import { QueryProvider } from '@/providers/QueryProvider';
@@ -10,8 +11,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang='ko'>
-      <body>
+    <html lang='ko' className={pretendard.variable}>
+      <body className='font-pretendard'>
         <MSWProvider>
           <QueryProvider>
             <QueryParamsProvider>
