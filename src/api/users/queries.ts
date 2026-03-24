@@ -4,7 +4,6 @@ import { getUsersMe, getUsersUserId, updateProfile, updatePassword, deleteUser }
 
 import type { UseMutationOptions } from '@tanstack/react-query';
 import type { User, UpdateProfileForm, UpdatePasswordForm, UpdatePasswordResponseData } from './types';
-import { invalidateServerCache } from '@/lib/invalidateServerCache';
 
 export const userKeys = {
   all: ['users'] as const,
@@ -18,7 +17,6 @@ export const userQueries = {
     queryOptions({
       queryKey: userKeys.me(),
       queryFn: () => getUsersMe(),
-      retry: false,
     }),
   /** GET /v1/users/:userId - 다른 사람 프로필 조회*/
   userId: (userId: number) =>
@@ -37,7 +35,6 @@ export const useUpdateProfile = (options?: UseMutationOptions<User, Error, Updat
     ...options,
     onSuccess: (data, variables, onMutateResult, context) => {
       queryClient.invalidateQueries({ queryKey: userKeys.me() });
-      invalidateServerCache(userKeys.all[0]);
       options?.onSuccess?.(data, variables, onMutateResult, context);
     },
   });
