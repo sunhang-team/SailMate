@@ -79,9 +79,7 @@ export const useUpdateGathering = (
     mutationFn: (body: UpdateGatheringRequest) => updateGathering(gatheringId, body),
     ...options,
     onSuccess: (data, variables, onMutateResult, context) => {
-      queryClient.invalidateQueries({ queryKey: gatheringKeys.detail(gatheringId) });
       queryClient.invalidateQueries({ queryKey: gatheringKeys.all });
-      invalidateServerCache(GATHERING_TAGS.detail(gatheringId));
       invalidateServerCache(GATHERING_TAGS.all);
       options?.onSuccess?.(data, variables, onMutateResult, context);
     },

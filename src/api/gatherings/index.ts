@@ -35,6 +35,7 @@ export const fetchMainGatherings = async (params?: GetMainGatheringsParams): Pro
   const res = await fetch(`${getBaseUrl()}/v1/gatherings/main${qs ? `?${qs}` : ''}`, {
     next: { tags: [GATHERING_TAGS.all, GATHERING_TAGS.main] },
   });
+  if (!res.ok) throw new Error(`gatherings/main fetch failed: ${res.status}`);
   const json: ApiResponse<GetMainGatheringsResponse> = await res.json();
   return unwrapResponse(json);
 };
@@ -44,6 +45,7 @@ export const fetchGatheringDetail = async (gatheringId: number): Promise<GetGath
   const res = await fetch(`${getBaseUrl()}/v1/gatherings/${gatheringId}`, {
     next: { tags: [GATHERING_TAGS.all, GATHERING_TAGS.detail(gatheringId)] },
   });
+  if (!res.ok) throw new Error(`gatherings/${gatheringId} fetch failed: ${res.status}`);
   const json: ApiResponse<GetGatheringDetailResponse> = await res.json();
   return unwrapResponse(json);
 };

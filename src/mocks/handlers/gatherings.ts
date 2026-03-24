@@ -251,7 +251,8 @@ export const gatheringsHandlers = [
     if (!detail) {
       // mockDetails에 상세 데이터가 없으면 mockGatherings 기반으로 최소 상세를 즉석 생성
       const base = mockGatherings.find((g) => g.id === gatheringId);
-      if (!base) return HttpResponse.json({ success: false, message: '모임을 찾을 수 없습니다.' }, { status: 404 });
+      if (!base)
+        return HttpResponse.json({ success: false, data: null, message: '모임을 찾을 수 없습니다.' }, { status: 404 });
 
       const generated: GatheringDetail = {
         ...base,
@@ -281,20 +282,21 @@ export const gatheringsHandlers = [
     await delay(300);
 
     const parsed = createBodySchema.safeParse(await request.json());
-    if (!parsed.success) return HttpResponse.json({ success: false, message: '잘못된 요청입니다.' }, { status: 400 });
+    if (!parsed.success)
+      return HttpResponse.json({ success: false, data: null, message: '잘못된 요청입니다.' }, { status: 400 });
     const body = parsed.data;
     const newGathering: GatheringListItem = {
       id: Date.now(),
-      type: body.type ?? '스터디',
-      category: body.category ?? '기타',
-      title: body.title ?? '새 모임',
-      shortDescription: body.shortDescription ?? '',
-      tags: body.tags ?? [],
-      maxMembers: body.maxMembers ?? 10,
+      type: body.type,
+      category: body.category,
+      title: body.title,
+      shortDescription: body.shortDescription,
+      tags: body.tags,
+      maxMembers: body.maxMembers,
       currentMembers: 1,
-      recruitDeadline: body.recruitDeadline ?? new Date().toISOString(),
-      startDate: body.startDate ?? new Date().toISOString(),
-      endDate: body.endDate ?? new Date().toISOString(),
+      recruitDeadline: body.recruitDeadline,
+      startDate: body.startDate,
+      endDate: body.endDate,
       status: 'RECRUITING',
       isLiked: false,
       leader: { id: 1, nickname: '김코딩', profileImage: null },
@@ -302,9 +304,9 @@ export const gatheringsHandlers = [
 
     const detail: GatheringDetail = {
       ...newGathering,
-      description: body.description ?? '',
-      goal: body.goal ?? '',
-      totalWeeks: body.weeklyGuides?.length ?? 4,
+      description: body.description,
+      goal: body.goal,
+      totalWeeks: body.weeklyGuides.length,
       images: [],
       weeklyPlans: [],
       members: [{ userId: 1, nickname: '김코딩', profileImage: null, role: 'LEADER' }],
@@ -324,11 +326,13 @@ export const gatheringsHandlers = [
 
     const gatheringId = Number(params.gatheringId);
     const parsed = updateBodySchema.safeParse(await request.json());
-    if (!parsed.success) return HttpResponse.json({ success: false, message: '잘못된 요청입니다.' }, { status: 400 });
+    if (!parsed.success)
+      return HttpResponse.json({ success: false, data: null, message: '잘못된 요청입니다.' }, { status: 400 });
     const body = parsed.data;
 
     const idx = mockGatherings.findIndex((g) => g.id === gatheringId);
-    if (idx === -1) return HttpResponse.json({ success: false, message: '모임을 찾을 수 없습니다.' }, { status: 404 });
+    if (idx === -1)
+      return HttpResponse.json({ success: false, data: null, message: '모임을 찾을 수 없습니다.' }, { status: 404 });
 
     // 목록 아이템 업데이트
     mockGatherings[idx] = { ...mockGatherings[idx], ...body } as GatheringListItem;
