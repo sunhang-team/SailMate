@@ -1,5 +1,123 @@
 @import 'tailwindcss';
 
+@theme {
+  --font-pretendard: var(--font-pretendard), 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+
+  --text-h1-b: 64px;
+  --text-h1-b--line-height: 160%;
+  --text-h1-b--font-weight: 700;
+  --text-h2-b: 40px;
+  --text-h2-b--line-height: 160%;
+  --text-h2-b--font-weight: 700;
+  --text-h3-b: 32px;
+  --text-h3-b--line-height: 160%;
+  --text-h3-b--font-weight: 700;
+  --text-h4-b: 28px;
+  --text-h4-b--line-height: 160%;
+  --text-h4-b--font-weight: 700;
+  --text-h5-b: 24px;
+  --text-h5-b--line-height: 160%;
+  --text-h5-b--font-weight: 600;
+  --text-body-01-r: 20px;
+  --text-body-01-r--line-height: 160%;
+  --text-body-01-r--font-weight: 400;
+  --text-body-01-m: 20px;
+  --text-body-01-m--line-height: 160%;
+  --text-body-01-m--font-weight: 500;
+  --text-body-01-sb: 20px;
+  --text-body-01-sb--line-height: 160%;
+  --text-body-01-sb--font-weight: 600;
+  --text-body-01-b: 20px;
+  --text-body-01-b--line-height: 160%;
+  --text-body-01-b--font-weight: 700;
+  --text-body-02-r: 16px;
+  --text-body-02-r--line-height: 160%;
+  --text-body-02-r--font-weight: 400;
+  --text-body-02-m: 16px;
+  --text-body-02-m--line-height: 160%;
+  --text-body-02-m--font-weight: 500;
+  --text-body-02-sb: 16px;
+  --text-body-02-sb--line-height: 160%;
+  --text-body-02-sb--font-weight: 600;
+  --text-small-01-r: 14px;
+  --text-small-01-r--line-height: 160%;
+  --text-small-01-r--font-weight: 400;
+  --text-small-01-sb: 14px;
+  --text-small-01-sb--line-height: 160%;
+  --text-small-01-sb--font-weight: 600;
+  --text-small-02-r: 12px;
+  --text-small-02-r--line-height: 160%;
+  --text-small-02-r--font-weight: 400;
+  --text-small-02-m: 12px;
+  --text-small-02-m--line-height: 160%;
+  --text-small-02-m--font-weight: 500;
+
+  --color-gray-0: #ffffff;
+  --color-gray-50: #fcfcfc;
+  --color-gray-100: #f9fafc;
+  --color-gray-150: #edeff1;
+  --color-gray-200: #dddddd;
+  --color-gray-300: #cccccc;
+  --color-gray-400: #bbbbbb;
+  --color-gray-500: #a4a4a4;
+  --color-gray-600: #737373;
+  --color-gray-700: #4a4a4a;
+  --color-gray-800: #333333;
+  --color-gray-900: #191919;
+
+  --color-blue-50: #f4faff;
+  --color-blue-100: #dbf0ff;
+  --color-blue-150: #cfdfff;
+  --color-blue-200: #00ccff;
+  --color-blue-300: #3779fe;
+  --color-blue-400: #1e58f8;
+  --color-blue-500: #010937;
+
+  --color-red-100: #ffdbdb;
+  --color-red-200: #fe3737;
+
+  --color-orange-100: #ffefdb;
+  --color-orange-200: #fe9137;
+
+  --color-focus-100: #d0dbfb;
+
+  --shadow-01: 0 0 12px rgba(30, 88, 248, 0.04);
+  --shadow-02: 0 0 16px rgba(30, 88, 248, 0.04);
+  --shadow-03: 0 0 12px rgba(30, 88, 248, 0.12);
+}
+
+@utility bg-gradient-primary {
+  background: linear-gradient(to right, #1e58f8, #00ccff);
+}
+
+@utility bg-gradient-sub-100 {
+  background: linear-gradient(to right, #f1fcff, #e5faff);
+}
+
+@utility bg-gradient-sub-200 {
+  background: linear-gradient(to right, #f1f8ff, #dfefff);
+}
+
+@utility bg-gradient-dashboard-blue {
+  background: linear-gradient(to right, #3779fe, #77a4ff);
+}
+
+@utility bg-gradient-dashboard-red {
+  background: linear-gradient(to right, #ff5757, #ff9090);
+}
+
+@utility bg-gradient-dashboard-disabled {
+  background: linear-gradient(to right, #dbf0ff, #dbf0ff70);
+}
+
+@utility bg-gradient-dashboard-focus {
+  background: linear-gradient(to right, #3779fe, #3779fe70);
+}
+
+@utility bg-gradient-dashboard-bg {
+  background: linear-gradient(to right, #e8f4ff, #ffffff00);
+}
+
 @keyframes modal-slide-in-right {
   from {
     opacity: 0;
