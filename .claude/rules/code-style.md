@@ -31,6 +31,12 @@ paths:
 - interface 우선 (type은 유니온, 교차 타입 시만)
 - Props interface는 같은 파일, 컴포넌트 바로 위에 선언
 
+## 가독성
+
+- 매직 넘버와 복잡한 조건식에 명명된 상수/변수 사용
+- 예: `if (members.length >= 5)` → `const MAX_MEMBERS = 5; if (members.length >= MAX_MEMBERS)`
+- 예: `if (a && b || c)` → `const isEligible = a && b || c; if (isEligible)`
+
 ## 컴포넌트 구조
 
 - `'use client'`는 파일 최상단, 첫 줄에만

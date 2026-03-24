@@ -38,7 +38,7 @@
 - 공개 데이터: 서버 prefetchQuery + HydrationBoundary + 클라이언트 useQuery
 - 유저별 데이터: 클라이언트 useSuspenseQuery + Suspense 경계
 - API 호출 있는 컴포넌트: ErrorBoundary로 에러 격리
-- Mutation 성공 시 이중 캐시 무효화: invalidateQueries + revalidateTag
+- Mutation 성공 시 이중 캐시 무효화: invalidateQueries + updateTag
 
 ## TanStack Query
 

@@ -4,10 +4,4 @@ import { authHandlers } from './auth';
 import { usersHandlers } from './users';
 import { membershipsHandlers } from './memberships';
 
-export const handlers = [
-  ...gatheringsHandlers,
-  ...todosHandlers,
-  ...authHandlers,
-  ...usersHandlers,
-  ...membershipsHandlers,
-];
+export const handlers = [...todosHandlers, ...authHandlers, ...usersHandlers, ...membershipsHandlers];
