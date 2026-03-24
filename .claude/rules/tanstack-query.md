@@ -36,14 +36,36 @@ paths:
 
 - mutation 성공 시 반드시 클라이언트 + 서버 캐시 둘 다 무효화
 - `invalidateQueries` → 현재 유저 화면 즉시 갱신
-- `revalidateTag` (Server Action) → 서버 Data Cache 무효화, 다른 유저도 최신 데이터
-- invalidateQueries만 → 새로고침 시 옛날 데이터 / revalidateTag만 → 현재 유저는 새로고침 필요
+- `updateTag` (Server Action) → 서버 Data Cache 무효화, 다른 유저도 최신 데이터
+- invalidateQueries만 → 새로고침 시 옛날 데이터 / updateTag만 → 현재 유저는 새로고침 필요
+
+## Mutation 콜백 분리 패턴
+
+| 위치                            | 담당                       | 이유                                   |
+| ------------------------------- | -------------------------- | -------------------------------------- |
+| `useMutation` 레벨 (훅 내부)    | 캐시 무효화, 데이터 동기화 | unmount 여부와 관계없이 항상 실행      |
+| `mutate()` 호출 레벨 (컴포넌트) | toast, redirect 등 UI 콜백 | unmount 시 실행 안 됨 → UI 콜백에 적합 |
+
+- 훅 내부 onSuccess에는 이중 캐시 무효화만 포함
+- UI 부수효과(toast, navigate)를 훅 내부에 하드코딩 금지
+- `UseMutationOptions` 파라미터로 소비자 콜백 주입 가능하도록 설계
+
+## mutate vs mutateAsync
+
+- 기본은 `mutate` 사용 (에러를 콜백으로 처리, 별도 try-catch 불필요)
+- `mutateAsync`는 여러 mutation을 `Promise.all`로 병렬 실행할 때만 사용
+
+## startTransition으로 Suspense fallback 깜빡임 방지
+
+- `useSuspenseQuery`의 queryKey가 변경될 때 `startTransition`으로 감싸서 이전 UI 유지
+- 필터/정렬/탭 전환 시 스켈레톤이 매번 깜빡이는 것을 방지
+- `startTransition` 없이 queryKey 변경 → Suspense fallback 재노출 → UX 저하
 
 ## 낙관적 업데이트 (찜 등 즉각 반응 필요 시)
 
 - onMutate: cancelQueries → getQueryData(이전값 저장) → setQueryData(낙관적 변경)
 - onError: 이전값으로 롤백
-- onSettled: invalidateQueries + revalidateTag로 서버/클라이언트 둘 다 최종 동기화
+- onSettled: invalidateQueries + updateTag로 서버/클라이언트 둘 다 최종 동기화
 
 ## 주의사항
 
