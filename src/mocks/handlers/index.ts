@@ -5,9 +5,9 @@ import { usersHandlers } from './users';
 import { membershipsHandlers } from './memberships';
 
 export const handlers = [
-  ...gatheringsHandlers,
   ...todosHandlers,
   ...authHandlers,
   ...usersHandlers,
   ...membershipsHandlers,
+  ...gatheringsHandlers,
 ];
