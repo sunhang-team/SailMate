@@ -46,7 +46,7 @@ export const useCreateApplication = (
     mutationFn: (body: ApplyGatheringForm) => createApplication(gatheringId, body),
     ...options,
     onSuccess: (data, variables, onMutateResult, context) => {
-      queryClient.invalidateQueries({ queryKey: applicationKeys.list(gatheringId) });
+      queryClient.invalidateQueries({ queryKey: applicationKeys.all });
       options?.onSuccess?.(data, variables, onMutateResult, context);
     },
   });
@@ -64,7 +64,7 @@ export const useUpdateApplicationStatus = (
     mutationFn: (body: UpdateApplicationStatusRequest) => updateApplicationStatus(gatheringId, applicationId, body),
     ...options,
     onSuccess: (data, variables, onMutateResult, context) => {
-      queryClient.invalidateQueries({ queryKey: applicationKeys.list(gatheringId) });
+      queryClient.invalidateQueries({ queryKey: applicationKeys.all });
       options?.onSuccess?.(data, variables, onMutateResult, context);
     },
   });
@@ -82,8 +82,7 @@ export const useDeleteApplication = (
     mutationFn: () => deleteApplication(gatheringId, applicationId),
     ...options,
     onSuccess: (data, variables, onMutateResult, context) => {
-      queryClient.invalidateQueries({ queryKey: applicationKeys.list(gatheringId) });
-      queryClient.invalidateQueries({ queryKey: applicationKeys.myList() });
+      queryClient.invalidateQueries({ queryKey: applicationKeys.all });
       options?.onSuccess?.(data, variables, onMutateResult, context);
     },
   });
