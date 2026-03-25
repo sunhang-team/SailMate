@@ -167,7 +167,7 @@ export const KeywordSearch: Story = {
     size: 'keyword-search',
     children: (
       <>
-        <SearchIcon size={28} />
+        <SearchIcon size={28} gradient />
         키워드를 검색하세요.
       </>
     ),
