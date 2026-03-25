@@ -32,12 +32,19 @@ paths:
 - **유저별 데이터 (prefetch 없음)**: useSuspenseQuery 사용 → Suspense 연동 자동 로딩 처리
 - 클라이언트 queryFn에서는 axios 인스턴스 사용 가능
 
-## Mutation + 이중 캐시 무효화
+## Mutation + 캐시 무효화
 
-- mutation 성공 시 반드시 클라이언트 + 서버 캐시 둘 다 무효화
+- 무효화 전략은 해당 데이터의 **서버 캐시 존재 여부**에 따라 결정
+
+| 데이터 유형                                           | 서버 캐시 | 필요한 무효화                                   |
+| ----------------------------------------------------- | --------- | ----------------------------------------------- |
+| 공개 데이터 (prefetchQuery + next.tags로 서버 캐시됨) | O         | `invalidateQueries` + `updateTag` (이중 무효화) |
+| 유저별 데이터 (useSuspenseQuery로 클라이언트만 페칭)  | X         | `invalidateQueries`만                           |
+
 - `invalidateQueries` → 현재 유저 화면 즉시 갱신
 - `updateTag` (Server Action) → 서버 Data Cache 무효화, 다른 유저도 최신 데이터
-- invalidateQueries만 → 새로고침 시 옛날 데이터 / updateTag만 → 현재 유저는 새로고침 필요
+- 서버 캐시 데이터에 invalidateQueries만 → 새로고침 시 옛날 데이터 / updateTag만 → 현재 유저는 새로고침 필요
+- 클라이언트 전용 데이터에 updateTag → 무효화할 서버 캐시 자체가 없으므로 무의미
 
 ## Mutation 콜백 분리 패턴
 
