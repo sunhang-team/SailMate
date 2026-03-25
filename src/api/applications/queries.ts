@@ -1,5 +1,4 @@
 import { queryOptions, useMutation, UseMutationOptions, useQueryClient } from '@tanstack/react-query';
-
 import {
   createApplication,
   deleteApplication,
@@ -7,11 +6,6 @@ import {
   getMyApplicationList,
   updateApplicationStatus,
 } from '.';
-
-import { invalidateServerCache } from '@/lib/invalidateServerCache';
-
-import { GATHERING_TAGS } from '../gatherings';
-
 import {
   ApplyGatheringForm,
   CreateApplicationResponse,
@@ -53,9 +47,6 @@ export const useCreateApplication = (
     ...options,
     onSuccess: (data, variables, onMutateResult, context) => {
       queryClient.invalidateQueries({ queryKey: applicationKeys.all });
-
-      invalidateServerCache(GATHERING_TAGS.all);
-      invalidateServerCache(GATHERING_TAGS.detail(gatheringId));
       options?.onSuccess?.(data, variables, onMutateResult, context);
     },
   });
