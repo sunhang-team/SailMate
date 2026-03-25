@@ -10,10 +10,14 @@ on:
   pull_request_review:
     types: [submitted]
 
+concurrency:
+  group: claude-review-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
 jobs:
   review:
     if: |
-      (github.event_name == 'pull_request') ||
+      (github.event_name == 'pull_request' && github.event.pull_request.draft == false) ||
       (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude')) ||
       (github.event_name == 'pull_request_review_comment' && contains(github.event.comment.body, '@claude')) ||
       (github.event_name == 'pull_request_review' && contains(github.event.review.body, '@claude'))
@@ -33,15 +37,32 @@ jobs:
         uses: anthropics/claude-code-action@v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          use_sticky_comment: true
           track_progress: true
           claude_args: |
             --model claude-sonnet-4-5-20250929
-            --allowedTools "mcp__github_inline_comment__create_inline_comment,Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*)"
+            --allowedTools "mcp__github_inline_comment__create_inline_comment,Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*),Bash(gh api:*)"
           prompt: |
+            EVENT_ACTION: ${{ github.event.action }}
             REPO: ${{ github.repository }}
-            PR NUMBER: ${{ github.event.pull_request.number }}
+            PR_NUMBER: ${{ github.event.pull_request.number }}
 
             이 PR을 프로젝트 규칙(CLAUDE.md, .claude/rules/)에 따라 리뷰해줘.
+
+            ## 리뷰 모드
+
+            EVENT_ACTION 값에 따라 리뷰 방식을 달리해줘:
+
+            ### opened (전체 리뷰)
+            - PR 전체 diff를 리뷰
+            - 아래 리뷰 기준에 따라 이슈를 찾아줘
+
+            ### synchronize (증분 리뷰)
+            - `gh api repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/comments` 로 이전 리뷰 코멘트를 확인
+            - 이전에 지적한 이슈가 해결되었는지 확인
+            - 새로 변경된 코드에서만 이슈를 검토
+            - 이전 리뷰와 동일한 내용을 반복하지 않기
+            - 이전 지적 해결 여부 + 새 이슈를 종합해서 작성
 
             ## 리뷰 기준 (심각도 순)
 
@@ -49,7 +70,7 @@ jobs:
             - page.tsx에 'use client' 사용 여부
             - 서버 컴포넌트에서 React 훅(useQuery, useState 등) 사용 여부
             - 서버에서 axios 사용 여부 (fetch만 허용)
-            - mutation 시 이중 캐시 무효화 누락 (invalidateQueries + revalidateTag)
+            - 서버 캐시 데이터(prefetch + next.tags)의 mutation 시 이중 캐시 무효화 누락. 클라이언트 전용 데이터는 invalidateQueries만으로 충분
 
             ### HIGH
             - 공개 데이터에 prefetchQuery + HydrationBoundary 패턴 사용 여부
@@ -64,11 +85,9 @@ jobs:
             - any 타입 사용
             - Promise.all 누락 (순차 fetch)
 
-            ## 코멘트 방식
-            - 구체적인 코드 이슈는 인라인 코멘트(mcp__github_inline_comment__create_inline_comment, confirmed: true)로 남겨줘
-            - 수정이 필요한 코드는 GitHub Suggestion 블록으로 제안해줘:
-              ```suggestion
-              수정된 코드
-              ```
-            - 전체적인 피드백과 요약은 `gh pr comment`로 PR 탑레벨 코멘트로 남겨줘
-            - 잘 작성된 부분도 언급해줘
+            ## 출력 규칙
+            - 발견된 이슈만 심각도별로 정리 (이슈가 없는 카테고리는 생략)
+            - 해당 PR과 무관한 규칙은 체크하지 않기 (예: API 코드만 변경된 PR에서 컴포넌트 규칙 스킵)
+            - 구체적인 코드 이슈는 인라인 코멘트(mcp__github_inline_comment__create_inline_comment, confirmed: true)로 남기고, 수정이 필요한 코드는 GitHub Suggestion 블록으로 제안
+            - PR 전체 코멘트(`gh pr comment`)는 요약 + 결론만 20줄 이내로 간결하게
+            - "잘 작성된 점"은 정말 돋보이는 패턴만 1-2줄로

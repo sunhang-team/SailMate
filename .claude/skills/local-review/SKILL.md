@@ -27,7 +27,7 @@ allowed-tools: Read, Grep, Glob, Bash(gh *)
 ### 3. 캐싱 & 무효화 (HIGH)
 
 - 서버 fetch에 next: { tags } 지정했는지
-- mutation 시 이중 무효화 (invalidateQueries + revalidateTag) 하는지
+- 서버 캐시 데이터(prefetch + next.tags) mutation 시 이중 무효화 (invalidateQueries + updateTag) 하는지. 클라이언트 전용 데이터는 invalidateQueries만으로 충분
 - staleTime > 0 설정했는지
 - queryKey가 서버/클라이언트에서 일치하는지
 
