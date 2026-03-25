@@ -76,7 +76,12 @@ const mockRanking: AchievementRanking = {
 export const achievementsHandlers = [
   /** GET /api/v1/gatherings/:gatheringId/achievements — 모임 전체 달성률 현황 */
   http.get(BASE, async () => {
-    await delay(300);
+const MOCK_DELAY = 300;
+
+export const achievementsHandlers = [
+  /** GET /api/v1/gatherings/:gatheringId/achievements — 모임 전체 달성률 현황 */
+  http.get(BASE, async () => {
+    await delay(MOCK_DELAY);
     return HttpResponse.json(createApiResponse<GatheringAchievements>(mockAchievements));
   }),
 
