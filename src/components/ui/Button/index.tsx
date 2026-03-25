@@ -29,6 +29,26 @@ const buttonVariants = cva('cursor-pointer transition-colors disabled:cursor-not
         'rounded-lg text-body-01-sb leading-[var(--text-body-01-sb--line-height)] [font-weight:var(--text-body-01-sb--font-weight)] text-blue-300 bg-blue-50 aria-pressed:bg-blue-100',
       'mypage-edit':
         'rounded-lg text-body-01-m leading-[var(--text-body-01-m--line-height)] [font-weight:var(--text-body-01-m--font-weight)] text-gray-600 bg-gray-100 border border-gray-150',
+      'icon-hand': 'rounded-lg flex items-center justify-center text-gray-400 bg-gray-150',
+      tag: 'rounded-lg flex items-center justify-center text-body-02-sb leading-[var(--text-body-02-sb--line-height)] [font-weight:var(--text-body-02-sb--font-weight)] text-blue-300 bg-blue-100',
+      social:
+        'rounded-lg flex items-center justify-center gap-2 text-body-02-sb leading-[var(--text-body-02-sb--line-height)] [font-weight:var(--text-body-02-sb--font-weight)] text-gray-800 border border-gray-300',
+      'social-kakao':
+        'rounded-lg flex items-center justify-center gap-2 text-body-02-sb leading-[var(--text-body-02-sb--line-height)] [font-weight:var(--text-body-02-sb--font-weight)] text-gray-800 bg-[#ffee01]',
+      'keyword-search':
+        'rounded-[50px] flex items-center gap-2 text-body-01-r leading-[var(--text-body-01-r--line-height)] [font-weight:var(--text-body-01-r--font-weight)] text-blue-300 text-gradient-primary border-gradient-primary',
+      dropdown:
+        'rounded-lg flex items-center justify-between px-3 text-body-01-m leading-[var(--text-body-01-m--line-height)] [font-weight:var(--text-body-01-m--font-weight)] text-blue-300 bg-blue-100',
+      'add-task':
+        'rounded-lg flex items-center justify-center gap-1 text-body-01-sb leading-[var(--text-body-01-sb--line-height)] [font-weight:var(--text-body-01-sb--font-weight)] text-blue-300 bg-blue-50',
+      fire: 'rounded-lg flex items-center justify-center bg-gray-150 data-[selected=true]:bg-gray-300',
+      'write-review':
+        'rounded-lg flex items-center justify-center gap-2 text-body-01-sb leading-[var(--text-body-01-sb--line-height)] [font-weight:var(--text-body-01-sb--font-weight)] text-blue-300 bg-blue-50',
+      bookmark:
+        'rounded-lg flex items-center justify-center bg-gray-0 border border-gray-200 text-gray-200 data-[selected=true]:text-red-200',
+      'social-icon-kakao': 'rounded-lg flex items-center justify-center bg-[#ffee01]',
+      'social-icon-google': 'rounded-lg flex items-center justify-center border border-gray-300',
+      'social-icon-email': 'rounded-lg flex items-center justify-center border border-blue-100 text-blue-300',
     },
     size: {
       'join-login': 'h-14 w-124',
@@ -44,6 +64,18 @@ const buttonVariants = cva('cursor-pointer transition-colors disabled:cursor-not
       'action-sm': 'h-20 w-75',
       cancel: 'h-18 w-[527px]',
       'mypage-edit': 'h-[60px] w-[394px]',
+      'icon-hand': 'h-12 w-12',
+      tag: 'h-12 w-12',
+      social: 'h-12 w-[242px]',
+      'social-kakao': 'h-12 w-[242px]',
+      'keyword-search': 'h-18 w-[258px] px-6',
+      dropdown: 'h-10 w-[131px]',
+      'add-task': 'h-18 w-[1624px]',
+      fire: 'h-12 w-12',
+      'write-review': 'h-18 w-[527px]',
+      'bookmark-sm': 'h-11 w-11',
+      'bookmark-lg': 'h-18 w-18 [border-width:1.64px]',
+      'social-icon': 'h-10 w-12',
     },
   },
   defaultVariants: {
