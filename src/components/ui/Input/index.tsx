@@ -1,15 +1,18 @@
 'use client';
 
-import { useId, type ComponentPropsWithRef } from 'react';
+import { useId, forwardRef, type ComponentPropsWithoutRef } from 'react';
 import { fieldControlVariants, fieldGradientFocusWrapperClass } from '@/components/ui/fieldControlVariants';
 import { cn } from '@/lib/cn';
 
-type InputProps = ComponentPropsWithRef<'input'> & {
+type InputProps = ComponentPropsWithoutRef<'input'> & {
   label?: string;
   error?: string;
 };
 
-export function Input({ label, error, className, type, id: idProp, ref, ...props }: InputProps) {
+export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
+  { label, error, className, type, id: idProp, ...props },
+  ref,
+) {
   const uid = useId();
   const id = idProp ?? uid;
   const hasError = !!error;
@@ -40,4 +43,6 @@ export function Input({ label, error, className, type, id: idProp, ref, ...props
       )}
     </div>
   );
-}
+});
+
+Input.displayName = 'Input';

@@ -1,6 +1,6 @@
 'use client';
 
-import { useId, type ComponentPropsWithRef } from 'react';
+import { useId, forwardRef, type ComponentPropsWithoutRef } from 'react';
 import { fieldControlVariants, fieldGradientFocusWrapperClass } from '@/components/ui/fieldControlVariants';
 import { cn } from '@/lib/cn';
 
@@ -8,13 +8,16 @@ const sizeClassName = {
   lg: 'text-base min-h-[140px]',
 } as const;
 
-type TextareaProps = ComponentPropsWithRef<'textarea'> & {
+type TextareaProps = ComponentPropsWithoutRef<'textarea'> & {
   label?: string;
   error?: string;
   size?: keyof typeof sizeClassName;
 };
 
-export function Textarea({ label, error, className, id: idProp, ref, size = 'lg', rows, ...props }: TextareaProps) {
+export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(function Textarea(
+  { label, error, className, id: idProp, size = 'lg', rows, ...props },
+  ref,
+) {
   const uid = useId();
   const id = idProp ?? uid;
   const hasError = !!error;
@@ -50,4 +53,6 @@ export function Textarea({ label, error, className, id: idProp, ref, size = 'lg'
       )}
     </div>
   );
-}
+});
+
+Textarea.displayName = 'Textarea';
