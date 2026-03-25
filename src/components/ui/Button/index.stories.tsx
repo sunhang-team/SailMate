@@ -21,8 +21,9 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-// Join Login
+// ─── 인증 ───────────────────────────────────────────────
 export const JoinLogin: Story = {
+  name: '[인증] 로그인/회원가입',
   args: { variant: 'primary', size: 'join-login', children: '회원가입', disabled: false },
   argTypes: {
     children: { control: 'select', options: ['회원가입', '로그인'] },
@@ -30,34 +31,53 @@ export const JoinLogin: Story = {
   },
 };
 
-// Join Login Small
 export const SignupSmall: Story = {
+  name: '[인증] 회원가입 소형',
   args: { variant: 'primary', size: 'join-sm', children: '회원가입' },
 };
 
 export const LoginSmall: Story = {
+  name: '[인증] 로그인 소형',
   args: { variant: 'login-outline', size: 'login-sm', children: '로그인' },
 };
 
-// Action
-export const Action: Story = {
-  args: { variant: 'action', size: 'action', children: '작성 완료', disabled: false },
-  argTypes: {
-    children: { control: 'select', options: ['참여 신청하기', '작성 완료', '확인', '참여 대기중'] },
-    disabled: { control: 'boolean' },
-  },
+// ─── 소셜 ───────────────────────────────────────────────
+export const Social: Story = {
+  name: '[소셜] 텍스트',
+  render: () => (
+    <div className='flex flex-col gap-4'>
+      <Button variant='social' size='social'>
+        <GoogleIcon size={24} />
+        구글로 시작하기
+      </Button>
+      <Button variant='social-kakao' size='social-kakao'>
+        <KakaoIcon size={24} />
+        카카오로 시작하기
+      </Button>
+    </div>
+  ),
 };
 
-export const ActionSmall: Story = {
-  args: { variant: 'action', size: 'action-sm', children: '작성 완료', disabled: false },
-  argTypes: {
-    disabled: { control: 'boolean' },
-  },
+export const SocialIcon: Story = {
+  name: '[소셜] 아이콘',
+  render: () => (
+    <div className='flex gap-4'>
+      <Button variant='social-icon-kakao' size='social-icon'>
+        <KakaoIcon size={24} />
+      </Button>
+      <Button variant='social-icon-google' size='social-icon'>
+        <GoogleIcon size={24} />
+      </Button>
+      <Button variant='social-icon-email' size='social-icon'>
+        <EmailIcon size={24} />
+      </Button>
+    </div>
+  ),
 };
 
-// Participation
+// ─── 참여 ───────────────────────────────────────────────
 export const Participation: Story = {
-  name: 'Participation',
+  name: '[참여] 대형',
   render: () => (
     <div className='flex flex-col gap-4'>
       <Button variant='participation-outline' size='participation'>
@@ -77,23 +97,8 @@ export const Participation: Story = {
   ),
 };
 
-// Cancel
-export const Cancel: Story = {
-  name: 'Cancel',
-  render: () => (
-    <div className='flex flex-col gap-4'>
-      <Button variant='cancel' size='cancel'>
-        참여 취소하기
-      </Button>
-      <Button variant='cancel' size='cancel' aria-pressed='true'>
-        참여 취소하기
-      </Button>
-    </div>
-  ),
-};
-
 export const ParticipationSm: Story = {
-  name: 'Participation Small',
+  name: '[참여] 소형',
   render: () => (
     <div className='flex flex-col gap-4'>
       <Button variant='participation-outline-sm' size='participation-sm'>
@@ -106,44 +111,57 @@ export const ParticipationSm: Story = {
   ),
 };
 
-// Social
-export const Social: Story = {
-  name: 'Social',
+export const Cancel: Story = {
+  name: '[참여] 취소',
   render: () => (
     <div className='flex flex-col gap-4'>
-      <Button variant='social' size='social'>
-        <GoogleIcon size={24} />
-        구글로 시작하기
+      <Button variant='cancel' size='cancel'>
+        참여 취소하기
       </Button>
-      <Button variant='social-kakao' size='social-kakao'>
-        <KakaoIcon size={24} />
-        카카오로 시작하기
+      <Button variant='cancel' size='cancel' aria-pressed='true'>
+        참여 취소하기
       </Button>
     </div>
   ),
 };
 
-// Social Icon
-export const SocialIcon: Story = {
-  name: 'Social Icon',
-  render: () => (
-    <div className='flex gap-4'>
-      <Button variant='social-icon-kakao' size='social-icon'>
-        <KakaoIcon size={24} />
-      </Button>
-      <Button variant='social-icon-google' size='social-icon'>
-        <GoogleIcon size={24} />
-      </Button>
-      <Button variant='social-icon-email' size='social-icon'>
-        <EmailIcon size={24} />
-      </Button>
-    </div>
-  ),
+// ─── 액션 ───────────────────────────────────────────────
+export const Action: Story = {
+  name: '[액션] 대형',
+  args: { variant: 'action', size: 'action', children: '작성 완료', disabled: false },
+  argTypes: {
+    children: { control: 'select', options: ['참여 신청하기', '작성 완료', '확인', '참여 대기중'] },
+    disabled: { control: 'boolean' },
+  },
 };
 
-// Keyword Search
+export const ActionSmall: Story = {
+  name: '[액션] 소형',
+  args: { variant: 'action', size: 'action-sm', children: '작성 완료', disabled: false },
+  argTypes: {
+    disabled: { control: 'boolean' },
+  },
+};
+
+export const Check: Story = {
+  name: '[액션] 확인',
+  args: { variant: 'check', size: 'check', children: '확인', disabled: false },
+  argTypes: {
+    disabled: { control: 'boolean' },
+  },
+};
+
+// ─── 검색 ───────────────────────────────────────────────
+export const Search: Story = {
+  name: '[검색] 바',
+  args: { variant: 'search', size: 'search', children: '검색' },
+  argTypes: {
+    variant: { control: 'select', options: ['search', 'search-gradient'] },
+  },
+};
+
 export const KeywordSearch: Story = {
-  name: 'Keyword Search',
+  name: '[검색] 키워드',
   args: {
     variant: 'keyword-search',
     size: 'keyword-search',
@@ -156,9 +174,22 @@ export const KeywordSearch: Story = {
   },
 };
 
-// Dropdown
+// ─── 태스크 ─────────────────────────────────────────────
+export const AddTask: Story = {
+  name: '[태스크] 추가',
+  args: {
+    variant: 'add-task',
+    size: 'add-task',
+    children: (
+      <>
+        <span className='text-[28px] leading-none font-light'>+</span>할 일 추가
+      </>
+    ),
+  },
+};
+
 export const Dropdown: Story = {
-  name: 'Dropdown',
+  name: '[태스크] 드롭다운',
   args: {
     variant: 'dropdown',
     size: 'dropdown',
@@ -171,23 +202,9 @@ export const Dropdown: Story = {
   },
 };
 
-// Add Task
-export const AddTask: Story = {
-  name: 'Add Task',
-  args: {
-    variant: 'add-task',
-    size: 'add-task',
-    children: (
-      <>
-        <span className='text-[28px] leading-none font-light'>+</span>할 일 추가
-      </>
-    ),
-  },
-};
-
-// Fire
+// ─── 인터랙션 ────────────────────────────────────────────
 export const Fire: Story = {
-  name: 'Fire',
+  name: '[인터랙션] 불꽃',
   render: () => (
     <div className='flex gap-4'>
       <Button variant='fire' size='fire'>
@@ -200,9 +217,8 @@ export const Fire: Story = {
   ),
 };
 
-// Bookmark
 export const Bookmark: Story = {
-  name: 'Bookmark',
+  name: '[인터랙션] 북마크',
   render: () => (
     <div className='flex items-end gap-4'>
       <Button variant='bookmark' size='bookmark-sm'>
@@ -221,9 +237,9 @@ export const Bookmark: Story = {
   ),
 };
 
-// Write Review
+// ─── 마이페이지 ──────────────────────────────────────────
 export const WriteReview: Story = {
-  name: 'Write Review',
+  name: '[기타] 리뷰 쓰기',
   args: {
     variant: 'write-review',
     size: 'write-review',
@@ -236,41 +252,22 @@ export const WriteReview: Story = {
   },
 };
 
-// Tag
-export const Tag: Story = {
-  name: 'Tag',
-  args: { variant: 'tag', size: 'tag', children: '나' },
-};
-
-// Icon Hand
-export const IconHand: Story = {
-  name: 'Icon Hand',
-  args: { variant: 'icon-hand', size: 'icon-hand', children: <HandIcon /> },
-};
-
-// Mypage Edit
 export const MypageEdit: Story = {
-  name: 'Mypage Edit',
+  name: '[기타] 정보 수정',
   args: { variant: 'mypage-edit', size: 'mypage-edit', children: '내 정보 수정' },
 };
 
-// File Upload
 export const FileUpload: Story = {
+  name: '[기타] 파일 업로드',
   args: { variant: 'file-upload', size: 'file-upload', children: '파일 찾기' },
 };
 
-// Check
-export const Check: Story = {
-  args: { variant: 'check', size: 'check', children: '확인', disabled: false },
-  argTypes: {
-    disabled: { control: 'boolean' },
-  },
+export const Tag: Story = {
+  name: '[기타] 태그',
+  args: { variant: 'tag', size: 'tag', children: '나' },
 };
 
-// Search
-export const Search: Story = {
-  args: { variant: 'search', size: 'search', children: '검색' },
-  argTypes: {
-    variant: { control: 'select', options: ['search', 'search-gradient'] },
-  },
+export const IconHand: Story = {
+  name: '[기타] 아이콘 핸드',
+  args: { variant: 'icon-hand', size: 'icon-hand', children: <HandIcon /> },
 };
