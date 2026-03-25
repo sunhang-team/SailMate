@@ -6,7 +6,7 @@ import { ApiResponse } from '../common/types';
 /** POST v1/gatherings/:gatheringId/reviews — 리뷰 작성 */
 export const createReviews = async (gatheringId: number, body: CreateReviewsForm): Promise<CreateReviewsResponse> => {
   const { data } = await axiosClient.post<ApiResponse<CreateReviewsResponse>>(
-    `v1/gatherings/${gatheringId}/reviews`,
+    `/gatherings/${gatheringId}/reviews`,
     body,
   );
   return unwrapResponse(data);
@@ -17,6 +17,6 @@ export const getUserReviewList = async (
   userId: number,
   params?: UserReviewsParams,
 ): Promise<UserReviewListResponse> => {
-  const { data } = await axiosClient.get<ApiResponse<UserReviewListResponse>>(`v1/users/${userId}/reviews`, { params });
+  const { data } = await axiosClient.get<ApiResponse<UserReviewListResponse>>(`/users/${userId}/reviews`, { params });
   return unwrapResponse(data);
 };
