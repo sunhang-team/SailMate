@@ -1,12 +1,7 @@
-import { forwardRef } from 'react';
-import type { Ref } from 'react';
 import { cn } from '@/lib/cn';
 import type { IconProps } from './types';
 
-export const IconBase = forwardRef(function IconBase(
-  { size = 24, className, children, ...props }: IconProps,
-  ref: Ref<SVGSVGElement>,
-) {
+export function IconBase({ size = 24, className, children, ref, ...props }: IconProps) {
   return (
     <svg
       ref={ref}
@@ -21,4 +16,4 @@ export const IconBase = forwardRef(function IconBase(
       {children}
     </svg>
   );
-});
+}

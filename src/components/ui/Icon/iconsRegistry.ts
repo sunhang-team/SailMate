@@ -21,7 +21,6 @@ import {
   NotificationsIcon,
   PaginationIcon,
   PeriodIcon,
-  Person1Icon,
   PersonIcon,
   ProjectIcon,
   RatingIcon,
@@ -43,7 +42,7 @@ export interface IconRegistryItem {
 
 export const iconsRegistry: Record<string, IconRegistryItem> = {
   AlarmIcon: { component: AlarmIcon },
-  ArrowIcon: { component: ArrowIcon, variants: ['left', 'right'] },
+  ArrowIcon: { component: ArrowIcon },
   BackupIcon: { component: BackupIcon },
   CalendarIcon: { component: CalendarIcon },
   CategoryIcon: { component: CategoryIcon },
@@ -62,7 +61,6 @@ export const iconsRegistry: Record<string, IconRegistryItem> = {
   NotificationsIcon: { component: NotificationsIcon },
   PaginationIcon: { component: PaginationIcon, variants: ['prev', 'next'] },
   PeriodIcon: { component: PeriodIcon },
-  Person1Icon: { component: Person1Icon },
   PersonIcon: { component: PersonIcon },
   ProjectIcon: { component: ProjectIcon },
   RatingIcon: { component: RatingIcon, variants: ['gold', 'silver', 'bronze'], fixedColor: true },

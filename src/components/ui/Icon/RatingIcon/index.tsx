@@ -12,15 +12,9 @@ const VIEW_BOX_BY_VARIANT = {
 } as const;
 const RATING_ICON_URL = new URL('./rating.svg', import.meta.url).toString();
 
-export function RatingIcon({ size = 24, className, variant = 'gold', ...props }: RatingIconProps) {
+export function RatingIcon({ variant = 'gold', ...props }: RatingIconProps) {
   return (
-    <IconBase
-      size={size}
-      className={className}
-      viewBox={VIEW_BOX_BY_VARIANT[variant]}
-      data-variant={variant}
-      {...props}
-    >
+    <IconBase viewBox={VIEW_BOX_BY_VARIANT[variant]} data-variant={variant} {...props}>
       <image href={RATING_ICON_URL} width='182' height='80' preserveAspectRatio='xMidYMid meet' />
     </IconBase>
   );

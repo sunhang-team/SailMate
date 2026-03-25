@@ -18,7 +18,7 @@ export { MoreIcon } from './MoreIcon';
 export { NotificationsIcon } from './NotificationsIcon';
 export { PaginationIcon } from './PaginationIcon';
 export { PeriodIcon } from './PeriodIcon';
-export { Person1Icon } from './Person1Icon';
+export { PeopleIcon } from './PeopleIcon';
 export { PersonIcon } from './PersonIcon';
 export { ProjectIcon } from './ProjectIcon';
 export { RatingIcon } from './RatingIcon';

@@ -11,15 +11,9 @@ const VIEW_BOX_BY_VARIANT = {
 } as const;
 const FIRE_BUTTON_ICON_URL = new URL('./fire-button.svg', import.meta.url).toString();
 
-export function FireButtonIcon({ size = 24, className, variant = 'active', ...props }: FireButtonIconProps) {
+export function FireButtonIcon({ variant = 'active', ...props }: FireButtonIconProps) {
   return (
-    <IconBase
-      size={size}
-      className={className}
-      viewBox={VIEW_BOX_BY_VARIANT[variant]}
-      data-variant={variant}
-      {...props}
-    >
+    <IconBase viewBox={VIEW_BOX_BY_VARIANT[variant]} data-variant={variant} {...props}>
       <image href={FIRE_BUTTON_ICON_URL} width='88' height='156' preserveAspectRatio='xMidYMid meet' />
     </IconBase>
   );

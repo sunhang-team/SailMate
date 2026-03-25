@@ -14,15 +14,9 @@ const ACTIVE_PATH =
 const WARNING_PATH =
   'M44.2448 33.6667L51.0011 22L57.7575 33.6667H44.2448ZM45.9678 32.6667H56.0345L51.0011 24L45.9678 32.6667ZM51.3831 31.7153C51.4875 31.6111 51.5396 31.4838 51.5396 31.3333C51.5396 31.1829 51.4875 31.0556 51.3831 30.9513C51.2789 30.847 51.1516 30.7948 51.0011 30.7948C50.8507 30.7948 50.7233 30.847 50.6191 30.9513C50.5148 31.0556 50.4626 31.1829 50.4626 31.3333C50.4626 31.4838 50.5148 31.6111 50.6191 31.7153C50.7233 31.8197 50.8507 31.8718 51.0011 31.8718C51.1516 31.8718 51.2789 31.8197 51.3831 31.7153ZM50.5011 30.1282H51.5011V26.7948H50.5011V30.1282Z';
 
-export function StateIcon({ size = 24, className, variant = 'active', ...props }: StateIconProps) {
+export function StateIcon({ variant = 'active', ...props }: StateIconProps) {
   return (
-    <IconBase
-      size={size}
-      className={className}
-      viewBox={variant === 'warning' ? WARNING_VIEW_BOX : ACTIVE_VIEW_BOX}
-      data-variant={variant}
-      {...props}
-    >
+    <IconBase viewBox={variant === 'warning' ? WARNING_VIEW_BOX : ACTIVE_VIEW_BOX} data-variant={variant} {...props}>
       <path d={variant === 'warning' ? WARNING_PATH : ACTIVE_PATH} fill='currentColor' />
     </IconBase>
   );
