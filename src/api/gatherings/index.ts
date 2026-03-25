@@ -21,9 +21,6 @@ export const GATHERING_TAGS = {
 } as const;
 
 const getBaseUrl = () => {
-  if (typeof window !== 'undefined') {
-    return '/api'; // 클라이언트: 상대 경로 → 브라우저 MSW Service Worker가 인터셉트
-  }
   const baseUrl = process.env.BACKEND_BASE_URL;
   if (!baseUrl) throw new Error('BACKEND_BASE_URL is not defined');
   return baseUrl.replace(/\/+$/, '');
@@ -35,9 +32,8 @@ export const fetchMainGatherings = async (params?: GetMainGatheringsParams): Pro
   if (params?.limit !== undefined) searchParams.set('limit', String(params.limit));
   const qs = searchParams.toString();
 
-  const isServer = typeof window === 'undefined';
   const res = await fetch(`${getBaseUrl()}/v1/gatherings/main${qs ? `?${qs}` : ''}`, {
-    ...(isServer && { next: { tags: [GATHERING_TAGS.all, GATHERING_TAGS.main] } }),
+    next: { tags: [GATHERING_TAGS.all, GATHERING_TAGS.main] },
   });
   if (!res.ok) throw new Error(`gatherings/main fetch failed: ${res.status}`);
   const json: ApiResponse<GetMainGatheringsResponse> = await res.json();
@@ -46,19 +42,12 @@ export const fetchMainGatherings = async (params?: GetMainGatheringsParams): Pro
 
 /** GET /v1/gatherings/:gatheringId — 모임 상세 (서버/클라이언트 공용) */
 export const fetchGatheringDetail = async (gatheringId: number): Promise<GetGatheringDetailResponse> => {
-  const isServer = typeof window === 'undefined';
   const res = await fetch(`${getBaseUrl()}/v1/gatherings/${gatheringId}`, {
-    ...(isServer && { next: { tags: [GATHERING_TAGS.all, GATHERING_TAGS.detail(gatheringId)] } }),
+    next: { tags: [GATHERING_TAGS.all, GATHERING_TAGS.detail(gatheringId)] },
   });
   if (!res.ok) throw new Error(`gatherings/${gatheringId} fetch failed: ${res.status}`);
   const json: ApiResponse<GetGatheringDetailResponse> = await res.json();
   return unwrapResponse(json);
-};
-
-/** GET /v1/gatherings/:gatheringId — 모임 상세 (클라이언트 전용) */
-export const getGatheringDetail = async (gatheringId: number): Promise<GetGatheringDetailResponse> => {
-  const { data } = await axiosClient.get<ApiResponse<GetGatheringDetailResponse>>(`/v1/gatherings/${gatheringId}`);
-  return unwrapResponse(data);
 };
 
 /** GET /v1/gatherings — 모임 목록 검색 (클라이언트 전용) */
