@@ -5,6 +5,7 @@ import { usersHandlers } from './users';
 import { membershipsHandlers } from './memberships';
 import { applicationsHandlers } from './applications';
 import { achievementsHandlers } from './achievements';
+import { reviewsHandlers } from './reviews';
 
 export const handlers = [
   ...todosHandlers,
@@ -13,4 +14,6 @@ export const handlers = [
   ...membershipsHandlers,
   ...gatheringsHandlers,
   ...achievementsHandlers,
+  ...applicationsHandlers,
+  ...reviewsHandlers,
 ];
