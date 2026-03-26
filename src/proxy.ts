@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 const PROTECTED_ROUTES = ['/my', '/gathering/create', '/gathering/dashboard'];
 const AUTH_ROUTES = ['/login', '/signup'];
 
-export function proxy(request: NextRequest) {
+export const proxy = (request: NextRequest) => {
   const { pathname } = request.nextUrl;
   const hasAccessToken = request.cookies.has('accessToken');
   const hasRefreshToken = request.cookies.has('refreshToken');
@@ -21,7 +21,7 @@ export function proxy(request: NextRequest) {
   }
 
   return NextResponse.next();
-}
+};
 
 export const config = {
   matcher: ['/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)'],
