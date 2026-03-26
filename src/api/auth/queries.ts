@@ -1,6 +1,7 @@
-import { queryOptions, useMutation } from '@tanstack/react-query';
+import { queryOptions, useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { checkEmail, checkNickname, login, logout, register } from './index';
+import { userKeys } from '@/api/users/queries';
 
 import type { UseMutationOptions } from '@tanstack/react-query';
 import type { LoginForm, LoginResponse, RegisterResponse, SignupForm } from './types';
@@ -40,21 +41,28 @@ export const useRegister = (options?: UseMutationOptions<RegisterResponse, Error
 
 /** POST /auth/login — 이메일 로그인 */
 export const useLogin = (options?: UseMutationOptions<LoginResponse, Error, LoginForm, unknown>) => {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: login,
-    // NOTE: 로그인 성공 시 GET /api/v1/users/me 캐시 무효화 필요
-    // users 도메인 구현 후 userKeys.me() invalidateQueries 추가 예정
     ...options,
+    onSuccess: (...args) => {
+      queryClient.invalidateQueries({ queryKey: userKeys.me() });
+      options?.onSuccess?.(...args);
+    },
   });
 };
 
 /** POST /auth/logout — 로그아웃 */
 export const useLogout = (options?: UseMutationOptions<void, Error, void, unknown>) => {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: logout,
-    // NOTE: 로그아웃 성공 시 GET /api/v1/users/me 캐시 제거 필요
-    // invalidate가 아닌 remove — 세션 종료이므로 데이터 자체를 삭제해야 함
-    // users 도메인 구현 후 userKeys.me() removeQueries 추가 예정
     ...options,
+    onSuccess: (...args) => {
+      queryClient.removeQueries({ queryKey: userKeys.me() });
+      options?.onSuccess?.(...args);
+    },
   });
 };
