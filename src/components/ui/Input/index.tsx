@@ -5,7 +5,7 @@ import { fieldControlVariants, fieldGradientFocusWrapperClass } from '@/componen
 import { cn } from '@/lib/cn';
 
 type InputProps = ComponentPropsWithoutRef<'input'> & {
-  label?: string;
+  label?: React.ReactNode;
   error?: string;
 };
 
