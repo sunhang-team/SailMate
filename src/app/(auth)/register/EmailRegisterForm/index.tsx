@@ -19,6 +19,7 @@ export function EmailRegisterForm() {
   const {
     register,
     handleSubmit,
+    trigger,
     formState: { errors, isValid },
   } = useForm<SignupForm>({
     resolver: zodResolver(signupFormSchema),
@@ -85,7 +86,9 @@ export function EmailRegisterForm() {
           placeholder='영문, 숫자, 특수문자 포함 8자 이상 입력해주세요.'
           type={showPassword ? 'text' : 'password'}
           error={errors.password?.message}
-          {...register('password')}
+          {...register('password', {
+            onBlur: () => trigger('passwordConfirmation'),
+          })}
           className='h-11'
         />
         <button
