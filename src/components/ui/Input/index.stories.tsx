@@ -10,6 +10,9 @@ const meta: Meta<typeof Input> = {
       control: 'select',
       options: ['text', 'password', 'email'],
     },
+    error: {
+      control: 'text',
+    },
   },
 } satisfies Meta<typeof Input>;
 
@@ -33,11 +36,11 @@ export const Nickname: Story = {
 };
 
 // 3. 에러 발생 상태 (Error)
-export const WithError: Story = {
+export const WithEmailError: Story = {
   args: {
     label: '이메일',
     placeholder: '이메일을 입력해주세요',
-    error: '올바른 이메일 형식이 아닙니다.',
+    error: '이메일 형식이 올바르지 않습니다.',
     defaultValue: 'wrong-email@',
   },
 };
@@ -51,9 +54,29 @@ export const Password: Story = {
   },
 };
 
-// 5. 라벨 없는 상태 (No Label)
+export const WithPasswordError: Story = {
+  args: {
+    label: '비밀번호',
+    type: 'password',
+    placeholder: '영문, 숫자, 특수문자 포함 8자 이상 입력해주세요',
+    error: '영문, 숫자, 특수문자 포함 8자 이상 입력해주세요',
+    defaultValue: 'wrong-password',
+  },
+};
+
 export const NoLabel: Story = {
   args: {
     placeholder: '',
   },
+};
+
+/** default · focus · error · disabled 한 화면에서 비교 */
+export const StatesMatrix: Story = {
+  render: () => (
+    <div className='grid max-w-md grid-cols-1 gap-6'>
+      <Input label='Default' placeholder='기본 상태' />
+      <Input label='Focus' placeholder='포커스 시 링·테두리 (탭으로 포커스)' autoFocus />
+      <Input label='Error' placeholder='에러' error='필수 입력 항목입니다.' defaultValue='invalid' />
+    </div>
+  ),
 };

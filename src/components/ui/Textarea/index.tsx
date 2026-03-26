@@ -1,32 +1,58 @@
-import { TextareaHTMLAttributes } from 'react';
-import { cva, VariantProps } from 'class-variance-authority';
+'use client';
+
+import { useId, forwardRef, type ComponentPropsWithoutRef } from 'react';
+import { fieldControlVariants, fieldGradientFocusWrapperClass } from '@/components/ui/fieldControlVariants';
 import { cn } from '@/lib/cn';
 
-const textareaVariants = cva('w-full px-3 py-2 outline-none focus:ring-2 resize-none', {
-  variants: {
-    variant: {
-      default: 'border border-gray-300 rounded-md',
-    },
-    size: {
-      sm: 'text-sm',
-      md: 'text-base',
-      lg: 'text-base',
-    },
-    state: {
-      default: '',
-      error: 'border-red-500 focus:ring-red-500',
-    },
-  },
-  defaultVariants: {
-    variant: 'default',
-    size: 'md',
-    state: 'default',
-  },
+const sizeClassName = {
+  lg: 'text-base min-h-[140px]',
+} as const;
+
+type TextareaProps = ComponentPropsWithoutRef<'textarea'> & {
+  label?: string;
+  error?: string;
+  size?: keyof typeof sizeClassName;
+};
+
+export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(function Textarea(
+  { label, error, className, id: idProp, size = 'lg', rows, ...props },
+  ref,
+) {
+  const uid = useId();
+  const id = idProp ?? uid;
+  const hasError = !!error;
+
+  const control = (
+    <textarea
+      id={id}
+      ref={ref}
+      rows={rows ?? 4}
+      aria-invalid={hasError || undefined}
+      className={cn(
+        fieldControlVariants({ state: hasError ? 'error' : 'default' }),
+        sizeClassName[size],
+        'resize-none',
+        className,
+      )}
+      {...props}
+    />
+  );
+
+  return (
+    <div className='flex flex-col gap-1.5'>
+      {label && (
+        <label htmlFor={id} className='text-sm font-bold text-gray-900'>
+          {label}
+        </label>
+      )}
+      {hasError ? control : <div className={fieldGradientFocusWrapperClass}>{control}</div>}
+      {error && (
+        <p className='text-xs text-red-200' role='alert'>
+          {error}
+        </p>
+      )}
+    </div>
+  );
 });
 
-interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement>, VariantProps<typeof textareaVariants> {}
-
-export function Textarea({ variant, size, state, className, ...props }: TextareaProps) {
-  const textareaClasses = cn(textareaVariants({ variant, size, state }), className);
-  return <textarea className={textareaClasses} {...props} />;
-}
+Textarea.displayName = 'Textarea';
