@@ -1,7 +1,6 @@
 import axios, { type AxiosError, type AxiosInstance, type AxiosRequestConfig } from 'axios';
 
 const REFRESH_PATH = '/auth/refresh';
-const LOGIN_PATH = '/auth/login';
 
 const refreshClient = axios.create({
   baseURL: '/api',
@@ -35,9 +34,6 @@ axiosClient.interceptors.response.use(
       await refreshClient.post(REFRESH_PATH);
       return await axiosClient.request(config);
     } catch (refreshError) {
-      if (typeof window !== 'undefined') {
-        window.location.assign(LOGIN_PATH);
-      }
       throw refreshError;
     }
   },
