@@ -31,7 +31,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(function 
       className={cn(
         fieldControlVariants({ state: hasError ? 'error' : 'default' }),
         sizeClassName[size],
-        'resize-y',
+        'resize-none',
         className,
       )}
       {...props}
