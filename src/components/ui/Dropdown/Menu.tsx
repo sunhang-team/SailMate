@@ -14,7 +14,7 @@ interface MenuProps {
 }
 
 export function Menu({ children, className }: MenuProps) {
-  const menuRef = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLUListElement>(null);
   const { isOpen, close } = useDropdown();
   const [shouldRender, setShouldRender] = useState(isOpen);
 
@@ -48,12 +48,13 @@ export function Menu({ children, className }: MenuProps) {
 
   return (
     <div
-      ref={menuRef}
       role='listbox'
       onKeyDown={handleKeyDown}
-      className={cn('absolute mt-2', isOpen ? 'animate-modal-fade-in' : 'animate-modal-fade-out', className)}
+      className={cn('absolute z-50 mt-2', isOpen ? 'animate-modal-fade-in' : 'animate-modal-fade-out')}
     >
-      <ul>{children}</ul>
+      <ul ref={menuRef} className={cn('shadow-01 rounded-lg border border-blue-100 bg-white', className)}>
+        {children}
+      </ul>
     </div>
   );
 }
