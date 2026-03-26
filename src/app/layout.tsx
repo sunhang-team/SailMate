@@ -4,6 +4,7 @@ import { MSWProvider } from '@/providers/MSWProvider';
 import { QueryParamsProvider } from '@/providers/QueryParamsProvider';
 import { QueryProvider } from '@/providers/QueryProvider';
 import { OverlayProvider } from '@/providers/OverlayProvider';
+import { Footer } from '@/components/Footer';
 
 export default function RootLayout({
   children,
@@ -17,6 +18,7 @@ export default function RootLayout({
           <QueryProvider>
             <QueryParamsProvider>
               {children}
+              <Footer />
               <OverlayProvider />
               <div id='modal-root' />
             </QueryParamsProvider>
