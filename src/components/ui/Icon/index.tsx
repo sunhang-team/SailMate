@@ -23,6 +23,7 @@ export { PaginationIcon } from './PaginationIcon';
 export { PeriodIcon } from './PeriodIcon';
 export { PeopleIcon } from './PeopleIcon';
 export { PersonIcon } from './PersonIcon';
+export { ProfilePlaceholderIcon } from './ProfilePlaceholderIcon';
 export { ProjectIcon } from './ProjectIcon';
 export { ProgressIcon } from './ProgressIcon';
 export { RatingIcon } from './RatingIcon';
