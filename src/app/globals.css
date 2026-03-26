@@ -90,6 +90,31 @@
   background: linear-gradient(to right, #1e58f8, #00ccff);
 }
 
+@utility text-gradient-primary {
+  background: linear-gradient(to right, #1e58f8, #00ccff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+@utility border-gradient-primary {
+  position: relative;
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(to right, #1e58f8, #00ccff);
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: destination-out;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+}
+
 @utility bg-gradient-sub-100 {
   background: linear-gradient(to right, #f1fcff, #e5faff);
 }

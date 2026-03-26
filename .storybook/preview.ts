@@ -1,7 +1,14 @@
 import type { Preview } from '@storybook/nextjs-vite';
+import { pretendard } from '../src/app/fonts';
 import '../src/app/globals.css';
 
 const preview: Preview = {
+  decorators: [
+    (Story) => {
+      document.documentElement.classList.add(pretendard.variable, 'font-pretendard');
+      return Story();
+    },
+  ],
   parameters: {
     controls: {
       matchers: {
