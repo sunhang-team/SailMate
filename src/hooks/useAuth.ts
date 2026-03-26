@@ -1,6 +1,8 @@
-import { userQueries } from '@/api/users/queries';
-import { User } from '@/api/users/types';
 import { useQuery } from '@tanstack/react-query';
+
+import { userQueries } from '@/api/users/queries';
+
+import type { User } from '@/api/users/types';
 
 interface AuthState {
   user: User | null;

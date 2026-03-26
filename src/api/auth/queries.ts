@@ -1,7 +1,8 @@
 import { queryOptions, useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { checkEmail, checkNickname, login, logout, register } from './index';
 import { userKeys } from '@/api/users/queries';
+
+import { checkEmail, checkNickname, login, logout, register } from './index';
 
 import type { UseMutationOptions } from '@tanstack/react-query';
 import type { LoginForm, LoginResponse, RegisterResponse, SignupForm } from './types';
