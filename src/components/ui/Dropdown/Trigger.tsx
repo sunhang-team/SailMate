@@ -36,7 +36,7 @@ export function Trigger({ children }: TriggerProps) {
       onClick={toggle}
       onKeyDown={handleKeyDown}
       style={{ transitionDuration: `${OVERLAY_ANIMATION_DURATION}ms` }}
-      className={cn('border transition-colors', isOpen ? 'border-black' : 'border-transparent')}
+      className={cn('transition-colors')}
     >
       {children}
     </button>

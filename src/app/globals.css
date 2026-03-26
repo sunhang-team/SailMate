@@ -202,3 +202,15 @@
 .animate-modal-fade-out {
   animation: modal-fade-out 0.3s ease-in forwards;
 }
+
+@utility custom-scrollbar {
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--color-blue-100);
+    border-radius: 9999px;
+    max-height: 40px;
+  }
+}
