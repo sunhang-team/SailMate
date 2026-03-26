@@ -1,11 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
-import { Badge } from '.';
+import { Tag } from '.';
 
 const meta = {
-  title: 'components/Badge',
-  component: Badge,
+  title: 'components/Tag',
+  component: Tag,
   args: {
-    children: 'Badge',
+    children: 'Tag',
   },
   parameters: {
     layout: 'centered',
@@ -17,7 +17,7 @@ const meta = {
       options: ['category', 'status', 'tag'],
     },
   },
-} satisfies Meta<typeof Badge>;
+} satisfies Meta<typeof Tag>;
 
 export default meta;
 
@@ -39,7 +39,7 @@ export const Status: Story = {
   },
 };
 
-export const Tag: Story = {
+export const TagVariant: Story = {
   args: {
     variant: 'tag',
     children: '태그',

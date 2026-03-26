@@ -2,7 +2,7 @@ import { type HTMLAttributes, type ReactNode } from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/cn';
 
-const badgeVariants = cva('', {
+const tagVariants = cva('', {
   variants: {
     variant: {
       category: '',
@@ -15,13 +15,13 @@ const badgeVariants = cva('', {
   },
 });
 
-interface BadgeProps extends HTMLAttributes<HTMLSpanElement>, VariantProps<typeof badgeVariants> {
+interface TagProps extends HTMLAttributes<HTMLSpanElement>, VariantProps<typeof tagVariants> {
   children: ReactNode;
 }
 
-export function Badge({ children, variant, className, ...props }: BadgeProps) {
+export function Tag({ children, variant, className, ...props }: TagProps) {
   return (
-    <span className={cn(badgeVariants({ variant }), className)} {...props}>
+    <span className={cn(tagVariants({ variant }), className)} {...props}>
       {children}
     </span>
   );
