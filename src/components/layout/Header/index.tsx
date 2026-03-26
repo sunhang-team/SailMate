@@ -54,9 +54,16 @@ export function Header() {
         </div>
 
         <div className={cn('flex items-center', isLoggedIn ? 'lg:gap-4' : 'lg:gap-2')}>
-          {isLoading ? (
-            <div className='h-[42px] w-[154px]' />
-          ) : isLoggedIn ? (
+          {isLoading || !isLoggedIn ? (
+            <>
+              <Button variant='login-outline' size='login-sm' onClick={handleMoveLogin}>
+                로그인
+              </Button>
+              <Button variant='primary' size='join-sm' onClick={handleMoveSignup}>
+                회원가입
+              </Button>
+            </>
+          ) : (
             <>
               <button
                 type='button'
@@ -88,15 +95,6 @@ export function Header() {
                   </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
-            </>
-          ) : (
-            <>
-              <Button variant='login-outline' size='login-sm' onClick={handleMoveLogin}>
-                로그인
-              </Button>
-              <Button variant='primary' size='join-sm' onClick={handleMoveSignup}>
-                회원가입
-              </Button>
             </>
           )}
         </div>
