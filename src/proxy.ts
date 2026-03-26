@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const PROTECTED_ROUTES = ['/my', '/gatherings/new', '/gathering/dashboard'];
-const AUTH_ROUTES = ['/login', '/register'];
+const PROTECTED_ROUTES = ['/my', '/gathering/create', '/gathering/dashboard'];
+const AUTH_ROUTES = ['/login', '/signup'];
 
 export const proxy = (request: NextRequest) => {
   const { pathname } = request.nextUrl;

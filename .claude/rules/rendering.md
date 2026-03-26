@@ -56,6 +56,7 @@ paths:
 - 컴포넌트 내부에서 `isLoading`, `isError` 분기 작성 금지
 - 로딩 처리는 Suspense (또는 prefetch), 에러 처리는 ErrorBoundary에 위임
 - 컴포넌트는 데이터가 있는 상태만 가정하고 렌더링 로직에 집중
+- **예외 — 선택적 인증 UI 분기**: `useAuth` 훅은 로그인/비로그인 상태에 따라 다른 UI를 보여줘야 하므로 `useQuery` + `isError` 체크를 의도적으로 사용. `useSuspenseQuery`를 사용하면 비로그인 시 에러가 ErrorBoundary로 전파되어 레이아웃 전체가 깨지므로 이 패턴은 허용
 
 ## ErrorBoundary / SuspenseBoundary 사용 규칙
 
