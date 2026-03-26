@@ -1,8 +1,11 @@
-import type { Meta, StoryObj } from '@storybook/nextjs-vite';
-import { Dropdown } from '.';
 import { useState } from 'react';
-import { ArrowIcon, TypeIcon, CloseIcon, CategoryIcon } from '../Icon';
+
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+
 import { cn } from '@/lib/cn';
+
+import { ArrowIcon, TypeIcon, CloseIcon, CategoryIcon } from '../Icon';
+import { Dropdown } from '.';
 import { useDropdown } from './context';
 
 const meta = {
