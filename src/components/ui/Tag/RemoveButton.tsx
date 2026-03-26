@@ -11,7 +11,7 @@ export function RemoveButton({ onRemove }: RemoveButtonProps) {
     <button
       type='button'
       onClick={onRemove}
-      className='inline-flex cursor-pointer items-center justify-center text-gray-600'
+      className='inline-flex items-center justify-center text-gray-600'
       aria-label='삭제'
     >
       <CloseIcon size={24} />
