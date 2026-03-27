@@ -18,6 +18,7 @@ export const userQueries = {
     queryOptions({
       queryKey: userKeys.me(),
       queryFn: () => getUsersMe(),
+      retry: false,
     }),
   /** GET /v1/users/:userId - 다른 사람 프로필 조회*/
   userId: (userId: number) =>
