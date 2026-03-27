@@ -1,6 +1,27 @@
 import { cn } from '@/lib/cn';
 import { PaginationIcon } from '@/components/ui/Icon/PaginationIcon';
 
+const ELLIPSIS_THRESHOLD = 7; // 이 값 이하면 전체 페이지 표시, 초과하면 ... 사용
+const DELTA = 1; // 현재 페이지 앞뒤로 보여줄 페이지 수
+
+// 페이지가 많을 때 ... 포함한 번호 배열 반환
+const getPageRange = (currentPage: number, totalPages: number): (number | '...')[] => {
+  if (totalPages <= ELLIPSIS_THRESHOLD) {
+    return Array.from({ length: totalPages }, (_, i) => i + 1);
+  }
+
+  const left = Math.max(2, currentPage - DELTA);
+  const right = Math.min(totalPages - 1, currentPage + DELTA);
+  const pages: (number | '...')[] = [1];
+
+  if (left > 2) pages.push('...');
+  for (let i = left; i <= right; i++) pages.push(i);
+  if (right < totalPages - 1) pages.push('...');
+  pages.push(totalPages);
+
+  return pages;
+};
+
 interface PaginationBaseProps {
   currentPage: number;
   totalPages: number;
@@ -29,20 +50,26 @@ export function Pagination({ variant, currentPage, totalPages, onPageChange, cla
 
       {variant === 'numbered' && (
         <div className='flex items-center justify-center gap-6'>
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-            <button
-              key={page}
-              onClick={() => onPageChange(page)}
-              aria-label={`${page}페이지`}
-              aria-current={page === currentPage ? 'page' : undefined}
-              className={cn(
-                'text-body-02-m cursor-pointer transition-colors',
-                page === currentPage ? 'text-gray-700' : 'text-gray-300 hover:text-gray-500',
-              )}
-            >
-              {page}
-            </button>
-          ))}
+          {getPageRange(currentPage, totalPages).map((item, index) =>
+            item === '...' ? (
+              <span key={`ellipsis-${index}`} className='text-body-02-m text-gray-300'>
+                ...
+              </span>
+            ) : (
+              <button
+                key={item}
+                onClick={() => onPageChange(item)}
+                aria-label={`${item}페이지`}
+                aria-current={item === currentPage ? 'page' : undefined}
+                className={cn(
+                  'text-body-02-m cursor-pointer transition-colors',
+                  item === currentPage ? 'text-gray-700' : 'text-gray-300 hover:text-gray-500',
+                )}
+              >
+                {item}
+              </button>
+            ),
+          )}
         </div>
       )}
 

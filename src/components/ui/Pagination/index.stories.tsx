@@ -43,6 +43,57 @@ export const NumberedLast: Story = {
   },
 };
 
+// ─── Numbered (많은 페이지 / 말줄임) ────────────────────────
+export const NumberedEllipsisFirst: Story = {
+  name: '[Numbered] 말줄임 - 첫 페이지',
+  args: {
+    variant: 'numbered',
+    currentPage: 1,
+    totalPages: 10,
+    onPageChange: () => {},
+  },
+};
+
+export const NumberedEllipsisMiddle: Story = {
+  name: '[Numbered] 말줄임 - 중간 페이지',
+  args: {
+    variant: 'numbered',
+    currentPage: 5,
+    totalPages: 10,
+    onPageChange: () => {},
+  },
+};
+
+export const NumberedEllipsisNearStart: Story = {
+  name: '[Numbered] 말줄임 - 시작 근처',
+  args: {
+    variant: 'numbered',
+    currentPage: 3,
+    totalPages: 8,
+    onPageChange: () => {},
+  },
+};
+
+export const NumberedEllipsisNearEnd: Story = {
+  name: '[Numbered] 말줄임 - 끝 근처',
+  args: {
+    variant: 'numbered',
+    currentPage: 8,
+    totalPages: 10,
+    onPageChange: () => {},
+  },
+};
+
+export const NumberedEllipsisLast: Story = {
+  name: '[Numbered] 말줄임 - 마지막 페이지',
+  args: {
+    variant: 'numbered',
+    currentPage: 10,
+    totalPages: 10,
+    onPageChange: () => {},
+  },
+};
+
 // ─── Simple ─────────────────────────────────────────────────
 export const SimpleDefault: Story = {
   name: '[Simple] 기본',
