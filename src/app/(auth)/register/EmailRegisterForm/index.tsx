@@ -47,7 +47,7 @@ export function EmailRegisterForm() {
             type='email'
             error={errors.email?.message}
             {...register('email')}
-            className='h-12'
+            className='h-11'
           />
         </div>
         <Button variant='check' size='check' type='button'>
@@ -67,7 +67,7 @@ export function EmailRegisterForm() {
             placeholder='닉네임을 입력해주세요.'
             error={errors.nickname?.message}
             {...register('nickname')}
-            className='h-12'
+            className='h-11'
           />
         </div>
         <Button variant='check' size='check' type='button'>
@@ -89,7 +89,7 @@ export function EmailRegisterForm() {
           {...register('password', {
             onBlur: () => trigger('passwordConfirmation'),
           })}
-          className='h-12'
+          className='h-11'
         />
         <button
           type='button'
@@ -113,7 +113,7 @@ export function EmailRegisterForm() {
           type={showPasswordConfirm ? 'text' : 'password'}
           error={errors.passwordConfirmation?.message}
           {...register('passwordConfirmation')}
-          className='h-12'
+          className='h-11'
         />
         <button
           type='button'

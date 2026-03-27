@@ -49,7 +49,7 @@ export function EmailLoginForm() {
         type='email'
         error={errors.email?.message}
         {...register('email')}
-        className='h-12'
+        className='h-11'
       />
       {/* 비밀번호 입력 필드 + 보기/숨기기 토글 버튼 */}
       <div className='relative'>
@@ -63,7 +63,7 @@ export function EmailLoginForm() {
           type={showPassword ? 'text' : 'password'}
           error={errors.password?.message}
           {...register('password')}
-          className='h-12'
+          className='h-11'
         />
         <button
           type='button'
