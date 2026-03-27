@@ -1,20 +1,21 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 
+import { loginFormSchema } from '@/api/auth/schemas';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { VisibilityIcon } from '@/components/ui/Icon';
+
 import { useLogin } from '@/api/auth/queries';
-import { loginFormSchema } from '@/api/auth/schemas';
 
-import type { LoginForm as LoginFormValues } from '@/api/auth/types';
+import type { LoginForm } from '@/api/auth/types';
 
-export function LoginForm() {
+export function EmailLoginForm() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
 
@@ -23,7 +24,7 @@ export function LoginForm() {
     handleSubmit,
     setError,
     formState: { errors, isValid },
-  } = useForm<LoginFormValues>({
+  } = useForm<LoginForm>({
     resolver: zodResolver(loginFormSchema),
     mode: 'onBlur',
   });
@@ -33,34 +34,36 @@ export function LoginForm() {
     onError: () => setError('root', { message: '이메일 또는 비밀번호가 올바르지 않습니다.' }),
   });
 
-  const onSubmit = (data: LoginFormValues) => loginMutate(data);
+  const onSubmit = (data: LoginForm) => loginMutate(data);
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-6'>
-      <div className='mt-2'>
-        <Input
-          label={
-            <>
-              이메일 <span className='text-blue-400'>*</span>
-            </>
-          }
-          type='email'
-          placeholder='이메일을 입력해주세요'
-          error={errors.email?.message}
-          {...register('email')}
-        />
-      </div>
+    <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-8'>
+      {/* 이메일 입력 필드 */}
+      <Input
+        label={
+          <>
+            이메일 <span className='ml-1 text-blue-400'>*</span>
+          </>
+        }
+        placeholder='이메일을 입력해주세요'
+        type='email'
+        error={errors.email?.message}
+        {...register('email')}
+        className='h-12'
+      />
+      {/* 비밀번호 입력 필드 + 보기/숨기기 토글 버튼 */}
       <div className='relative'>
         <Input
           label={
             <>
-              비밀번호 <span className='text-blue-400'>*</span>
+              비밀번호 <span className='ml-1 text-blue-400'>*</span>
             </>
           }
-          type={showPassword ? 'text' : 'password'}
           placeholder='영문, 숫자, 특수문자 포함 8자 이상 입력해주세요'
+          type={showPassword ? 'text' : 'password'}
           error={errors.password?.message}
           {...register('password')}
+          className='h-12'
         />
         <button
           type='button'
@@ -71,23 +74,20 @@ export function LoginForm() {
           <VisibilityIcon variant={showPassword ? 'on' : 'off'} size={20} />
         </button>
       </div>
+
+      {/* 로그인 API 실패 시 서버 에러 메시지 (이메일/비밀번호 불일치 등) */}
       {errors.root && <p className='text-small-02-r text-center text-red-200'>{errors.root.message}</p>}
 
+      {/* 로그인 제출 버튼 — 유효성 검사 통과 전·API 요청 중 비활성화 */}
       <Button
-        type='submit'
         variant='primary'
         size='join-login'
-        className='mt-6 w-full'
-        disabled={!isValid || isPending}
+        type='submit'
+        disabled={!isValid || isPending} // isPending: API 응답 대기 중 이중 제출 방지
+        className='mt-3 w-full'
       >
         로그인
       </Button>
-      <p className='text-small-01-r mt-4 text-center text-gray-800'>
-        완성도가 처음이신가요?
-        <Link href='/signup' className='text-small-01-r ml-3 text-blue-400'>
-          회원가입
-        </Link>
-      </p>
     </form>
   );
 }
