@@ -1,26 +1,8 @@
+'use client';
+
 import { cn } from '@/lib/cn';
+import { getPageRange } from '@/lib/getPageRange';
 import { PaginationIcon } from '@/components/ui/Icon/PaginationIcon';
-
-const ELLIPSIS_THRESHOLD = 7; // 이 값 이하면 전체 페이지 표시, 초과하면 ... 사용
-const DELTA = 1; // 현재 페이지 앞뒤로 보여줄 페이지 수
-
-// 페이지가 많을 때 ... 포함한 번호 배열 반환
-const getPageRange = (currentPage: number, totalPages: number): (number | '...')[] => {
-  if (totalPages <= ELLIPSIS_THRESHOLD) {
-    return Array.from({ length: totalPages }, (_, i) => i + 1);
-  }
-
-  const left = Math.max(2, currentPage - DELTA);
-  const right = Math.min(totalPages - 1, currentPage + DELTA);
-  const pages: (number | '...')[] = [1];
-
-  if (left > 2) pages.push('...');
-  for (let i = left; i <= right; i++) pages.push(i);
-  if (right < totalPages - 1) pages.push('...');
-  pages.push(totalPages);
-
-  return pages;
-};
 
 interface PaginationBaseProps {
   currentPage: number;

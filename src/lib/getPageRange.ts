@@ -2,7 +2,13 @@
  * 페이지네이션에 표시할 페이지 번호 배열을 반환합니다.
  * 페이지 수가 많을 때 현재 페이지 주변만 보여주고 나머지는 '...'로 축약합니다.
  */
+const ELLIPSIS_THRESHOLD = 7; // 이 값 이하면 전체 페이지 표시, 초과하면 ... 사용
+
 export const getPageRange = (currentPage: number, totalPages: number): (number | '...')[] => {
+  if (totalPages <= ELLIPSIS_THRESHOLD) {
+    return Array.from({ length: totalPages }, (_, i) => i + 1);
+  }
+
   // 현재 페이지 기준 양쪽으로 보여줄 페이지 수
   // delta=1 → currentPage ±1 (ex. 10이면 9, 10, 11)
   const delta = 1;
