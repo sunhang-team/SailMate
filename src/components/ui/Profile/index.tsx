@@ -7,15 +7,13 @@ import { ProfilePlaceholderIcon } from '@/components/ui/Icon';
 
 interface ProfileProps {
   imageUrl?: string | null;
-  nickname?: string;
   className?: string;
 }
 
-export function Profile({ imageUrl, nickname, className }: ProfileProps) {
+export function Profile({ imageUrl, className }: ProfileProps) {
   const [failedImageUrl, setFailedImageUrl] = useState<string | null>(null);
 
   const hasImage = !!imageUrl && failedImageUrl !== imageUrl;
-  const altText = nickname ? `${nickname} 프로필 이미지` : '프로필 이미지';
 
   if (hasImage) {
     return (
@@ -25,12 +23,7 @@ export function Profile({ imageUrl, nickname, className }: ProfileProps) {
           className,
         )}
       >
-        <img
-          src={imageUrl}
-          alt={altText}
-          className='h-full w-full object-cover'
-          onError={() => setFailedImageUrl(imageUrl)}
-        />
+        <img src={imageUrl} className='h-full w-full object-cover' onError={() => setFailedImageUrl(imageUrl)} />
       </span>
     );
   }
