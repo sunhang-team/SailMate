@@ -10,7 +10,6 @@ import { loginFormSchema } from '@/api/auth/schemas';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { VisibilityIcon } from '@/components/ui/Icon';
-
 import { useLogin } from '@/api/auth/queries';
 
 import type { LoginForm } from '@/api/auth/types';
@@ -30,7 +29,7 @@ export function EmailLoginForm() {
   });
 
   const { mutate: loginMutate, isPending } = useLogin({
-    onSuccess: () => router.push('/'),
+    onSuccess: () => router.push('/main'),
     onError: () => setError('root', { message: '이메일 또는 비밀번호가 올바르지 않습니다.' }),
   });
 
