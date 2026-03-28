@@ -1,4 +1,5 @@
 import { cn } from '@/lib/cn';
+
 import { Card } from '../Card';
 
 interface GatheringCardHeaderProps {
