@@ -33,10 +33,7 @@ const overflowSizeVariants = cva(
 );
 
 interface AvatarItem {
-<<<<<<< HEAD
   id?: number;
-=======
->>>>>>> d3ff22e (feat: AvatarGroup 컴포넌트 구현)
   imageUrl?: string | null;
 }
 
