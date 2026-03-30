@@ -11,11 +11,12 @@ const buttonVariants = cva('cursor-pointer transition-colors disabled:cursor-not
       check: 'rounded-lg text-small-01-sb text-white bg-blue-300 disabled:bg-gray-300',
       'login-outline': 'rounded-lg text-body-02-m text-gradient-primary border-gradient-primary',
       action: 'rounded-lg text-h5-b text-white',
-      participation: 'rounded-lg text-small-01-sb text-white',
-      'participation-outline-sm': 'rounded-lg text-small-01-sb text-blue-400 border-gradient-primary',
+      participation: 'rounded-lg text-small-01-sb text-white ',
+      'participation-outline-sm':
+        'rounded-lg text-small-01-sb text-blue-400 border-gradient-primary enabled:hover:bg-gradient-primary enabled:hover:text-white  disabled:bg-gray-300 disabled:text-gray-0 disabled:border disabled:border-gray-150 disabled:before:hidden',
       'file-upload': 'rounded-lg text-body-01-sb text-gray-800 border border-gray-300',
       'participation-outline':
-        'rounded-lg text-body-01-sb text-blue-400 border-gradient-primary disabled:bg-gray-100 disabled:text-gray-600 disabled:border disabled:border-gray-150 disabled:before:hidden',
+        'rounded-lg text-body-01-sb text-blue-400 border-gradient-primary enabled:hover:bg-gradient-primary enabled:hover:text-white disabled:bg-gray-100 disabled:text-gray-600 disabled:border disabled:border-gray-150 disabled:before:hidden ',
       cancel: 'rounded-lg text-body-01-sb text-blue-300 bg-blue-50 aria-pressed:bg-blue-100',
       'mypage-edit': 'rounded-lg text-body-01-m text-gray-600 bg-gray-100 border border-gray-150',
       'icon-hand': 'rounded-lg flex items-center justify-center text-gray-400 bg-gray-150',
