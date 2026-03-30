@@ -5,7 +5,7 @@ import { EmailRegisterForm } from './EmailRegisterForm';
 
 export default function Register() {
   return (
-    <main className='flex justify-center px-4 py-20'>
+    <main className='flex justify-center px-4 py-20 md:py-25'>
       <div className='w-full max-w-[496px]'>
         <h1 className='text-h5-b mb-10 text-center text-gray-900'>회원가입</h1>
         <SocialLoginButtons kakaoLabel='카카오로 시작하기' googleLabel='구글로 시작하기' />

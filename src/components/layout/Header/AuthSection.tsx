@@ -21,7 +21,7 @@ export function AuthSection() {
   });
 
   const handleMoveLogin = () => router.push('/login');
-  const handleMoveSignup = () => router.push('/signup');
+  const handleMoveSignup = () => router.push('/register');
   const handleMoveMyPage = () => router.push('/my');
 
   if (isLoading) {
