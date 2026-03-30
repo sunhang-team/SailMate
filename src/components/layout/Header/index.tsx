@@ -5,7 +5,7 @@ import { AuthSection } from './AuthSection';
 
 const NAVIGATION_ITEMS = [
   { href: '/', label: '홈' },
-  { href: '/search', label: '모임 탐색' },
+  { href: '/gatherings', label: '모임 탐색' },
   { href: '/gatherings/new', label: '모임 만들기' },
   { href: '/my', label: '내 모임' },
 ] as const;
