@@ -56,6 +56,16 @@ export const WithoutLabel: Story = {
   },
 };
 
+export const Horizontal: Story = {
+  name: '가로형 레이아웃',
+  args: {
+    value: 80,
+    label: '달성률',
+    layout: 'horizontal',
+    className: 'w-[527px]',
+  },
+};
+
 export const MemberCount: Story = {
   name: '인원 (6/20명)',
   args: {
