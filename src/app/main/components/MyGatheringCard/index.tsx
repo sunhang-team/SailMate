@@ -6,6 +6,7 @@ import { GatheringCard } from '@/components/ui/GatheringCard';
 import { PersonIcon, StudyIcon } from '@/components/ui/Icon';
 import { ProgressBar } from '@/components/ui/Progress';
 import { Tag } from '@/components/ui/Tag';
+
 import type { Member, MembershipGathering } from '@/api/memberships/types';
 
 interface MyGatheringCardProps {
