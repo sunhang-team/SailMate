@@ -1,7 +1,5 @@
 'use client';
 
-import { startTransition } from 'react';
-
 import { ReplayIcon } from '@/components/ui/Icon/ReplayIcon';
 import { Tag } from '@/components/ui/Tag';
 import { useGatheringSearchParams } from '@/hooks/useGatheringSearchParams';
@@ -13,27 +11,19 @@ export function ActiveFilters() {
   if (!hasActiveFilters) return null;
 
   const handleRemoveQuery = () => {
-    startTransition(() => {
-      setParams({ query: '', page: 1 }, { history: 'push' });
-    });
+    setParams({ query: '', page: 1 }, { history: 'push' });
   };
 
   const handleRemoveType = () => {
-    startTransition(() => {
-      setParams({ type: null, page: 1 }, { history: 'push' });
-    });
+    setParams({ type: null, page: 1 }, { history: 'push' });
   };
 
   const handleRemoveCategory = () => {
-    startTransition(() => {
-      setParams({ category: null, page: 1 }, { history: 'push' });
-    });
+    setParams({ category: null, page: 1 }, { history: 'push' });
   };
 
   const handleResetFilters = () => {
-    startTransition(() => {
-      setParams({ query: '', type: null, category: null, page: 1 }, { history: 'push' });
-    });
+    setParams({ query: '', type: null, category: null, page: 1 }, { history: 'push' });
   };
 
   return (
