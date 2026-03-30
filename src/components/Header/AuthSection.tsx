@@ -21,7 +21,7 @@ export function AuthSection() {
   });
 
   const handleMoveLogin = () => router.push('/login');
-  const handleMoveSignup = () => router.push('/signup');
+  const handleMoveRegister = () => router.push('/register');
   const handleMoveMyPage = () => router.push('/my');
 
   if (isLoading) {
@@ -33,7 +33,7 @@ export function AuthSection() {
         <Button variant='login-outline' size='login-sm' onClick={handleMoveLogin}>
           로그인
         </Button>
-        <Button variant='primary' size='join-sm' onClick={handleMoveSignup}>
+        <Button variant='primary' size='join-sm' onClick={handleMoveRegister}>
           회원가입
         </Button>
       </div>
