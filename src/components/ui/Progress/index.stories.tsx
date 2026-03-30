@@ -1,9 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 
-import { Tag } from '../Tag';
-
-import { ProgressBar } from '.';
 import { IllustrationIcon, StateIcon } from '../Icon';
+import { ProgressBar } from '.';
+import { Tag } from '../Tag';
 
 const meta = {
   title: 'components/ProgressBar',

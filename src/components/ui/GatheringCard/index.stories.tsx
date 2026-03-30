@@ -1,12 +1,11 @@
 import type { Meta } from '@storybook/nextjs-vite';
 
 import { AvatarGroup } from '../AvatarGroup';
+import { Button } from '../Button';
+import { GatheringCard } from '.';
 import { CalendarIcon, HeartIcon, ProjectIcon, ReviewIcon } from '../Icon';
 import { ProgressBar } from '../Progress';
 import { Tag } from '../Tag';
-
-import { GatheringCard } from '.';
-import { Button } from '../Button';
 
 const meta = {
   title: 'components/GatheringCard',
