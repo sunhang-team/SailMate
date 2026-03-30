@@ -66,6 +66,12 @@ interface EmailTagProps extends TagBaseProps {
   children: ReactNode;
 }
 
+interface FilterTagProps extends TagBaseProps {
+  variant: 'filter';
+  onRemove: () => void;
+  children: ReactNode;
+}
+
 export type TagProps =
   | CategoryTagProps
   | DeadlineTagProps
@@ -77,4 +83,5 @@ export type TagProps =
   | BadTagProps
   | MateTagProps
   | StatusTagProps
-  | EmailTagProps;
+  | EmailTagProps
+  | FilterTagProps;
