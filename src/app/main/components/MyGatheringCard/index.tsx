@@ -29,7 +29,7 @@ export function MyGatheringCard({ gathering, members = [], className }: MyGather
   const dDayText = dDay > 0 ? `D-${dDay}` : dDay === 0 ? 'D-Day' : `D+${Math.abs(dDay)}`;
 
   return (
-    <GatheringCard className={cn('w-[402px]', className)}>
+    <GatheringCard className={cn('w-full', className)}>
       <GatheringCard.Header>
         <Tag
           variant='category'
