@@ -33,6 +33,7 @@ const overflowSizeVariants = cva(
 );
 
 interface AvatarItem {
+  id?: number;
   imageUrl?: string | null;
 }
 
@@ -56,7 +57,7 @@ export function AvatarGroup({ avatars, max, size = 'sm', className }: AvatarGrou
     <div className={cn('flex items-center -space-x-2', className)}>
       {displayAvatars.map((avatar, index) => (
         <div
-          key={index}
+          key={avatar.id ?? index}
           className={cn(
             avatarSizeVariants({ size }),
             !avatar.imageUrl && PLACEHOLDER_COLORS[index % PLACEHOLDER_COLORS.length],

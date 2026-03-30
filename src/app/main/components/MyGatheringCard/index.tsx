@@ -6,35 +6,11 @@ import { GatheringCard } from '@/components/ui/GatheringCard';
 import { PersonIcon, StudyIcon } from '@/components/ui/Icon';
 import { ProgressBar } from '@/components/ui/Progress';
 import { Tag } from '@/components/ui/Tag';
-
-export interface GatheringType {
-  id: number;
-  type: string;
-  category: string;
-  title: string;
-  shortDescription: string;
-  tags: string[];
-  maxMembers: number;
-  currentMembers: number;
-  startDate: string;
-  endDate: string;
-  status: string;
-  myRole: string;
-  isLiked: boolean;
-}
-
-export interface MemberType {
-  userId: number;
-  nickname: string;
-  profileImage: string;
-  role: string;
-  overallAchievementRate: number;
-  isActive: boolean;
-}
+import type { Member, MembershipGathering } from '@/api/memberships/types';
 
 interface MyGatheringCardProps {
-  gathering: GatheringType;
-  members?: MemberType[];
+  gathering: MembershipGathering;
+  members?: Member[];
   className?: string;
 }
 
@@ -66,7 +42,7 @@ export function MyGatheringCard({ gathering, members = [], className }: MyGather
             )
           }
         />
-        <AvatarGroup max={4} avatars={members.map((m) => ({ imageUrl: m.profileImage }))} size='sm' />
+        <AvatarGroup max={4} avatars={members.map((m) => ({ id: m.userId, imageUrl: m.profileImage }))} size='sm' />
       </GatheringCard.Header>
       <GatheringCard.Body>
         <div className='flex flex-col gap-0.5'>
