@@ -1,6 +1,6 @@
 import './globals.css';
 import { pretendard } from './fonts';
-import { Header } from '@/components/layout/Header';
+import { Header } from '@/components/Header';
 import { MSWProvider } from '@/providers/MSWProvider';
 import { QueryParamsProvider } from '@/providers/QueryParamsProvider';
 import { QueryProvider } from '@/providers/QueryProvider';
