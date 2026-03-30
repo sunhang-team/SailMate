@@ -1,7 +1,6 @@
 import { differenceInDays, startOfDay } from 'date-fns';
 
 import { cn } from '@/lib/cn';
-
 import { AvatarGroup } from '@/components/ui/AvatarGroup';
 import { GatheringCard } from '@/components/ui/GatheringCard';
 import { PersonIcon, StudyIcon } from '@/components/ui/Icon';
