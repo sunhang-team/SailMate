@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { startTransition, useState } from 'react';
 
 import { Button } from '@/components/ui/Button';
 import { CategoryIcon } from '@/components/ui/Icon/CategoryIcon';
@@ -25,23 +25,29 @@ export function SearchForm() {
   const handleSearch = () => {
     const trimmed = inputValue.trim();
     if (trimmed) {
-      setParams({ query: trimmed, page: 1 }, { history: 'push' });
+      startTransition(() => {
+        setParams({ query: trimmed, page: 1 }, { history: 'push' });
+      });
       setInputValue('');
     }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter' && !e.nativeEvent.isComposing) {
       handleSearch();
     }
   };
 
   const handleTypeSelect = (value: string | null) => {
-    setParams({ type: value as (typeof GATHERING_TYPES)[number] | null, page: 1 }, { history: 'push' });
+    startTransition(() => {
+      setParams({ type: value as (typeof GATHERING_TYPES)[number] | null, page: 1 }, { history: 'push' });
+    });
   };
 
   const handleCategorySelect = (value: string | null) => {
-    setParams({ category: value, page: 1 }, { history: 'push' });
+    startTransition(() => {
+      setParams({ category: value, page: 1 }, { history: 'push' });
+    });
   };
 
   return (
