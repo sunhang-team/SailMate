@@ -23,9 +23,11 @@ function RotatingArrow() {
   );
 }
 
+type StatusValue = (typeof STATUS_OPTIONS)[number]['value'];
+
 interface StatusFilterProps {
-  value: string;
-  onChange: (value: string) => void;
+  value: StatusValue;
+  onChange: (value: StatusValue) => void;
 }
 
 export function StatusFilter({ value, onChange }: StatusFilterProps) {

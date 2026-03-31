@@ -1,5 +1,7 @@
 'use client';
 
+import { startTransition } from 'react';
+
 import { useGatheringSearchParams } from '@/hooks/useGatheringSearchParams';
 
 import { SortFilter } from './SortFilter';
@@ -12,12 +14,16 @@ interface GatheringFilterBarProps {
 export function GatheringFilterBar({ totalCount }: GatheringFilterBarProps) {
   const { sort, status, setParams } = useGatheringSearchParams();
 
-  const handleSortChange = (value: string) => {
-    setParams({ sort: value as 'latest' | 'popular' | 'deadline', page: 1 }, { history: 'push' });
+  const handleSortChange = (value: 'popular' | 'deadline' | 'latest') => {
+    startTransition(() => {
+      setParams({ sort: value, page: 1 }, { history: 'push' });
+    });
   };
 
-  const handleStatusChange = (value: string) => {
-    setParams({ status: value as 'RECRUITING' | 'ALL', page: 1 }, { history: 'push' });
+  const handleStatusChange = (value: 'RECRUITING' | 'ALL') => {
+    startTransition(() => {
+      setParams({ status: value, page: 1 }, { history: 'push' });
+    });
   };
 
   return (

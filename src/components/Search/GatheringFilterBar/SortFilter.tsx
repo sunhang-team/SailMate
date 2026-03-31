@@ -9,9 +9,11 @@ const SORT_OPTIONS = [
   { label: '최근등록순', value: 'latest' },
 ] as const;
 
+type SortValue = (typeof SORT_OPTIONS)[number]['value'];
+
 interface SortFilterProps {
-  value: string;
-  onChange: (value: string) => void;
+  value: SortValue;
+  onChange: (value: SortValue) => void;
 }
 
 export function SortFilter({ value, onChange }: SortFilterProps) {
