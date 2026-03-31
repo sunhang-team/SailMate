@@ -3,6 +3,7 @@ import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   transpilePackages: ['until-async'],
+  serverExternalPackages: ['msw'],
 };
 
 export default withSentryConfig(nextConfig, {

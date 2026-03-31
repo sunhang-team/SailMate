@@ -1,3 +1,5 @@
+import { HTMLAttributes } from 'react';
+
 import { cn } from '@/lib/cn';
 
 import { Card } from '../Card';
@@ -29,13 +31,16 @@ export function GatheringCardFooter({ children, className }: GatheringCardFooter
   return <div className={cn('flex gap-2', className)}>{children}</div>;
 }
 
-interface GatheringCardRootProps {
+interface GatheringCardRootProps extends HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
-  className?: string;
 }
 
-function GatheringCardRoot({ children, className }: GatheringCardRootProps) {
-  return <Card className={cn('p-7', className)}>{children}</Card>;
+function GatheringCardRoot({ children, className, ...props }: GatheringCardRootProps) {
+  return (
+    <Card className={cn('p-7', className)} {...props}>
+      {children}
+    </Card>
+  );
 }
 
 export const GatheringCard = Object.assign(GatheringCardRoot, {
