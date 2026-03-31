@@ -10,6 +10,8 @@ import { Pagination } from '@/components/ui/Pagination';
 import { gatheringQueries } from '@/api/gatherings/queries';
 import { useGatheringSearchParams } from '@/hooks/useGatheringSearchParams';
 
+const PAGE_LIMIT = 12;
+
 export function GatheringList() {
   const { query, type, category, sort, status, page, setParams } = useGatheringSearchParams();
 
@@ -21,6 +23,7 @@ export function GatheringList() {
       sort,
       status,
       page,
+      limit: PAGE_LIMIT,
     }),
   );
 
