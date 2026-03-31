@@ -6,9 +6,9 @@ import { MyGatheringSection } from './components/MyGatheringSection';
 import { PopularGatheringSection } from './components/PopularGatheringSection';
 import { gatheringQueries } from '@/api/gatherings/queries';
 import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
-import { MAX_GATHERING_LIMIT, MAIN_PAGE_REVALIDATE_TIME } from './constant/constant';
+import { MAX_GATHERING_LIMIT } from './constant/constant';
 
-export const revalidate = MAIN_PAGE_REVALIDATE_TIME;
+export const revalidate = 3600;
 
 export default async function MainPage() {
   const queryClient = getQueryClient();
