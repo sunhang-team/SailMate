@@ -1,4 +1,4 @@
-const SKELETON_COUNT = 8;
+const SKELETON_COUNT = 12;
 
 export function GatheringListSkeleton() {
   return (
