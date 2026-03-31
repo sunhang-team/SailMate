@@ -198,3 +198,15 @@ export const Status: Story = {
     </div>
   ),
 };
+
+export const Route: Story = {
+  name: '[랜딩] route',
+  render: () => (
+    <div className='bg-gray-0 flex flex-wrap gap-3 p-6'>
+      <Tag variant='route'>Route 1</Tag>
+      <Tag variant='route'>Route 2</Tag>
+      <Tag variant='route'>Route 3</Tag>
+      <Tag variant='route'>Route 4</Tag>
+    </div>
+  ),
+};

@@ -66,6 +66,21 @@ interface EmailTagProps extends TagBaseProps {
   children: ReactNode;
 }
 
+interface CoreFeatureTagProps extends TagBaseProps {
+  variant: 'coreFeature';
+  children: ReactNode;
+}
+
+interface CoreFeatureSmallTagProps extends TagBaseProps {
+  variant: 'coreFeatureSmall';
+  children: ReactNode;
+}
+
+interface RouteTagProps extends TagBaseProps {
+  variant: 'route';
+  children: ReactNode;
+}
+
 export type TagProps =
   | CategoryTagProps
   | DeadlineTagProps
@@ -77,4 +92,7 @@ export type TagProps =
   | BadTagProps
   | MateTagProps
   | StatusTagProps
-  | EmailTagProps;
+  | EmailTagProps
+  | CoreFeatureTagProps
+  | CoreFeatureSmallTagProps
+  | RouteTagProps;

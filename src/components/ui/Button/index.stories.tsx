@@ -271,3 +271,13 @@ export const IconHand: Story = {
   name: '[기타] 아이콘 핸드',
   args: { variant: 'icon-hand', size: 'icon-hand', children: <HandIcon /> },
 };
+
+export const LandingStart: Story = {
+  name: '[랜딩] 시작하기',
+  args: { variant: 'landing-start', size: 'landing-hero', children: '시작하기' },
+};
+
+export const LandingBrowse: Story = {
+  name: '[랜딩] 둘러보기',
+  args: { variant: 'landing-browse', size: 'landing-hero', children: '둘러보기' },
+};
