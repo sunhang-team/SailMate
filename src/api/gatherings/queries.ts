@@ -1,9 +1,10 @@
-import { queryOptions, useMutation, useQueryClient } from '@tanstack/react-query';
+import { queryOptions, useMutation, useQueryClient, isServer } from '@tanstack/react-query';
 
 import { invalidateServerCache } from '@/lib/invalidateServerCache';
 import {
   fetchMainGatherings,
   fetchGatheringDetail,
+  getGatheringDetail,
   getGatherings,
   createGathering,
   updateGathering,
@@ -40,7 +41,7 @@ export const gatheringQueries = {
   detail: (gatheringId: number) =>
     queryOptions({
       queryKey: gatheringKeys.detail(gatheringId),
-      queryFn: () => fetchGatheringDetail(gatheringId),
+      queryFn: () => (isServer ? fetchGatheringDetail(gatheringId) : getGatheringDetail(gatheringId)),
     }),
 
   /** GET /gatherings — 모임 목록 검색 */

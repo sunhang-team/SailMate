@@ -55,6 +55,12 @@ export const fetchGatheringDetail = async (gatheringId: number): Promise<GetGath
   return unwrapResponse(json);
 };
 
+/** GET /v1/gatherings/:gatheringId — 모임 상세 (클라이언트 전용) */
+export const getGatheringDetail = async (gatheringId: number): Promise<GetGatheringDetailResponse> => {
+  const { data } = await axiosClient.get<ApiResponse<GetGatheringDetailResponse>>(`/v1/gatherings/${gatheringId}`);
+  return unwrapResponse(data);
+};
+
 /** GET /v1/gatherings — 모임 목록 검색 (클라이언트 전용) */
 export const getGatherings = async (params?: GetGatheringsParams): Promise<GetGatheringsResponse> => {
   const { data } = await axiosClient.get<ApiResponse<GetGatheringsResponse>>('/v1/gatherings', { params });
