@@ -14,11 +14,11 @@ import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import { useToastStore } from '@/components/ui/Toast/useToastStore';
 import { useCreateGathering } from '@/api/gatherings/queries';
-import { gatheringFormSchema } from '@/api/gatherings/schemas';
+import { gatheringFormPartialSchema, gatheringFormSchema } from '@/api/gatherings/schemas';
 import { GATHERING_CATEGORIES, GATHERING_TYPES } from '@/constants/gathering';
 import { cn } from '@/lib/cn';
 
-import type { GatheringForm } from '@/api/gatherings/types';
+import type { GatheringForm, GatheringFormPartial } from '@/api/gatherings/types';
 
 const RotatingArrow = () => {
   const { isOpen } = useDropdown();
@@ -61,8 +61,8 @@ export function CreateGatheringForm() {
     control,
     watch,
     formState: { errors },
-  } = useForm<GatheringForm>({
-    resolver: zodResolver(gatheringFormSchema),
+  } = useForm<GatheringFormPartial>({
+    resolver: zodResolver(gatheringFormPartialSchema),
     mode: 'onBlur',
   });
 
@@ -78,8 +78,8 @@ export function CreateGatheringForm() {
   const isFormComplete =
     !!typeValue && !!categoryValue && !!titleValue && !!shortDescValue && !!descValue && !!goalValue;
 
-  const onSubmit = (data: GatheringForm) => {
-    mutate(data, {
+  const onSubmit = (data: GatheringFormPartial) => {
+    mutate(data as GatheringForm, {
       onSuccess: () => {
         showToast({ variant: 'success', title: '모임이 생성되었습니다.' });
         // 리다이렉트
@@ -166,7 +166,7 @@ export function CreateGatheringForm() {
               placeholder='제목을 입력하세요'
               error={errors.title?.message}
               {...register('title')}
-              className='text-small-02-rmd:text-body-02-r lg:text-body-01-r'
+              className='text-small-02-r md:text-body-02-r lg:text-body-01-r'
             />
             <p className='text-small-02-r self-end text-gray-400'>{titleValue.length}/30</p>
           </div>
