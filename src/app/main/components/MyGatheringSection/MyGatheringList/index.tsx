@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 import { MembershipGathering } from '@/api/memberships/types';
 import { Pagination } from '@/components/ui/Pagination';
-import { MyGatheringCard } from '../../MyGatheringCard';
+import { MyGatheringCard } from '../MyGatheringCard';
 import { useMyGatheringList } from './useMyGatheringList';
 
 export function MyGatheringList() {
