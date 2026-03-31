@@ -19,6 +19,7 @@ interface GatheringHeroProps {
 export function GatheringHero({ gatheringId }: GatheringHeroProps) {
   const { data } = useQuery(gatheringQueries.detail(gatheringId));
 
+  // 프로덕션: prefetch로 data 항상 존재. 개발(MSW): 서버 prefetch 실패 시 클라이언트 fetch 완료 전까지 undefined
   if (!data) return null;
 
   const TypeIcon = TYPE_ICON[data.type];
