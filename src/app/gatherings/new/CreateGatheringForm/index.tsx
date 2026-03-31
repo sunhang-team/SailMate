@@ -82,6 +82,7 @@ export function CreateGatheringForm() {
     mutate(data, {
       onSuccess: () => {
         showToast({ variant: 'success', title: '모임이 생성되었습니다.' });
+        // 리다이렉트
       },
       onError: () => {
         showToast({ variant: 'error', title: '모임 생성에 실패했습니다.' });
