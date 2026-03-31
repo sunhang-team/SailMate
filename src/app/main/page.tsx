@@ -1,11 +1,13 @@
+import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
+
 import { getQueryClient } from '@/lib/getQueryClient';
-import { DeadlineGatheringSection } from './components/DeadlineGatheringSection';
+import { gatheringQueries } from '@/api/gatherings/queries';
+
 import { HeroSection } from './components/HeroSection';
-import { LatestGatheringSection } from './components/LatestGatheringSection';
 import { MyGatheringSection } from './components/MyGatheringSection';
 import { PopularGatheringSection } from './components/PopularGatheringSection';
-import { gatheringQueries } from '@/api/gatherings/queries';
-import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
+import { DeadlineGatheringSection } from './components/DeadlineGatheringSection';
+import { LatestGatheringSection } from './components/LatestGatheringSection';
 import { MAX_GATHERING_LIMIT } from './constant/constant';
 
 export const revalidate = 3600;

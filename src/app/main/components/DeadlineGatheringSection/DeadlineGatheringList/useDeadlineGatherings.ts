@@ -5,7 +5,7 @@ import { gatheringQueries } from '@/api/gatherings/queries';
 import { usePerPage } from '@/app/main/hooks/usePerPage';
 import { FIRST_PAGE, MAX_GATHERING_LIMIT } from '@/app/main/constant/constant';
 
-export function useDeadlineGatherings() {
+export const useDeadlineGatherings = () => {
   const [page, setPage] = useState(FIRST_PAGE);
   const { data, ...rest } = useQuery(gatheringQueries.main({ limit: MAX_GATHERING_LIMIT }));
 
@@ -24,4 +24,4 @@ export function useDeadlineGatherings() {
     visibleGatherings,
     ...rest,
   };
-}
+};

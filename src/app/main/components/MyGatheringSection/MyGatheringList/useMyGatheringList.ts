@@ -5,7 +5,7 @@ import { membershipQueries } from '@/api/memberships/queries';
 import { usePerPage } from '@/app/main/hooks/usePerPage';
 import { FIRST_PAGE, MAX_GATHERING_LIMIT } from '@/app/main/constant/constant';
 
-export function useMyGatheringList() {
+export const useMyGatheringList = () => {
   const [page, setPage] = useState(FIRST_PAGE);
   const {
     data: { gatherings },
@@ -30,4 +30,4 @@ export function useMyGatheringList() {
     visibleGatherings,
     memberQueries,
   };
-}
+};

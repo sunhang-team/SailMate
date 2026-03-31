@@ -7,7 +7,7 @@ const LAPTOP_PER_PAGE = 3;
 const TABLET_PER_PAGE = 2;
 const MOBILE_PER_PAGE = 1;
 
-export function usePerPage() {
+export const usePerPage = () => {
   const [perPage, setPerPage] = useState(DEFAULT_PER_PAGE);
 
   useEffect(() => {
@@ -31,4 +31,4 @@ export function usePerPage() {
   }, []);
 
   return perPage;
-}
+};
