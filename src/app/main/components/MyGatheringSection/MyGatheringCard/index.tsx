@@ -12,10 +12,11 @@ import type { Member, MembershipGathering } from '@/api/memberships/types';
 interface MyGatheringCardProps {
   gathering: MembershipGathering;
   members?: Member[];
+  onClick?: () => void;
   className?: string;
 }
 
-export function MyGatheringCard({ gathering, members = [], className }: MyGatheringCardProps) {
+export function MyGatheringCard({ gathering, members = [], onClick, className }: MyGatheringCardProps) {
   const now = startOfDay(new Date());
   const startDate = new Date(gathering.startDate);
   const endDate = new Date(gathering.endDate);
@@ -29,7 +30,7 @@ export function MyGatheringCard({ gathering, members = [], className }: MyGather
   const dDayText = dDay > 0 ? `D-${dDay}` : dDay === 0 ? 'D-Day' : `D+${Math.abs(dDay)}`;
 
   return (
-    <GatheringCard className={cn('w-full', className)}>
+    <GatheringCard onClick={onClick} className={cn('w-full cursor-pointer', className)}>
       <GatheringCard.Header>
         <Tag
           variant='category'
