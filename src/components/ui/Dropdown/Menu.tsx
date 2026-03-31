@@ -11,9 +11,10 @@ import { useDropdown } from './context';
 interface MenuProps {
   children: ReactNode;
   className?: string;
+  containerClassName?: string;
 }
 
-export function Menu({ children, className }: MenuProps) {
+export function Menu({ children, className, containerClassName }: MenuProps) {
   const menuRef = useRef<HTMLUListElement>(null);
   const { isOpen, close } = useDropdown();
   const [shouldRender, setShouldRender] = useState(isOpen);
@@ -50,7 +51,11 @@ export function Menu({ children, className }: MenuProps) {
     <div
       role='listbox'
       onKeyDown={handleKeyDown}
-      className={cn('absolute z-50 mt-2', isOpen ? 'animate-modal-fade-in' : 'animate-modal-fade-out')}
+      className={cn(
+        'absolute top-full z-50 mt-2',
+        containerClassName,
+        isOpen ? 'animate-modal-fade-in' : 'animate-modal-fade-out',
+      )}
     >
       <ul ref={menuRef} className={cn('shadow-01 rounded-lg border border-blue-100 bg-white', className)}>
         {children}

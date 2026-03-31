@@ -1,8 +1,12 @@
+import { useState } from 'react';
+
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 
 import { Button } from '@/components/ui/Button';
+import { CheckIcon } from '@/components/ui/Icon/CheckIcon';
 import { HeartIcon, PeopleIcon, ProjectIcon, StudyIcon } from '@/components/ui/Icon';
 import { Tag } from '@/components/ui/Tag';
+import { cn } from '@/lib/cn';
 
 import { Card } from '.';
 
@@ -113,5 +117,58 @@ export const GatheringCardExample: Story = {
         </div>
       </div>
     ),
+  },
+};
+
+export const GatheringTypeSelect: Story = {
+  name: '모임 유형 선택 카드',
+  args: { children: null },
+  render: () => {
+    const [selected, setSelected] = useState<'study' | 'project' | null>(null);
+
+    const toggle = (type: 'study' | 'project') => {
+      setSelected((prev) => (prev === type ? null : type));
+    };
+
+    const isStudySelected = selected === 'study';
+    const isProjectSelected = selected === 'project';
+
+    return (
+      <div className='flex flex-col gap-4'>
+        <Card
+          className={cn(
+            'flex h-[160px] w-[828px] cursor-pointer items-center gap-6 rounded-lg px-8 shadow-none',
+            isStudySelected ? 'border-focus-100 bg-blue-50' : 'border-gray-300 bg-gray-100',
+          )}
+          onClick={() => toggle('study')}
+        >
+          <CheckIcon size={56} className={isStudySelected ? 'text-blue-300' : 'text-gray-300'} />
+          <div className='flex flex-1 flex-col gap-1'>
+            <span className={cn('text-h4-b', isStudySelected ? 'text-blue-300' : 'text-gray-600')}>스터디</span>
+            <span className={cn('text-body-01-r', isStudySelected ? 'text-blue-300' : 'text-gray-300')}>
+              함께 학습하고 성장해요
+            </span>
+          </div>
+          {isStudySelected && <StudyIcon size={56} className='text-blue-300' />}
+        </Card>
+
+        <Card
+          className={cn(
+            'flex h-[160px] w-[828px] cursor-pointer items-center gap-6 rounded-lg px-8 shadow-none',
+            isProjectSelected ? 'border-focus-100 bg-blue-50' : 'border-gray-300 bg-gray-100',
+          )}
+          onClick={() => toggle('project')}
+        >
+          <CheckIcon size={56} className={isProjectSelected ? 'text-blue-300' : 'text-gray-300'} />
+          <div className='flex flex-1 flex-col gap-1'>
+            <span className={cn('text-h4-b', isProjectSelected ? 'text-blue-300' : 'text-gray-600')}>프로젝트</span>
+            <span className={cn('text-body-01-r', isProjectSelected ? 'text-blue-300' : 'text-gray-300')}>
+              함께 만들고 완성해요
+            </span>
+          </div>
+          {isProjectSelected && <ProjectIcon size={56} className='text-blue-300' />}
+        </Card>
+      </div>
+    );
   },
 };
