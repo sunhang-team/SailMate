@@ -6,7 +6,7 @@ import { SuspenseBoundary } from '@/components/SuspenseBoundary';
 
 export default function GatheringsPage() {
   return (
-    <main>
+    <main className='min-h-screen'>
       <SearchHero>
         <SearchForm />
       </SearchHero>
