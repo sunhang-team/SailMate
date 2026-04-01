@@ -73,7 +73,9 @@ export function ImageUpload({ value, onChange, error }: ImageUploadProps) {
 
   const handleDragLeave = (e: React.DragEvent) => {
     e.preventDefault();
-    setIsDragging(false);
+    if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+      setIsDragging(false);
+    }
   };
 
   const handleDrop = (e: React.DragEvent) => {
@@ -123,7 +125,15 @@ export function ImageUpload({ value, onChange, error }: ImageUploadProps) {
         </div>
       ) : (
         /* ── 1장 이상: 썸네일 + 빈 슬롯 ── */
-        <div className='flex flex-row gap-2 overflow-x-auto md:flex-wrap md:overflow-x-visible'>
+        <div
+          className={cn(
+            'flex flex-row gap-2 overflow-x-auto rounded-lg md:flex-wrap md:overflow-x-visible',
+            isDragging && 'outline-2 outline-blue-300 outline-dashed',
+          )}
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
+        >
           {value.map((file, index) => {
             const isPdf = file.type === 'application/pdf';
             const previewUrl = isPdf ? undefined : previewUrls.get(file);
@@ -139,9 +149,7 @@ export function ImageUpload({ value, onChange, error }: ImageUploadProps) {
                     <p className='text-body-02-r w-full truncate px-3 text-center text-gray-600'>{file.name}</p>
                   </div>
                 ) : (
-                  // blob URL(브라우저 메모리의 임시 주소)은 next/image가 서버에서 접근할 수 없어
-                  // <img> 태그를 직접 사용. ESLint 규칙을 이 줄만 예외 처리
-                  // eslint-disable-next-line @next/next/no-img-element
+                  // blob URL(브라우저 메모리의 임시 주소)은 next/image가 서버에서 접근할 수 없어 <img> 태그를 직접 사용
                   <img src={previewUrl} alt={file.name} className='h-full w-full object-cover' />
                 )}
 
@@ -163,7 +171,7 @@ export function ImageUpload({ value, onChange, error }: ImageUploadProps) {
               key={`empty-${i}`}
               type='button'
               onClick={openFilePicker}
-              className='bg-gray-150 flex aspect-[3/4] w-[200px] shrink-0 items-center justify-center gap-1 rounded-lg border border-dashed border-gray-300 md:w-[calc((100%-1rem)/3)] lg:w-[264px]'
+              className='bg-gray-150 flex aspect-3/4 w-[200px] shrink-0 cursor-pointer items-center justify-center gap-1 rounded-lg border border-dashed border-gray-300 md:w-[calc((100%-1rem)/3)] lg:w-[264px]'
             >
               <span className='text-body-01-m text-gray-600'>+</span>
               <span className='text-body-01-m text-gray-600'>이미지 추가</span>
