@@ -10,7 +10,7 @@ export const buttonVariants = cva('cursor-pointer transition-colors disabled:cur
       'search-gradient': 'rounded-r-lg text-body-01-sb text-white bg-gradient-primary',
       check: 'rounded-lg text-small-01-sb text-white bg-blue-300 disabled:bg-gray-300',
       'login-outline': 'rounded-lg text-body-02-m text-gradient-primary border-gradient-primary',
-      action: 'rounded-lg text-h5-b text-white',
+      action: 'rounded-lg text-h5-b text-white disabled:bg-gray-300',
       participation: 'rounded-lg text-small-01-sb text-white ',
       'participation-outline-sm':
         'rounded-lg text-small-01-sb text-blue-400 border-gradient-primary enabled:hover:bg-gradient-primary enabled:hover:text-white  disabled:bg-gray-300 disabled:text-gray-0 disabled:border disabled:border-gray-150 disabled:before:hidden',
