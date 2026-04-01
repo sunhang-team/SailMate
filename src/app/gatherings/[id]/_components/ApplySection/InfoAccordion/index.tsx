@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { cn } from '@/lib/cn';
 
 import type { GatheringDetail } from '@/api/gatherings/types';
-import { ArrowIcon, CategoryIcon, FlagIcon, CalendarIcon, PersonIcon } from '@/components/ui/Icon';
+import { ArrowIcon, CategoryIcon, FlagIcon, CalendarIcon, PersonIcon, AlarmIcon } from '@/components/ui/Icon';
 import { InfoRow } from './InfoRow';
 import { DeadlineLabel } from '../DeadlineLabel';
 import { formatDate, MILLISECONDS_IN_A_DAY } from '../utils/dateUtils';
@@ -53,7 +53,7 @@ export function InfoAccordion({ data, defaultOpen = true, className }: InfoAccor
             <InfoRow icon={<CalendarIcon size={24} className='text-gray-800' />}>
               {formatDate(data.startDate)} ~ {formatDate(data.endDate)} · {weeksLabel}
             </InfoRow>
-            <InfoRow icon={<CalendarIcon size={24} className='text-gray-800' />}>
+            <InfoRow icon={<AlarmIcon size={24} className='text-gray-800' />}>
               <span className='flex items-center gap-1 text-gray-700'>
                 마감까지 <DeadlineLabel recruitDeadline={data.recruitDeadline} />
               </span>
