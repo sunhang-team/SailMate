@@ -6,7 +6,10 @@ import { gatheringQueries } from '@/api/gatherings/queries';
 
 import { AnchorTabNav } from './_components/AnchorTabNav';
 import { GatheringDetailContent } from './_components/GatheringDetailContent';
+import { FloatingActionBar } from './_components/ApplySection/FloatingActionBar';
 import { GatheringHero } from './_components/GatheringHero';
+import { GatheringInfoAside } from './_components/ApplySection/GatheringInfoAside';
+import { GatheringInfoCard } from './_components/ApplySection/GatheringInfoCard';
 
 interface GatheringDetailPageProps {
   params: Promise<{ id: string }>;
@@ -29,6 +32,13 @@ export default async function GatheringDetailPage({ params }: GatheringDetailPag
 
           {/* TODO: [이슈 2] Mobile/Tablet 사이드바 정보 카드 (xl:hidden) */}
 
+          {/* Mobile/Tablet: 모임 정보 카드 (탭 위에 배치) */}
+          <div className='px-4 pt-6 md:px-8 xl:hidden'>
+            <GatheringInfoCard gatheringId={gatheringId} />
+          </div>
+
+          {/* TODO: [이슈 3] 앵커 탭 네비게이션 */}
+
           <AnchorTabNav />
 
           <div className='px-4 pt-10 md:px-7 xl:flex xl:gap-20 xl:px-30'>
@@ -36,10 +46,13 @@ export default async function GatheringDetailPage({ params }: GatheringDetailPag
               <GatheringDetailContent gatheringId={gatheringId} />
             </section>
 
-            <aside className='xl:block xl:w-[560px] xl:shrink-0'>
-              {/* TODO: [이슈 2] Desktop 사이드바 (sticky) */}
+            {/* Desktop: 사이드바 (sticky) */}
+            <aside className='hidden xl:block xl:w-[560px] xl:shrink-0'>
+              <GatheringInfoAside gatheringId={gatheringId} />
             </aside>
           </div>
+          {/* Mobile/Tablet: 하단 고정 액션 바 */}
+          <FloatingActionBar gatheringId={gatheringId} />
         </ErrorBoundary>
       </main>
     </HydrationBoundary>
