@@ -18,6 +18,7 @@ import { gatheringFormPartialSchema } from '@/api/gatherings/schemas';
 import { GATHERING_CATEGORIES, GATHERING_TYPES } from '@/constants/gathering';
 import { cn } from '@/lib/cn';
 
+import { ImageUpload } from './ImageUpload';
 import { TagInput } from './TagInput';
 
 import type { GatheringForm, GatheringFormPartial } from '@/api/gatherings/types';
@@ -282,6 +283,18 @@ export function CreateGatheringForm() {
         />
       </div>
 
+      {/* 이미지 */}
+      <div className='flex flex-col gap-1'>
+        <p className='text-small-02-m md:text-body-02-m lg:text-body-01-m text-gray-800'>이미지</p>
+        <Controller
+          name='images'
+          control={control}
+          render={({ field }) => (
+            <ImageUpload value={field.value ?? []} onChange={field.onChange} error={errors.images?.message} />
+          )}
+        />
+      </div>
+
       {/* 모임 최종 목표 */}
       <div className='flex flex-col gap-1'>
         <Input
@@ -298,9 +311,6 @@ export function CreateGatheringForm() {
         />
         <p className='text-small-02-r self-end text-gray-400'>{goalValue.length}/200</p>
       </div>
-
-      {/* 이미지 */}
-      <div />
 
       {/* 날짜/일정 */}
       <div />
