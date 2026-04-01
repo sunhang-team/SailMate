@@ -1,11 +1,13 @@
 'use client';
 
-import { type ReactNode } from 'react';
+import { type ReactNode, useMemo } from 'react';
+import { differenceInWeeks, isValid, parseISO } from 'date-fns';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
+import { DatePicker } from '@/components/ui/DatePicker';
 import { Dropdown } from '@/components/ui/Dropdown';
 import { CheckIcon } from '@/components/ui/Icon/CheckIcon';
 import { StudyIcon, ProjectIcon, CategoryIcon, ArrowIcon } from '@/components/ui/Icon';
@@ -19,6 +21,7 @@ import { GATHERING_CATEGORIES, GATHERING_TYPES } from '@/constants/gathering';
 import { cn } from '@/lib/cn';
 
 import { TagInput } from './TagInput';
+import { WeeklyPlanForm } from './WeeklyPlanForm';
 
 import type { GatheringForm, GatheringFormPartial } from '@/api/gatherings/types';
 
@@ -68,6 +71,7 @@ export function CreateGatheringForm() {
     mode: 'onBlur',
     defaultValues: {
       tags: [],
+      weeklyGuides: [],
     },
   });
 
@@ -80,6 +84,26 @@ export function CreateGatheringForm() {
   const descValue = watch('description') ?? '';
   const goalValue = watch('goal') ?? '';
   const tagsValue = watch('tags') ?? [];
+  const maxMembersValue = watch('maxMembers');
+  const recruitDeadlineValue = watch('recruitDeadline');
+  const startDateValue = watch('startDate');
+  const endDateValue = watch('endDate');
+  const weeklyGuidesValue = watch('weeklyGuides') ?? [];
+
+  const totalWeeks = useMemo(() => {
+    if (!startDateValue || !endDateValue) return 0;
+
+    const startDate = parseISO(startDateValue);
+    const endDate = parseISO(endDateValue);
+    const isDateRangeInvalid = !isValid(startDate) || !isValid(endDate);
+    if (isDateRangeInvalid) return 0;
+
+    return Math.max(1, differenceInWeeks(endDate, startDate));
+  }, [endDateValue, startDateValue]);
+
+  const isWeeklyGuidesComplete =
+    weeklyGuidesValue.length > 0 &&
+    weeklyGuidesValue.every((guide) => Boolean(guide?.title?.trim()) && Boolean(guide?.content?.trim()));
 
   const isFormComplete =
     !!typeValue &&
@@ -88,7 +112,14 @@ export function CreateGatheringForm() {
     !!shortDescValue &&
     !!descValue &&
     !!goalValue &&
-    tagsValue.length > 0;
+    tagsValue.length > 0 &&
+    typeof maxMembersValue === 'number' &&
+    maxMembersValue >= 2 &&
+    maxMembersValue <= 20 &&
+    !!recruitDeadlineValue &&
+    !!startDateValue &&
+    !!endDateValue &&
+    isWeeklyGuidesComplete;
 
   const onSubmit = (data: GatheringFormPartial) => {
     mutate(data as GatheringForm, {
@@ -302,8 +333,98 @@ export function CreateGatheringForm() {
       {/* 이미지 */}
       <div />
 
-      {/* 날짜/일정 */}
-      <div />
+      {/* 모집 정보 */}
+      <section className='flex flex-col gap-4'>
+        <p className='text-small-01-sb md:text-body-01-sb lg:text-h5-b text-gray-800'>
+          모집 정보 <span className='text-blue-400'>*</span>
+        </p>
+
+        <div className='flex w-full flex-col gap-4 md:flex-row'>
+          <div className='flex w-full flex-col gap-1.5'>
+            <Input
+              type='number'
+              min={2}
+              max={20}
+              label={
+                <span className='text-small-02-m md:text-body-02-m lg:text-body-01-m text-gray-800'>모집 인원</span>
+              }
+              placeholder='모집 인원을 적어주세요'
+              error={errors.maxMembers?.message}
+              {...register('maxMembers', { valueAsNumber: true })}
+              className='text-small-02-r md:text-body-02-r lg:text-body-01-r'
+            />
+          </div>
+
+          <Controller
+            name='recruitDeadline'
+            control={control}
+            render={({ field }) => (
+              <div className='flex w-full flex-col gap-1.5'>
+                <p className='text-small-02-m md:text-body-02-m lg:text-body-01-m text-gray-800'>모집 마감 일정</p>
+                <DatePicker
+                  value={field.value}
+                  onChange={field.onChange}
+                  onBlur={field.onBlur}
+                  placeholder='모집 마감 일정을 선택해주세요'
+                  error={errors.recruitDeadline?.message}
+                />
+              </div>
+            )}
+          />
+        </div>
+      </section>
+
+      {/* 모임 일정 */}
+      <section className='flex flex-col gap-4'>
+        <p className='text-small-01-sb md:text-body-01-sb lg:text-h5-b text-gray-800'>
+          모임 일정 <span className='text-blue-400'>*</span>
+        </p>
+
+        <div className='flex flex-col gap-4 md:flex-row'>
+          <Controller
+            name='startDate'
+            control={control}
+            render={({ field }) => (
+              <div className='flex w-full flex-col gap-1.5'>
+                <p className='text-small-02-m md:text-body-02-m lg:text-body-01-m text-gray-800'>모임 시작일</p>
+                <DatePicker
+                  value={field.value}
+                  onChange={field.onChange}
+                  onBlur={field.onBlur}
+                  placeholder='모임 시작일을 선택해주세요'
+                  error={errors.startDate?.message}
+                />
+              </div>
+            )}
+          />
+
+          <Controller
+            name='endDate'
+            control={control}
+            render={({ field }) => (
+              <div className='flex w-full flex-col gap-1.5'>
+                <p className='text-small-02-m md:text-body-02-m lg:text-body-01-m text-gray-800'>모임 종료일</p>
+                <DatePicker
+                  value={field.value}
+                  onChange={field.onChange}
+                  onBlur={field.onBlur}
+                  placeholder='모임 종료일을 선택해주세요'
+                  error={errors.endDate?.message}
+                />
+              </div>
+            )}
+          />
+        </div>
+
+        <div className='mt-8 flex h-12 items-center justify-between rounded-lg bg-gray-100 px-7 py-5'>
+          <p className='text-small-01-sb md:text-body-02-sb text-gray-800'>모임 기간</p>
+          <p className='text-small-01-sb md:text-body-02-sb text-gray-800'>
+            <span className='text-blue-400'>{totalWeeks}</span> 주
+          </p>
+        </div>
+
+        <WeeklyPlanForm control={control} register={register} errors={errors} totalWeeks={totalWeeks} />
+      </section>
 
       <Button
         type='submit'

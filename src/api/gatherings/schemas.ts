@@ -44,4 +44,9 @@ export const gatheringFormPartialSchema = z.object({
   description: z.string().min(1, '상세 소개를 입력해 주세요.').max(1000, '상세 설명은 최대 1000자까지 가능합니다.'),
   tags: z.array(z.string()).min(1, '최소 1개의 태그를 입력해 주세요.').max(5, '태그는 최대 5개까지 가능합니다.'),
   goal: z.string().min(1, '모임 목표를 입력해 주세요.').max(200, '모임 목표는 최대 200자까지 가능합니다.'),
+  maxMembers: z.number().min(2, '최소 2명 이상이어야 합니다.').max(20, '최대 20명 이하이어야 합니다.'),
+  recruitDeadline: dateStringSchema,
+  startDate: dateStringSchema,
+  endDate: dateStringSchema,
+  weeklyGuides: z.array(weeklyGuideSchema).min(1, '최소 1주차 계획은 입력해 주세요.'),
 });
