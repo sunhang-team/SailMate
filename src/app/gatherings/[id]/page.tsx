@@ -21,7 +21,7 @@ export default async function GatheringDetailPage({ params }: GatheringDetailPag
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <main className='min-h-screen'>
+      <main className='mb-20 min-h-screen'>
         <ErrorBoundary
           fallback={<p className='py-20 text-center text-gray-500'>모임 정보를 불러오는데 실패했습니다.</p>}
         >
@@ -34,7 +34,6 @@ export default async function GatheringDetailPage({ params }: GatheringDetailPag
           <div className='px-4 pt-10 md:px-7 xl:flex xl:gap-20 xl:px-30'>
             <section className='min-w-0 flex-1'>
               <GatheringDetailContent gatheringId={gatheringId} />
-              {/* TODO: [이슈 4] 주차별 계획 아코디언, 모집 인원 현황 */}
             </section>
 
             <aside className='xl:block xl:w-[560px] xl:shrink-0'>
