@@ -1,11 +1,13 @@
 'use client';
 
 import { useSuspenseQuery } from '@tanstack/react-query';
+import { differenceInDays, differenceInWeeks } from 'date-fns';
+
 import { AvatarGroup } from '@/components/ui/AvatarGroup';
 import { StudyIcon, ProjectIcon, ArrowIcon, PeriodIcon, TimeIcon, PeopleIcon, RisingIcon } from '@/components/ui/Icon';
 import { cn } from '@/lib/cn';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
-import { formatDateDot, getCurrentWeek, getRemainingDays } from '@/lib/formatGatheringDate';
+import { formatDateDot } from '@/lib/formatGatheringDate';
 import { gatheringQueries } from '@/api/gatherings/queries';
 import { achievementQueries } from '@/api/achievements/queries';
 
@@ -38,8 +40,11 @@ export function DashboardHeader({ gatheringId }: DashboardHeaderProps) {
 
   const TypeIcon = TYPE_ICON[gathering.type];
 
-  const currentWeek = getCurrentWeek(gathering.startDate);
-  const daysRemaining = getRemainingDays(gathering.endDate);
+  const now = new Date();
+  const startDate = new Date(gathering.startDate);
+  const endDate = new Date(gathering.endDate);
+  const currentWeek = Math.max(1, differenceInWeeks(now, startDate) + 1);
+  const daysRemaining = Math.max(0, differenceInDays(endDate, now));
 
   const avatars = gathering.members.map((member) => ({
     id: member.userId,
