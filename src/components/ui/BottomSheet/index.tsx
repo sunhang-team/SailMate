@@ -13,7 +13,6 @@ import {
 import { createPortal } from 'react-dom';
 
 import { CloseIcon } from '@/components/ui/Icon';
-import { buttonVariants } from '@/components/ui/Button/index';
 import { OVERLAY_ANIMATION_DURATION } from '@/constants/overlay';
 import { cn } from '@/lib/cn';
 
@@ -98,7 +97,7 @@ function BottomSheetHeader({ children, className, showCloseButton = true }: Bott
       {showCloseButton ? (
         <button
           type='button'
-          aria-label='작성 완료'
+          aria-label='닫기'
           onClick={onClose}
           className='shrink-0 rounded p-1 text-gray-600 transition-colors'
         >
