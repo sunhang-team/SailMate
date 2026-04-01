@@ -8,6 +8,8 @@ import { formatDateDot, formatDday } from '@/lib/formatGatheringDate';
 import { GatheringDescription } from '../GatheringDescription';
 import { ImageCarousel } from '../ImageCarousel';
 import { InfoCard } from '../InfoCard';
+import { MembersStatus } from '../MembersStatus';
+import { WeeklyPlanAccordion } from '../WeeklyPlanAccordion';
 
 interface GatheringDetailContentProps {
   gatheringId: number;
@@ -52,7 +54,21 @@ export function GatheringDetailContent({ gatheringId }: GatheringDetailContentPr
         </InfoCard>
       </section>
 
-      {/* TODO: [이슈 4] id="weekly-plans", id="members" 섹션 */}
+      {data.weeklyPlans.length > 0 && (
+        <section id='weekly-plans' className='mt-15 scroll-mt-10 xl:scroll-mt-12'>
+          <div className='flex flex-col gap-4 xl:gap-6'>
+            <h2 className='text-body-01-sb xl:text-h5-sb text-gray-900'>주차별 계획 ✅</h2>
+            <WeeklyPlanAccordion weeklyPlans={data.weeklyPlans} />
+          </div>
+        </section>
+      )}
+
+      <section id='members' className='mt-15 scroll-mt-10 xl:scroll-mt-12'>
+        <div className='flex flex-col gap-6'>
+          <h2 className='text-body-01-sb xl:text-h5-sb text-gray-900'>모집 인원 현황 👀</h2>
+          <MembersStatus currentMembers={data.currentMembers} maxMembers={data.maxMembers} />
+        </div>
+      </section>
     </div>
   );
 }
