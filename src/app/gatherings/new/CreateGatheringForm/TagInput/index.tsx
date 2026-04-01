@@ -48,7 +48,12 @@ export function TagInput({ value, onChange, error }: TagInputProps) {
       {value.length > 0 && (
         <div className='flex flex-wrap gap-2'>
           {value.map((tag) => (
-            <Tag key={tag} variant='hashtag' onRemove={() => handleRemove(tag)}>
+            <Tag
+              key={tag}
+              variant='hashtag'
+              onRemove={() => handleRemove(tag)}
+              className='text-small-02-r md:text-body-02-r lg:text-body-01-r px-2 py-0.5 md:px-2.5 md:py-1 lg:px-3 lg:py-1'
+            >
               #{tag}
             </Tag>
           ))}
