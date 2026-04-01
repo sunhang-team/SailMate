@@ -284,13 +284,16 @@ export function CreateGatheringForm() {
       </div>
 
       {/* 이미지 */}
-      <Controller
-        name='images'
-        control={control}
-        render={({ field }) => (
-          <ImageUpload value={field.value ?? []} onChange={field.onChange} error={errors.images?.message} />
-        )}
-      />
+      <div className='flex flex-col gap-1'>
+        <p className='text-small-02-m md:text-body-02-m lg:text-body-01-m text-gray-800'>이미지</p>
+        <Controller
+          name='images'
+          control={control}
+          render={({ field }) => (
+            <ImageUpload value={field.value ?? []} onChange={field.onChange} error={errors.images?.message} />
+          )}
+        />
+      </div>
 
       {/* 모임 최종 목표 */}
       <div className='flex flex-col gap-1'>

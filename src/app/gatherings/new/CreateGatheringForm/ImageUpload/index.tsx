@@ -91,14 +91,12 @@ export function ImageUpload({ value, onChange, error }: ImageUploadProps) {
 
   return (
     <div className='flex flex-col gap-1.5'>
-      <p className='text-small-01-sb md:text-body-01-sb lg:text-h5-b text-gray-800'>이미지</p>
-
       {!hasImages ? (
         /* ── 0장: 큰 드롭존 ── */
         <div
           className={cn(
             'flex w-full cursor-pointer flex-col items-center justify-center gap-4 rounded-lg border border-dashed border-gray-300 bg-gray-100',
-            'h-[408px]',
+            'h-[343px] md:h-[688px] lg:h-[448px]',
             isDragging && 'border-gradient-primary',
           )}
           onClick={openFilePicker}
@@ -106,15 +104,18 @@ export function ImageUpload({ value, onChange, error }: ImageUploadProps) {
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
         >
-          <BackupIcon size={80} className='text-gray-300' />
+          {/* size prop이 숫자라 반응형 클래스 불가 → 두 개 렌더 후 breakpoint별 show/hide */}
+          <BackupIcon size={44} className='text-gray-300 md:hidden' />
+          <BackupIcon size={80} className='hidden text-gray-300 md:block' />
           <div className='flex flex-col items-center gap-1'>
-            <p className='text-body-01-m text-gray-600'>이곳을 클릭해 이미지를 업로드해주세요</p>
-            <p className='text-body-02-r text-gray-300'>JPEG, PNG, PDF</p>
+            <p className='text-small-02-m md:text-body-01-m text-gray-600'>이곳을 클릭해 이미지를 업로드해주세요</p>
+            <p className='text-small-01-r md:text-body-02-r text-gray-300'>JPEG, PNG, PDF</p>
           </div>
           <Button
             type='button'
             variant='file-upload'
             size='file-upload'
+            className='text-small-02-sb md:text-body-01-sb h-[35px] w-[101px] md:h-12 md:w-[122px]'
             onClick={(e) => {
               e.stopPropagation();
               openFilePicker();
@@ -171,10 +172,10 @@ export function ImageUpload({ value, onChange, error }: ImageUploadProps) {
               key={`empty-${i}`}
               type='button'
               onClick={openFilePicker}
-              className='bg-gray-150 flex aspect-3/4 w-[200px] shrink-0 cursor-pointer items-center justify-center gap-1 rounded-lg border border-dashed border-gray-300 md:w-[calc((100%-1rem)/3)] lg:w-[264px]'
+              className='bg-gray-150 aspect-3/4 w-[200px] shrink-0 cursor-pointer flex-col items-center justify-center gap-1 rounded-lg border border-dashed border-gray-300 md:w-[calc((100%-1rem)/3)] md:flex-row lg:w-[264px]'
             >
-              <span className='text-body-01-m text-gray-600'>+</span>
-              <span className='text-body-01-m text-gray-600'>이미지 추가</span>
+              <span className='text-small-02-m md:text-body-02-m lg:text-body-01-m text-gray-600'>+</span>
+              <span className='text-small-02-m md:text-body-02-m lg:text-body-01-m text-gray-600'>이미지 추가</span>
             </button>
           ))}
         </div>
