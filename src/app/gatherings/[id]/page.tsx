@@ -4,6 +4,8 @@ import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { getQueryClient } from '@/lib/getQueryClient';
 import { gatheringQueries } from '@/api/gatherings/queries';
 
+import { AnchorTabNav } from './_components/AnchorTabNav';
+import { GatheringDetailContent } from './_components/GatheringDetailContent';
 import { GatheringHero } from './_components/GatheringHero';
 
 interface GatheringDetailPageProps {
@@ -26,15 +28,16 @@ export default async function GatheringDetailPage({ params }: GatheringDetailPag
           <GatheringHero gatheringId={gatheringId} />
 
           {/* TODO: [이슈 2] Mobile/Tablet 사이드바 정보 카드 (xl:hidden) */}
-          {/* TODO: [이슈 3] 앵커 탭 네비게이션 */}
 
-          <div className='mx-auto max-w-[1680px] px-4 md:px-7 xl:flex xl:gap-20 xl:px-0'>
+          <AnchorTabNav />
+
+          <div className='px-4 pt-10 md:px-7 xl:flex xl:gap-20 xl:px-30'>
             <section className='min-w-0 flex-1'>
-              {/* TODO: [이슈 3] 모임 설명, 이미지 캐러셀, 모집/활동 기간, 최종 목표 */}
+              <GatheringDetailContent gatheringId={gatheringId} />
               {/* TODO: [이슈 4] 주차별 계획 아코디언, 모집 인원 현황 */}
             </section>
 
-            <aside className='hidden xl:block xl:w-[560px] xl:shrink-0'>
+            <aside className='xl:block xl:w-[560px] xl:shrink-0'>
               {/* TODO: [이슈 2] Desktop 사이드바 (sticky) */}
             </aside>
           </div>

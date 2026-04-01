@@ -18,6 +18,9 @@
   --text-h5-b: 24px;
   --text-h5-b--line-height: 160%;
   --text-h5-b--font-weight: 600;
+  --text-h5-sb: 24px;
+  --text-h5-sb--line-height: 160%;
+  --text-h5-sb--font-weight: 700;
   --text-body-01-r: 20px;
   --text-body-01-r--line-height: 160%;
   --text-body-01-r--font-weight: 400;
@@ -204,6 +207,15 @@
 
 .animate-modal-fade-out {
   animation: modal-fade-out 0.3s ease-in forwards;
+}
+
+@utility scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 @utility custom-scrollbar {
