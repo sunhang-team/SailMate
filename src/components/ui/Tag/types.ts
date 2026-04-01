@@ -66,6 +66,12 @@ interface EmailTagProps extends TagBaseProps {
   children: ReactNode;
 }
 
+interface FilterTagProps extends TagBaseProps {
+  variant: 'filter';
+  onRemove: () => void;
+  children: ReactNode;
+}
+
 interface CoreFeatureTagProps extends TagBaseProps {
   variant: 'coreFeature';
   children: ReactNode;
@@ -93,6 +99,7 @@ export type TagProps =
   | MateTagProps
   | StatusTagProps
   | EmailTagProps
+  | FilterTagProps
   | CoreFeatureTagProps
   | CoreFeatureSmallTagProps
   | RouteTagProps;

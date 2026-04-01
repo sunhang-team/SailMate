@@ -2,6 +2,8 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 
 import { MainGatheringCard } from '.';
 
+import type { GatheringListItem } from '@/api/gatherings/types';
+
 const meta = {
   title: 'components/MainGatheringCard',
   component: MainGatheringCard,
@@ -15,18 +17,31 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-const baseArgs = {
-  category: '프로젝트',
-  subcategory: '개발',
-  currentMembers: 3,
-  maxMembers: 12,
-  tags: ['디자인', '기획'],
+const gathering: GatheringListItem = {
+  id: 1,
+  type: '프로젝트',
+  category: '개발',
   title: '피그마 기초 스터디',
-  subtitle: '디자인 시스템을 함께 구축해요',
-  totalWeeksLabel: '총 9주',
-  deadlineLabel: '모집 마감 D-14',
-  joinButtonLabel: '참여하기',
+  shortDescription: '디자인 시스템을 함께 구축해요',
+  tags: ['디자인', '기획'],
+  maxMembers: 12,
+  currentMembers: 3,
+  recruitDeadline: '2026-03-27',
+  startDate: '2026-04-01',
+  endDate: '2026-06-01',
+  status: 'RECRUITING',
+  isLiked: false,
+  leader: {
+    id: 1,
+    nickname: '테스터',
+    profileImage: null,
+  },
 };
+
+const baseArgs = {
+  gathering,
+  joinButtonLabel: '참여하기',
+} satisfies Parameters<typeof MainGatheringCard>[0];
 
 export const Default: Story = {
   name: '1. Default',
