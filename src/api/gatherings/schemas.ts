@@ -44,4 +44,8 @@ export const gatheringFormPartialSchema = z.object({
   description: z.string().min(1, '상세 소개를 입력해 주세요.').max(1000, '상세 설명은 최대 1000자까지 가능합니다.'),
   tags: z.array(z.string()).min(1, '최소 1개의 태그를 입력해 주세요.').max(5, '태그는 최대 5개까지 가능합니다.'),
   goal: z.string().min(1, '모임 목표를 입력해 주세요.').max(200, '모임 목표는 최대 200자까지 가능합니다.'),
+  images: z
+    .array(z.instanceof(File, { message: '유효한 파일이 아닙니다.' }))
+    .max(6, '이미지는 최대 6장까지 업로드 가능합니다.')
+    .optional(),
 });
