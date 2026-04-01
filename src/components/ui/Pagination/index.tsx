@@ -9,13 +9,21 @@ interface PaginationBaseProps {
   totalPages: number;
   onPageChange: (page: number) => void;
   className?: string;
+  disabled?: boolean;
 }
 
 type NumberedPaginationProps = PaginationBaseProps & { variant: 'numbered' };
 type SimplePaginationProps = PaginationBaseProps & { variant: 'simple' };
 type PaginationProps = NumberedPaginationProps | SimplePaginationProps;
 
-export function Pagination({ variant, currentPage, totalPages, onPageChange, className }: PaginationProps) {
+export function Pagination({
+  disabled = false,
+  variant,
+  currentPage,
+  totalPages,
+  onPageChange,
+  className,
+}: PaginationProps) {
   const isFirst = currentPage === 1;
   const isLast = currentPage === totalPages;
 
@@ -23,11 +31,11 @@ export function Pagination({ variant, currentPage, totalPages, onPageChange, cla
     <div className={cn('flex items-center justify-center', variant === 'numbered' ? 'gap-10' : 'gap-3', className)}>
       <button
         onClick={() => onPageChange(currentPage - 1)}
-        disabled={isFirst}
+        disabled={isFirst || disabled}
         aria-label='이전 페이지'
         className='cursor-pointer transition-colors enabled:hover:text-gray-500 disabled:cursor-not-allowed'
       >
-        <PaginationIcon variant='prev' className={cn('size-12', isFirst && 'text-gray-300')} />
+        <PaginationIcon variant='prev' className={cn('size-12', (isFirst || disabled) && 'text-gray-300')} />
       </button>
 
       {variant === 'numbered' && (
@@ -40,11 +48,12 @@ export function Pagination({ variant, currentPage, totalPages, onPageChange, cla
             ) : (
               <button
                 key={item}
+                disabled={disabled}
                 onClick={() => onPageChange(item)}
                 aria-label={`${item}페이지`}
                 aria-current={item === currentPage ? 'page' : undefined}
                 className={cn(
-                  'text-body-02-m cursor-pointer transition-colors',
+                  'text-body-02-m cursor-pointer transition-colors disabled:cursor-not-allowed',
                   item === currentPage ? 'text-gray-700' : 'text-gray-300 hover:text-gray-500',
                 )}
               >
@@ -57,11 +66,11 @@ export function Pagination({ variant, currentPage, totalPages, onPageChange, cla
 
       <button
         onClick={() => onPageChange(currentPage + 1)}
-        disabled={isLast}
+        disabled={isLast || disabled}
         aria-label='다음 페이지'
         className='cursor-pointer transition-colors enabled:hover:text-gray-500 disabled:cursor-not-allowed'
       >
-        <PaginationIcon variant='next' className={cn('size-12', isLast && 'text-gray-300')} />
+        <PaginationIcon variant='next' className={cn('size-12', (isLast || disabled) && 'text-gray-300')} />
       </button>
     </div>
   );
