@@ -172,7 +172,7 @@ export function ImageUpload({ value, onChange, error }: ImageUploadProps) {
               key={`empty-${i}`}
               type='button'
               onClick={openFilePicker}
-              className='bg-gray-150 aspect-3/4 w-[200px] shrink-0 cursor-pointer flex-col items-center justify-center gap-1 rounded-lg border border-dashed border-gray-300 md:w-[calc((100%-1rem)/3)] md:flex-row lg:w-[264px]'
+              className='bg-gray-150 flex aspect-3/4 w-[200px] shrink-0 cursor-pointer flex-col items-center justify-center gap-1 rounded-lg border border-dashed border-gray-300 md:w-[calc((100%-1rem)/3)] md:flex-row lg:w-[264px]'
             >
               <span className='text-small-02-m md:text-body-02-m lg:text-body-01-m text-gray-600'>+</span>
               <span className='text-small-02-m md:text-body-02-m lg:text-body-01-m text-gray-600'>이미지 추가</span>
