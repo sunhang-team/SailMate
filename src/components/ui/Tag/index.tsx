@@ -25,6 +25,10 @@ const tagVariants = cva('inline-flex w-fit items-center justify-center rounded-l
       email: 'bg-gray-150 text-gray-400 text-body-01-r px-3 py-1',
       filter:
         'cursor-pointer gap-[2px] bg-blue-300 text-gray-0 text-small-02-r px-2 py-1 gap-1 [&_button]:text-gray-0 [&_svg]:size-4',
+      coreFeature: 'bg-blue-100 text-blue-300 px-3 py-1 gap-1 text-small-01-sb',
+      coreFeatureSmall: 'bg-blue-100 text-blue-300 px-3 py-1 gap-1 text-small-02-sb',
+      route:
+        'h-[27px] w-[65px] rounded-xl bg-blue-100 text-small-01-sb text-blue-300 md:h-[34px] md:w-[78px] md:text-body-02-sb lg:h-[40px] lg:w-[91px] lg:text-body-01-sb',
     },
     state: {
       goal: '',
@@ -117,7 +121,7 @@ const renderContent = (props: TagProps): ReactNode => {
         </>
       );
     default:
-      return props.children;
+      return 'children' in props ? props.children : null;
   }
 };
 

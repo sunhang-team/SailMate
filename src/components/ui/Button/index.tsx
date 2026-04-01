@@ -2,7 +2,7 @@ import { cva, VariantProps } from 'class-variance-authority';
 import { ButtonHTMLAttributes } from 'react';
 import { cn } from '@/lib/cn';
 
-const buttonVariants = cva('cursor-pointer transition-colors disabled:cursor-not-allowed', {
+export const buttonVariants = cva('cursor-pointer transition-colors disabled:cursor-not-allowed', {
   variants: {
     variant: {
       primary: 'rounded-lg text-body-02-sb text-white',
@@ -34,6 +34,12 @@ const buttonVariants = cva('cursor-pointer transition-colors disabled:cursor-not
       'social-icon-kakao': 'rounded-lg flex items-center justify-center bg-[#ffee01]',
       'social-icon-google': 'rounded-lg flex items-center justify-center border border-gray-300',
       'social-icon-email': 'rounded-lg flex items-center justify-center border border-blue-100 text-blue-300',
+      /** 랜딩 Hero — 시작하기: 기본 그라데이션, hover 시 아웃라인 */
+      'landing-start':
+        'inline-flex items-center justify-center bg-gradient-primary text-gray-0 shadow-02 transition-colors hover:bg-gray-0 hover:text-gradient-primary hover:border-gradient-primary hover:shadow-03',
+      /** 랜딩 Hero — 둘러보기: 기본 아웃라인, hover 시 그라데이션 채움 */
+      'landing-browse':
+        'inline-flex items-center justify-center bg-gray-0 text-gradient-primary border-gradient-primary shadow-01 transition-colors hover:bg-gradient-primary hover:text-gray-0 hover:[-webkit-background-clip:border-box] hover:[background-clip:border-box] hover:[-webkit-text-fill-color:var(--color-gray-0)] hover:shadow-03',
     },
     size: {
       'join-login': 'h-14 w-124',
@@ -60,6 +66,11 @@ const buttonVariants = cva('cursor-pointer transition-colors disabled:cursor-not
       'bookmark-sm': 'h-11 w-11',
       'bookmark-lg': 'h-18 w-18 [border-width:1.64px]',
       'social-icon': 'h-10 w-12',
+      'landing-lg': 'h-[72px] w-[179px] shrink-0 rounded-full text-h5-b',
+      'landing-sm': 'h-12 w-[120px] shrink-0 rounded-[33.333px] text-body-02-sb',
+      /** Hero CTA: 모바일 Small, md 이상 Big */
+      'landing-hero':
+        'h-12 w-[120px] rounded-[33.333px] text-body-02-sb md:h-[72px] md:w-[179px] md:rounded-full md:text-h5-b',
     },
   },
   defaultVariants: {
