@@ -57,7 +57,7 @@ export function InfoAccordion({ data, defaultOpen = true, className }: InfoAccor
               {formatDate(data.startDate)} ~ {formatDate(data.endDate)} · {weeksLabel}
             </InfoRow>
             <InfoRow icon={<CalendarIcon size={24} className='text-gray-800' />}>
-              <span className='flex gap-1 text-gray-700'>
+              <span className='flex items-center gap-1 text-gray-700'>
                 마감까지 <DeadlineLabel recruitDeadline={data.recruitDeadline} />
               </span>
             </InfoRow>
