@@ -134,6 +134,13 @@ export const Action: Story = {
     disabled: { control: 'boolean' },
   },
 };
+export const ActionDisabled: Story = {
+  name: '[액션] 비활성화',
+  args: { variant: 'action', size: 'action', children: '작성 완료', disabled: true },
+  argTypes: {
+    disabled: { control: 'boolean' },
+  },
+};
 
 export const ActionSmall: Story = {
   name: '[액션] 소형',

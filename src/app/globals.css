@@ -209,6 +209,38 @@
   animation: modal-fade-out 0.3s ease-in forwards;
 }
 
+@keyframes slide-up-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-down-out {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+}
+
+.animate-sheet-slide-up-in {
+  animation: slide-up-in 0.3s ease-out forwards;
+}
+
+.animate-sheet-slide-down-out {
+  animation: slide-down-out 0.3s ease-in forwards;
+}
+
 @utility scrollbar-none {
   -ms-overflow-style: none;
   scrollbar-width: none;
