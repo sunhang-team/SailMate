@@ -1,20 +1,17 @@
 'use client';
 
 import { useState } from 'react';
-
 import { useQuery } from '@tanstack/react-query';
 
+import { gatheringQueries } from '@/api/gatherings/queries';
+import type { GatheringType } from '@/api/gatherings/types';
 import { Button } from '@/components/ui/Button';
 import { GatheringCard } from '@/components/ui/GatheringCard';
 import { HeartIcon, StudyIcon, ProjectIcon, PersonIcon } from '@/components/ui/Icon';
 import { Tag } from '@/components/ui/Tag';
-import { gatheringQueries } from '@/api/gatherings/queries';
-
 import { DeadlineLabel } from '../DeadlineLabel';
 import { InfoAccordion } from '../InfoAccordion';
 import { ParticipantsList } from '../ParticipantsList';
-
-import type { GatheringType } from '@/api/gatherings/types';
 
 const TYPE_ICON: Record<GatheringType, typeof StudyIcon> = {
   스터디: StudyIcon,
@@ -81,8 +78,12 @@ export function GatheringInfoAside({ gatheringId }: GatheringInfoAsideProps) {
           <ParticipantsList members={data.members} maxMembers={data.maxMembers} className='mb-7' />
         </GatheringCard.Footer>
 
-        <Button variant='action' className='text-h5-b h-16 w-full'>
-          참여 신청하기
+        <Button
+          variant='action'
+          className={`text-body-01-sb h-13.5 flex-1 md:h-18 ${data.myApplicationStatus === 'PENDING' ? 'bg-gray-300' : ''}`}
+          disabled={data.myApplicationStatus === 'PENDING'}
+        >
+          {data.myApplicationStatus === 'PENDING' ? '참여 대기중' : '참여 신청하기'}
         </Button>
       </GatheringCard>
     </div>

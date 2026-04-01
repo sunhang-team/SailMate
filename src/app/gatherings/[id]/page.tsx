@@ -53,7 +53,7 @@ export default async function GatheringDetailPage({ params }: GatheringDetailPag
             </aside>
           </div>
           {/* Mobile/Tablet: 하단 고정 액션 바 */}
-          <FloatingActionBar />
+          <FloatingActionBar gatheringId={gatheringId} />
         </ErrorBoundary>
       </main>
     </HydrationBoundary>

@@ -1,10 +1,8 @@
 'use client';
 
-import { useState } from 'react';
-
 import { cn } from '@/lib/cn';
-import type { MemberInfo } from '@/api/gatherings/types';
 
+import type { MemberInfo } from '@/api/gatherings/types';
 import { AvatarGroup } from '@/components/ui/AvatarGroup';
 
 interface ParticipantsListProps {
@@ -14,8 +12,6 @@ interface ParticipantsListProps {
 }
 
 export function ParticipantsList({ members, maxMembers, className }: ParticipantsListProps) {
-  const [selectedMember, setSelectedMember] = useState<MemberInfo | null>(null);
-  console.log(members);
   return (
     <div className={cn('flex items-center justify-end gap-2', className)}>
       <AvatarGroup

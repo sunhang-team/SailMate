@@ -4,10 +4,10 @@ import { useState } from 'react';
 
 import { cn } from '@/lib/cn';
 
+import type { GatheringDetail } from '@/api/gatherings/types';
 import { ArrowIcon, CategoryIcon, FlagIcon, CalendarIcon, PersonIcon } from '@/components/ui/Icon';
 import { InfoRow } from './InfoRow';
 import { DeadlineLabel } from '../DeadlineLabel';
-import type { GatheringDetail } from '@/api/gatherings/types';
 
 export const MILLISECONDS_IN_A_DAY = 1000 * 60 * 60 * 24;
 
@@ -30,7 +30,6 @@ interface InfoAccordionProps {
 export function InfoAccordion({ data, defaultOpen = true, className }: InfoAccordionProps) {
   const [isOpen, setIsOpen] = useState(defaultOpen);
   const weeksLabel = toWeeksLabel(data.startDate, data.endDate);
-  console.log(data);
 
   return (
     <div className={cn('border-gray-150 overflow-hidden rounded-xl border', className)}>

@@ -2,9 +2,8 @@
 
 import { useQuery } from '@tanstack/react-query';
 
-import { Tag } from '@/components/ui/Tag';
 import { gatheringQueries } from '@/api/gatherings/queries';
-
+import { Tag } from '@/components/ui/Tag';
 import { InfoAccordion } from '../InfoAccordion';
 import { ParticipantsList } from '../ParticipantsList';
 import { DeadlineLabel } from '../DeadlineLabel';
