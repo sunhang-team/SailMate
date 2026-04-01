@@ -14,7 +14,7 @@ import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import { useToastStore } from '@/components/ui/Toast/useToastStore';
 import { useCreateGathering } from '@/api/gatherings/queries';
-import { gatheringFormPartialSchema, gatheringFormSchema } from '@/api/gatherings/schemas';
+import { gatheringFormPartialSchema } from '@/api/gatherings/schemas';
 import { GATHERING_CATEGORIES, GATHERING_TYPES } from '@/constants/gathering';
 import { cn } from '@/lib/cn';
 
@@ -66,6 +66,9 @@ export function CreateGatheringForm() {
   } = useForm<GatheringFormPartial>({
     resolver: zodResolver(gatheringFormPartialSchema),
     mode: 'onBlur',
+    defaultValues: {
+      tags: [],
+    },
   });
 
   const { mutate, isPending } = useCreateGathering();
@@ -269,7 +272,12 @@ export function CreateGatheringForm() {
           name='tags'
           control={control}
           render={({ field }) => (
-            <TagInput value={field.value ?? []} onChange={field.onChange} error={errors.tags?.message} />
+            <TagInput
+              value={field.value ?? []}
+              onChange={field.onChange}
+              onBlur={field.onBlur}
+              error={errors.tags?.root?.message ?? errors.tags?.message}
+            />
           )}
         />
       </div>
