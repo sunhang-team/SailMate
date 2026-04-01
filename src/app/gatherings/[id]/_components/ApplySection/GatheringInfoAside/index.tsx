@@ -1,13 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 
 import { gatheringQueries } from '@/api/gatherings/queries';
 import type { GatheringType } from '@/api/gatherings/types';
 import { Button } from '@/components/ui/Button';
 import { GatheringCard } from '@/components/ui/GatheringCard';
-import { HeartIcon, StudyIcon, ProjectIcon, PersonIcon } from '@/components/ui/Icon';
+import { HeartIcon, StudyIcon, ProjectIcon } from '@/components/ui/Icon';
 import { Tag } from '@/components/ui/Tag';
 import { DeadlineLabel } from '../DeadlineLabel';
 import { InfoAccordion } from '../InfoAccordion';
@@ -23,10 +23,8 @@ interface GatheringInfoAsideProps {
 }
 
 export function GatheringInfoAside({ gatheringId }: GatheringInfoAsideProps) {
-  const { data } = useQuery(gatheringQueries.detail(gatheringId));
+  const { data } = useSuspenseQuery(gatheringQueries.detail(gatheringId));
   const [isFavorite, setIsFavorite] = useState(false);
-
-  if (!data) return null;
 
   const TypeIcon = TYPE_ICON[data.type];
 

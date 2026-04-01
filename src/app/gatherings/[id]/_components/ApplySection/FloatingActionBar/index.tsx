@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 
 import { gatheringQueries } from '@/api/gatherings/queries';
 import { Button } from '@/components/ui/Button';
@@ -12,10 +12,8 @@ interface FloatingActionBarProps {
 }
 
 export function FloatingActionBar({ gatheringId }: FloatingActionBarProps) {
-  const { data } = useQuery(gatheringQueries.detail(gatheringId));
+  const { data } = useSuspenseQuery(gatheringQueries.detail(gatheringId));
   const [isFavorite, setIsFavorite] = useState(false);
-
-  if (!data) return null;
 
   return (
     <div className='border-gray-150 bg-gray-0 fixed right-0 bottom-0 left-0 z-50 border-t px-5 py-4 md:px-7 md:py-6 xl:hidden'>
@@ -33,10 +31,10 @@ export function FloatingActionBar({ gatheringId }: FloatingActionBarProps) {
         </Button>
         <Button
           variant='action'
-          className={`text-body-01-sb h-13.5 flex-1 md:h-18 ${data.myApplicationStatus === 'PENDING' ? 'bg-gray-300' : ''}`}
-          disabled={data.myApplicationStatus === 'PENDING'}
+          className={`text-body-01-sb h-13.5 flex-1 md:h-18 ${data?.myApplicationStatus === 'PENDING' ? 'bg-gray-300' : ''}`}
+          disabled={data?.myApplicationStatus === 'PENDING'}
         >
-          {data.myApplicationStatus === 'PENDING' ? '참여 대기중' : '참여 신청하기'}
+          {data?.myApplicationStatus === 'PENDING' ? '참여 대기중' : '참여 신청하기'}
         </Button>
       </div>
     </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 
 import { gatheringQueries } from '@/api/gatherings/queries';
 import { Tag } from '@/components/ui/Tag';
@@ -13,9 +13,7 @@ interface GatheringInfoCardProps {
 }
 
 export function GatheringInfoCard({ gatheringId }: GatheringInfoCardProps) {
-  const { data } = useQuery(gatheringQueries.detail(gatheringId));
-
-  if (!data) return null;
+  const { data } = useSuspenseQuery(gatheringQueries.detail(gatheringId));
 
   return (
     <section className='xl:hidden'>
@@ -33,7 +31,7 @@ export function GatheringInfoCard({ gatheringId }: GatheringInfoCardProps) {
       <InfoAccordion data={data} className='mb-4' />
 
       {/* 참여자 목록 */}
-      <ParticipantsList members={data.members} maxMembers={data.maxMembers} />
+      <ParticipantsList members={data.members} maxMembers={data.maxMembers} className='mb-8' />
     </section>
   );
 }
