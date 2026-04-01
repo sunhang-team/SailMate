@@ -18,6 +18,8 @@ import { gatheringFormPartialSchema, gatheringFormSchema } from '@/api/gathering
 import { GATHERING_CATEGORIES, GATHERING_TYPES } from '@/constants/gathering';
 import { cn } from '@/lib/cn';
 
+import { TagInput } from './TagInput';
+
 import type { GatheringForm, GatheringFormPartial } from '@/api/gatherings/types';
 
 const RotatingArrow = () => {
@@ -74,9 +76,16 @@ export function CreateGatheringForm() {
   const shortDescValue = watch('shortDescription') ?? '';
   const descValue = watch('description') ?? '';
   const goalValue = watch('goal') ?? '';
+  const tagsValue = watch('tags') ?? [];
 
   const isFormComplete =
-    !!typeValue && !!categoryValue && !!titleValue && !!shortDescValue && !!descValue && !!goalValue;
+    !!typeValue &&
+    !!categoryValue &&
+    !!titleValue &&
+    !!shortDescValue &&
+    !!descValue &&
+    !!goalValue &&
+    tagsValue.length > 0;
 
   const onSubmit = (data: GatheringFormPartial) => {
     mutate(data as GatheringForm, {
@@ -253,6 +262,18 @@ export function CreateGatheringForm() {
         <p className='text-small-02-r self-end text-gray-400'>{descValue.length}/1000</p>
       </div>
 
+      {/* 태그 */}
+      <div className='flex flex-col gap-1'>
+        <p className='text-small-02-m md:text-body-02-m lg:text-body-01-m text-gray-800'>태그</p>
+        <Controller
+          name='tags'
+          control={control}
+          render={({ field }) => (
+            <TagInput value={field.value ?? []} onChange={field.onChange} error={errors.tags?.message} />
+          )}
+        />
+      </div>
+
       {/* 모임 최종 목표 */}
       <div className='flex flex-col gap-1'>
         <Input
@@ -270,9 +291,6 @@ export function CreateGatheringForm() {
         <p className='text-small-02-r self-end text-gray-400'>{goalValue.length}/200</p>
       </div>
 
-      {/* 태그 */}
-      <div />
-
       {/* 이미지 */}
       <div />
 
@@ -284,7 +302,7 @@ export function CreateGatheringForm() {
         variant='action'
         size='action-sm'
         disabled={isPending || !isFormComplete}
-        className='text-small-01-sb md:text-body-01-sb h-12 w-[164px] self-end md:h-[72px] md:w-75 lg:h-20'
+        className='text-small-01-sb md:text-body-01-sb lg:text-h5-b h-12 w-[164px] self-end md:h-[72px] md:w-75 lg:h-20'
       >
         작성 완료
       </Button>
