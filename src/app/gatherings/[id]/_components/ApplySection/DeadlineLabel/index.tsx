@@ -1,4 +1,4 @@
-import { formatDate, MILLISECONDS_IN_A_DAY } from '../InfoAccordion';
+import { formatDate, MILLISECONDS_IN_A_DAY } from '../utils/dateUtils';
 
 interface DeadlineLabelProps {
   recruitDeadline: string;

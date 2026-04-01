@@ -31,10 +31,10 @@ export function FloatingActionBar({ gatheringId }: FloatingActionBarProps) {
         </Button>
         <Button
           variant='action'
-          className={`text-body-01-sb h-13.5 flex-1 md:h-18 ${data?.myApplicationStatus === 'PENDING' ? 'bg-gray-300' : ''}`}
-          disabled={data?.myApplicationStatus === 'PENDING'}
+          className={`text-body-01-sb h-13.5 flex-1 md:h-18 ${data.myApplicationStatus === 'PENDING' ? 'bg-gray-300' : ''}`}
+          disabled={data.myApplicationStatus === 'PENDING'}
         >
-          {data?.myApplicationStatus === 'PENDING' ? '참여 대기중' : '참여 신청하기'}
+          {data.myApplicationStatus === 'PENDING' ? '참여 대기중' : '참여 신청하기'}
         </Button>
       </div>
     </div>

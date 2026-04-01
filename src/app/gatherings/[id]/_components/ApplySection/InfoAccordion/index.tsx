@@ -8,10 +8,7 @@ import type { GatheringDetail } from '@/api/gatherings/types';
 import { ArrowIcon, CategoryIcon, FlagIcon, CalendarIcon, PersonIcon } from '@/components/ui/Icon';
 import { InfoRow } from './InfoRow';
 import { DeadlineLabel } from '../DeadlineLabel';
-
-export const MILLISECONDS_IN_A_DAY = 1000 * 60 * 60 * 24;
-
-export const formatDate = (isoDate: string) => isoDate.slice(0, 10);
+import { formatDate, MILLISECONDS_IN_A_DAY } from '../utils/dateUtils';
 
 const toWeeksLabel = (startDate: string, endDate: string) => {
   const start = new Date(startDate);
