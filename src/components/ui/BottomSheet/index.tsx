@@ -101,7 +101,7 @@ function BottomSheetHeader({ children, className, showCloseButton = true }: Bott
           onClick={onClose}
           className='shrink-0 rounded p-1 text-gray-600 transition-colors'
         >
-          <CloseIcon size={48} />
+          <CloseIcon className='h-8 w-8 text-gray-600 md:h-12 md:w-12' />
         </button>
       ) : null}
     </div>
