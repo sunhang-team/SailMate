@@ -15,8 +15,6 @@ import { InfoAccordion } from '../InfoAccordion';
 import { ParticipantsList } from '../ParticipantsList';
 import { GatheringApplyForm } from '../GatheringApplyForm';
 import { GatheringApplySuccess } from '../GatheringApplySuccess';
-import { invalidateServerCache } from '@/lib/invalidateServerCache';
-import { GATHERING_TAGS } from '@/api/gatherings';
 
 const TYPE_ICON: Record<GatheringType, typeof StudyIcon> = {
   스터디: StudyIcon,

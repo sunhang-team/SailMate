@@ -10,8 +10,6 @@ import { HeartIcon } from '@/components/ui/Icon';
 import { BottomSheet } from '@/components/ui/BottomSheet';
 import { GatheringApplyForm } from '../GatheringApplyForm';
 import { GatheringApplySuccess } from '../GatheringApplySuccess';
-import { invalidateServerCache } from '@/lib/invalidateServerCache';
-import { GATHERING_TAGS } from '@/api/gatherings';
 
 interface FloatingActionBarProps {
   gatheringId: number;
@@ -19,7 +17,6 @@ interface FloatingActionBarProps {
 
 export function FloatingActionBar({ gatheringId }: FloatingActionBarProps) {
   const { data } = useSuspenseQuery(gatheringQueries.detail(gatheringId));
-  const queryClient = useQueryClient();
   const [isFavorite, setIsFavorite] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [step, setStep] = useState<'APPLY' | 'SUCCESS'>('APPLY');
