@@ -43,7 +43,7 @@ export function GatheringInfoAside({ gatheringId }: GatheringInfoAsideProps) {
   const TypeIcon = TYPE_ICON[data.type];
 
   return (
-    <div className='sticky top-24'>
+    <div className='sticky top-[0.1px]'>
       {/* 모집 상태 바 - 항상 노출 */}
       <div className='border-focus-100 mt-15 mb-4 flex justify-between rounded-[8px] border bg-blue-100 px-8 py-2.5'>
         <div className='text-body-02-sb flex items-center text-blue-400'>모집중</div>
