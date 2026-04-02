@@ -167,7 +167,7 @@ export function WeeklyPlanForm({ control, register, errors, totalWeeks }: Weekly
         className='bg-gray-150 flex h-12 items-center justify-between rounded-lg border border-gray-200 px-7 py-5'
       >
         <span className='text-small-01-sb md:text-body-02-sb text-gray-800'>
-          주차별 계획 <span className='md: text-small-02-r lg:text-small-01-r text-gray-400'>(선택)</span>
+          주차별 계획 <span className='md:text-small-02-r lg:text-small-01-r text-gray-400'>(선택)</span>
         </span>
         <ArrowIcon className={cn('size-4 rotate-90 text-gray-800 transition-transform', isOpen && '-rotate-90')} />
       </button>
