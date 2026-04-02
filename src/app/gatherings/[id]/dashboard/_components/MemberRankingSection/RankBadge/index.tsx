@@ -13,11 +13,18 @@ const MEDAL_VARIANTS = {
 export function RankBadge({ rank }: RankBadgeProps) {
   if (rank <= 3) {
     return (
-      <div className='flex w-8 items-center justify-center'>
-        <RatingIcon variant={MEDAL_VARIANTS[rank as keyof typeof MEDAL_VARIANTS]} size={28} />
+      <div className='flex w-[18px] items-center justify-center md:w-[30px]'>
+        <RatingIcon
+          variant={MEDAL_VARIANTS[rank as keyof typeof MEDAL_VARIANTS]}
+          className='h-[24px] w-[18px] md:h-[40px] md:w-[30px]'
+        />
       </div>
     );
   }
 
-  return <div className='text-body-02-sb flex w-8 items-center justify-center text-gray-600'>{rank}</div>;
+  return (
+    <div className='text-small-02-sb md:text-body-02-sb flex w-[18px] items-center justify-center text-gray-600 md:w-[30px]'>
+      {rank}
+    </div>
+  );
 }
