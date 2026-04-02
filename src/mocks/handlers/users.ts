@@ -41,7 +41,7 @@ const getPublicUser = (userId: number): UserPublicProfile => {
   return {
     id: userId,
     nickname: userId === 1 ? mockUser.nickname : nickname,
-    profileImage: userId === 1 ? mockUser.profileImage : '',
+    profileImage: userId === 1 ? mockUser.profileImage : `https://avatars.githubusercontent.com/u/${userId}?v=4`,
     reputationScore: (30 + (userId % 70)).toFixed(1) as unknown as number,
     reputationLabel: userId % 2 === 0 ? '불꽃 메이트' : '불씨 메이트',
     reviews: [

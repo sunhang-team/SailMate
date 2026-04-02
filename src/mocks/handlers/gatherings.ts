@@ -38,7 +38,7 @@ const BASE_GATHERINGS: GatheringListItem[] = [
     endDate: '2026-06-30',
     status: 'RECRUITING',
     isLiked: false,
-    leader: { id: 1, nickname: '김코딩', profileImage: null },
+    leader: { id: 1, nickname: '김코딩', profileImage: 'https://avatars.githubusercontent.com/u/1?v=4' },
   },
   {
     id: 2,
@@ -54,7 +54,7 @@ const BASE_GATHERINGS: GatheringListItem[] = [
     endDate: '2026-09-30',
     status: 'RECRUITING',
     isLiked: false,
-    leader: { id: 2, nickname: '박프로', profileImage: null },
+    leader: { id: 2, nickname: '박프로', profileImage: 'https://avatars.githubusercontent.com/u/2?v=4' },
   },
   {
     id: 3,
@@ -70,7 +70,7 @@ const BASE_GATHERINGS: GatheringListItem[] = [
     endDate: '2026-07-05',
     status: 'IN_PROGRESS',
     isLiked: true,
-    leader: { id: 3, nickname: '이개발', profileImage: null },
+    leader: { id: 3, nickname: '이개발', profileImage: 'https://avatars.githubusercontent.com/u/3?v=4' },
   },
   // ── 어학 ──
   {
@@ -87,7 +87,7 @@ const BASE_GATHERINGS: GatheringListItem[] = [
     endDate: '2026-07-20',
     status: 'RECRUITING',
     isLiked: true,
-    leader: { id: 4, nickname: '영어왕', profileImage: null },
+    leader: { id: 4, nickname: '영어왕', profileImage: 'https://avatars.githubusercontent.com/u/4?v=4' },
   },
   {
     id: 5,
@@ -103,7 +103,7 @@ const BASE_GATHERINGS: GatheringListItem[] = [
     endDate: '2026-07-05',
     status: 'RECRUITING',
     isLiked: false,
-    leader: { id: 5, nickname: '일본어마스터', profileImage: null },
+    leader: { id: 5, nickname: '일본어마스터', profileImage: 'https://avatars.githubusercontent.com/u/5?v=4' },
   },
   // ── 독서 ──
   {
@@ -120,7 +120,7 @@ const BASE_GATHERINGS: GatheringListItem[] = [
     endDate: '2026-10-15',
     status: 'RECRUITING',
     isLiked: false,
-    leader: { id: 1, nickname: '김코딩', profileImage: null },
+    leader: { id: 1, nickname: '김코딩', profileImage: 'https://avatars.githubusercontent.com/u/1?v=4' },
   },
   {
     id: 7,
@@ -136,7 +136,7 @@ const BASE_GATHERINGS: GatheringListItem[] = [
     endDate: '2026-07-31',
     status: 'COMPLETED',
     isLiked: false,
-    leader: { id: 6, nickname: '책벌레', profileImage: null },
+    leader: { id: 6, nickname: '책벌레', profileImage: 'https://avatars.githubusercontent.com/u/6?v=4' },
   },
   // ── 자격증 ──
   {
@@ -153,7 +153,7 @@ const BASE_GATHERINGS: GatheringListItem[] = [
     endDate: '2026-06-20',
     status: 'RECRUITING',
     isLiked: true,
-    leader: { id: 7, nickname: '합격러', profileImage: null },
+    leader: { id: 7, nickname: '합격러', profileImage: 'https://avatars.githubusercontent.com/u/7?v=4' },
   },
   {
     id: 9,
@@ -169,7 +169,7 @@ const BASE_GATHERINGS: GatheringListItem[] = [
     endDate: '2026-06-02',
     status: 'RECRUITING',
     isLiked: false,
-    leader: { id: 8, nickname: 'DB마스터', profileImage: null },
+    leader: { id: 8, nickname: 'DB마스터', profileImage: 'https://avatars.githubusercontent.com/u/8?v=4' },
   },
   {
     id: 10,
@@ -185,7 +185,7 @@ const BASE_GATHERINGS: GatheringListItem[] = [
     endDate: '2026-06-10',
     status: 'RECRUITING',
     isLiked: false,
-    leader: { id: 4, nickname: '영어왕', profileImage: null },
+    leader: { id: 4, nickname: '영어왕', profileImage: 'https://avatars.githubusercontent.com/u/4?v=4' },
   },
 ];
 
@@ -238,10 +238,15 @@ const mockDetails: Record<number, GatheringDetail> = {
       { week: 8, title: '최종 프로젝트 발표', startDate: '2026-06-03', endDate: '2026-06-09' },
     ],
     members: [
-      { userId: 1, nickname: '김코딩', profileImage: null, role: 'LEADER' },
-      { userId: 2, nickname: '이개발', profileImage: null, role: 'MEMBER' },
-      { userId: 3, nickname: '박프로', profileImage: null, role: 'MEMBER' },
-      { userId: 4, nickname: '최모바일', profileImage: null, role: 'MEMBER' },
+      { userId: 1, nickname: '김코딩', profileImage: 'https://avatars.githubusercontent.com/u/1?v=4', role: 'LEADER' },
+      { userId: 2, nickname: '이개발', profileImage: 'https://avatars.githubusercontent.com/u/2?v=4', role: 'MEMBER' },
+      { userId: 3, nickname: '박프로', profileImage: 'https://avatars.githubusercontent.com/u/3?v=4', role: 'MEMBER' },
+      {
+        userId: 4,
+        nickname: '최모바일',
+        profileImage: 'https://avatars.githubusercontent.com/u/4?v=4',
+        role: 'MEMBER',
+      },
     ],
     myApplicationStatus: null,
   },
@@ -282,12 +287,42 @@ const mockDetails: Record<number, GatheringDetail> = {
       { week: 4, title: '서비스 완성', startDate: '2026-04-05', endDate: '2026-04-05' },
     ],
     members: [
-      { userId: 10, nickname: '김민수', profileImage: null, role: 'LEADER' },
-      { userId: 11, nickname: '최서연', profileImage: null, role: 'MEMBER' },
-      { userId: 12, nickname: '박수철', profileImage: null, role: 'MEMBER' },
-      { userId: 13, nickname: '이수태', profileImage: null, role: 'MEMBER' },
-      { userId: 14, nickname: '김경아', profileImage: null, role: 'MEMBER' },
-      { userId: 15, nickname: '정수진', profileImage: null, role: 'MEMBER' },
+      {
+        userId: 10,
+        nickname: '김민수',
+        profileImage: 'https://avatars.githubusercontent.com/u/10?v=4',
+        role: 'LEADER',
+      },
+      {
+        userId: 11,
+        nickname: '최서연',
+        profileImage: 'https://avatars.githubusercontent.com/u/11?v=4',
+        role: 'MEMBER',
+      },
+      {
+        userId: 12,
+        nickname: '박수철',
+        profileImage: 'https://avatars.githubusercontent.com/u/12?v=4',
+        role: 'MEMBER',
+      },
+      {
+        userId: 13,
+        nickname: '이수태',
+        profileImage: 'https://avatars.githubusercontent.com/u/13?v=4',
+        role: 'MEMBER',
+      },
+      {
+        userId: 14,
+        nickname: '김경아',
+        profileImage: 'https://avatars.githubusercontent.com/u/14?v=4',
+        role: 'MEMBER',
+      },
+      {
+        userId: 15,
+        nickname: '정수진',
+        profileImage: 'https://avatars.githubusercontent.com/u/15?v=4',
+        role: 'MEMBER',
+      },
     ],
     myApplicationStatus: null,
   },
