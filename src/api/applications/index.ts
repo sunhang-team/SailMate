@@ -18,7 +18,7 @@ export const createApplication = async (
   body: ApplyGatheringForm,
 ): Promise<CreateApplicationResponse> => {
   const { data } = await axiosClient.post<ApiResponse<CreateApplicationResponse>>(
-    `/gatherings/${gatheringId}/applications`,
+    `/v1/gatherings/${gatheringId}/applications`,
     body,
   );
   return unwrapResponse(data);
@@ -27,7 +27,7 @@ export const createApplication = async (
 /** GET v1/gatherings/:gatheringId/applications — 신청 목록 조회(모임장) */
 export const getApplicationList = async (gatheringId: number): Promise<ApplicationListResponse> => {
   const { data } = await axiosClient.get<ApiResponse<ApplicationListResponse>>(
-    `/gatherings/${gatheringId}/applications`,
+    `/v1/gatherings/${gatheringId}/applications`,
   );
   return unwrapResponse(data);
 };
@@ -39,7 +39,7 @@ export const updateApplicationStatus = async (
   body: UpdateApplicationStatusRequest,
 ): Promise<UpdateApplicationStatusResponse> => {
   const { data } = await axiosClient.patch<ApiResponse<UpdateApplicationStatusResponse>>(
-    `/gatherings/${gatheringId}/applications/${applicationId}`,
+    `/v1/gatherings/${gatheringId}/applications/${applicationId}`,
     body,
   );
   return unwrapResponse(data);
@@ -47,11 +47,11 @@ export const updateApplicationStatus = async (
 
 /** DELETE v1/gatherings/:gatheringId/applications/:applicationId — 신청 취소(신청자 본인) */
 export const deleteApplication = async (gatheringId: number, applicationId: number): Promise<void> => {
-  await axiosClient.delete(`/gatherings/${gatheringId}/applications/${applicationId}`);
+  await axiosClient.delete(`/v1/gatherings/${gatheringId}/applications/${applicationId}`);
 };
 
 /** GET v1/users/me/applications — 내 신청 목록 조회(신청자) */
 export const getMyApplicationList = async (): Promise<MyApplicationListResponse> => {
-  const { data } = await axiosClient.get<ApiResponse<MyApplicationListResponse>>(`/users/me/applications`);
+  const { data } = await axiosClient.get<ApiResponse<MyApplicationListResponse>>(`/v1/users/me/applications`);
   return unwrapResponse(data);
 };
