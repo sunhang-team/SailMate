@@ -1,12 +1,13 @@
 'use client';
 
 import { cn } from '@/lib/cn';
-
-import type { MemberInfo } from '@/api/gatherings/types';
 import { AvatarGroup } from '@/components/ui/AvatarGroup';
 import { Dropdown } from '@/components/ui/Dropdown';
-import { MemberDetailModal } from '../MemberDetailModal';
 import { useOverlay } from '@/hooks/useOverlay';
+
+import { MemberDetailModal } from '../MemberDetailModal';
+
+import type { MemberInfo } from '@/api/gatherings/types';
 
 interface ParticipantsListProps {
   members: MemberInfo[];

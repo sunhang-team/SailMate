@@ -15,8 +15,6 @@ export function MemberDetailContent({ memberId }: Pick<MemberDetailModalProps, '
   const { page, setPage, userProfile, reviewsData, totalPages, aggregatedTags, isPending, reviewerProfilesMap } =
     useMemberDetail(memberId);
 
-  if (!userProfile) return null;
-
   return (
     <>
       <Modal.Header className='mt-6 flex gap-6'>
