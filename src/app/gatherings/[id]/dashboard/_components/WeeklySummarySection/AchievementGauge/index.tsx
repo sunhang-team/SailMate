@@ -4,10 +4,10 @@ interface AchievementGaugeProps {
   arcColor: string;
 }
 
-const CX = 200;
+const CX = 250;
 const CY = 180;
-const RADIUS = 150;
-const STROKE_WIDTH = 20;
+const RADIUS = 120;
+const STROKE_WIDTH = 15;
 
 export function AchievementGauge({ label, rate, arcColor }: AchievementGaugeProps) {
   // 0~99.99 클램프 (rate=100일 때 start/end 동일점 문제 방지)
@@ -20,7 +20,6 @@ export function AchievementGauge({ label, rate, arcColor }: AchievementGaugeProp
   const startY = CY;
   const endTrackX = CX + RADIUS;
 
-  const gradientId = `gauge-gradient-${label.replace(/\s/g, '-')}`;
   const bgGradientId = `gauge-bg-${label.replace(/\s/g, '-')}`;
   const markerGradientId = `marker-gradient-${label.replace(/\s/g, '-')}`;
 
@@ -28,10 +27,10 @@ export function AchievementGauge({ label, rate, arcColor }: AchievementGaugeProp
     <div className='flex flex-1 flex-col rounded-2xl bg-gray-100 p-4 md:p-6'>
       <svg viewBox='0 0 400 220' className='w-full' aria-label={`${label} ${rate}%`}>
         <defs>
-          {/* 반원 안쪽 배경 그라데이션 */}
-          <linearGradient id={bgGradientId} x1='0%' y1='0%' x2='100%' y2='0%'>
+          {/* 반원 안쪽 배경 그라데이션 (위→아래) */}
+          <linearGradient id={bgGradientId} x1='0%' y1='0%' x2='0%' y2='100%'>
             <stop offset='0%' stopColor='#e8f4ff' />
-            <stop offset='100%' stopColor='#ffffff' stopOpacity='0' />
+            <stop offset='100%' stopColor='#e8f4ff' stopOpacity='0' />
           </linearGradient>
           {/* 끝점 마커 그라데이션 */}
           <linearGradient id={markerGradientId} x1='0%' y1='0%' x2='100%' y2='0%'>
@@ -46,11 +45,11 @@ export function AchievementGauge({ label, rate, arcColor }: AchievementGaugeProp
           fill={`url(#${bgGradientId})`}
         />
 
-        {/* 배경 arc (회색) */}
+        {/* 배경 arc */}
         <path
           d={`M ${startX} ${startY} A ${RADIUS} ${RADIUS} 0 0 1 ${endTrackX} ${startY}`}
           fill='none'
-          stroke='#dddddd'
+          stroke='#dbf0ff'
           strokeWidth={STROKE_WIDTH}
           strokeLinecap='round'
         />
@@ -69,13 +68,18 @@ export function AchievementGauge({ label, rate, arcColor }: AchievementGaugeProp
 
         {/* 라벨 텍스트 (왼쪽 위) */}
         <text
-          x={startX + 4}
-          y={50}
+          x={startX - 120}
+          y={30}
           fontSize={16}
           fontWeight={600}
-          fill='#737373'
-          className='text-small-01-sb md:text-h5-sb'
+          fill='#a4a4a4'
+          className='text-small-02-sb md:text-body-01-sb'
         >
+          {label}
+        </text>
+
+        {/* 라벨 텍스트 (반원 내부 중앙) */}
+        <text x={CX} y={115} textAnchor='middle' fill='#a4a4a4' className='text-small-02-sb md:text-body-01-sb'>
           {label}
         </text>
 
