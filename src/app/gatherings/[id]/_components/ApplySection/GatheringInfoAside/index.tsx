@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/Button';
 import { GatheringCard } from '@/components/ui/GatheringCard';
 import { HeartIcon, StudyIcon, ProjectIcon } from '@/components/ui/Icon';
 import { Tag } from '@/components/ui/Tag';
+import { useFunnel } from '@/hooks/useFunnel';
 
 import { DeadlineLabel } from '../DeadlineLabel';
 import { InfoAccordion } from '../InfoAccordion';
@@ -31,7 +32,7 @@ interface GatheringInfoAsideProps {
 export function GatheringInfoAside({ gatheringId }: GatheringInfoAsideProps) {
   const { data } = useSuspenseQuery(gatheringQueries.detail(gatheringId));
   const [isFavorite, setIsFavorite] = useState(false);
-  const [step, setStep] = useState<'DEFAULT' | 'APPLY' | 'SUCCESS'>('DEFAULT');
+  const { Funnel, Step, setStep } = useFunnel<'DEFAULT' | 'APPLY' | 'SUCCESS'>('DEFAULT');
 
   const { mutate, isPending } = useCreateApplication(gatheringId, {
     onSuccess: () => {
@@ -54,66 +55,68 @@ export function GatheringInfoAside({ gatheringId }: GatheringInfoAsideProps) {
         </div>
       </div>
 
-      {step === 'APPLY' && (
-        <div className='border-gray-150 rounded-2xl border bg-white p-8 shadow-sm'>
-          <GatheringApplyForm gatheringTitle={data.title} onSubmit={mutate} isLoading={isPending} />
-        </div>
-      )}
+      <Funnel>
+        <Step name='APPLY'>
+          <div className='border-gray-150 rounded-2xl border bg-white p-8 shadow-sm'>
+            <GatheringApplyForm gatheringTitle={data.title} onSubmit={mutate} isLoading={isPending} />
+          </div>
+        </Step>
 
-      {step === 'SUCCESS' && (
-        <div className='border-gray-150 rounded-2xl border bg-white p-8 shadow-sm'>
-          <GatheringApplySuccess onClose={() => setStep('DEFAULT')} />
-        </div>
-      )}
+        <Step name='SUCCESS'>
+          <div className='border-gray-150 rounded-2xl border bg-white p-8 shadow-sm'>
+            <GatheringApplySuccess onClose={() => setStep('DEFAULT')} />
+          </div>
+        </Step>
 
-      {step === 'DEFAULT' && (
-        <GatheringCard className='border-focus-100 w-full border'>
-          <GatheringCard.Header className='items-center'>
-            <Tag
-              variant='category'
-              icon={<TypeIcon size={14} className='text-blue-200' />}
-              label={data.type}
-              sublabel={data.category}
-            />
+        <Step name='DEFAULT'>
+          <GatheringCard className='border-focus-100 w-full border'>
+            <GatheringCard.Header className='items-center'>
+              <Tag
+                variant='category'
+                icon={<TypeIcon size={14} className='text-blue-200' />}
+                label={data.type}
+                sublabel={data.category}
+              />
+              <Button
+                variant='bookmark'
+                size='bookmark-sm'
+                data-selected={isFavorite}
+                aria-label='찜하기'
+                aria-pressed={isFavorite}
+                onClick={() => setIsFavorite((prev) => !prev)}
+              >
+                <HeartIcon size={20} variant={isFavorite ? 'filled' : 'outline'} />
+              </Button>
+            </GatheringCard.Header>
+
+            <GatheringCard.Body className='mb-10 gap-2'>
+              <div className='flex flex-wrap gap-1'>
+                {data.tags.map((tag) => (
+                  <span key={tag} className='text-body-02-r text-gray-700'>
+                    #{tag}
+                  </span>
+                ))}
+              </div>
+              <p className='text-body-01-b text-gray-900'>{data.title}</p>
+              <p className='text-small-01-r text-gray-800'>{data.shortDescription}</p>
+            </GatheringCard.Body>
+
+            <GatheringCard.Footer className='flex-col'>
+              <InfoAccordion data={data} className='mb-7' />
+              <ParticipantsList members={data.members} maxMembers={data.maxMembers} className='mb-7' />
+            </GatheringCard.Footer>
+
             <Button
-              variant='bookmark'
-              size='bookmark-sm'
-              data-selected={isFavorite}
-              aria-label='찜하기'
-              aria-pressed={isFavorite}
-              onClick={() => setIsFavorite((prev) => !prev)}
+              variant='action'
+              className={`text-body-01-sb h-13.5 flex-1 md:h-18 ${data.myApplicationStatus === 'PENDING' ? 'bg-gray-300' : ''}`}
+              disabled={data.myApplicationStatus === 'PENDING'}
+              onClick={() => setStep('APPLY')}
             >
-              <HeartIcon size={20} variant={isFavorite ? 'filled' : 'outline'} />
+              {data.myApplicationStatus === 'PENDING' ? '참여 대기중' : '참여 신청하기'}
             </Button>
-          </GatheringCard.Header>
-
-          <GatheringCard.Body className='mb-10 gap-2'>
-            <div className='flex flex-wrap gap-1'>
-              {data.tags.map((tag) => (
-                <span key={tag} className='text-body-02-r text-gray-700'>
-                  #{tag}
-                </span>
-              ))}
-            </div>
-            <p className='text-body-01-b text-gray-900'>{data.title}</p>
-            <p className='text-small-01-r text-gray-800'>{data.shortDescription}</p>
-          </GatheringCard.Body>
-
-          <GatheringCard.Footer className='flex-col'>
-            <InfoAccordion data={data} className='mb-7' />
-            <ParticipantsList members={data.members} maxMembers={data.maxMembers} className='mb-7' />
-          </GatheringCard.Footer>
-
-          <Button
-            variant='action'
-            className={`text-body-01-sb h-13.5 flex-1 md:h-18 ${data.myApplicationStatus === 'PENDING' ? 'bg-gray-300' : ''}`}
-            disabled={data.myApplicationStatus === 'PENDING'}
-            onClick={() => setStep('APPLY')}
-          >
-            {data.myApplicationStatus === 'PENDING' ? '참여 대기중' : '참여 신청하기'}
-          </Button>
-        </GatheringCard>
-      )}
+          </GatheringCard>
+        </Step>
+      </Funnel>
     </div>
   );
 }

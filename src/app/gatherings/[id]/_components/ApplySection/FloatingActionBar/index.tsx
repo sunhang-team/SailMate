@@ -9,6 +9,7 @@ import { useCreateApplication } from '@/api/applications/queries';
 import { Button } from '@/components/ui/Button';
 import { HeartIcon } from '@/components/ui/Icon';
 import { BottomSheet } from '@/components/ui/BottomSheet';
+import { useFunnel } from '@/hooks/useFunnel';
 
 import { GatheringApplyForm } from '../GatheringApplyForm';
 import { GatheringApplySuccess } from '../GatheringApplySuccess';
@@ -21,7 +22,7 @@ export function FloatingActionBar({ gatheringId }: FloatingActionBarProps) {
   const { data } = useSuspenseQuery(gatheringQueries.detail(gatheringId));
   const [isFavorite, setIsFavorite] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [step, setStep] = useState<'APPLY' | 'SUCCESS'>('APPLY');
+  const { Funnel, Step, setStep, currentStep } = useFunnel<'APPLY' | 'SUCCESS'>('APPLY');
 
   const { mutate, isPending } = useCreateApplication(gatheringId, {
     onSuccess: () => {
@@ -61,13 +62,16 @@ export function FloatingActionBar({ gatheringId }: FloatingActionBarProps) {
       </div>
 
       <BottomSheet isOpen={isOpen} onClose={handleClose}>
-        <BottomSheet.Header showCloseButton={step === 'APPLY'}>{null}</BottomSheet.Header>
+        <BottomSheet.Header showCloseButton={currentStep === 'APPLY'}>{null}</BottomSheet.Header>
         <BottomSheet.Body className='scrollbar-none pb-10'>
-          {step === 'APPLY' ? (
-            <GatheringApplyForm gatheringTitle={data.title} onSubmit={mutate} isLoading={isPending} />
-          ) : (
-            <GatheringApplySuccess onClose={handleClose} />
-          )}
+          <Funnel>
+            <Step name='APPLY'>
+              <GatheringApplyForm gatheringTitle={data.title} onSubmit={mutate} isLoading={isPending} />
+            </Step>
+            <Step name='SUCCESS'>
+              <GatheringApplySuccess onClose={handleClose} />
+            </Step>
+          </Funnel>
         </BottomSheet.Body>
       </BottomSheet>
     </>
