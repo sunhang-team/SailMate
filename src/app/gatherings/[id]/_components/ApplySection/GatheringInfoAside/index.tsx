@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useSuspenseQuery } from '@tanstack/react-query';
 
-import { gatheringQueries, gatheringKeys } from '@/api/gatherings/queries';
+import { gatheringQueries } from '@/api/gatherings/queries';
 import { useCreateApplication } from '@/api/applications/queries';
 import type { GatheringType } from '@/api/gatherings/types';
 import { Button } from '@/components/ui/Button';

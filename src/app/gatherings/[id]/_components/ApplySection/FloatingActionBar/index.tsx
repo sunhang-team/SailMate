@@ -1,9 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { useSuspenseQuery, useQueryClient } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 
-import { gatheringQueries, gatheringKeys } from '@/api/gatherings/queries';
+import { gatheringQueries } from '@/api/gatherings/queries';
 import { useCreateApplication } from '@/api/applications/queries';
 import { Button } from '@/components/ui/Button';
 import { HeartIcon } from '@/components/ui/Icon';
