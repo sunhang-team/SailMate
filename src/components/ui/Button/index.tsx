@@ -61,7 +61,7 @@ export const buttonVariants = cva('cursor-pointer transition-colors disabled:cur
       'social-kakao': 'h-12 w-[242px]',
       'keyword-search': 'h-18 w-[258px] px-6',
       dropdown: 'h-10 w-[131px]',
-      'add-task': 'lg:h-18  md:h-14.5 sm:h-11 w-full',
+      'add-task': 'h-11 w-full md:h-14.5 lg:h-18',
       'add-detail': 'w-full lg:w-1/2 md:h-14.5 sm:h-11 py-5',
       fire: 'h-12 w-12',
       'write-review': 'h-18 w-[527px]',
