@@ -31,7 +31,7 @@ export function DashboardContent({ activeTab, gatheringId }: DashboardContentPro
     <section className='px-4 py-10 md:px-8 xl:px-30'>
       <div>
         {activeTab === 'summary' && (
-          <>
+          <div className='flex flex-col gap-6'>
             <SuspenseBoundary
               pendingFallback={<div className='h-96 animate-pulse rounded-2xl bg-gray-100' />}
               errorFallback={<p className='text-body-02-r text-gray-400'>동기부여 섹션을 불러오는데 실패했습니다.</p>}
@@ -40,11 +40,11 @@ export function DashboardContent({ activeTab, gatheringId }: DashboardContentPro
             </SuspenseBoundary>
             <SuspenseBoundary
               pendingFallback={<WeeklySummarySkeleton />}
-              errorFallback={<p className='py-20 text-center text-gray-500'>활동 요약을 불러오는데 실패했습니다.</p>}
+              errorFallback={<p className='text-body-02-r text-gray-400'>활동 요약을 불러오는데 실패했습니다.</p>}
             >
               <WeeklySummarySection gatheringId={gatheringId} />
             </SuspenseBoundary>
-          </>
+          </div>
         )}
       </div>
     </section>

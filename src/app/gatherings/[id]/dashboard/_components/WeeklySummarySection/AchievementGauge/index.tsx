@@ -25,7 +25,7 @@ export function AchievementGauge({ label, rate, arcColor }: AchievementGaugeProp
 
   return (
     <div className='flex flex-1 flex-col rounded-2xl bg-gray-100 p-4 md:p-6'>
-      <svg viewBox='0 0 400 220' className='w-full' aria-label={`${label} ${rate}%`}>
+      <svg viewBox='0 0 400 220' className='max-h-80 w-full' aria-label={`${label} ${rate}%`}>
         <defs>
           {/* 반원 안쪽 배경 그라데이션 (위→아래) */}
           <linearGradient id={bgGradientId} x1='0%' y1='0%' x2='0%' y2='100%'>
