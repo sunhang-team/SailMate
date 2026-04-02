@@ -22,7 +22,7 @@ export function RankingItem({ item, isMe }: RankingItemProps) {
   const isWarning = item.overallRate < WARNING_THRESHOLD;
 
   return (
-    <div className={`flex items-center gap-3 rounded-2xl bg-gray-100 p-3 ${isMe ? 'border-2 border-blue-300' : ''}`}>
+    <div className={`flex items-center gap-3 rounded-2xl bg-gray-100 p-3 ${isMe ? 'border border-blue-300' : ''}`}>
       <RankBadge rank={item.rank} />
 
       <div className='h-8 w-8 shrink-0 overflow-hidden rounded-full bg-gray-200'>
