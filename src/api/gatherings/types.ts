@@ -1,6 +1,6 @@
 import type { z } from 'zod';
 
-import type { gatheringFormPartialSchema, gatheringFormSchema, gatheringUpdateFormSchema } from './schemas';
+import type { gatheringFormSchema, gatheringUpdateFormSchema } from './schemas';
 
 /** 모임 유형 */
 export type GatheringType = '스터디' | '프로젝트';
@@ -133,5 +133,5 @@ export interface DeleteGatheringResponse {
   success: boolean;
 }
 
-/** POST `/gatherings` — 모임 생성 폼 (부분 구현용) */
-export type GatheringFormPartial = z.infer<typeof gatheringFormPartialSchema>;
+/** POST `/gatherings` — 모임 생성 폼 (호환용 별칭) */
+export type GatheringFormPartial = GatheringForm;
