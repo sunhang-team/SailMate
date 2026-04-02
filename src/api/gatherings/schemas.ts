@@ -35,17 +35,5 @@ export const gatheringFormSchema = z.object({
 /** PUT `/gatherings/:gatheringId` — 모임 수정 폼 (모든 필드 optional) */
 export const gatheringUpdateFormSchema = gatheringFormSchema.partial();
 
-/** POST `/gatherings` — 모임 생성 폼 (부분 구현용) */
-export const gatheringFormPartialSchema = z.object({
-  type: z.enum(['스터디', '프로젝트'], { message: '모임 유형을 지정해 주세요.' }),
-  category: z.string().min(1, '카테고리를 선택해 주세요.'),
-  title: z.string().min(1, '모임 제목을 입력해 주세요. ').max(30, '제목은 최대 30자까지 가능합니다.'),
-  shortDescription: z.string().min(1, '한 줄 소개를 입력해 주세요.').max(50, '한 줄 소개는 최대 50자까지 가능합니다.'),
-  description: z.string().min(1, '상세 소개를 입력해 주세요.').max(1000, '상세 설명은 최대 1000자까지 가능합니다.'),
-  tags: z.array(z.string()).min(1, '최소 1개의 태그를 입력해 주세요.').max(5, '태그는 최대 5개까지 가능합니다.'),
-  goal: z.string().min(1, '모임 목표를 입력해 주세요.').max(200, '모임 목표는 최대 200자까지 가능합니다.'),
-  images: z
-    .array(z.instanceof(File, { message: '유효한 파일이 아닙니다.' }))
-    .max(6, '이미지는 최대 6장까지 업로드 가능합니다.')
-    .optional(),
-});
+/** POST `/gatherings` — 모임 생성 폼 (호환용 별칭) */
+export const gatheringFormPartialSchema = gatheringFormSchema;
