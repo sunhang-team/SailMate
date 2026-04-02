@@ -1,10 +1,11 @@
 import { Modal } from '@/components/ui/Modal';
 import { Pagination } from '@/components/ui/Pagination';
 import { ProgressBar } from '@/components/ui/Progress';
-import { IllustrationIcon } from '@/components/ui/Icon';
+import { IllustrationIcon, ProfilePlaceholderIcon } from '@/components/ui/Icon';
 import { Tag } from '@/components/ui/Tag';
 import { useMemberDetail } from '../../hooks/useMemberDetail';
 import { KeywordTags } from './KeywordTags';
+import { formatReviewDate } from '../../utils/dateUtils';
 
 interface MemberDetailModalProps<T = boolean> {
   memberId: number;
@@ -13,7 +14,9 @@ interface MemberDetailModalProps<T = boolean> {
 }
 
 export function MemberDetailContent({ memberId }: Pick<MemberDetailModalProps, 'memberId'>) {
-  const { page, setPage, userProfile, reviewsData, totalPages, aggregatedTags, isPending } = useMemberDetail(memberId);
+  const { page, setPage, userProfile, reviewsData, totalPages, aggregatedTags, isPending, reviewerProfilesMap } =
+    useMemberDetail(memberId);
+
   if (!userProfile) return null;
 
   return (
@@ -32,7 +35,6 @@ export function MemberDetailContent({ memberId }: Pick<MemberDetailModalProps, '
             />
           )}
         </div>
-
         <div className='flex flex-1 flex-col justify-center'>
           <div className='mb-4 flex items-center gap-4'>
             <div className='text-body-02-b md:text-h3-b text-gray-900'>{userProfile.nickname}</div>
@@ -51,6 +53,7 @@ export function MemberDetailContent({ memberId }: Pick<MemberDetailModalProps, '
           </ProgressBar>
         </div>
       </Modal.Header>
+
       <Modal.Body className='scrollbar-hide custom-scrollbar flex max-h-[60vh] flex-col gap-4 overflow-y-auto'>
         <div className='border-gray-150 border-t px-5'></div>
         <div className='flex flex-col gap-2'>
@@ -65,39 +68,50 @@ export function MemberDetailContent({ memberId }: Pick<MemberDetailModalProps, '
           </div>
           <div className='flex w-full flex-col gap-6'>
             <ul className='flex w-full flex-col gap-2'>
-              {reviewsData?.reviews.map((review) => (
-                <li
-                  key={review.id}
-                  className='flex flex-col gap-2 rounded-xl border border-gray-100 bg-white p-2 shadow-sm'
-                >
-                  <div className='flex items-start justify-between'>
-                    <div className='flex flex-col'>
-                      <span className='text-xs font-semibold text-gray-800'>{review.gatheringTitle}</span>
-                      <span className='mt-0.5 text-xs text-gray-400'>
-                        작성자: {review.reviewer?.nickname || '익명'}
-                      </span>
-                    </div>
-                    {review.createdAt && (
-                      <span className='text-xs text-gray-400'>{new Date(review.createdAt).toLocaleDateString()}</span>
-                    )}
-                  </div>
+              {reviewsData?.reviews.map((review) => {
+                const profileImg = reviewerProfilesMap[review.reviewer.id];
 
-                  <p className='mt-1 text-sm text-gray-700'>{review.comment}</p>
-
-                  {review.tags && review.tags.length > 0 && (
-                    <div className='mt-2 flex flex-wrap gap-1.5'>
-                      {review.tags.map((tag, idx) => (
-                        <span
-                          key={idx}
-                          className='rounded-md bg-blue-50 px-2 py-1 text-[11px] font-medium text-blue-500'
-                        >
-                          {tag}
-                        </span>
-                      ))}
+                return (
+                  <li
+                    key={review.id}
+                    className='border-gray-150 flex flex-col gap-2 rounded-xl border bg-gray-100 p-4 shadow-sm md:gap-4 md:p-6'
+                  >
+                    <div className='flex items-start gap-1 md:gap-2'>
+                      <div className='h-6 w-6 shrink-0 overflow-hidden rounded-full bg-gray-200 md:h-12 md:w-12'>
+                        {profileImg ? (
+                          <img
+                            src={profileImg}
+                            alt={`${review.reviewer.nickname} 프로필`}
+                            className='h-full w-full object-cover'
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).style.display = 'none';
+                            }}
+                          />
+                        ) : (
+                          <ProfilePlaceholderIcon className='h-full w-full' />
+                        )}
+                      </div>
+                      <div className='flex flex-1 items-start justify-between'>
+                        <div className='flex flex-col gap-0.5 text-left md:gap-1'>
+                          <span className='md:text-body-02-sb text-[13px] font-bold text-gray-800'>
+                            {review.reviewer?.nickname || '익명'}
+                          </span>
+                          <span className='text-small-01-r md:text-small-02-r text-gray-400'>
+                            {review.gatheringTitle}
+                          </span>
+                        </div>
+                        {review.createdAt && (
+                          <span className='md:text-small-01-r shrink-0 text-[8px] text-gray-400'>
+                            {formatReviewDate(review.createdAt)}
+                          </span>
+                        )}
+                      </div>
                     </div>
-                  )}
-                </li>
-              ))}
+                    <div className='border-gray-150 border'></div>
+                    <p className='text-small-02-r md:text-body-02-r text-gray-700'>{review.comment}</p>
+                  </li>
+                );
+              })}
             </ul>
           </div>
         </div>

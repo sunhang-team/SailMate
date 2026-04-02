@@ -1,5 +1,6 @@
 import { useState, useTransition } from 'react';
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useParams } from 'next/navigation';
+import { useSuspenseQuery, useSuspenseQueries } from '@tanstack/react-query';
 
 import { userQueries } from '@/api/users/queries';
 import { reviewQueries } from '@/api/reviews/queries';
@@ -20,6 +21,21 @@ export const useMemberDetail = (memberId: number) => {
   const { data: reviewsData } = useSuspenseQuery({
     ...reviewQueries.list(memberId, { page }),
   });
+
+  const reviewerQueries = useSuspenseQueries({
+    queries: (reviewsData?.reviews || []).map((review) => userQueries.userId(review.reviewer.id)),
+  });
+
+  const reviewerProfilesMap = reviewerQueries.reduce(
+    (acc, query, index) => {
+      const review = reviewsData?.reviews[index];
+      if (review && query.data?.profileImage) {
+        acc[review.reviewer.id] = query.data.profileImage;
+      }
+      return acc;
+    },
+    {} as Record<number, string>,
+  );
 
   const totalPages = Math.ceil((reviewsData?.totalCount || 0) / FIXED_LIMIT_REVIEW) || 1;
   const allTags = userProfile?.reviews?.flatMap((review) => review.tags || []) || [];
@@ -42,5 +58,6 @@ export const useMemberDetail = (memberId: number) => {
     totalPages,
     aggregatedTags,
     isPending,
+    reviewerProfilesMap,
   };
 };
