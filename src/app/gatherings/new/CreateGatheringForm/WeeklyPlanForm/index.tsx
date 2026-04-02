@@ -8,12 +8,12 @@ import { ArrowIcon } from '@/components/ui/Icon';
 import { Button } from '@/components/ui/Button';
 import { cn } from '@/lib/cn';
 
-import type { GatheringFormPartial } from '@/api/gatherings/types';
+import type { GatheringForm } from '@/api/gatherings/types';
 
 interface WeeklyPlanFormProps {
-  control: Control<GatheringFormPartial>;
-  register: UseFormRegister<GatheringFormPartial>;
-  errors: FieldErrors<GatheringFormPartial>;
+  control: Control<GatheringForm>;
+  register: UseFormRegister<GatheringForm>;
+  errors: FieldErrors<GatheringForm>;
   totalWeeks: number;
 }
 
@@ -36,7 +36,7 @@ const parseDetailLines = (value: string | undefined) => {
 };
 
 interface WeekDetailInputsProps {
-  control: Control<GatheringFormPartial>;
+  control: Control<GatheringForm>;
   index: number;
   error?: string;
 }

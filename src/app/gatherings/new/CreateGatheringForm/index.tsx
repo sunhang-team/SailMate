@@ -16,7 +16,7 @@ import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import { useToastStore } from '@/components/ui/Toast/useToastStore';
 import { useCreateGathering } from '@/api/gatherings/queries';
-import { gatheringFormPartialSchema } from '@/api/gatherings/schemas';
+import { gatheringFormSchema } from '@/api/gatherings/schemas';
 import { GATHERING_CATEGORIES, GATHERING_TYPES } from '@/constants/gathering';
 import { cn } from '@/lib/cn';
 
@@ -24,7 +24,7 @@ import { ImageUpload } from './ImageUpload';
 import { TagInput } from './TagInput';
 import { WeeklyPlanForm } from './WeeklyPlanForm';
 
-import type { GatheringForm, GatheringFormPartial } from '@/api/gatherings/types';
+import type { GatheringForm } from '@/api/gatherings/types';
 
 const RotatingArrow = () => {
   const { isOpen } = useDropdown();
@@ -67,8 +67,8 @@ export function CreateGatheringForm() {
     control,
     watch,
     formState: { errors },
-  } = useForm<GatheringFormPartial>({
-    resolver: zodResolver(gatheringFormPartialSchema),
+  } = useForm<GatheringForm>({
+    resolver: zodResolver(gatheringFormSchema),
     mode: 'onBlur',
     defaultValues: {
       tags: [],
@@ -122,8 +122,8 @@ export function CreateGatheringForm() {
     !!endDateValue &&
     isWeeklyGuidesComplete;
 
-  const onSubmit = (data: GatheringFormPartial) => {
-    mutate(data as GatheringForm, {
+  const onSubmit = (data: GatheringForm) => {
+    mutate(data, {
       onSuccess: () => {
         showToast({ variant: 'success', title: '모임이 생성되었습니다.' });
         // 리다이렉트
