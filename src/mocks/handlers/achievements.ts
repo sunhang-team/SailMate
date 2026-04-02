@@ -31,7 +31,7 @@ const mockSunny: GatheringAchievements = {
     },
     {
       userId: 3,
-      nickname: '박디자인',
+      nickname: '박프로',
       weeklyRates: [
         { week: 1, rate: 60.0 },
         { week: 2, rate: 100.0 },
@@ -150,7 +150,7 @@ const mockRanking: AchievementRanking = {
     {
       rank: 2,
       userId: 3,
-      nickname: '박디자인',
+      nickname: '박프로',
       profileImage: 'https://picsum.photos/seed/user3/200',
       overallRate: 80.0,
     },
