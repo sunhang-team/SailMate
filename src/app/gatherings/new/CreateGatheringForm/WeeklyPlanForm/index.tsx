@@ -63,33 +63,49 @@ function WeekDetailInputs({ control, index, error }: WeekDetailInputsProps) {
     <div className='flex flex-col gap-3'>
       <p className='text-small-02-m md:text-body-02-m text-gray-800'>세부 계획</p>
 
-      <div className='flex flex-col gap-3 md:flex-row'>
-        <div className='flex w-full flex-col gap-1.5'>
+      <div className='flex flex-col gap-3 lg:flex-row'>
+        <div className='flex w-full flex-col gap-1.5 lg:w-1/2'>
           <Input
             placeholder='세부 계획을 적어주세요'
             value={detailLines[0] ?? ''}
             onBlur={field.onBlur}
             onChange={(event) => updateDetailLine(0, event.target.value)}
             error={error}
-            className='text-small-02-r md:text-body-02-r'
+            className='text-small-02-r md:text-body-02-r h-11 md:h-14.5'
           />
         </div>
-        <Button type='button' variant='add-detail' size='add-detail' onClick={handleAddDetailLine}>
+        <Button
+          type='button'
+          variant='add-detail'
+          size='add-detail'
+          className='hidden h-[calc(2.75rem+5px)] w-full md:h-[calc(3.625rem+5px)] lg:block lg:w-1/2'
+          onClick={handleAddDetailLine}
+        >
           + 세부 계획 추가
         </Button>
       </div>
 
       {detailLines.slice(1).map((detailLine, lineIndex) => (
-        <div key={`${index}-detail-${lineIndex + 1}`} className='flex w-1/2 flex-col gap-1.5'>
+        <div key={`${index}-detail-${lineIndex + 1}`} className='flex w-full flex-col gap-1.5 lg:w-1/2'>
           <Input
             placeholder='세부 계획을 적어주세요'
             value={detailLine}
             onBlur={field.onBlur}
             onChange={(event) => updateDetailLine(lineIndex + 1, event.target.value)}
-            className='text-small-02-r md:text-body-02-r'
+            className='text-small-02-r md:text-body-02-r h-11 md:h-14.5'
           />
         </div>
       ))}
+
+      <Button
+        type='button'
+        variant='add-detail'
+        size='add-detail'
+        className='h-[calc(2.75rem+2px)] w-full md:h-[calc(3.625rem+2px)] lg:hidden'
+        onClick={handleAddDetailLine}
+      >
+        + 세부 계획 추가
+      </Button>
     </div>
   );
 }
@@ -178,7 +194,7 @@ export function WeeklyPlanForm({ control, register, errors, totalWeeks }: Weekly
           ))}
 
           {canAddNextWeek && (
-            <Button type='button' variant='add-task' className='mb-2.5 h-18 w-full' onClick={handleAddNextWeek}>
+            <Button type='button' variant='add-task' size='add-task' className='mb-2.5' onClick={handleAddNextWeek}>
               + 다음 주차 추가
             </Button>
           )}
