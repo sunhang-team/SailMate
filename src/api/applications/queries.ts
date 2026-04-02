@@ -12,6 +12,7 @@ import {
   UpdateApplicationStatusRequest,
   UpdateApplicationStatusResponse,
 } from './types';
+import { invalidateServerCache } from '@/lib/invalidateServerCache';
 
 export const applicationKeys = {
   all: ['applications'] as const,
@@ -47,6 +48,9 @@ export const useCreateApplication = (
     ...options,
     onSuccess: (data, variables, onMutateResult, context) => {
       queryClient.invalidateQueries({ queryKey: applicationKeys.all });
+
+      invalidateServerCache('gatherings');
+      invalidateServerCache(`gatherings-detail-${gatheringId}`);
       options?.onSuccess?.(data, variables, onMutateResult, context);
     },
   });

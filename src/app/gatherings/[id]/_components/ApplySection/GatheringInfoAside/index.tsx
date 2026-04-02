@@ -35,8 +35,6 @@ export function GatheringInfoAside({ gatheringId }: GatheringInfoAsideProps) {
   const { mutate, isPending } = useCreateApplication(gatheringId, {
     onSuccess: () => {
       setStep('SUCCESS');
-      invalidateServerCache(GATHERING_TAGS.all);
-      invalidateServerCache(GATHERING_TAGS.detail(gatheringId));
     },
   });
 
