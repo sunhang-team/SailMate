@@ -39,7 +39,7 @@ export function MotivationSection({ gatheringId }: MotivationSectionProps) {
       </div>
 
       {/* 일러스트 영역 */}
-      <div className='border-gray-150 shadow-02 aspect-[343/182] flex-1 overflow-hidden rounded-2xl border md:aspect-[688/366] lg:aspect-auto'>
+      <div className='border-gray-150 shadow-02 aspect-343/182 flex-1 overflow-hidden rounded-2xl border md:aspect-688/366 lg:aspect-auto'>
         <MotivationIllustration distance={distance} boatPosition={boatPosition} weatherLevel={weatherLevel} />
       </div>
     </div>
