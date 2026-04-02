@@ -343,9 +343,6 @@ export function CreateGatheringForm() {
         <p className='text-small-02-r self-end text-gray-400'>{goalValue.length}/200</p>
       </div>
 
-      {/* 이미지 */}
-      <div />
-
       {/* 모집 정보 */}
       <section className='flex flex-col gap-4'>
         <p className='text-small-01-sb md:text-body-01-sb lg:text-h5-b text-gray-800'>
