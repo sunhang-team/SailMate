@@ -49,4 +49,8 @@ export const gatheringFormPartialSchema = z.object({
   startDate: dateStringSchema,
   endDate: dateStringSchema,
   weeklyGuides: z.array(weeklyGuideSchema).min(1, '최소 1주차 계획은 입력해 주세요.'),
+  images: z
+    .array(z.instanceof(File, { message: '유효한 파일이 아닙니다.' }))
+    .max(6, '이미지는 최대 6장까지 업로드 가능합니다.')
+    .optional(),
 });

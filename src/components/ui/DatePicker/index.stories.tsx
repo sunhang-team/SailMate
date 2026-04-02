@@ -16,6 +16,10 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
+  args: {
+    value: '',
+    onChange: () => {},
+  },
   render: () => {
     const [value, setValue] = useState<string>('');
 
@@ -28,6 +32,10 @@ export const Default: Story = {
 };
 
 export const WithError: Story = {
+  args: {
+    value: '',
+    onChange: () => {},
+  },
   render: () => {
     const [value, setValue] = useState<string>('');
 

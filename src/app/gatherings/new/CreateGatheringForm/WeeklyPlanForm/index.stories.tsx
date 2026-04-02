@@ -6,18 +6,29 @@ import { WeeklyPlanForm } from '.';
 
 import type { GatheringFormPartial } from '@/api/gatherings/types';
 
+interface WeeklyPlanFormStoryArgs {
+  totalWeeks: number;
+}
+
 const meta = {
   title: 'app/CreateGatheringForm/WeeklyPlanForm',
-  component: WeeklyPlanForm,
+  args: {
+    totalWeeks: 1,
+  },
+  argTypes: {
+    totalWeeks: {
+      control: { type: 'number', min: 0, step: 1 },
+    },
+  },
   parameters: { layout: 'padded' },
   tags: ['autodocs'],
-} satisfies Meta<typeof WeeklyPlanForm>;
+} satisfies Meta<WeeklyPlanFormStoryArgs>;
 
 export default meta;
 
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<WeeklyPlanFormStoryArgs>;
 
-function WeeklyPlanFormStory({ totalWeeks }: { totalWeeks: number }) {
+function WeeklyPlanFormStory({ totalWeeks }: WeeklyPlanFormStoryArgs) {
   const { control, register, formState } = useForm<GatheringFormPartial>({
     defaultValues: {
       weeklyGuides: [],
@@ -32,9 +43,15 @@ function WeeklyPlanFormStory({ totalWeeks }: { totalWeeks: number }) {
 }
 
 export const OneWeek: Story = {
-  render: () => <WeeklyPlanFormStory totalWeeks={1} />,
+  args: {
+    totalWeeks: 1,
+  },
+  render: (args) => <WeeklyPlanFormStory totalWeeks={args.totalWeeks} />,
 };
 
 export const ThreeWeeks: Story = {
-  render: () => <WeeklyPlanFormStory totalWeeks={3} />,
+  args: {
+    totalWeeks: 3,
+  },
+  render: (args) => <WeeklyPlanFormStory totalWeeks={args.totalWeeks} />,
 };
