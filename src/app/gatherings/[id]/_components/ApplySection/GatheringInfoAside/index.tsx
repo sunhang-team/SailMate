@@ -1,20 +1,23 @@
 'use client';
 
 import { useState } from 'react';
+
 import { useSuspenseQuery } from '@tanstack/react-query';
 
 import { gatheringQueries } from '@/api/gatherings/queries';
 import { useCreateApplication } from '@/api/applications/queries';
-import type { GatheringType } from '@/api/gatherings/types';
 import { Button } from '@/components/ui/Button';
 import { GatheringCard } from '@/components/ui/GatheringCard';
 import { HeartIcon, StudyIcon, ProjectIcon } from '@/components/ui/Icon';
 import { Tag } from '@/components/ui/Tag';
+
 import { DeadlineLabel } from '../DeadlineLabel';
 import { InfoAccordion } from '../InfoAccordion';
 import { ParticipantsList } from '../ParticipantsList';
 import { GatheringApplyForm } from '../GatheringApplyForm';
 import { GatheringApplySuccess } from '../GatheringApplySuccess';
+
+import type { GatheringType } from '@/api/gatherings/types';
 
 const TYPE_ICON: Record<GatheringType, typeof StudyIcon> = {
   스터디: StudyIcon,

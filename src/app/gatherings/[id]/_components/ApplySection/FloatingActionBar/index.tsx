@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+
 import { useSuspenseQuery } from '@tanstack/react-query';
 
 import { gatheringQueries } from '@/api/gatherings/queries';
@@ -8,6 +9,7 @@ import { useCreateApplication } from '@/api/applications/queries';
 import { Button } from '@/components/ui/Button';
 import { HeartIcon } from '@/components/ui/Icon';
 import { BottomSheet } from '@/components/ui/BottomSheet';
+
 import { GatheringApplyForm } from '../GatheringApplyForm';
 import { GatheringApplySuccess } from '../GatheringApplySuccess';
 
