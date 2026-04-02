@@ -1,6 +1,6 @@
 'use client';
 
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useSuspenseQueries, useSuspenseQuery } from '@tanstack/react-query';
 
 import { achievementQueries } from '@/api/achievements/queries';
 import { gatheringQueries } from '@/api/gatherings/queries';
@@ -20,13 +20,14 @@ interface WeeklySummarySectionProps {
 }
 
 export function WeeklySummarySection({ gatheringId }: WeeklySummarySectionProps) {
-  const { data: gatheringData } = useSuspenseQuery(gatheringQueries.detail(gatheringId));
+  const [{ data: gatheringData }, { data: achievementData }] = useSuspenseQueries({
+    queries: [gatheringQueries.detail(gatheringId), achievementQueries.detail(gatheringId)],
+  });
 
   const currentWeek = getCurrentWeek(gatheringData.startDate);
   const remainingDays = getRemainingDays(gatheringData.endDate);
 
   const { data: myTodoData } = useSuspenseQuery(todoQueries.myList(gatheringId, { week: currentWeek }));
-  const { data: achievementData } = useSuspenseQuery(achievementQueries.detail(gatheringId));
 
   const currentWeekTodos = myTodoData.todos.filter((t) => t.week === currentWeek);
   const incompleteTodoCount = currentWeekTodos.filter((t) => !t.isCompleted).length;
