@@ -2,8 +2,6 @@
 
 import { useState } from 'react';
 
-import type { Member } from '@/api/memberships/types';
-import type { Todo } from '@/api/todos/types';
 import { ArrowIcon } from '@/components/ui/Icon/ArrowIcon';
 import { Profile } from '@/components/ui/Profile';
 import { cn } from '@/lib/cn';
@@ -11,6 +9,9 @@ import { StateIcon } from '@/components/ui/Icon';
 import { Tag } from '@/components/ui/Tag';
 
 import { MemberTodoGrid } from '../MemberTodoGrid';
+
+import type { Member } from '@/api/memberships/types';
+import type { Todo } from '@/api/todos/types';
 
 interface MemberTodoAccordionProps {
   member: Member;
