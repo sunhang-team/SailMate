@@ -56,7 +56,7 @@ export function MemberTodoAccordion({ member, todos }: MemberTodoAccordionProps)
             <span className='text-small-02-sb inline-flex items-center gap-1 rounded-[4px] bg-blue-50 px-2 py-0.5 text-blue-400'>
               <Tag variant='info' state='good'>
                 <StateIcon variant='active' size={14} />
-                14일
+                {dDay}일
               </Tag>
             </span>
           )}

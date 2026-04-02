@@ -1,7 +1,8 @@
 'use client';
 
-import { useSuspenseQueries } from '@tanstack/react-query';
 import { useState } from 'react';
+
+import { useSuspenseQueries, useSuspenseQuery } from '@tanstack/react-query';
 
 import { gatheringQueries } from '@/api/gatherings/queries';
 import { membershipQueries } from '@/api/memberships/queries';
@@ -26,11 +27,8 @@ export function MemberTodoSection({ gatheringId }: MemberTodoSectionProps) {
 
   const currentWeek = getCurrentWeek(gatheringData.startDate);
 
-  const { data: todoData } = useSuspenseQueries({
-    queries: [todoQueries.list(gatheringId, { week: currentWeek })],
-    combine: (results) => ({
-      data: results[0].data,
-    }),
+  const { data: todoData } = useSuspenseQuery({
+    ...todoQueries.list(gatheringId, { week: currentWeek }),
   });
 
   const totalMembers = membersData.members.length;
