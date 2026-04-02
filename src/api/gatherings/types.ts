@@ -1,6 +1,6 @@
 import type { z } from 'zod';
 
-import type { gatheringFormPartialSchema, gatheringFormSchema, gatheringUpdateFormSchema } from './schemas';
+import type { gatheringFormSchema, gatheringUpdateFormSchema } from './schemas';
 
 /** 모임 유형 */
 export type GatheringType = '스터디' | '프로젝트';
