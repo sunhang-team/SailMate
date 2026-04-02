@@ -120,3 +120,20 @@ export const ScoreWithBadge: Story = {
     ),
   },
 };
+
+export const EnergyWithScore: Story = {
+  name: '에너지 + 점수(70점)',
+  args: {
+    value: 70,
+    barClassName: 'h-4',
+    children: (
+      <div className='text-small-02-m flex items-center justify-between'>
+        <div className='text-body-01-m text-gray-800'>활동 에너지</div>
+        <div className='flex items-center gap-2'>
+          <span className='text-body-01-sb text-blue-300'>70점</span>
+          <IllustrationIcon variant='fire' size={32} />
+        </div>
+      </div>
+    ),
+  },
+};
