@@ -26,6 +26,8 @@ describe('WeeklyPlanForm', () => {
     fireEvent.click(screen.getByRole('button', { name: /주차별 계획/i }));
 
     expect(screen.getByText('1주차')).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: /\+ 다음 주차 추가/i }));
     expect(screen.getByText('2주차')).toBeInTheDocument();
   });
 
@@ -33,6 +35,8 @@ describe('WeeklyPlanForm', () => {
     const { rerender } = render(<TestHarness totalWeeks={3} />);
 
     fireEvent.click(screen.getByRole('button', { name: /주차별 계획/i }));
+    fireEvent.click(screen.getByRole('button', { name: /\+ 다음 주차 추가/i }));
+    fireEvent.click(screen.getByRole('button', { name: /\+ 다음 주차 추가/i }));
     expect(screen.getByText('3주차')).toBeInTheDocument();
 
     rerender(<TestHarness totalWeeks={1} />);
