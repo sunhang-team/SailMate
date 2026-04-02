@@ -310,8 +310,6 @@
 }
 
 /* Recharts 내부 영역 클릭 시 보이던 두꺼운 border(3개) 제거 */
-.custom-scrollbar:focus,
-.custom-scrollbar:focus-visible,
 .recharts-wrapper:focus,
 .recharts-surface:focus,
 .recharts-wrapper *:focus {
