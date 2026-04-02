@@ -26,7 +26,8 @@ export const buttonVariants = cva('cursor-pointer transition-colors disabled:cur
       'keyword-search':
         'rounded-[50px] flex items-center gap-2 text-body-01-r text-blue-300 text-gradient-primary border-gradient-primary',
       dropdown: 'rounded-lg flex items-center justify-between px-3 text-body-01-m text-blue-300 bg-blue-100',
-      'add-task': 'rounded-lg flex items-center justify-center gap-1 text-body-01-sb text-blue-300 bg-blue-50',
+      'add-task': 'rounded-lg flex items-center justify-center gap-1 md:text-body-01-m text-blue-300 bg-blue-50',
+      'add-detail': 'rounded-lg flex items-center justify-center gap-1  md:text-body-01-m text-gray-600 bg-gray-100',
       fire: 'rounded-lg flex items-center justify-center bg-gray-150 data-[selected=true]:bg-gray-300',
       'write-review': 'rounded-lg flex items-center justify-center gap-2 text-body-01-sb text-blue-300 bg-blue-50',
       bookmark:
@@ -60,7 +61,8 @@ export const buttonVariants = cva('cursor-pointer transition-colors disabled:cur
       'social-kakao': 'h-12 w-[242px]',
       'keyword-search': 'h-18 w-[258px] px-6',
       dropdown: 'h-10 w-[131px]',
-      'add-task': 'h-18 w-[1624px]',
+      'add-task': 'lg:h-18 lg:w-[1624px] md:w-[640px] md:h-14.5 sm:w-[311px] sm:h-11 w-full',
+      'add-detail': 'w-full',
       fire: 'h-12 w-12',
       'write-review': 'h-18 w-[527px]',
       'bookmark-sm': 'h-11 w-11',

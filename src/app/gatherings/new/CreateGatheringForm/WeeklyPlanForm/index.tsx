@@ -1,11 +1,11 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { type Control, type FieldErrors, type UseFormRegister, useFieldArray } from 'react-hook-form';
+import { type Control, type FieldErrors, type UseFormRegister, useController, useFieldArray } from 'react-hook-form';
 
 import { Input } from '@/components/ui/Input';
 import { ArrowIcon } from '@/components/ui/Icon';
-import { Textarea } from '@/components/ui/Textarea';
+import { Button } from '@/components/ui/Button';
 import { cn } from '@/lib/cn';
 
 import type { GatheringFormPartial } from '@/api/gatherings/types';
@@ -29,42 +29,119 @@ const createEmptyGuide = (week: number): WeeklyGuideItem => ({
   content: '',
 });
 
+const parseDetailLines = (value: string | undefined) => {
+  if (!value) return [''];
+  const parsed = value.split('\n');
+  return parsed.length > 0 ? parsed : [''];
+};
+
+interface WeekDetailInputsProps {
+  control: Control<GatheringFormPartial>;
+  index: number;
+  error?: string;
+}
+
+function WeekDetailInputs({ control, index, error }: WeekDetailInputsProps) {
+  const { field } = useController({
+    control,
+    name: `weeklyGuides.${index}.content`,
+  });
+  const detailLines = parseDetailLines(field.value);
+
+  const updateDetailLine = (lineIndex: number, nextValue: string) => {
+    const currentLines = parseDetailLines(field.value);
+    const nextLines = currentLines.map((line, idx) => (idx === lineIndex ? nextValue : line));
+    field.onChange(nextLines.join('\n'));
+  };
+
+  const handleAddDetailLine = () => {
+    const nextLines = [...parseDetailLines(field.value), ''];
+    field.onChange(nextLines.join('\n'));
+  };
+
+  return (
+    <div className='flex flex-col gap-3'>
+      <p className='text-small-02-m md:text-body-02-m text-gray-800'>세부 계획</p>
+
+      <div className='flex flex-col gap-3 md:flex-row'>
+        <div className='flex w-full flex-col gap-1.5'>
+          <Input
+            placeholder='세부 계획을 적어주세요'
+            value={detailLines[0] ?? ''}
+            onBlur={field.onBlur}
+            onChange={(event) => updateDetailLine(0, event.target.value)}
+            error={error}
+            className='text-small-02-r md:text-body-02-r'
+          />
+        </div>
+        <Button type='button' variant='add-detail' size='add-detail' onClick={handleAddDetailLine}>
+          + 세부 계획 추가
+        </Button>
+      </div>
+
+      {detailLines.slice(1).map((detailLine, lineIndex) => (
+        <div key={`${index}-detail-${lineIndex + 1}`} className='flex w-1/2 flex-col gap-1.5'>
+          <Input
+            placeholder='세부 계획을 적어주세요'
+            value={detailLine}
+            onBlur={field.onBlur}
+            onChange={(event) => updateDetailLine(lineIndex + 1, event.target.value)}
+            className='text-small-02-r md:text-body-02-r'
+          />
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export function WeeklyPlanForm({ control, register, errors, totalWeeks }: WeeklyPlanFormProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const { fields, replace } = useFieldArray({
+  const { fields, append, remove, replace } = useFieldArray({
     control,
     name: 'weeklyGuides',
   });
 
   useEffect(() => {
-    const nextLength = Math.max(0, totalWeeks);
-    const currentGuides = fields.map((field, index) => ({
+    const allowedLength = Math.max(0, totalWeeks);
+    const currentLength = fields.length;
+
+    if (allowedLength === 0) {
+      if (currentLength > 0) {
+        remove();
+      }
+      return;
+    }
+
+    // 총 주차가 줄어든 경우에만 초과 주차를 자동 제거
+    if (currentLength > allowedLength) {
+      remove(allowedLength);
+      return;
+    }
+
+    // 최초 1주차는 자동 생성, 이후 주차는 "다음 주차 추가" 버튼으로만 생성
+    if (currentLength === 0) {
+      append(createEmptyGuide(1));
+      return;
+    }
+
+    const normalized = fields.map((field, index) => ({
       week: index + 1,
       title: field.title ?? '',
       content: field.content ?? '',
     }));
-
-    const resized = Array.from({ length: nextLength }, (_, index) => {
-      const existing = currentGuides[index];
-      return existing ? { ...existing, week: index + 1 } : createEmptyGuide(index + 1);
-    });
-
-    const hasSameLength = currentGuides.length === resized.length;
-    const hasSameValue =
-      hasSameLength &&
-      resized.every(
-        (item, index) =>
-          item.week === currentGuides[index]?.week &&
-          item.title === currentGuides[index]?.title &&
-          item.content === currentGuides[index]?.content,
-      );
-
-    if (!hasSameValue) {
-      replace(resized);
+    const hasSameWeekOrder = normalized.every((item, index) => item.week === fields[index]?.week);
+    if (!hasSameWeekOrder) {
+      replace(normalized);
     }
-  }, [fields, replace, totalWeeks]);
+  }, [append, fields, remove, replace, totalWeeks]);
 
   const guideErrors = useMemo(() => errors.weeklyGuides, [errors.weeklyGuides]);
+  const canAddNextWeek = fields.length < Math.max(0, totalWeeks);
+
+  const handleAddNextWeek = () => {
+    if (!canAddNextWeek) return;
+    append(createEmptyGuide(fields.length + 1));
+  };
 
   return (
     <section className='mt-8 flex flex-col'>
@@ -92,15 +169,19 @@ export function WeeklyPlanForm({ control, register, errors, totalWeeks }: Weekly
                 {...register(`weeklyGuides.${index}.title`)}
               />
 
-              <Textarea
-                label='세부 계획'
-                placeholder='세부 계획을 적어주세요'
+              <WeekDetailInputs
+                control={control}
+                index={index}
                 error={guideErrors?.[index]?.content?.message as string | undefined}
-                rows={3}
-                {...register(`weeklyGuides.${index}.content`)}
               />
             </div>
           ))}
+
+          {canAddNextWeek && (
+            <Button type='button' variant='add-task' className='mb-2.5 h-18 w-full' onClick={handleAddNextWeek}>
+              + 다음 주차 추가
+            </Button>
+          )}
         </div>
       )}
     </section>
