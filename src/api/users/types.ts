@@ -55,7 +55,7 @@ export type UserPublicProfile = Pick<
   User,
   'id' | 'nickname' | 'profileImage' | 'reputationScore' | 'reputationLabel'
 > & {
-  reviews: Review[];
+  reviews?: Review[];
 };
 
 /**
