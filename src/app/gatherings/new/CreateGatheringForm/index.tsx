@@ -63,6 +63,7 @@ const CATEGORY_META = {
   LANGUAGE: { label: '어학' },
   BOOK: { label: '독서' },
   CERTIFICATE: { label: '자격증' },
+  DESIGN: { label: '디자인' },
 } as const;
 
 export function CreateGatheringForm() {

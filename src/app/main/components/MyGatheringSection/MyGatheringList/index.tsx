@@ -13,7 +13,7 @@ export function MyGatheringList() {
   const { page, setPage, totalPages, visibleGatherings, memberQueries } = useMyGatheringList();
 
   const handleCardClick = (id: number) => {
-    router.push(`/gatherings/${id}`);
+    router.push(`/gatherings/${id}/dashboard`);
   };
 
   return (

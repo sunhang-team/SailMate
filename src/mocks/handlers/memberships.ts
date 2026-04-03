@@ -23,8 +23,8 @@ const STATUS_FILTER_MAP: Record<string, GatheringStatus> = {
 const mockGatherings: MembershipGathering[] = [
   {
     id: 1,
-    type: '스터디',
-    category: '개발',
+    type: 'STUDY',
+    category: 'DEVELOPMENT',
     title: 'React 완전 정복 스터디',
     shortDescription: '리액트 공식문서를 같이 읽어요',
     tags: ['React', '프론트엔드'],
@@ -38,8 +38,8 @@ const mockGatherings: MembershipGathering[] = [
   },
   {
     id: 2,
-    type: '프로젝트',
-    category: '개발',
+    type: 'PROJECT',
+    category: 'DEVELOPMENT',
     title: '사이드 프로젝트 팀원 모집',
     shortDescription: 'Spring Boot 기반 협업 프로젝트',
     tags: ['Spring', '백엔드'],
@@ -53,8 +53,8 @@ const mockGatherings: MembershipGathering[] = [
   },
   {
     id: 3,
-    type: '스터디',
-    category: '디자인',
+    type: 'STUDY',
+    category: 'DESIGN',
     title: 'Figma 마스터 클래스',
     shortDescription: 'Figma 기초부터 실전까지',
     tags: ['Figma', 'UI/UX'],
@@ -68,8 +68,8 @@ const mockGatherings: MembershipGathering[] = [
   },
   {
     id: 4,
-    type: '스터디',
-    category: '개발',
+    type: 'STUDY',
+    category: 'DEVELOPMENT',
     title: 'React 완전 정복 스터디',
     shortDescription: '리액트 공식문서를 같이 읽어요',
     tags: ['React', '프론트엔드'],
@@ -83,8 +83,8 @@ const mockGatherings: MembershipGathering[] = [
   },
   {
     id: 5,
-    type: '스터디',
-    category: '개발',
+    type: 'STUDY',
+    category: 'DEVELOPMENT',
     title: 'React 완전 정복 스터디',
     shortDescription: '리액트 공식문서를 같이 읽어요',
     tags: ['React', '프론트엔드'],
@@ -98,8 +98,8 @@ const mockGatherings: MembershipGathering[] = [
   },
   {
     id: 6,
-    type: '스터디',
-    category: '개발',
+    type: 'STUDY',
+    category: 'DEVELOPMENT',
     title: 'React 완전 정복 스터디',
     shortDescription: '리액트 공식문서를 같이 읽어요',
     tags: ['React', '프론트엔드'],
@@ -113,8 +113,8 @@ const mockGatherings: MembershipGathering[] = [
   },
   {
     id: 7,
-    type: '스터디',
-    category: '개발',
+    type: 'STUDY',
+    category: 'DEVELOPMENT',
     title: 'React 완전 정복 스터디',
     shortDescription: '리액트 공식문서를 같이 읽어요',
     tags: ['React', '프론트엔드'],
@@ -128,8 +128,8 @@ const mockGatherings: MembershipGathering[] = [
   },
   {
     id: 8,
-    type: '스터디',
-    category: '개발',
+    type: 'STUDY',
+    category: 'DEVELOPMENT',
     title: 'React 완전 정복 스터디',
     shortDescription: '리액트 공식문서를 같이 읽어요',
     tags: ['React', '프론트엔드'],

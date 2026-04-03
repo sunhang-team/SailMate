@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/Button';
 import { GatheringCard } from '@/components/ui/GatheringCard';
 import { HeartIcon, StudyIcon, ProjectIcon } from '@/components/ui/Icon';
 import { Tag } from '@/components/ui/Tag';
+import { GATHERING_CATEGORY_LABEL, GATHERING_TYPE_LABEL } from '@/constants/gathering';
 import { useFunnel } from '@/hooks/useFunnel';
 
 import { DeadlineLabel } from '../DeadlineLabel';
@@ -21,8 +22,8 @@ import { GatheringApplySuccess } from '../GatheringApplySuccess';
 import type { GatheringType } from '@/api/gatherings/types';
 
 const TYPE_ICON: Record<GatheringType, typeof StudyIcon> = {
-  스터디: StudyIcon,
-  프로젝트: ProjectIcon,
+  STUDY: StudyIcon,
+  PROJECT: ProjectIcon,
 };
 
 interface GatheringInfoAsideProps {
@@ -40,7 +41,10 @@ export function GatheringInfoAside({ gatheringId }: GatheringInfoAsideProps) {
     },
   });
 
-  const TypeIcon = TYPE_ICON[data.type];
+  const TypeIcon = TYPE_ICON[data.type] || StudyIcon;
+  const TypeLabel = GATHERING_TYPE_LABEL[data.type] || data.type;
+  const CategoryLabel =
+    GATHERING_CATEGORY_LABEL[data.category as keyof typeof GATHERING_CATEGORY_LABEL] || data.category;
 
   return (
     <div className='sticky top-[0.1px]'>
@@ -74,8 +78,8 @@ export function GatheringInfoAside({ gatheringId }: GatheringInfoAsideProps) {
               <Tag
                 variant='category'
                 icon={<TypeIcon size={14} className='text-blue-200' />}
-                label={data.type}
-                sublabel={data.category}
+                label={TypeLabel}
+                sublabel={CategoryLabel}
               />
               <Button
                 variant='bookmark'
