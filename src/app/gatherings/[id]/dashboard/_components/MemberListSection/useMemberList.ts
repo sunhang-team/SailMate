@@ -14,6 +14,8 @@ import type { Member } from '@/api/memberships/types';
 
 const MEMBERS_PER_PAGE = 10;
 const WARNING_ACHIEVEMENT_THRESHOLD = 0.5; // 50% 이하면 주의 배지 (현재 주차 기준)
+const MIN_WEEKS_FOR_WARNING = 2;
+const DAYS_PER_WEEK = 7;
 
 export const useMemberList = (gatheringId: number) => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -51,7 +53,7 @@ export const useMemberList = (gatheringId: number) => {
     const achievedWeeks = getAchievedWeeks(member.userId);
     const achievementRatio = currentWeek > 0 ? achievedWeeks / currentWeek : 0;
 
-    if (achievementRatio <= WARNING_ACHIEVEMENT_THRESHOLD && currentWeek >= 2) {
+    if (achievementRatio <= WARNING_ACHIEVEMENT_THRESHOLD && currentWeek >= MIN_WEEKS_FOR_WARNING) {
       return { type: 'warning', label: '주의' };
     }
 
@@ -68,7 +70,7 @@ export const useMemberList = (gatheringId: number) => {
         }
       }
       if (streak >= STREAK_WEEKS_THRESHOLD) {
-        return { type: 'streak', label: `${streak * 7}일` };
+        return { type: 'streak', label: `${streak * DAYS_PER_WEEK}일` };
       }
     }
 
