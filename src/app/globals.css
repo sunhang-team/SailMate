@@ -308,3 +308,11 @@
     max-height: 40px;
   }
 }
+
+/* Recharts 내부 영역 클릭 시 보이던 두꺼운 border(3개) 제거 */
+.recharts-wrapper:focus,
+.recharts-surface:focus,
+.recharts-wrapper *:focus {
+  outline: none;
+  box-shadow: none;
+}

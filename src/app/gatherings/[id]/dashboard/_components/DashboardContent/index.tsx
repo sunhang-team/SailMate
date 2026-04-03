@@ -2,6 +2,7 @@ import { SuspenseBoundary } from '@/components/SuspenseBoundary';
 
 import { MotivationSection } from '../MotivationSection';
 import { WeeklySummarySection } from '../WeeklySummarySection';
+import { WeeklyTrendChart } from '../WeeklyTrendChart';
 
 import type { DashboardTab } from '../../_constants';
 
@@ -43,6 +44,14 @@ export function DashboardContent({ activeTab, gatheringId }: DashboardContentPro
               errorFallback={<p className='text-body-02-r text-gray-400'>활동 요약을 불러오는데 실패했습니다.</p>}
             >
               <WeeklySummarySection gatheringId={gatheringId} />
+            </SuspenseBoundary>
+            <SuspenseBoundary
+              pendingFallback={<div className='h-96 animate-pulse rounded-2xl bg-gray-100' />}
+              errorFallback={
+                <p className='text-body-02-r text-gray-400'>주차별 달성률 추이를 불러오는데 실패했습니다.</p>
+              }
+            >
+              <WeeklyTrendChart gatheringId={gatheringId} />
             </SuspenseBoundary>
           </div>
         )}
