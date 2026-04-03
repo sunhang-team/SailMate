@@ -7,6 +7,7 @@ import { WeeklyTrendChart } from '../WeeklyTrendChart';
 import { MemberTodoSection } from '../MemberTodoSection';
 
 import type { DashboardTab } from '../../_constants';
+import { MemberListSection } from '../MemberListSection';
 
 interface DashboardContentProps {
   activeTab: DashboardTab;
@@ -71,6 +72,16 @@ export function DashboardContent({ activeTab, gatheringId }: DashboardContentPro
               errorFallback={<p className='text-body-02-r text-gray-400'>멤버 할 일을 불러오는데 실패했습니다.</p>}
             >
               <MemberTodoSection gatheringId={gatheringId} />
+            </SuspenseBoundary>
+          </div>
+        )}
+        {activeTab === 'members' && (
+          <div className='flex flex-col gap-6'>
+            <SuspenseBoundary
+              pendingFallback={<div className='h-96 animate-pulse rounded-2xl bg-gray-100' />}
+              errorFallback={<p className='text-body-02-r text-gray-400'>멤버 목록을 불러오는데 실패했습니다.</p>}
+            >
+              <MemberListSection gatheringId={gatheringId} />
             </SuspenseBoundary>
           </div>
         )}
