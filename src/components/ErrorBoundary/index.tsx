@@ -1,0 +1,87 @@
+'use client';
+
+import { Component, type ErrorInfo, type ReactNode } from 'react';
+import type { ErrorBoundaryProps, ErrorBoundaryState } from './types';
+
+/**
+ * 자식 컴포넌트의 렌더링 에러를 잡아 fallback UI를 표시하는 에러 경계 컴포넌트.
+ *
+ * @example
+ * // prefetch된 공개 데이터 — 에러만 대비
+ * <ErrorBoundary fallback={<div>에러가 발생했습니다.</div>}>
+ *   <GatheringList />
+ * </ErrorBoundary>
+ *
+ * @example
+ * // 함수형 fallback — error 정보 + 재시도 버튼
+ * <ErrorBoundary
+ *   fallback={(error, reset) => (
+ *     <div>
+ *       <p>{error.message}</p>
+ *       <button onClick={reset}>재시도</button>
+ *     </div>
+ *   )}
+ *   onError={(error) => sendToSentry(error)}
+ *   resetKeys={[userId]}
+ * >
+ *   <UserProfile />
+ * </ErrorBoundary>
+ */
+export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  constructor(props: ErrorBoundaryProps) {
+    super(props);
+    this.state = { error: null };
+  }
+
+  static getDerivedStateFromError(error: Error): ErrorBoundaryState {
+    return { error };
+  }
+
+  componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
+    this.props.onError?.(error, errorInfo);
+
+    if (process.env.NODE_ENV === 'development') {
+      console.group('🚨 ErrorBoundary caught an error');
+      console.error('Error:', error);
+      console.error('Component Stack:', errorInfo.componentStack);
+      console.groupEnd();
+    }
+  }
+
+  componentDidUpdate(prevProps: ErrorBoundaryProps): void {
+    const { resetKeys } = this.props;
+    const { error } = this.state;
+
+    if (error == null || resetKeys == null) {
+      return;
+    }
+
+    const hasResetKeysChanged =
+      prevProps.resetKeys == null ||
+      resetKeys.length !== prevProps.resetKeys.length ||
+      resetKeys.some((key, index) => !Object.is(key, prevProps.resetKeys![index]));
+
+    if (hasResetKeysChanged) {
+      this.reset();
+    }
+  }
+
+  reset = (): void => {
+    this.props.onReset?.();
+    this.setState({ error: null });
+  };
+
+  render(): ReactNode {
+    const { error } = this.state;
+    const { children, fallback } = this.props;
+
+    if (error != null) {
+      if (typeof fallback === 'function') {
+        return fallback(error, this.reset);
+      }
+      return fallback;
+    }
+
+    return children;
+  }
+}

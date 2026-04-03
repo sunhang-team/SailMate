@@ -1,1 +1,318 @@
-@import "tailwindcss";
+@import 'tailwindcss';
+
+@theme {
+  --font-pretendard: var(--font-pretendard), 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+
+  --text-h1-b: 64px;
+  --text-h1-b--line-height: 160%;
+  --text-h1-b--font-weight: 700;
+  --text-h2-b: 40px;
+  --text-h2-b--line-height: 160%;
+  --text-h2-b--font-weight: 700;
+  --text-h3-b: 32px;
+  --text-h3-b--line-height: 160%;
+  --text-h3-b--font-weight: 700;
+  --text-h4-b: 28px;
+  --text-h4-b--line-height: 160%;
+  --text-h4-b--font-weight: 700;
+  --text-h5-b: 24px;
+  --text-h5-b--line-height: 160%;
+  --text-h5-b--font-weight: 700;
+  --text-h5-sb: 24px;
+  --text-h5-sb--line-height: 160%;
+  --text-h5-sb--font-weight: 600;
+  --text-body-01-r: 20px;
+  --text-body-01-r--line-height: 160%;
+  --text-body-01-r--font-weight: 400;
+  --text-body-01-m: 20px;
+  --text-body-01-m--line-height: 160%;
+  --text-body-01-m--font-weight: 500;
+  --text-body-01-sb: 20px;
+  --text-body-01-sb--line-height: 160%;
+  --text-body-01-sb--font-weight: 600;
+  --text-body-01-b: 20px;
+  --text-body-01-b--line-height: 160%;
+  --text-body-01-b--font-weight: 700;
+  --text-body-02-r: 16px;
+  --text-body-02-r--line-height: 160%;
+  --text-body-02-r--font-weight: 400;
+  --text-body-02-m: 16px;
+  --text-body-02-m--line-height: 160%;
+  --text-body-02-m--font-weight: 500;
+  --text-body-02-b: 16px;
+  --text-body-02-b--line-height: 160%;
+  --text-body-02-b--font-weight: 700;
+  --text-body-02-sb: 16px;
+  --text-body-02-sb--line-height: 160%;
+  --text-body-02-sb--font-weight: 600;
+  --text-small-01-r: 14px;
+  --text-small-01-r--line-height: 160%;
+  --text-small-01-r--font-weight: 400;
+  --text-small-01-m: 14px;
+  --text-small-01-m--line-height: 160%;
+  --text-small-01-m--font-weight: 500;
+  --text-small-01-sb: 14px;
+  --text-small-01-sb--line-height: 160%;
+  --text-small-01-sb--font-weight: 600;
+  --text-small-01-b: 14px;
+  --text-small-01-b--line-height: 160%;
+  --text-small-01-b--font-weight: 700;
+  --text-small-02-r: 12px;
+  --text-small-02-r--line-height: 160%;
+  --text-small-02-r--font-weight: 400;
+  --text-small-02-sb: 12px;
+  --text-small-02-sb--line-height: 160%;
+  --text-small-02-sb--font-weight: 600;
+  --text-small-02-m: 12px;
+  --text-small-02-m--line-height: 160%;
+  --text-small-02-m--font-weight: 500;
+  --text-small-02-sb: 12px;
+  --text-small-02-sb--line-height: 160%;
+  --text-small-02-sb--font-weight: 600;
+  --text-small-03-r: 10px;
+  --text-small-03-r--line-height: 160%;
+  --text-small-03-r--font-weight: 400;
+
+  --color-gray-0: #ffffff;
+  --color-gray-50: #fcfcfc;
+  --color-gray-100: #f9fafc;
+  --color-gray-150: #edeff1;
+  --color-gray-200: #dddddd;
+  --color-gray-300: #cccccc;
+  --color-gray-400: #bbbbbb;
+  --color-gray-500: #a4a4a4;
+  --color-gray-600: #737373;
+  --color-gray-700: #4a4a4a;
+  --color-gray-800: #333333;
+  --color-gray-900: #191919;
+
+  --color-blue-50: #f4faff;
+  --color-blue-100: #dbf0ff;
+  --color-blue-150: #cfdfff;
+  --color-blue-200: #00ccff;
+  --color-blue-300: #3779fe;
+  --color-blue-400: #1e58f8;
+  --color-blue-500: #010937;
+
+  --color-red-100: #ffdbdb;
+  --color-red-200: #fe3737;
+
+  --color-orange-100: #ffefdb;
+  --color-orange-200: #fe9137;
+
+  --color-focus-100: #d0dbfb;
+
+  --shadow-01: 0 0 12px rgba(30, 88, 248, 0.04);
+  --shadow-02: 0 0 16px rgba(30, 88, 248, 0.04);
+  --shadow-03: 0 0 12px rgba(30, 88, 248, 0.12);
+}
+
+@utility bg-gradient-primary {
+  background: linear-gradient(to right, #1e58f8, #00ccff);
+}
+
+@utility text-gradient-primary {
+  background: linear-gradient(to right, #1e58f8, #00ccff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+@utility border-gradient-primary {
+  position: relative;
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(to right, #1e58f8, #00ccff);
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: destination-out;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+}
+
+@utility bg-gradient-sub-100 {
+  background: linear-gradient(to right, #f1fcff, #e5faff);
+}
+
+@utility bg-gradient-sub-200 {
+  background: linear-gradient(to right, #f1f8ff, #dfefff);
+}
+
+@utility bg-gradient-dashboard-blue {
+  background: linear-gradient(to right, #3779fe, #77a4ff);
+}
+
+@utility bg-gradient-dashboard-red {
+  background: linear-gradient(to right, #ff5757, #ff9090);
+}
+
+@utility bg-gradient-dashboard-disabled {
+  background: linear-gradient(to right, #dbf0ff, #dbf0ff70);
+}
+
+@utility bg-gradient-dashboard-focus {
+  background: linear-gradient(to right, #3779fe, #3779fe70);
+}
+
+@utility bg-gradient-dashboard-bg {
+  background: linear-gradient(to right, #e8f4ff, #ffffff00);
+}
+
+@keyframes modal-slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes modal-slide-out-left {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+}
+
+.animate-modal-slide-in {
+  animation: modal-slide-in-right 0.3s ease-out forwards;
+}
+
+.animate-modal-slide-out {
+  animation: modal-slide-out-left 0.3s ease-in forwards;
+}
+
+@keyframes modal-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modal-fade-out {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+.animate-modal-fade-in {
+  animation: modal-fade-in 0.3s ease-out forwards;
+}
+
+.animate-modal-fade-out {
+  animation: modal-fade-out 0.3s ease-in forwards;
+}
+
+@keyframes slide-up-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-down-out {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+}
+
+.animate-sheet-slide-up-in {
+  animation: slide-up-in 0.3s ease-out forwards;
+}
+
+.animate-sheet-slide-down-out {
+  animation: slide-down-out 0.3s ease-in forwards;
+}
+
+@keyframes funnel-in {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes funnel-out {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+}
+
+.animate-funnel-in {
+  animation: funnel-in 0.3s ease-out forwards;
+}
+
+.animate-funnel-out {
+  animation: funnel-out 0.3s ease-in forwards;
+}
+
+@utility scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@utility custom-scrollbar {
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--color-blue-100);
+    border-radius: 9999px;
+    max-height: 40px;
+  }
+}
+
+/* Recharts 내부 영역 클릭 시 보이던 두꺼운 border(3개) 제거 */
+.recharts-wrapper:focus,
+.recharts-surface:focus,
+.recharts-wrapper *:focus {
+  outline: none;
+  box-shadow: none;
+}
