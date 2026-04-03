@@ -51,12 +51,7 @@ export interface User {
 /**
  * GET /api/v1/users/{userId} 응답 `data`
  */
-export type UserPublicProfile = Pick<
-  User,
-  'id' | 'nickname' | 'profileImage' | 'reputationScore' | 'reputationLabel'
-> & {
-  reviews: Review[];
-};
+export type UserPublicProfile = Pick<User, 'id' | 'nickname' | 'profileImage' | 'reputationScore' | 'reputationLabel'>;
 
 /**
  * GET /api/v1/users/me

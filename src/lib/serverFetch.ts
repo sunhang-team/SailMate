@@ -44,6 +44,12 @@ export const requestBackend = async (params: { request: NextRequest; endpoint: s
   const init = await createServerProxyRequestInit(params.request);
   const url = buildBackendUrl(params.endpoint, params.request.nextUrl.searchParams);
 
+  // DEBUG LOG
+  console.log(`[BFF -> Backend] ${init.method} ${url}`);
+  console.log(`[BFF -> Backend] Content-Type: ${init.headers.get('content-type')}`);
+  console.log(`[BFF -> Backend] Body Size: ${init.body?.byteLength ?? 0} bytes`);
+  console.log(`[BFF -> Backend] Auth Header: ${init.headers.get('authorization') ? 'Present' : 'None'}`);
+
   return await fetch(url, {
     method: init.method,
     headers: init.headers,

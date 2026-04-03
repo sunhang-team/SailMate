@@ -9,7 +9,7 @@ const isSecureCookie = process.env.NODE_ENV === 'production';
 
 const isAuthEndpoint = (endpoint: string) => {
   const normalized = endpoint.replace(/^\/+/, '');
-  return normalized.startsWith('auth/');
+  return normalized.includes('auth/');
 };
 
 const buildEndpointFromParams = (params: { endpoint: string[] } | undefined) => {
@@ -20,6 +20,17 @@ const buildEndpointFromParams = (params: { endpoint: string[] } | undefined) => 
 async function proxy(request: NextRequest, params: { endpoint: string[] }) {
   const endpoint = buildEndpointFromParams(params);
   const backendResponse = await requestBackend({ request, endpoint });
+
+  // 에러 응답시 백엔드의 메시지 로깅
+  if (!backendResponse.ok) {
+    try {
+      const errorText = await backendResponse.clone().text();
+      console.error(`[BFF -> Backend Error] URL: ${endpoint}, Status: ${backendResponse.status}`);
+      console.error(`[BFF -> Backend Error Body]: ${errorText}`);
+    } catch {
+      console.error(`[BFF -> Backend Error] Failed to read error body for ${endpoint}`);
+    }
+  }
 
   const contentType = backendResponse.headers.get('content-type');
   const shouldTransformAuth = isAuthEndpoint(endpoint) && isJsonResponse(contentType);
@@ -73,20 +84,45 @@ async function proxy(request: NextRequest, params: { endpoint: string[] }) {
 }
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ endpoint: string[] }> }) {
-  return await proxy(request, await params);
+  try {
+    return await proxy(request, await params);
+  } catch (error) {
+    console.error('[BFF ERROR] GET:', error);
+    return NextResponse.json({ success: false, message: 'Internal Server Error' }, { status: 500 });
+  }
 }
 export async function POST(request: NextRequest, { params }: { params: Promise<{ endpoint: string[] }> }) {
-  return await proxy(request, await params);
+  try {
+    return await proxy(request, await params);
+  } catch (error) {
+    console.error('[BFF ERROR] POST:', error);
+    return NextResponse.json({ success: false, message: 'Internal Server Error' }, { status: 500 });
+  }
 }
 
 export async function PUT(request: NextRequest, { params }: { params: Promise<{ endpoint: string[] }> }) {
-  return await proxy(request, await params);
+  try {
+    return await proxy(request, await params);
+  } catch (error) {
+    console.error('[BFF ERROR] PUT:', error);
+    return NextResponse.json({ success: false, message: 'Internal Server Error' }, { status: 500 });
+  }
 }
 
 export async function PATCH(request: NextRequest, { params }: { params: Promise<{ endpoint: string[] }> }) {
-  return await proxy(request, await params);
+  try {
+    return await proxy(request, await params);
+  } catch (error) {
+    console.error('[BFF ERROR] PATCH:', error);
+    return NextResponse.json({ success: false, message: 'Internal Server Error' }, { status: 500 });
+  }
 }
 
 export async function DELETE(request: NextRequest, { params }: { params: Promise<{ endpoint: string[] }> }) {
-  return await proxy(request, await params);
+  try {
+    return await proxy(request, await params);
+  } catch (error) {
+    console.error('[BFF ERROR] DELETE:', error);
+    return NextResponse.json({ success: false, message: 'Internal Server Error' }, { status: 500 });
+  }
 }
