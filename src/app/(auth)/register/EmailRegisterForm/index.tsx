@@ -1,81 +1,101 @@
 'use client';
 
-import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-
-import { signupFormSchema } from '@/api/auth/schemas';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { VisibilityIcon } from '@/components/ui/Icon';
+import { useToastStore } from '@/components/ui/Toast/useToastStore';
+
+import { useEmailRegister } from './useEmailRegister';
 
 import type { SignupForm } from '@/api/auth/types';
 
 export function EmailRegisterForm() {
-  const [showPassword, setShowPassword] = useState(false);
-  const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
+  const router = useRouter();
+  const showToast = useToastStore((state) => state.showToast);
+  const { state, form, handlers } = useEmailRegister();
 
-  const {
-    register,
-    handleSubmit,
-    trigger,
-    formState: { errors, isValid },
-  } = useForm<SignupForm>({
-    resolver: zodResolver(signupFormSchema),
-    mode: 'onBlur',
-  });
-
-  // OAuth 로그인 시 이메일, 닉네임 중복체크 미연동
   const onSubmit = (data: SignupForm) => {
-    // TODO: 회원가입 API 호출
-    console.log(data);
+    if (!state.isEmailChecked || !state.isNicknameChecked) {
+      showToast({ title: '이메일과 닉네임 중복 확인을 완료해주세요.', variant: 'warning' });
+      return;
+    }
+
+    handlers.registerMutate(data, {
+      onSuccess: () => {
+        showToast({ title: '회원가입이 완료되었습니다.', variant: 'success' });
+        router.push('/main');
+      },
+      onError: () => {
+        showToast({ title: '회원가입 중 오류가 발생했습니다.', variant: 'error' });
+      },
+    });
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-8'>
-      {/* 이메일 */}
-      <div className={`flex gap-2 ${errors.email ? 'items-center' : 'items-end'}`}>
-        <div className='flex-1'>
-          <Input
-            label={
-              <>
-                이메일 <span className='ml-1 text-blue-400'>*</span>
-              </>
-            }
-            placeholder='이메일을 입력해주세요.'
-            type='email'
-            error={errors.email?.message}
-            {...register('email')}
-            className='h-11'
-          />
+    <form onSubmit={form.handleSubmit(onSubmit)} className='flex flex-col gap-8'>
+      <div className='flex flex-col gap-2'>
+        <div className={`flex gap-2 ${form.errors.email ? 'items-center' : 'items-end'}`}>
+          <div className='flex-1'>
+            <Input
+              label={
+                <>
+                  이메일 <span className='ml-1 text-blue-400'>*</span>
+                </>
+              }
+              placeholder='이메일을 입력해주세요.'
+              type='email'
+              error={form.errors.email?.message}
+              {...form.register('email')}
+              className='h-11'
+            />
+          </div>
+          <Button
+            variant='check'
+            size='check'
+            type='button'
+            onClick={handlers.handleCheckEmail}
+            disabled={state.isCheckingEmail || !form.emailValue}
+          >
+            {state.isCheckingEmail ? '확인 중...' : '확인'}
+          </Button>
         </div>
-        <Button variant='check' size='check' type='button'>
-          확인
-        </Button>
+        {state.isEmailChecked && !form.errors.email && (
+          <p className='text-small-02-r ml-1 text-blue-400'>사용 가능한 이메일입니다.</p>
+        )}
       </div>
 
-      {/* 닉네임 */}
-      <div className={`flex gap-2 ${errors.nickname ? 'items-center' : 'items-end'}`}>
-        <div className='flex-1'>
-          <Input
-            label={
-              <>
-                닉네임 <span className='ml-1 text-blue-400'>*</span>
-              </>
-            }
-            placeholder='닉네임을 입력해주세요.'
-            error={errors.nickname?.message}
-            {...register('nickname')}
-            className='h-11'
-          />
+      <div className='flex flex-col gap-2'>
+        <div className={`flex gap-2 ${form.errors.nickname ? 'items-center' : 'items-end'}`}>
+          <div className='flex-1'>
+            <Input
+              label={
+                <>
+                  닉네임 <span className='ml-1 text-blue-400'>*</span>
+                </>
+              }
+              placeholder='닉네임을 입력해주세요.'
+              error={form.errors.nickname?.message}
+              {...form.register('nickname')}
+              className='h-11'
+            />
+          </div>
+          <Button
+            variant='check'
+            size='check'
+            type='button'
+            onClick={handlers.handleCheckNickname}
+            disabled={state.isCheckingNickname || !form.nicknameValue}
+          >
+            {state.isCheckingNickname ? '확인 중...' : '확인'}
+          </Button>
         </div>
-        <Button variant='check' size='check' type='button'>
-          확인
-        </Button>
+        {state.isNicknameChecked && !form.errors.nickname && (
+          <p className='text-small-02-r ml-1 text-blue-400'>사용 가능한 닉네임입니다.</p>
+        )}
       </div>
 
-      {/* 비밀번호 */}
       <div className='relative'>
         <Input
           label={
@@ -84,24 +104,23 @@ export function EmailRegisterForm() {
             </>
           }
           placeholder='영문, 숫자, 특수문자 포함 8자 이상 입력해주세요.'
-          type={showPassword ? 'text' : 'password'}
-          error={errors.password?.message}
-          {...register('password', {
-            onBlur: () => trigger('passwordConfirmation'),
+          type={state.showPassword ? 'text' : 'password'}
+          error={form.errors.password?.message}
+          {...form.register('password', {
+            onBlur: () => form.trigger('passwordConfirmation'),
           })}
           className='h-11'
         />
         <button
           type='button'
           className='absolute top-9 right-3 cursor-pointer text-gray-400'
-          onClick={() => setShowPassword((prev) => !prev)}
-          aria-label={showPassword ? '비밀번호 숨기기' : '비밀번호 보기'}
+          onClick={() => state.setShowPassword((prev) => !prev)}
+          aria-label={state.showPassword ? '비밀번호 숨기기' : '비밀번호 보기'}
         >
-          <VisibilityIcon variant={showPassword ? 'on' : 'off'} size={20} />
+          <VisibilityIcon variant={state.showPassword ? 'on' : 'off'} size={20} />
         </button>
       </div>
 
-      {/* 비밀번호 확인 */}
       <div className='relative'>
         <Input
           label={
@@ -110,24 +129,29 @@ export function EmailRegisterForm() {
             </>
           }
           placeholder='비밀번호를 한번 더 입력해주세요.'
-          type={showPasswordConfirm ? 'text' : 'password'}
-          error={errors.passwordConfirmation?.message}
-          {...register('passwordConfirmation')}
+          type={state.showPasswordConfirm ? 'text' : 'password'}
+          error={form.errors.passwordConfirmation?.message}
+          {...form.register('passwordConfirmation')}
           className='h-11'
         />
         <button
           type='button'
           className='absolute top-9 right-3 cursor-pointer text-gray-400'
-          onClick={() => setShowPasswordConfirm((prev) => !prev)}
-          aria-label={showPasswordConfirm ? '비밀번호 숨기기' : '비밀번호 보기'}
+          onClick={() => state.setShowPasswordConfirm((prev) => !prev)}
+          aria-label={state.showPasswordConfirm ? '비밀번호 숨기기' : '비밀번호 보기'}
         >
-          <VisibilityIcon variant={showPasswordConfirm ? 'on' : 'off'} size={20} />
+          <VisibilityIcon variant={state.showPasswordConfirm ? 'on' : 'off'} size={20} />
         </button>
       </div>
 
-      {/* 회원가입 버튼 */}
-      <Button variant='primary' size='join-login' type='submit' disabled={!isValid} className='mt-3 w-full'>
-        회원가입
+      <Button
+        variant='primary'
+        size='join-login'
+        type='submit'
+        disabled={!form.isValid || !state.isEmailChecked || !state.isNicknameChecked || state.isRegistering}
+        className='mt-3 w-full'
+      >
+        {state.isRegistering ? '회원가입 중...' : '회원가입'}
       </Button>
     </form>
   );
