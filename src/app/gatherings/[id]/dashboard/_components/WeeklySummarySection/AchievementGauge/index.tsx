@@ -25,6 +25,7 @@ export function AchievementGauge({ label, rate, arcColor }: AchievementGaugeProp
 
   return (
     <div className='flex flex-1 flex-col rounded-2xl bg-gray-100 p-4 md:p-6'>
+      <p className='text-small-01-sb md:text-h5-sb mb-1 text-gray-400'>{label}</p>
       <svg viewBox='0 0 400 220' className='max-h-80 w-full' aria-label={`${label} ${rate}%`}>
         <defs>
           {/* 반원 안쪽 배경 그라데이션 (위→아래) */}
@@ -65,18 +66,6 @@ export function AchievementGauge({ label, rate, arcColor }: AchievementGaugeProp
 
         {/* 끝점 마커 원 (테두리만, 가운데 비어있음) */}
         <circle cx={endX} cy={endY} r={10} fill='white' stroke={`url(#${markerGradientId})`} strokeWidth={3} />
-
-        {/* 라벨 텍스트 (왼쪽 위) */}
-        <text
-          x={startX - 120}
-          y={30}
-          fontSize={16}
-          fontWeight={600}
-          fill='#a4a4a4'
-          className='text-small-02-sb md:text-body-01-sb'
-        >
-          {label}
-        </text>
 
         {/* 라벨 텍스트 (반원 내부 중앙) */}
         <text x={CX} y={115} textAnchor='middle' fill='#a4a4a4' className='text-small-02-sb md:text-body-01-sb'>
