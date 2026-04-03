@@ -12,16 +12,22 @@ export const weeklyGuideSchema = z.object({
 
 /** POST `/gatherings` — 모임 생성 폼 */
 export const gatheringFormSchema = z.object({
-  type: z.enum(['스터디', '프로젝트'], {
+  type: z.enum(['STUDY', 'PROJECT'], {
     message: '모임 유형을 지정해 주세요.',
   }),
   category: z.string().min(1, '카테고리를 선택해 주세요.'),
-  title: z.string().min(1, '모임 제목을 입력해 주세요. ').max(30, '제목은 최대 30자까지 가능합니다.'),
-  shortDescription: z.string().min(1, '한 줄 소개를 입력해 주세요.').max(50, '한 줄 소개는 최대 50자까지 가능합니다.'),
-  description: z.string().min(1, '상세 소개를 입력해 주세요.').max(1000, '상세 설명은 최대 1000자까지 가능합니다.'),
+  title: z.string().min(2, '제목은 2자 이상이어야 합니다.').max(30, '제목은 최대 30자까지 가능합니다.'),
+  shortDescription: z
+    .string()
+    .min(2, '한 줄 소개는 2자 이상이어야 합니다.')
+    .max(50, '한 줄 소개는 최대 50자까지 가능합니다.'),
+  description: z
+    .string()
+    .min(10, '상세 설명은 10자 이상이어야 합니다.')
+    .max(1000, '상세 설명은 최대 1000자까지 가능합니다.'),
   tags: z.array(z.string()).min(1, '최소 1개의 태그를 입력해 주세요.').max(5, '태그는 최대 5개까지 가능합니다.'),
   goal: z.string().min(1, '모임 목표를 입력해 주세요.').max(200, '모임 목표는 최대 200자까지 가능합니다.'),
-  maxMembers: z.number().min(2, '최소 2명 이상이어야 합니다.').max(20, '최대 20명 이하이어야 합니다.'),
+  maxMembers: z.number().min(2, '최소 2명 이상이어야 합니다.').max(10, '최대 10명 이하이어야 합니다.'),
   recruitDeadline: dateStringSchema,
   startDate: dateStringSchema,
   endDate: dateStringSchema,
