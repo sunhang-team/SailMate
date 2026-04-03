@@ -3,6 +3,7 @@ import { SuspenseBoundary } from '@/components/SuspenseBoundary';
 import { MotivationSection } from '../MotivationSection';
 import { WeeklySummarySection } from '../WeeklySummarySection';
 import { WeeklyTrendChart } from '../WeeklyTrendChart';
+import { MemberTodoSection } from '../MemberTodoSection';
 
 import type { DashboardTab } from '../../_constants';
 
@@ -52,6 +53,17 @@ export function DashboardContent({ activeTab, gatheringId }: DashboardContentPro
               }
             >
               <WeeklyTrendChart gatheringId={gatheringId} />
+            </SuspenseBoundary>
+          </div>
+        )}
+
+        {activeTab === 'weekly' && (
+          <div className='flex flex-col gap-6'>
+            <SuspenseBoundary
+              pendingFallback={<div className='h-96 animate-pulse rounded-2xl bg-gray-100' />}
+              errorFallback={<p className='text-body-02-r text-gray-400'>멤버 할 일을 불러오는데 실패했습니다.</p>}
+            >
+              <MemberTodoSection gatheringId={gatheringId} />
             </SuspenseBoundary>
           </div>
         )}
