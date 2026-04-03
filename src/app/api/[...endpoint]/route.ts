@@ -12,6 +12,11 @@ const isAuthEndpoint = (endpoint: string) => {
   return normalized.includes('auth/');
 };
 
+const isLogoutEndpoint = (endpoint: string) => {
+  const normalized = endpoint.replace(/^\/+/, '');
+  return normalized === 'auth/logout' || normalized.endsWith('/auth/logout');
+};
+
 const buildEndpointFromParams = (params: { endpoint: string[] } | undefined) => {
   const parts = params?.endpoint ?? [];
   return parts.join('/');
@@ -20,6 +25,8 @@ const buildEndpointFromParams = (params: { endpoint: string[] } | undefined) => 
 async function proxy(request: NextRequest, params: { endpoint: string[] }) {
   const endpoint = buildEndpointFromParams(params);
   const backendResponse = await requestBackend({ request, endpoint });
+
+  const isLogoutSuccess = isLogoutEndpoint(endpoint) && backendResponse.ok;
 
   // 에러 응답시 백엔드의 메시지 로깅
   if (!backendResponse.ok) {
@@ -43,6 +50,12 @@ async function proxy(request: NextRequest, params: { endpoint: string[] }) {
       if (lower === 'set-cookie') return;
       response.headers.set(key, value);
     });
+
+    if (isLogoutSuccess) {
+      response.cookies.delete(ACCESS_TOKEN_COOKIE);
+      response.cookies.delete(REFRESH_TOKEN_COOKIE);
+    }
+
     return response;
   }
 
@@ -57,6 +70,11 @@ async function proxy(request: NextRequest, params: { endpoint: string[] }) {
     if (lower === 'set-cookie') return;
     response.headers.set(key, value);
   });
+
+  if (isLogoutSuccess) {
+    response.cookies.delete(ACCESS_TOKEN_COOKIE);
+    response.cookies.delete(REFRESH_TOKEN_COOKIE);
+  }
 
   if (nextAccessToken) {
     const expires = getExpirationDate(nextAccessToken) ?? undefined;
