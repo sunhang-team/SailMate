@@ -70,13 +70,13 @@ export function RankingItem({ item, isMe }: RankingItemProps) {
       </div>
 
       {isMe && (
-        <Button variant='tag' size='tag' className='h-8 w-8 md:h-12 md:w-12'>
+        <Button variant='tag' size='tag' className='h-8 w-8 cursor-default md:h-12 md:w-12'>
           나
         </Button>
       )}
 
       {!isMe && (
-        <Button variant='icon-hand' size='icon-hand' className='h-8 w-8 md:h-12 md:w-12' disabled>
+        <Button variant='icon-hand' size='icon-hand' className='h-8 w-8 md:h-12 md:w-12'>
           <HandIcon />
         </Button>
       )}
