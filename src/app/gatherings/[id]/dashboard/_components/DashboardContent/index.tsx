@@ -1,6 +1,7 @@
 import { SuspenseBoundary } from '@/components/SuspenseBoundary';
 
 import { DASHBOARD_TAB_ITEMS, DEFAULT_TAB } from '../../_constants';
+import { MemberRankingSection } from '../MemberRankingSection';
 import { MotivationSection } from '../MotivationSection';
 import { WeeklySummarySection } from '../WeeklySummarySection';
 import { WeeklyTrendChart } from '../WeeklyTrendChart';
@@ -79,6 +80,12 @@ export function DashboardContent({ activeTab, gatheringId }: DashboardContentPro
               resetKeys={[gatheringId]}
             >
               <WeeklySummarySection gatheringId={gatheringId} />
+            </SuspenseBoundary>
+            <SuspenseBoundary
+              pendingFallback={<div className='h-96 animate-pulse rounded-2xl bg-gray-100' />}
+              errorFallback={<p className='text-body-02-r text-gray-400'>멤버 랭킹을 불러오는데 실패했습니다.</p>}
+            >
+              <MemberRankingSection gatheringId={gatheringId} />
             </SuspenseBoundary>
             <SuspenseBoundary
               pendingFallback={<div className='h-96 animate-pulse rounded-2xl bg-gray-100' />}
