@@ -12,7 +12,7 @@ const mockUserReviewListResponse: UserReviewListResponse = {
       id: 30,
       reviewer: { id: 1, nickname: '김코딩' },
       gatheringTitle: 'React 완전 정복 스터디',
-      tags: ['성실해요', '소통이 좋아요'],
+      tags: ['약속을 잘 지켜요', '적극적이에요'],
       comment: '항상 열심히 참여해주셨어요!',
       createdAt: '2025-04-20T10:00:00Z',
     },
@@ -20,7 +20,7 @@ const mockUserReviewListResponse: UserReviewListResponse = {
       id: 31,
       reviewer: { id: 2, nickname: '항해사' },
       gatheringTitle: 'JavaScript 딥다이브',
-      tags: ['시간을 잘 지켜요', '잘 도와줘요'],
+      tags: ['소통이 활발해요', '팀 분위기를 밝게 만들어요'],
       comment: '시간 약속도 잘 지키고 많이 도와주셨습니다.',
       createdAt: '2025-04-22T14:30:00Z',
     },
@@ -35,7 +35,13 @@ const MOCK_COMMENTS = [
   '소통이 원활하고 책임감이 강한 분입니다.',
   '함께 협업하면서 배울 점이 많았던 팀원입니다.',
 ];
-const MOCK_TAGS = ['성실해요', '소통이 좋아요', '잘 도와줘요', '시간을 잘 지켜요', '다시 함께하고 싶어요'];
+const MOCK_TAGS = [
+  '약속을 잘 지켜요',
+  '적극적이에요',
+  '할 일을 미루지 않아요',
+  '소통이 활발해요',
+  '책임감 있게 해내요',
+];
 
 export const reviewsHandlers = [
   /** POST v1/gatherings/:gatheringId/reviews — 리뷰 작성 */
