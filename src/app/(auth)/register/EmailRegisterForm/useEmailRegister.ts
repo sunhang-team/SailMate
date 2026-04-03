@@ -1,5 +1,3 @@
-'use client';
-
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
@@ -67,15 +65,7 @@ export function useEmailRegister() {
   });
 
   // 회원가입 뮤테이션
-  const { mutate: registerMutate, isPending: isRegistering } = useRegister({
-    onSuccess: () => {
-      showToast({ title: '회원가입이 완료되었습니다.', variant: 'success' });
-      router.push('/main');
-    },
-    onError: () => {
-      showToast({ title: '회원가입 중 오류가 발생했습니다.', variant: 'error' });
-    },
-  });
+  const { mutate: registerMutate, isPending: isRegistering } = useRegister();
 
   const handleCheckEmail = async () => {
     if (errors.email || !emailValue) {
@@ -114,7 +104,16 @@ export function useEmailRegister() {
       showToast({ title: '이메일과 닉네임 중복 확인을 완료해주세요.', variant: 'warning' });
       return;
     }
-    registerMutate(data);
+
+    registerMutate(data, {
+      onSuccess: () => {
+        showToast({ title: '회원가입이 완료되었습니다.', variant: 'success' });
+        router.push('/main');
+      },
+      onError: () => {
+        showToast({ title: '회원가입 중 오류가 발생했습니다.', variant: 'error' });
+      },
+    });
   };
 
   return {

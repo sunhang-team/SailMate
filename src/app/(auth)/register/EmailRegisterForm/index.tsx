@@ -3,6 +3,7 @@
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { VisibilityIcon } from '@/components/ui/Icon';
+
 import { useEmailRegister } from './useEmailRegister';
 
 export function EmailRegisterForm() {
@@ -89,7 +90,7 @@ export function EmailRegisterForm() {
         <button
           type='button'
           className='absolute top-9 right-3 cursor-pointer text-gray-400'
-          onClick={() => state.setShowPassword((prev: boolean) => !prev)}
+          onClick={() => state.setShowPassword((prev) => !prev)}
           aria-label={state.showPassword ? '비밀번호 숨기기' : '비밀번호 보기'}
         >
           <VisibilityIcon variant={state.showPassword ? 'on' : 'off'} size={20} />
@@ -112,7 +113,7 @@ export function EmailRegisterForm() {
         <button
           type='button'
           className='absolute top-9 right-3 cursor-pointer text-gray-400'
-          onClick={() => state.setShowPasswordConfirm((prev: boolean) => !prev)}
+          onClick={() => state.setShowPasswordConfirm((prev) => !prev)}
           aria-label={state.showPasswordConfirm ? '비밀번호 숨기기' : '비밀번호 보기'}
         >
           <VisibilityIcon variant={state.showPasswordConfirm ? 'on' : 'off'} size={20} />
