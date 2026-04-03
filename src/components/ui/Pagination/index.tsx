@@ -48,7 +48,7 @@ export function Pagination({
         <div className='flex items-center justify-center gap-4 md:gap-6'>
           {getPageRange(currentPage, totalPages).map((item, index) =>
             item === '...' ? (
-              <span key={`ellipsis-${index}`} className='text-body-02-m text-gray-300'>
+              <span key={`ellipsis-${index}`} className='text-small-02-m md:text-body-02-m text-gray-300'>
                 ...
               </span>
             ) : (
@@ -59,7 +59,7 @@ export function Pagination({
                 aria-label={`${item}페이지`}
                 aria-current={item === currentPage ? 'page' : undefined}
                 className={cn(
-                  'text-body-02-m cursor-pointer transition-colors disabled:cursor-not-allowed',
+                  'text-small-02-m md:text-body-02-m cursor-pointer transition-colors disabled:cursor-not-allowed',
                   item === currentPage ? 'text-gray-700' : 'text-gray-300 hover:text-gray-500',
                 )}
               >
