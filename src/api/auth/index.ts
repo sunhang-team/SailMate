@@ -18,7 +18,7 @@ export const login = async (body: LoginForm): Promise<LoginResponse> => {
 
 /** POST /v1/auth/logout — 로그아웃 */
 export const logout = async (): Promise<void> => {
-  await axiosClient.post('/v1/auth/logout');
+  await axiosClient.post('/v1/auth/logout', {});
 };
 
 /** GET /v1/auth/check/email — 이메일 중복 확인 */
