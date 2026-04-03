@@ -309,6 +309,21 @@
   }
 }
 
+@keyframes toast-slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-toast-in {
+  animation: toast-slide-in-right 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
 /* Recharts 내부 영역 클릭 시 보이던 두꺼운 border(3개) 제거 */
 .recharts-wrapper:focus,
 .recharts-surface:focus,

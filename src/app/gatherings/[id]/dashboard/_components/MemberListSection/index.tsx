@@ -2,8 +2,11 @@
 
 import { Pagination } from '@/components/ui/Pagination';
 
+import { useOverlay } from '@/hooks/useOverlay';
+
 import { MemberCard } from './MemberCard';
 import { useMemberList } from './useMemberList';
+import { ReviewModal } from '../ReviewModal';
 
 interface MemberListSectionProps {
   gatheringId: number;
@@ -24,6 +27,7 @@ export function MemberListSection({ gatheringId }: MemberListSectionProps) {
     handlePageChange,
   } = useMemberList(gatheringId);
 
+  const { open } = useOverlay();
   const handlePokeClick = (_memberId: number) => {
     alert('콕 찌르기 API 추가 전입니다.');
   };
@@ -48,7 +52,16 @@ export function MemberListSection({ gatheringId }: MemberListSectionProps) {
               goalText={goalText}
               isGatheringEnded={isGatheringEnded}
               onReviewClick={() => {
-                // TODO: 리뷰 모달 열기 (useOverlay 등 사용)
+                open(({ isOpen, close }) => (
+                  <ReviewModal
+                    isOpen={isOpen}
+                    onClose={() => close(false)}
+                    member={member}
+                    achievedWeeks={achievedWeeks}
+                    totalWeeks={totalWeeks}
+                    gatheringId={gatheringId}
+                  />
+                ));
               }}
               onPokeClick={() => handlePokeClick(member.userId)}
               hasReviewed={getHasReviewed(index)}
