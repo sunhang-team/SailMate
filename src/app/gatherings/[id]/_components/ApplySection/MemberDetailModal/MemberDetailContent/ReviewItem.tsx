@@ -1,0 +1,42 @@
+import { ProfilePlaceholderIcon } from '@/components/ui/Icon';
+import { formatReviewDate } from '../../utils/dateUtils';
+import type { Review } from '@/api/reviews/types';
+
+interface ReviewItemProps {
+  review: Review;
+  profileImg?: string;
+}
+
+export function ReviewItem({ review, profileImg }: ReviewItemProps) {
+  return (
+    <li className='border-gray-150 flex flex-col gap-2 rounded-xl border bg-gray-100 p-4 shadow-sm md:gap-4 md:p-6'>
+      <div className='flex items-start gap-2'>
+        <div className='h-6 w-6 shrink-0 overflow-hidden rounded-full bg-gray-200 md:h-12 md:w-12'>
+          {profileImg ? (
+            <img
+              src={profileImg}
+              alt={`${review.reviewer.nickname} 프로필`}
+              className='h-full w-full object-cover'
+              onError={(e) => {
+                (e.target as HTMLImageElement).style.display = 'none';
+              }}
+            />
+          ) : (
+            <ProfilePlaceholderIcon className='h-full w-full' />
+          )}
+        </div>
+        <div className='flex flex-1 justify-between'>
+          <div className='flex flex-col text-left'>
+            <span className='md:text-body-02-sb text-[13px] font-bold text-gray-800'>
+              {review.reviewer?.nickname || '익명'}
+            </span>
+            <span className='text-small-01-r text-gray-400'>{review.gatheringTitle}</span>
+          </div>
+          <span className='md:text-small-01-r text-[8px] text-gray-400'>{formatReviewDate(review.createdAt)}</span>
+        </div>
+      </div>
+      <div className='border-gray-150 border-t' />
+      <p className='text-small-02-r md:text-body-02-r text-gray-700'>{review.comment}</p>
+    </li>
+  );
+}

@@ -1,6 +1,10 @@
 import { SuspenseBoundary } from '@/components/SuspenseBoundary';
 
 import { DASHBOARD_TAB_ITEMS, DEFAULT_TAB } from '../../_constants';
+import { MotivationSection } from '../MotivationSection';
+import { WeeklySummarySection } from '../WeeklySummarySection';
+import { WeeklyTrendChart } from '../WeeklyTrendChart';
+import { MemberTodoSection } from '../MemberTodoSection';
 import { MyTodoSection } from '../MyTodoSection';
 import { MyTodoSectionSkeleton } from '../MyTodoSection/MyTodoSectionSkeleton';
 
@@ -11,16 +15,31 @@ interface DashboardContentProps {
   gatheringId: number;
 }
 
+function WeeklySummarySkeleton() {
+  return (
+    <div className='border-gray-150 h-[677px] animate-pulse rounded-2xl border bg-white p-4 shadow-(--shadow-02) md:h-[1044px] md:p-6 lg:h-[723px]'>
+      <div className='bg-gray-150 mb-4 h-6 w-32 rounded' />
+      <div className='flex flex-col gap-4'>
+        <div className='h-20 rounded-2xl bg-gray-100' />
+        <div className='flex flex-col gap-4 lg:flex-row'>
+          <div className='h-60 flex-1 rounded-2xl bg-gray-100' />
+          <div className='h-60 flex-1 rounded-2xl bg-gray-100' />
+        </div>
+        <div className='h-20 rounded-2xl bg-gray-100' />
+      </div>
+    </div>
+  );
+}
+
 export function DashboardContent({ activeTab, gatheringId }: DashboardContentProps) {
   const label =
     DASHBOARD_TAB_ITEMS.find((item) => item.key === activeTab)?.label ??
     DASHBOARD_TAB_ITEMS.find((item) => item.key === DEFAULT_TAB)!.label;
 
   if (activeTab === 'weekly') {
-    // 주차별 현황 탭 상단: "이번주 할 일" 섹션 — 유저별 데이터는 섹션 단위 SuspenseBoundary로 로딩/에러 격리
     return (
       <section className='px-4 py-10 md:px-7 xl:px-30'>
-        <div className='mx-auto max-w-[1680px]'>
+        <div className='mx-auto flex max-w-[1680px] flex-col gap-6'>
           <SuspenseBoundary
             pendingFallback={<MyTodoSectionSkeleton />}
             errorFallback={
@@ -30,6 +49,47 @@ export function DashboardContent({ activeTab, gatheringId }: DashboardContentPro
           >
             <MyTodoSection gatheringId={gatheringId} />
           </SuspenseBoundary>
+          <SuspenseBoundary
+            pendingFallback={<div className='h-96 animate-pulse rounded-2xl bg-gray-100' />}
+            errorFallback={<p className='text-body-02-r text-gray-400'>멤버 할 일을 불러오는데 실패했습니다.</p>}
+            resetKeys={[gatheringId]}
+          >
+            <MemberTodoSection gatheringId={gatheringId} />
+          </SuspenseBoundary>
+        </div>
+      </section>
+    );
+  }
+
+  if (activeTab === 'summary') {
+    return (
+      <section className='px-4 py-10 md:px-8 xl:px-30'>
+        <div className='mx-auto max-w-[1680px]'>
+          <div className='flex flex-col gap-6'>
+            <SuspenseBoundary
+              pendingFallback={<div className='h-96 animate-pulse rounded-2xl bg-gray-100' />}
+              errorFallback={<p className='text-body-02-r text-gray-400'>동기부여 섹션을 불러오는데 실패했습니다.</p>}
+              resetKeys={[gatheringId]}
+            >
+              <MotivationSection gatheringId={gatheringId} />
+            </SuspenseBoundary>
+            <SuspenseBoundary
+              pendingFallback={<WeeklySummarySkeleton />}
+              errorFallback={<p className='text-body-02-r text-gray-400'>활동 요약을 불러오는데 실패했습니다.</p>}
+              resetKeys={[gatheringId]}
+            >
+              <WeeklySummarySection gatheringId={gatheringId} />
+            </SuspenseBoundary>
+            <SuspenseBoundary
+              pendingFallback={<div className='h-96 animate-pulse rounded-2xl bg-gray-100' />}
+              errorFallback={
+                <p className='text-body-02-r text-gray-400'>주차별 달성률 추이를 불러오는데 실패했습니다.</p>
+              }
+              resetKeys={[gatheringId]}
+            >
+              <WeeklyTrendChart gatheringId={gatheringId} />
+            </SuspenseBoundary>
+          </div>
         </div>
       </section>
     );

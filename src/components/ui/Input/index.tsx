@@ -35,7 +35,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
           {label}
         </label>
       )}
-      {hasError ? control : <div className={fieldGradientFocusWrapperClass}>{control}</div>}
+      <div className={cn(hasError ? 'w-full' : fieldGradientFocusWrapperClass)}>{control}</div>
       {error && (
         <p className='text-xs text-red-200' role='alert'>
           {error}

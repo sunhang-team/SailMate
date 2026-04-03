@@ -17,10 +17,10 @@
   --text-h4-b--font-weight: 700;
   --text-h5-b: 24px;
   --text-h5-b--line-height: 160%;
-  --text-h5-b--font-weight: 600;
+  --text-h5-b--font-weight: 700;
   --text-h5-sb: 24px;
   --text-h5-sb--line-height: 160%;
-  --text-h5-sb--font-weight: 700;
+  --text-h5-sb--font-weight: 600;
   --text-body-01-r: 20px;
   --text-body-01-r--line-height: 160%;
   --text-body-01-r--font-weight: 400;
@@ -39,15 +39,24 @@
   --text-body-02-m: 16px;
   --text-body-02-m--line-height: 160%;
   --text-body-02-m--font-weight: 500;
+  --text-body-02-b: 16px;
+  --text-body-02-b--line-height: 160%;
+  --text-body-02-b--font-weight: 700;
   --text-body-02-sb: 16px;
   --text-body-02-sb--line-height: 160%;
   --text-body-02-sb--font-weight: 600;
   --text-small-01-r: 14px;
   --text-small-01-r--line-height: 160%;
   --text-small-01-r--font-weight: 400;
+  --text-small-01-m: 14px;
+  --text-small-01-m--line-height: 160%;
+  --text-small-01-m--font-weight: 500;
   --text-small-01-sb: 14px;
   --text-small-01-sb--line-height: 160%;
   --text-small-01-sb--font-weight: 600;
+  --text-small-01-b: 14px;
+  --text-small-01-b--line-height: 160%;
+  --text-small-01-b--font-weight: 700;
   --text-small-02-r: 12px;
   --text-small-02-r--line-height: 160%;
   --text-small-02-r--font-weight: 400;
@@ -57,6 +66,12 @@
   --text-small-02-m: 12px;
   --text-small-02-m--line-height: 160%;
   --text-small-02-m--font-weight: 500;
+  --text-small-02-sb: 12px;
+  --text-small-02-sb--line-height: 160%;
+  --text-small-02-sb--font-weight: 600;
+  --text-small-03-r: 10px;
+  --text-small-03-r--line-height: 160%;
+  --text-small-03-r--font-weight: 400;
 
   --color-gray-0: #ffffff;
   --color-gray-50: #fcfcfc;
@@ -241,6 +256,38 @@
   animation: slide-down-out 0.3s ease-in forwards;
 }
 
+@keyframes funnel-in {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes funnel-out {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+}
+
+.animate-funnel-in {
+  animation: funnel-in 0.3s ease-out forwards;
+}
+
+.animate-funnel-out {
+  animation: funnel-out 0.3s ease-in forwards;
+}
+
 @utility scrollbar-none {
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -260,4 +307,12 @@
     border-radius: 9999px;
     max-height: 40px;
   }
+}
+
+/* Recharts 내부 영역 클릭 시 보이던 두꺼운 border(3개) 제거 */
+.recharts-wrapper:focus,
+.recharts-surface:focus,
+.recharts-wrapper *:focus {
+  outline: none;
+  box-shadow: none;
 }
