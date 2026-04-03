@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 import { Modal } from '@/components/ui/Modal';
 import { Profile } from '@/components/ui/Profile';
@@ -193,13 +193,13 @@ export function ReviewModal({ isOpen, onClose, member, achievedWeeks, totalWeeks
             <div className='relative'>
               <textarea
                 value={comment}
-                onChange={(e) => setComment(e.target.value.slice(0, 100))}
+                onChange={(e) => setComment(e.target.value.slice(0, 200))}
                 disabled={!selectedMate}
                 placeholder='(선택) 여기에 적어주세요.'
                 className='text-small-02-r md:text-small-01-r h-28 w-full resize-none rounded-xl border border-gray-200 p-4 transition-shadow focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none disabled:bg-gray-50 disabled:text-gray-400'
               />
               <div className='text-small-02-r md:text-small-01-r absolute right-4 bottom-4 text-gray-400'>
-                {comment.length}/100
+                {comment.length}/200
               </div>
             </div>
           </section>
