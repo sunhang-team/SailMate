@@ -6,6 +6,7 @@ import { QueryParamsProvider } from '@/providers/QueryParamsProvider';
 import { QueryProvider } from '@/providers/QueryProvider';
 import { OverlayProvider } from '@/providers/OverlayProvider';
 import { FooterWrapper } from '@/components/Footer/FooterWrapper';
+import { ToastProvider } from '@/components/ui/Toast/ToastProvider';
 
 export default function RootLayout({
   children,
@@ -18,11 +19,13 @@ export default function RootLayout({
         <MSWProvider>
           <QueryProvider>
             <QueryParamsProvider>
-              <Header />
-              {children}
-              <FooterWrapper />
-              <OverlayProvider />
-              <div id='modal-root' />
+              <ToastProvider>
+                <Header />
+                {children}
+                <FooterWrapper />
+                <OverlayProvider />
+                <div id='modal-root' />
+              </ToastProvider>
             </QueryParamsProvider>
           </QueryProvider>
         </MSWProvider>
