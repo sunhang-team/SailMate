@@ -1,16 +1,40 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
+
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { VisibilityIcon } from '@/components/ui/Icon';
+import { useToastStore } from '@/components/ui/Toast/useToastStore';
 
 import { useEmailRegister } from './useEmailRegister';
 
+import type { SignupForm } from '@/api/auth/types';
+
 export function EmailRegisterForm() {
+  const router = useRouter();
+  const showToast = useToastStore((state) => state.showToast);
   const { state, form, handlers } = useEmailRegister();
 
+  const onSubmit = (data: SignupForm) => {
+    if (!state.isEmailChecked || !state.isNicknameChecked) {
+      showToast({ title: '이메일과 닉네임 중복 확인을 완료해주세요.', variant: 'warning' });
+      return;
+    }
+
+    handlers.registerMutate(data, {
+      onSuccess: () => {
+        showToast({ title: '회원가입이 완료되었습니다.', variant: 'success' });
+        router.push('/main');
+      },
+      onError: () => {
+        showToast({ title: '회원가입 중 오류가 발생했습니다.', variant: 'error' });
+      },
+    });
+  };
+
   return (
-    <form onSubmit={form.handleSubmit(handlers.onSubmit)} className='flex flex-col gap-8'>
+    <form onSubmit={form.handleSubmit(onSubmit)} className='flex flex-col gap-8'>
       <div className='flex flex-col gap-2'>
         <div className={`flex gap-2 ${form.errors.email ? 'items-center' : 'items-end'}`}>
           <div className='flex-1'>
