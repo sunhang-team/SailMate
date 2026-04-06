@@ -2,10 +2,10 @@
 
 import { useState } from 'react';
 
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 
 import { gatheringQueries } from '@/api/gatherings/queries';
-import { useCreateApplication } from '@/api/applications/queries';
+import { applicationQueries, useCreateApplication } from '@/api/applications/queries';
 import { Button } from '@/components/ui/Button';
 import { GatheringCard } from '@/components/ui/GatheringCard';
 import { HeartIcon, StudyIcon, ProjectIcon } from '@/components/ui/Icon';
@@ -32,6 +32,10 @@ interface GatheringInfoAsideProps {
 
 export function GatheringInfoAside({ gatheringId }: GatheringInfoAsideProps) {
   const { data } = useSuspenseQuery(gatheringQueries.detail(gatheringId));
+  const { data: myApplications } = useQuery(applicationQueries.myList());
+
+  const hasPendingApplication =
+    myApplications?.applications.some((app) => app.gathering.id === gatheringId && app.status === 'PENDING') ?? false;
   const [isFavorite, setIsFavorite] = useState(false);
   const { Funnel, Step, setStep } = useFunnel<'DEFAULT' | 'APPLY' | 'SUCCESS'>('DEFAULT');
 
@@ -47,9 +51,9 @@ export function GatheringInfoAside({ gatheringId }: GatheringInfoAsideProps) {
     GATHERING_CATEGORY_LABEL[data.category as keyof typeof GATHERING_CATEGORY_LABEL] || data.category;
 
   return (
-    <div className='sticky top-[0.1px]'>
+    <div className='sticky top-[-20px]'>
       {/* 모집 상태 바 - 항상 노출 */}
-      <div className='border-focus-100 mt-15 mb-4 flex justify-between rounded-[8px] border bg-blue-100 px-8 py-2.5'>
+      <div className='border-focus-100 mb-4 flex justify-between rounded-[8px] border bg-blue-100 px-8 py-2.5'>
         <div className='text-body-02-sb flex items-center text-blue-400'>모집중</div>
         <div className='flex items-center gap-2'>
           <span className='text-body-02-m text-gray-700'>모집 마감까지</span>
@@ -112,11 +116,11 @@ export function GatheringInfoAside({ gatheringId }: GatheringInfoAsideProps) {
 
             <Button
               variant='action'
-              className={`text-body-01-sb h-13.5 flex-1 md:h-18 ${data.myApplicationStatus === 'PENDING' ? 'bg-gray-300' : ''}`}
-              disabled={data.myApplicationStatus === 'PENDING'}
+              className={`text-body-01-sb h-13.5 flex-1 md:h-18 ${hasPendingApplication ? 'bg-gray-300' : ''}`}
+              disabled={hasPendingApplication}
               onClick={() => setStep('APPLY')}
             >
-              {data.myApplicationStatus === 'PENDING' ? '참여 대기중' : '참여 신청하기'}
+              {hasPendingApplication ? '참여 대기중' : '참여 신청하기'}
             </Button>
           </GatheringCard>
         </Step>

@@ -2,10 +2,10 @@
 
 import { useState } from 'react';
 
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 
 import { gatheringQueries } from '@/api/gatherings/queries';
-import { useCreateApplication } from '@/api/applications/queries';
+import { applicationQueries, useCreateApplication } from '@/api/applications/queries';
 import { Button } from '@/components/ui/Button';
 import { HeartIcon } from '@/components/ui/Icon';
 import { BottomSheet } from '@/components/ui/BottomSheet';
@@ -20,6 +20,10 @@ interface FloatingActionBarProps {
 
 export function FloatingActionBar({ gatheringId }: FloatingActionBarProps) {
   const { data } = useSuspenseQuery(gatheringQueries.detail(gatheringId));
+  const { data: myApplications } = useQuery(applicationQueries.myList());
+
+  const hasPendingApplication =
+    myApplications?.applications.some((app) => app.gathering.id === gatheringId && app.status === 'PENDING') ?? false;
   const [isFavorite, setIsFavorite] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const { Funnel, Step, setStep, currentStep } = useFunnel<'APPLY' | 'SUCCESS'>('APPLY');
@@ -52,11 +56,11 @@ export function FloatingActionBar({ gatheringId }: FloatingActionBarProps) {
           </Button>
           <Button
             variant='action'
-            className={`text-body-01-sb h-13.5 flex-1 md:h-18 ${data.myApplicationStatus === 'PENDING' ? 'bg-gray-300' : ''}`}
-            disabled={data.myApplicationStatus === 'PENDING'}
+            className={`text-body-01-sb h-13.5 flex-1 md:h-18 ${hasPendingApplication ? 'bg-gray-300' : ''}`}
+            disabled={hasPendingApplication}
             onClick={() => setIsOpen(true)}
           >
-            {data.myApplicationStatus === 'PENDING' ? '참여 대기중' : '참여 신청하기'}
+            {hasPendingApplication ? '참여 대기중' : '참여 신청하기'}
           </Button>
         </div>
       </div>
