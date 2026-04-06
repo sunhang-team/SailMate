@@ -1,6 +1,7 @@
 'use client';
 
 import { Modal } from '@/components/ui/Modal';
+
 import { AuthFunnel } from './AuthFunnel';
 
 interface AuthModalProps {
