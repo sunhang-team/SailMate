@@ -46,6 +46,9 @@ export interface User {
   provider: AuthProvider;
   reputationScore: number;
   reputationLabel: string;
+  completedGatherings: number;
+  avgAchievementRate: number;
+  reviewCount: number;
 }
 
 /**
