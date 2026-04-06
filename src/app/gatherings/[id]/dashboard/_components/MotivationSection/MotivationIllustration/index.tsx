@@ -1,4 +1,3 @@
-
 import { motion } from 'motion/react';
 
 import { BOAT_CONFIG, COLOR_TRANSITION, WEATHER_COLORS } from '../_constants';
