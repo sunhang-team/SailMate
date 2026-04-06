@@ -37,7 +37,10 @@ export const updateProfile = async (body: UpdateProfileForm): Promise<UpdateProf
 };
 
 /** PATCH /v1/users/me/password - 비밀번호 변경*/
-export const updatePassword = async (body: UpdatePasswordForm): Promise<UpdatePasswordResponseData> => {
+export const updatePassword = async ({
+  newPasswordConfirmation,
+  ...body
+}: UpdatePasswordForm): Promise<UpdatePasswordResponseData> => {
   const { data } = await axiosClient.patch<PatchPasswordResponse>(`/v1/users/me/password`, body);
   return unwrapResponse(data);
 };
