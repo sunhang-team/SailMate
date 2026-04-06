@@ -2,6 +2,8 @@
 
 import { startTransition } from 'react';
 
+import { useRouter } from 'next/navigation';
+
 import { useSuspenseQuery } from '@tanstack/react-query';
 
 import { MainGatheringCard } from '@/components/MainGatheringCard';
@@ -13,6 +15,7 @@ import { useGatheringSearchParams } from '@/hooks/useGatheringSearchParams';
 const PAGE_LIMIT = 12;
 
 export function GatheringList() {
+  const router = useRouter();
   const { query, type, category, sort, status, page, setParams } = useGatheringSearchParams();
 
   const { data } = useSuspenseQuery(
@@ -33,6 +36,10 @@ export function GatheringList() {
     });
   };
 
+  const handleJoin = (id: number) => {
+    router.push(`/gatherings/${id}`);
+  };
+
   if (data.gatherings.length === 0) {
     return (
       <>
@@ -47,7 +54,12 @@ export function GatheringList() {
       <GatheringFilterBar totalCount={data.totalCount} />
       <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
         {data.gatherings.map((gathering) => (
-          <MainGatheringCard key={gathering.id} gathering={gathering} initialFavorite={gathering.isLiked} />
+          <MainGatheringCard
+            key={gathering.id}
+            gathering={gathering}
+            initialFavorite={gathering.isLiked}
+            onJoin={() => handleJoin(gathering.id)}
+          />
         ))}
       </div>
       {data.totalPages > 1 && (
