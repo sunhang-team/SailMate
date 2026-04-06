@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/Button';
 import { GatheringCard } from '@/components/ui/GatheringCard';
 import { HeartIcon, PersonIcon, StudyIcon, ProjectIcon } from '@/components/ui/Icon';
 import { Tag } from '@/components/ui/Tag';
-import { GATHERING_CATEGORY_LABEL, GATHERING_TYPE_LABEL } from '@/constants/gathering';
 import { cn } from '@/lib/cn';
 
 import type { GatheringListItem } from '@/api/gatherings/types';
@@ -26,8 +25,8 @@ const MILLISECONDS_IN_A_DAY = 1000 * 60 * 60 * 24;
 const formatDate = (isoDate: string) => isoDate.slice(0, 10);
 
 const TYPE_ICON = {
-  STUDY: StudyIcon,
-  PROJECT: ProjectIcon,
+  스터디: StudyIcon,
+  프로젝트: ProjectIcon,
 } as const;
 
 const toDeadlineDdayLabel = (recruitDeadline: string) => {
@@ -75,10 +74,8 @@ export function MainGatheringCard({
             const Icon = TYPE_ICON[gathering.type as keyof typeof TYPE_ICON] || StudyIcon;
             return <Icon size={14} className='text-blue-200' />;
           })()}
-          label={GATHERING_TYPE_LABEL[gathering.type as keyof typeof GATHERING_TYPE_LABEL] || gathering.type}
-          sublabel={
-            GATHERING_CATEGORY_LABEL[gathering.category as keyof typeof GATHERING_CATEGORY_LABEL] || gathering.category
-          }
+          label={gathering.type}
+          sublabel={gathering.categories.join(', ')}
         />
         <div className='text-small-01-sb flex items-center gap-1'>
           <PersonIcon size={16} className='text-blue-400' />

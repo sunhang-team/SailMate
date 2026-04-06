@@ -19,8 +19,8 @@ type Story = StoryObj<typeof meta>;
 
 const gathering: GatheringListItem = {
   id: 1,
-  type: 'PROJECT',
-  category: 'DEVELOPMENT',
+  type: '프로젝트',
+  categories: ['개발'],
   title: '피그마 기초 스터디',
   shortDescription: '디자인 시스템을 함께 구축해요',
   tags: ['디자인', '기획'],
@@ -30,7 +30,6 @@ const gathering: GatheringListItem = {
   startDate: '2026-04-01',
   endDate: '2026-06-01',
   status: 'RECRUITING',
-  isLiked: false,
   leader: {
     id: 1,
     nickname: '테스터',

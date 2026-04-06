@@ -2,6 +2,8 @@ import { queryOptions, useMutation, useQueryClient, isServer } from '@tanstack/r
 
 import { invalidateServerCache } from '@/lib/invalidateServerCache';
 import {
+  getCategories,
+  getApplicationStatus,
   fetchMainGatherings,
   fetchGatheringDetail,
   getGatheringDetail,
@@ -24,12 +26,22 @@ import type {
 
 export const gatheringKeys = {
   all: ['gatherings'] as const,
+  categories: () => [...gatheringKeys.all, 'categories'] as const,
   main: (params?: GetMainGatheringsParams) => [...gatheringKeys.all, 'main', params ?? {}] as const,
   list: (params?: GetGatheringsParams) => [...gatheringKeys.all, 'list', params ?? {}] as const,
   detail: (gatheringId: number) => [...gatheringKeys.all, 'detail', gatheringId] as const,
+  applicationStatus: (gatheringId: number) => [...gatheringKeys.all, 'applicationStatus', gatheringId] as const,
 };
 
 export const gatheringQueries = {
+  /** GET /gatherings/categories — 카테고리 목록 */
+  categories: () =>
+    queryOptions({
+      queryKey: gatheringKeys.categories(),
+      queryFn: () => getCategories(),
+      staleTime: Infinity,
+    }),
+
   /** GET /gatherings/main — 메인 페이지 모임 목록 */
   main: (params?: GetMainGatheringsParams) =>
     queryOptions({
@@ -42,6 +54,13 @@ export const gatheringQueries = {
     queryOptions({
       queryKey: gatheringKeys.detail(gatheringId),
       queryFn: () => (isServer ? fetchGatheringDetail(gatheringId) : getGatheringDetail(gatheringId)),
+    }),
+
+  /** GET /gatherings/:gatheringId/application-status — 모임 신청 상태 */
+  applicationStatus: (gatheringId: number) =>
+    queryOptions({
+      queryKey: gatheringKeys.applicationStatus(gatheringId),
+      queryFn: () => getApplicationStatus(gatheringId),
     }),
 
   /** GET /gatherings — 모임 목록 검색 */

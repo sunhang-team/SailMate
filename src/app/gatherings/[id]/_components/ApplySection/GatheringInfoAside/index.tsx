@@ -11,7 +11,6 @@ import { GatheringCard } from '@/components/ui/GatheringCard';
 import { HeartIcon, StudyIcon, ProjectIcon } from '@/components/ui/Icon';
 import { Tag } from '@/components/ui/Tag';
 import { AuthModal } from '@/components/AuthModal';
-import { GATHERING_CATEGORY_LABEL, GATHERING_TYPE_LABEL } from '@/constants/gathering';
 import { useAuth } from '@/hooks/useAuth';
 import { useFunnel } from '@/hooks/useFunnel';
 import { useOverlay } from '@/hooks/useOverlay';
@@ -25,8 +24,8 @@ import { GatheringApplySuccess } from '../GatheringApplySuccess';
 import type { GatheringType } from '@/api/gatherings/types';
 
 const TYPE_ICON: Record<GatheringType, typeof StudyIcon> = {
-  STUDY: StudyIcon,
-  PROJECT: ProjectIcon,
+  스터디: StudyIcon,
+  프로젝트: ProjectIcon,
 };
 
 interface GatheringInfoAsideProps {
@@ -54,9 +53,8 @@ export function GatheringInfoAside({ gatheringId }: GatheringInfoAsideProps) {
   });
 
   const TypeIcon = TYPE_ICON[data.type] || StudyIcon;
-  const TypeLabel = GATHERING_TYPE_LABEL[data.type] || data.type;
-  const CategoryLabel =
-    GATHERING_CATEGORY_LABEL[data.category as keyof typeof GATHERING_CATEGORY_LABEL] || data.category;
+  const TypeLabel = data.type;
+  const CategoryLabel = data.categories.join(', ');
 
   return (
     <div className='sticky top-[-20px]'>
