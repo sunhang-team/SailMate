@@ -10,8 +10,8 @@ const mockMyLikesResponse: GetMyLikesResponse = {
   gatherings: [
     {
       id: 1,
-      type: '스터디',
-      category: '개발',
+      type: 'STUDY',
+      category: 'DEVELOPMENT',
       title: 'React 완전 정복 스터디',
       shortDescription: 'React 심화 학습을 함께해요',
       tags: ['React', 'Frontend'],
@@ -26,8 +26,8 @@ const mockMyLikesResponse: GetMyLikesResponse = {
     },
     {
       id: 2,
-      type: '프로젝트',
-      category: '개발',
+      type: 'PROJECT',
+      category: 'DEVELOPMENT',
       title: 'TypeScript 딥다이브',
       shortDescription: 'TypeScript를 깊게 파봐요',
       tags: ['TypeScript', 'Backend'],

@@ -54,8 +54,16 @@ const CategoryTriggerBorder = ({ children }: { children: ReactNode }) => {
 };
 
 const TYPE_META = {
-  스터디: { subtitle: '함께 학습하고 성장해요', Icon: StudyIcon },
-  프로젝트: { subtitle: '함께 만들고 완성해요', Icon: ProjectIcon },
+  STUDY: { label: '스터디', subtitle: '함께 학습하고 성장해요', Icon: StudyIcon },
+  PROJECT: { label: '프로젝트', subtitle: '함께 만들고 완성해요', Icon: ProjectIcon },
+} as const;
+
+const CATEGORY_META = {
+  DEVELOPMENT: { label: '개발' },
+  LANGUAGE: { label: '어학' },
+  BOOK: { label: '독서' },
+  CERTIFICATE: { label: '자격증' },
+  DESIGN: { label: '디자인' },
 } as const;
 
 export function CreateGatheringForm() {
@@ -148,7 +156,7 @@ export function CreateGatheringForm() {
             <div className='flex flex-col gap-4 md:flex-row'>
               {GATHERING_TYPES.map((type) => {
                 const isSelected = field.value === type;
-                const { subtitle, Icon } = TYPE_META[type];
+                const { label, subtitle, Icon } = TYPE_META[type];
                 return (
                   <Card
                     key={type}
@@ -170,7 +178,7 @@ export function CreateGatheringForm() {
                           isSelected ? 'text-blue-300' : 'text-gray-600',
                         )}
                       >
-                        {type}
+                        {TYPE_META[type].label}
                       </span>
                       <span
                         className={cn(
@@ -231,7 +239,9 @@ export function CreateGatheringForm() {
                             field.value ? 'text-gray-900' : 'text-gray-400',
                           )}
                         >
-                          {field.value ?? '카테고리를 선택해주세요'}
+                          {field.value
+                            ? CATEGORY_META[field.value as keyof typeof CATEGORY_META].label
+                            : '카테고리를 선택해주세요'}
                         </span>
                       </div>
                       <RotatingArrow />
@@ -250,7 +260,7 @@ export function CreateGatheringForm() {
                           field.value === cat && 'bg-blue-100 text-blue-400',
                         )}
                       >
-                        {cat}
+                        {CATEGORY_META[cat].label}
                       </Dropdown.Item>
                     ))}
                   </Dropdown.Menu>

@@ -10,14 +10,15 @@ import { gatheringQueries } from '@/api/gatherings/queries';
 import { achievementQueries } from '@/api/achievements/queries';
 
 import { StatCard } from '../StatCard';
+import { GATHERING_CATEGORY_LABEL, GATHERING_TYPE_LABEL } from '@/constants/gathering';
 import { useSnapCarousel } from './useSnapCarousel';
 
 import type { StatCardProps } from '../StatCard';
 import type { GatheringType } from '@/api/gatherings/types';
 
 const TYPE_ICON: Record<GatheringType, typeof StudyIcon> = {
-  스터디: StudyIcon,
-  프로젝트: ProjectIcon,
+  STUDY: StudyIcon,
+  PROJECT: ProjectIcon,
 };
 
 interface DashboardHeaderProps {
@@ -36,7 +37,7 @@ export function DashboardHeader({ gatheringId }: DashboardHeaderProps) {
   const pageCount = isMd ? TABLET_PAGES : MOBILE_PAGES;
   const { scrollRef, activeIndex, scrollToPage } = useSnapCarousel({ pageCount });
 
-  const TypeIcon = TYPE_ICON[gathering.type];
+  const TypeIcon = TYPE_ICON[gathering.type] || StudyIcon;
 
   const currentWeek = getCurrentWeek(gathering.startDate);
   const daysRemaining = getRemainingDays(gathering.endDate);
@@ -80,9 +81,12 @@ export function DashboardHeader({ gatheringId }: DashboardHeaderProps) {
         <div className='flex flex-col gap-1'>
           <p className='flex items-center gap-0.5 text-blue-500'>
             <TypeIcon size={14} className='text-blue-500' />
-            <span className='text-small-01-sb'>{gathering.type}</span>
+            <span className='text-small-01-sb'>{GATHERING_TYPE_LABEL[gathering.type] || gathering.type}</span>
             <ArrowIcon size={14} />
-            <span className='text-small-01-r'>{gathering.category}</span>
+            <span className='text-small-01-r'>
+              {GATHERING_CATEGORY_LABEL[gathering.category as keyof typeof GATHERING_CATEGORY_LABEL] ||
+                gathering.category}
+            </span>
           </p>
           <h1 className='text-h5-b md:text-h3-b xl:text-h2-b text-blue-500'>{gathering.title}</h1>
           <p className='text-small-02-r md:text-body-02-r text-gray-800'>{gathering.shortDescription}</p>

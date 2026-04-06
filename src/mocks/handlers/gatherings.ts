@@ -21,13 +21,13 @@ const updateBodySchema = gatheringUpdateFormSchema.omit({ images: true });
 
 // ─── 목 데이터 ────────────────────────────────────────────────────────────────
 
-// 카테고리: 개발, 어학, 독서, 자격증 / 유형: 스터디, 프로젝트
+// 카테고리: DEVELOPMENT, LANGUAGE, BOOK, CERTIFICATE / 유형: STUDY, PROJECT
 const BASE_GATHERINGS: GatheringListItem[] = [
-  // ── 개발 ──
+  // ── DEVELOPMENT ──
   {
     id: 1,
-    type: '스터디',
-    category: '개발',
+    type: 'STUDY',
+    category: 'DEVELOPMENT',
     title: 'React 19 & Next.js 스터디',
     shortDescription: 'React 19의 새 기능과 Next.js App Router를 함께 파헤쳐요.',
     tags: ['React', 'Next.js', 'TypeScript'],
@@ -42,8 +42,8 @@ const BASE_GATHERINGS: GatheringListItem[] = [
   },
   {
     id: 2,
-    type: '프로젝트',
-    category: '개발',
+    type: 'PROJECT',
+    category: 'DEVELOPMENT',
     title: 'SaaS 사이드 프로젝트 팀 모집',
     shortDescription: '구독형 SaaS 서비스를 함께 기획·개발해요.',
     tags: ['SaaS', 'React', 'Node.js'],
@@ -58,8 +58,8 @@ const BASE_GATHERINGS: GatheringListItem[] = [
   },
   {
     id: 3,
-    type: '스터디',
-    category: '개발',
+    type: 'STUDY',
+    category: 'DEVELOPMENT',
     title: 'Spring Boot 심화 스터디',
     shortDescription: 'JPA, Redis, Kafka를 활용한 실전 백엔드 구축.',
     tags: ['Java', 'Spring', 'JPA'],
@@ -72,11 +72,11 @@ const BASE_GATHERINGS: GatheringListItem[] = [
     isLiked: true,
     leader: { id: 3, nickname: '이개발', profileImage: 'https://avatars.githubusercontent.com/u/3?v=4' },
   },
-  // ── 어학 ──
+  // ── LANGUAGE ──
   {
     id: 4,
-    type: '스터디',
-    category: '어학',
+    type: 'STUDY',
+    category: 'LANGUAGE',
     title: '매일 영어 회화 30분 챌린지',
     shortDescription: '매일 30분씩 영어 프리토킹으로 스피킹 실력을 키워요.',
     tags: ['영어', '회화', '스피킹'],
@@ -91,8 +91,8 @@ const BASE_GATHERINGS: GatheringListItem[] = [
   },
   {
     id: 5,
-    type: '스터디',
-    category: '어학',
+    type: 'STUDY',
+    category: 'LANGUAGE',
     title: 'JLPT N2 집중 대비반',
     shortDescription: '7월 시험 목표! 문법·독해·청해를 체계적으로 준비합니다.',
     tags: ['일본어', 'JLPT', 'N2'],
@@ -105,11 +105,11 @@ const BASE_GATHERINGS: GatheringListItem[] = [
     isLiked: false,
     leader: { id: 5, nickname: '일본어마스터', profileImage: 'https://avatars.githubusercontent.com/u/5?v=4' },
   },
-  // ── 독서 ──
+  // ── BOOK ──
   {
     id: 6,
-    type: '스터디',
-    category: '독서',
+    type: 'STUDY',
+    category: 'BOOK',
     title: '한 달에 한 권 완독 모임',
     shortDescription: '매달 한 권을 선정해 함께 읽고 토론해요.',
     tags: ['독서', '토론', '인문'],
@@ -124,8 +124,8 @@ const BASE_GATHERINGS: GatheringListItem[] = [
   },
   {
     id: 7,
-    type: '프로젝트',
-    category: '독서',
+    type: 'PROJECT',
+    category: 'BOOK',
     title: '독서 기록 앱 만들기',
     shortDescription: '읽은 책을 기록하고 공유하는 앱을 직접 만들어 봐요.',
     tags: ['독서', '사이드프로젝트', 'Flutter'],
@@ -138,11 +138,11 @@ const BASE_GATHERINGS: GatheringListItem[] = [
     isLiked: false,
     leader: { id: 6, nickname: '책벌레', profileImage: 'https://avatars.githubusercontent.com/u/6?v=4' },
   },
-  // ── 자격증 ──
+  // ── CERTIFICATE ──
   {
     id: 8,
-    type: '스터디',
-    category: '자격증',
+    type: 'STUDY',
+    category: 'CERTIFICATE',
     title: '정보처리기사 실기 스터디',
     shortDescription: '기출 분석 + 모의고사로 실기 합격을 목표로 합니다.',
     tags: ['정보처리기사', '자격증', '실기'],
@@ -157,8 +157,8 @@ const BASE_GATHERINGS: GatheringListItem[] = [
   },
   {
     id: 9,
-    type: '스터디',
-    category: '자격증',
+    type: 'STUDY',
+    category: 'CERTIFICATE',
     title: 'SQLD 자격증 4주 완성',
     shortDescription: 'SQL 기초부터 시험 대비까지 4주 만에 끝내요.',
     tags: ['SQLD', 'SQL', '데이터베이스'],
@@ -173,8 +173,8 @@ const BASE_GATHERINGS: GatheringListItem[] = [
   },
   {
     id: 10,
-    type: '스터디',
-    category: '자격증',
+    type: 'STUDY',
+    category: 'CERTIFICATE',
     title: 'TOEIC 900+ 달성 스터디',
     shortDescription: '파트별 전략 학습으로 900점 이상을 목표로 합니다.',
     tags: ['TOEIC', '영어', '자격증'],
@@ -252,8 +252,8 @@ const mockDetails: Record<number, GatheringDetail> = {
   },
   8: {
     ...mockGatherings[7],
-    type: '스터디',
-    category: '디자인',
+    type: 'STUDY',
+    category: 'DESIGN',
     title: '피그마 기초 스터디',
     shortDescription: '피그마를 통해 디자인 이론부터 실습까지 목표로',
     tags: ['실습', '디자인'],
@@ -466,7 +466,7 @@ export const gatheringsHandlers = [
       category: body.category,
       title: body.title,
       shortDescription: body.shortDescription,
-      tags: body.tags,
+      tags: body.tags ?? [],
       maxMembers: body.maxMembers,
       currentMembers: 1,
       recruitDeadline: body.recruitDeadline,

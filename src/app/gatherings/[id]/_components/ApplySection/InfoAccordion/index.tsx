@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { cn } from '@/lib/cn';
 
 import type { GatheringDetail } from '@/api/gatherings/types';
+import { GATHERING_CATEGORY_LABEL } from '@/constants/gathering';
 import { ArrowIcon, CategoryIcon, FlagIcon, CalendarIcon, PersonIcon, AlarmIcon } from '@/components/ui/Icon';
 import { InfoRow } from './InfoRow';
 import { DeadlineLabel } from '../DeadlineLabel';
@@ -48,7 +49,9 @@ export function InfoAccordion({ data, defaultOpen = true, className }: InfoAccor
       >
         <div className='overflow-hidden'>
           <ul className='border-gray-150 flex flex-col gap-3 border-t px-5 py-4'>
-            <InfoRow icon={<CategoryIcon size={24} className='text-gray-800' />}>{data.category}</InfoRow>
+            <InfoRow icon={<CategoryIcon size={24} className='text-gray-800' />}>
+              {GATHERING_CATEGORY_LABEL[data.category as keyof typeof GATHERING_CATEGORY_LABEL] || data.category}
+            </InfoRow>
             <InfoRow icon={<FlagIcon size={24} className='text-gray-800' />}>{data.goal}</InfoRow>
             <InfoRow icon={<CalendarIcon size={24} className='text-gray-800' />}>
               {formatDate(data.startDate)} ~ {formatDate(data.endDate)} · {weeksLabel}

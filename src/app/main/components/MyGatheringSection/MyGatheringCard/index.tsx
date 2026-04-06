@@ -3,11 +3,12 @@ import { differenceInDays, startOfDay } from 'date-fns';
 import { cn } from '@/lib/cn';
 import { AvatarGroup } from '@/components/ui/AvatarGroup';
 import { GatheringCard } from '@/components/ui/GatheringCard';
-import { PersonIcon, StudyIcon } from '@/components/ui/Icon';
+import { ProjectIcon, StudyIcon } from '@/components/ui/Icon';
 import { ProgressBar } from '@/components/ui/Progress';
 import { Tag } from '@/components/ui/Tag';
 
 import type { Member, MembershipGathering } from '@/api/memberships/types';
+import { GATHERING_CATEGORY_LABEL, GATHERING_TYPE_LABEL } from '@/constants/gathering';
 
 interface MyGatheringCardProps {
   gathering: MembershipGathering;
@@ -15,6 +16,11 @@ interface MyGatheringCardProps {
   onClick?: () => void;
   className?: string;
 }
+
+const TYPE_ICON = {
+  STUDY: ProjectIcon,
+  PROJECT: StudyIcon,
+} as const;
 
 export function MyGatheringCard({ gathering, members = [], onClick, className }: MyGatheringCardProps) {
   const now = startOfDay(new Date());
@@ -31,17 +37,16 @@ export function MyGatheringCard({ gathering, members = [], onClick, className }:
 
   return (
     <GatheringCard onClick={onClick} className={cn('w-full cursor-pointer', className)}>
-      <GatheringCard.Header>
+      <GatheringCard.Header className='items-center'>
         <Tag
           variant='category'
-          label={gathering.type}
-          sublabel={gathering.category}
-          icon={
-            gathering.type === '프로젝트' ? (
-              <PersonIcon size={14} className='text-blue-300' />
-            ) : (
-              <StudyIcon size={14} className='text-blue-300' />
-            )
+          icon={(() => {
+            const Icon = TYPE_ICON[gathering.type as keyof typeof TYPE_ICON] || StudyIcon;
+            return <Icon size={14} className='text-blue-200' />;
+          })()}
+          label={GATHERING_TYPE_LABEL[gathering.type as keyof typeof GATHERING_TYPE_LABEL] || gathering.type}
+          sublabel={
+            GATHERING_CATEGORY_LABEL[gathering.category as keyof typeof GATHERING_CATEGORY_LABEL] || gathering.category
           }
         />
         <AvatarGroup max={4} avatars={members.map((m) => ({ id: m.userId, imageUrl: m.profileImage }))} size='sm' />

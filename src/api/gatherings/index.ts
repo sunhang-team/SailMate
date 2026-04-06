@@ -69,7 +69,20 @@ export const getGatherings = async (params?: GetGatheringsParams): Promise<GetGa
 
 /** POST /v1/gatherings — 모임 생성 (이미지 업로드 시 multipart/form-data 처리 필요할 수 있음) */
 export const createGathering = async (body: CreateGatheringRequest): Promise<CreateGatheringResponse> => {
-  const { data } = await axiosClient.post<ApiResponse<CreateGatheringResponse>>('/v1/gatherings', body);
+  const formData = new FormData();
+
+  const { images, ...requestData } = body;
+
+  const requestBlob = new Blob([JSON.stringify(requestData)], { type: 'application/json' });
+  formData.append('request', requestBlob);
+
+  if (images && images.length > 0) {
+    images.forEach((file) => {
+      formData.append('images', file);
+    });
+  }
+
+  const { data } = await axiosClient.post<ApiResponse<CreateGatheringResponse>>('/v1/gatherings', formData);
   return unwrapResponse(data);
 };
 
