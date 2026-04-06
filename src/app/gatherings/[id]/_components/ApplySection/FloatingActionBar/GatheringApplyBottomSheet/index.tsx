@@ -1,3 +1,5 @@
+'use client';
+
 import { useCreateApplication } from '@/api/applications/queries';
 import { BottomSheet } from '@/components/ui/BottomSheet';
 import { useFunnel } from '@/hooks/useFunnel';
