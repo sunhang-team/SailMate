@@ -10,8 +10,11 @@ import { Button } from '@/components/ui/Button';
 import { GatheringCard } from '@/components/ui/GatheringCard';
 import { HeartIcon, StudyIcon, ProjectIcon } from '@/components/ui/Icon';
 import { Tag } from '@/components/ui/Tag';
+import { AuthModal } from '@/components/AuthModal';
 import { GATHERING_CATEGORY_LABEL, GATHERING_TYPE_LABEL } from '@/constants/gathering';
+import { useAuth } from '@/hooks/useAuth';
 import { useFunnel } from '@/hooks/useFunnel';
+import { useOverlay } from '@/hooks/useOverlay';
 
 import { DeadlineLabel } from '../DeadlineLabel';
 import { InfoAccordion } from '../InfoAccordion';
@@ -31,12 +34,17 @@ interface GatheringInfoAsideProps {
 }
 
 export function GatheringInfoAside({ gatheringId }: GatheringInfoAsideProps) {
+  const { isLoggedIn } = useAuth();
   const { data } = useSuspenseQuery(gatheringQueries.detail(gatheringId));
-  const { data: myApplications } = useQuery(applicationQueries.myList());
+  const { data: myApplications } = useQuery({
+    ...applicationQueries.myList(),
+    enabled: isLoggedIn,
+  });
 
   const hasPendingApplication =
     myApplications?.applications.some((app) => app.gathering.id === gatheringId && app.status === 'PENDING') ?? false;
   const [isFavorite, setIsFavorite] = useState(false);
+  const overlay = useOverlay();
   const { Funnel, Step, setStep } = useFunnel<'DEFAULT' | 'APPLY' | 'SUCCESS'>('DEFAULT');
 
   const { mutate, isPending } = useCreateApplication(gatheringId, {
@@ -91,7 +99,15 @@ export function GatheringInfoAside({ gatheringId }: GatheringInfoAsideProps) {
                 data-selected={isFavorite}
                 aria-label='찜하기'
                 aria-pressed={isFavorite}
-                onClick={() => setIsFavorite((prev) => !prev)}
+                onClick={async () => {
+                  if (!isLoggedIn) {
+                    const isLoginSuccessful = await overlay.open(({ isOpen, close }) => (
+                      <AuthModal isOpen={isOpen} onClose={() => close(false)} onSuccess={() => close(true)} />
+                    ));
+                    if (!isLoginSuccessful) return;
+                  }
+                  setIsFavorite((prev) => !prev);
+                }}
               >
                 <HeartIcon size={20} variant={isFavorite ? 'filled' : 'outline'} />
               </Button>
@@ -118,7 +134,15 @@ export function GatheringInfoAside({ gatheringId }: GatheringInfoAsideProps) {
               variant='action'
               className={`text-body-01-sb h-13.5 flex-1 md:h-18 ${hasPendingApplication ? 'bg-gray-300' : ''}`}
               disabled={hasPendingApplication}
-              onClick={() => setStep('APPLY')}
+              onClick={async () => {
+                if (!isLoggedIn) {
+                  const isLoginSuccessful = await overlay.open(({ isOpen, close }) => (
+                    <AuthModal isOpen={isOpen} onClose={() => close(false)} onSuccess={() => close(true)} />
+                  ));
+                  if (!isLoginSuccessful) return;
+                }
+                setStep('APPLY');
+              }}
             >
               {hasPendingApplication ? '참여 대기중' : '참여 신청하기'}
             </Button>
