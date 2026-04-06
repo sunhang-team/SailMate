@@ -1,5 +1,3 @@
-'use client';
-
 import type { MyPageTab } from '../../_constants';
 
 interface MyPageContentProps {
