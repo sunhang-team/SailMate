@@ -31,7 +31,7 @@ export function ParticipantsList({ members, maxMembers, className }: Participant
             />
           </div>
         </Dropdown.Trigger>
-        <Dropdown.Menu className='scrollbar-hide custom-scrollbar absolute top-[-20px] z-50 mt-2 max-h-60 w-48 overflow-y-auto rounded-xl bg-white p-2 shadow-lg'>
+        <Dropdown.Menu className='scrollbar-hide custom-scrollbar absolute top-[-20px] right-[-110px] z-50 mt-2 max-h-60 w-42 overflow-y-auto rounded-xl bg-white p-2 shadow-lg md:right-[-130px] md:w-48'>
           {members.map((member) => (
             <Dropdown.Item
               key={member.userId}

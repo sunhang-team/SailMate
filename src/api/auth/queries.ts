@@ -49,10 +49,16 @@ export const useCheckNickname = (options?: UseMutationOptions<CheckAvailabilityR
 
 /** POST /auth/register — 이메일 회원가입 */
 export const useRegister = (options?: UseMutationOptions<RegisterResponse, Error, SignupForm, unknown>) => {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: register,
-    // NOTE: 신규 가입이므로 무효화할 기존 캐시 없음
     ...options,
+    onSuccess: (...args) => {
+      // NOTE: 상세페이지 같은 곳에서 유저 정보가 필요한 경우(상세페이지에서 회원가입 시 헤더 업데이트)를 대비해 유저 캐시 무효화
+      queryClient.invalidateQueries({ queryKey: userKeys.me() });
+      options?.onSuccess?.(...args);
+    },
   });
 };
 
