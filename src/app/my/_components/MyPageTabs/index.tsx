@@ -24,7 +24,7 @@ export function MyPageTabs({ activeTab }: MyPageTabsProps) {
                 replace
                 scroll={false}
                 className={cn(
-                  'text-small-01-m md:text-body-01-m h-[3 9px] flex shrink-0 items-center px-2.5 transition-colors md:h-12',
+                  'text-small-01-m md:text-body-01-m flex h-[39px] shrink-0 items-center px-2.5 transition-colors md:h-12',
                   isActive
                     ? 'text-small-01-b md:text-body-01-b border-b-2 border-gray-800 text-gray-800'
                     : 'text-gray-300',
