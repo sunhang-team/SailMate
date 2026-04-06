@@ -1,6 +1,6 @@
 /** 랜딩 CTA·미리보기 이미지 경로 (한곳에서 관리) */
 export const LANDING_LINKS = {
-  start: '/register',
+  start: '/main',
   browse: '/gatherings',
 } as const;
 
