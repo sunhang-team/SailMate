@@ -15,6 +15,9 @@ const mockUser: User = {
   provider: 'EMAIL',
   reputationScore: 36.5,
   reputationLabel: '신뢰 메이트',
+  completedGatherings: 5,
+  avgAchievementRate: 82.3,
+  reviewCount: 3,
 };
 
 // 공통으로 사용될 수 있는 유저 이름 목록
