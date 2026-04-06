@@ -9,7 +9,6 @@ import type {
   UpdatePasswordForm,
   UpdatePasswordResponseData,
 } from './types';
-import { invalidateServerCache } from '@/lib/invalidateServerCache';
 
 export const userKeys = {
   all: ['users'] as const,
