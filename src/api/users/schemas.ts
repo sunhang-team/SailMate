@@ -20,27 +20,18 @@ const newPasswordField = z
     { message: '비밀번호는 숫자, 영문, 특수문자를 포함해야 합니다.' },
   );
 
-export const updateProfileRequestSchema = z.object({
-  nickname: nicknameField,
-  profileImage: z
-    .string()
-    .refine(
-      (value) => {
-        if (value === '') return true;
-        // URL 형식 체크
-        try {
-          new URL(value);
-        } catch {
-          return false;
-        }
-        // 파일 확장자 체크
-        return /\.(jpg|png|webp)$/i.test(value);
-      },
-      { message: '프로필 이미지는 유효한 URL이어야 하며 jpg, png, webp 형식이어야 합니다.' },
-    ),
-});
+const MAX_PROFILE_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB
+const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 
-export const updateProfileFormSchema = updateProfileRequestSchema;
+export const updateProfileFormSchema = z.object({
+  nickname: nicknameField.optional(),
+  profileImage: z
+    .instanceof(File)
+    .refine((file) => file.size <= MAX_PROFILE_IMAGE_SIZE, '프로필 이미지는 5MB 이하여야 합니다.')
+    .refine((file) => ACCEPTED_IMAGE_TYPES.includes(file.type), '프로필 이미지는 jpg, png, webp 형식만 가능합니다.')
+    .nullable()
+    .optional(),
+});
 
 export const updatePasswordRequestSchema = z.object({
   currentPassword: z.string().min(1, '현재 비밀번호를 입력해 주세요.'),

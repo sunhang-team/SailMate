@@ -5,6 +5,7 @@ import type {
   GetMeResponse,
   User,
   UpdateProfileForm,
+  UpdateProfileResponseData,
   PatchMeResponse,
   UpdatePasswordForm,
   PatchPasswordResponse,
@@ -19,9 +20,19 @@ export const getUsersMe = async (): Promise<User> => {
   return unwrapResponse(data);
 };
 
-/** PATCH /v1/users/me - 내 프로필 수정*/
-export const updateProfile = async (body: UpdateProfileForm): Promise<User> => {
-  const { data } = await axiosClient.patch<PatchMeResponse>(`/v1/users/me`, body);
+/** PATCH /v1/users/me - 내 프로필 수정 (multipart/form-data) */
+export const updateProfile = async (body: UpdateProfileForm): Promise<UpdateProfileResponseData> => {
+  const formData = new FormData();
+
+  if (body.nickname !== undefined) {
+    formData.append('nickname', body.nickname);
+  }
+
+  if (body.profileImage) {
+    formData.append('profileImage', body.profileImage);
+  }
+
+  const { data } = await axiosClient.patch<PatchMeResponse>(`/v1/users/me`, formData);
   return unwrapResponse(data);
 };
 

@@ -2,7 +2,7 @@ import { http, HttpResponse, delay } from 'msw';
 
 import { createApiResponse } from '../utils';
 
-import type { User, UserPublicProfile, UpdateProfileForm, UpdatePasswordResponseData } from '@/api/users/types';
+import type { User, UserPublicProfile, UpdateProfileResponseData, UpdatePasswordResponseData } from '@/api/users/types';
 
 const BASE = '/api/v1/users';
 
@@ -83,16 +83,24 @@ export const usersHandlers = [
     return HttpResponse.json(createApiResponse<User>(mockUser));
   }),
 
-  /** PATCH /api/v1/users/me - 내 프로필 수정*/
+  /** PATCH /api/v1/users/me - 내 프로필 수정 (multipart/form-data) */
   http.patch(`${BASE}/me`, async ({ request }) => {
-    await delay(400); // 폼 제출 액션이므로 조금 더 길게 지연
-    const body = (await request.json()) as UpdateProfileForm;
+    await delay(400);
+    const formData = await request.formData();
 
-    // 임의의 프로필 데이터 업데이트
-    if (body.nickname) mockUser.nickname = body.nickname;
-    if (body.profileImage) mockUser.profileImage = body.profileImage;
+    const nickname = formData.get('nickname');
+    const profileImage = formData.get('profileImage');
 
-    return HttpResponse.json(createApiResponse<User>(mockUser));
+    if (typeof nickname === 'string') mockUser.nickname = nickname;
+    if (profileImage instanceof File) mockUser.profileImage = `https://example.com/${profileImage.name}`;
+
+    const responseData: UpdateProfileResponseData = {
+      id: mockUser.id,
+      nickname: mockUser.nickname,
+      profileImage: mockUser.profileImage,
+    };
+
+    return HttpResponse.json(createApiResponse<UpdateProfileResponseData>(responseData));
   }),
 
   /** PATCH /api/v1/users/me/password - 비밀번호 변경*/
