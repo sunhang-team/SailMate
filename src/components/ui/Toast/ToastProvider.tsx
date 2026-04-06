@@ -1,5 +1,7 @@
 'use client';
 
+import { useSyncExternalStore } from 'react';
+
 import { createPortal } from 'react-dom';
 
 import { cn } from '@/lib/cn';
@@ -16,6 +18,14 @@ interface ToastProviderProps {
 export function ToastProvider({ children }: ToastProviderProps) {
   const { toasts, removeToast } = useToastStore();
   const portalRoot = typeof document !== 'undefined' ? document.body : null;
+
+  const isMounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
+
+  if (!isMounted) return <>{children}</>;
 
   return (
     <>
