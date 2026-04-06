@@ -50,7 +50,7 @@ export function GatheringApplyForm({ gatheringTitle, onSubmit, isLoading }: Gath
   };
 
   return (
-    <form onSubmit={handleSubmit(handleFormSubmit)} className='flex flex-col gap-8'>
+    <form onSubmit={handleSubmit(handleFormSubmit)} className='flex flex-col gap-6'>
       <div className='flex flex-col gap-2'>
         <h2 className='text-h3-b text-gray-900'>모임 신청</h2>
         <p className='text-body-02-m text-gray-600'>
@@ -59,7 +59,7 @@ export function GatheringApplyForm({ gatheringTitle, onSubmit, isLoading }: Gath
         </p>
       </div>
 
-      <div className='flex flex-col gap-6'>
+      <div className='flex flex-col gap-4'>
         <div className='relative flex flex-col gap-2'>
           <div className='flex justify-between'>
             <label className='text-body-02-b text-gray-900'>
@@ -72,7 +72,7 @@ export function GatheringApplyForm({ gatheringTitle, onSubmit, isLoading }: Gath
             className='min-h-[160px]'
             error={errors.personalGoal?.message}
           />
-          <span className='text-small-01-r absolute right-4 bottom-10 text-gray-400'>{personalGoal.length}/200</span>
+          <span className='text-small-01-r absolute right-4 bottom-1 text-gray-400'>{personalGoal.length}/200</span>
         </div>
 
         <div className='relative flex flex-col gap-2'>
@@ -83,18 +83,18 @@ export function GatheringApplyForm({ gatheringTitle, onSubmit, isLoading }: Gath
             className='min-h-[120px]'
             error={errors.selfIntroduction?.message}
           />
-          <span className='text-small-01-r absolute right-4 bottom-10 text-gray-400'>
+          <span className='text-small-01-r absolute right-4 bottom-1 text-gray-400'>
             {selfIntroduction?.length}/100
           </span>
         </div>
       </div>
 
-      <div className='flex flex-col gap-4'>
+      <div className='flex flex-col gap-2'>
         <p className='text-body-02-b text-gray-900'>팀 구성을 위해 닉네임과 평판 점수가 모임장에게 전달됩니다.</p>
         <label className='flex cursor-pointer items-center gap-2'>
           <div className='relative flex h-5 w-5 items-center justify-center'>
             <input type='checkbox' {...register('agreement')} className='peer sr-only' />
-            <div className='flex h-6 w-6 items-center justify-center rounded-md border border-gray-200 bg-white transition-colors peer-checked:border-blue-300 peer-checked:bg-blue-300'>
+            <div className='flex h-4 w-4 items-center justify-center rounded-md border border-gray-200 bg-white transition-colors peer-checked:border-blue-300 peer-checked:bg-blue-300'>
               <CheckIcon size={16} className='text-white' />
             </div>
           </div>

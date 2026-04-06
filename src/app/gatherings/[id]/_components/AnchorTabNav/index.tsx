@@ -60,7 +60,7 @@ export function AnchorTabNav() {
   };
 
   return (
-    <nav className='border-gray-150 bg-gray-0 border-b px-4 md:px-7 xl:px-30'>
+    <nav className='bg-gray-0 border-gray-150 sticky top-0 z-20 border-b px-4 md:px-7 xl:px-30'>
       <div className='mx-auto max-w-[1680px]'>
         <ul className='scrollbar-none flex flex-nowrap gap-2 overflow-x-auto'>
           {TAB_ITEMS.map(({ id, label }) => {
