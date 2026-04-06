@@ -3,7 +3,10 @@ import type { z } from 'zod';
 import type { gatheringFormSchema, gatheringUpdateFormSchema } from './schemas';
 
 /** 모임 유형 */
-export type GatheringType = '스터디' | '프로젝트';
+export type GatheringType = 'STUDY' | 'PROJECT';
+
+/** 모임 카테고리 */
+export type GatheringCategory = 'DEVELOPMENT' | 'LANGUAGE' | 'BOOK' | 'CERTIFICATE' | 'DESIGN';
 
 /** 모임 상태 */
 export type GatheringStatus = 'RECRUITING' | 'IN_PROGRESS' | 'COMPLETED';
