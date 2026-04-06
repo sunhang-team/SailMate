@@ -1,5 +1,3 @@
-import { SuspenseBoundary } from '@/components/SuspenseBoundary';
-
 import { MyPageContent } from './_components/MyPageContent';
 import { MyPageTabs } from './_components/MyPageTabs';
 import { DEFAULT_TAB } from './_constants';
@@ -16,13 +14,13 @@ export default async function MyPage({ searchParams }: MyPageProps) {
 
   return (
     <main className='min-h-screen bg-gray-50'>
-      <MyPageTabs activeTab={activeTab} />
-      <SuspenseBoundary
-        pendingFallback={<p className='py-20 text-center text-gray-500'>불러오는 중...</p>}
-        errorFallback={<p className='py-20 text-center text-gray-500'>데이터를 불러오는데 실패했습니다.</p>}
-      >
-        <MyPageContent activeTab={activeTab} />
-      </SuspenseBoundary>
+      <div className='px-4 py-6 md:px-7 lg:px-15'>
+        <h1 className='text-body-01-b md:text-h4-b lg:text-h3-b mt-12'>마이페이지</h1>
+        <div className='mt-11'>
+          <MyPageTabs activeTab={activeTab} />
+          <MyPageContent activeTab={activeTab} />
+        </div>
+      </div>
     </main>
   );
 }
