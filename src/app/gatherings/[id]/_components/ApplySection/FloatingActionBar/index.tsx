@@ -5,17 +5,14 @@ import { useState } from 'react';
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 
 import { gatheringQueries } from '@/api/gatherings/queries';
-import { applicationQueries, useCreateApplication } from '@/api/applications/queries';
+import { applicationQueries } from '@/api/applications/queries';
 import { Button } from '@/components/ui/Button';
 import { HeartIcon } from '@/components/ui/Icon';
-import { BottomSheet } from '@/components/ui/BottomSheet';
 import { AuthModal } from '@/components/AuthModal';
 import { useAuth } from '@/hooks/useAuth';
-import { useFunnel } from '@/hooks/useFunnel';
-
-import { GatheringApplyForm } from '../GatheringApplyForm';
-import { GatheringApplySuccess } from '../GatheringApplySuccess';
 import { useOverlay } from '@/hooks/useOverlay';
+
+import { GatheringApplyBottomSheet } from './GatheringApplyBottomSheet';
 
 interface FloatingActionBarProps {
   gatheringId: number;
@@ -32,20 +29,7 @@ export function FloatingActionBar({ gatheringId }: FloatingActionBarProps) {
   const hasPendingApplication =
     myApplications?.applications.some((app) => app.gathering.id === gatheringId && app.status === 'PENDING') ?? false;
   const [isFavorite, setIsFavorite] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
   const overlay = useOverlay();
-  const { Funnel, Step, setStep, currentStep } = useFunnel<'APPLY' | 'SUCCESS'>('APPLY');
-
-  const { mutate, isPending } = useCreateApplication(gatheringId, {
-    onSuccess: () => {
-      setStep('SUCCESS');
-    },
-  });
-
-  const handleClose = () => {
-    setIsOpen(false);
-    setStep('APPLY');
-  };
 
   return (
     <>
@@ -81,27 +65,20 @@ export function FloatingActionBar({ gatheringId }: FloatingActionBarProps) {
                 });
                 if (!isLoginSuccessful) return;
               }
-              setIsOpen(true);
+              overlay.open(({ isOpen, close }) => (
+                <GatheringApplyBottomSheet
+                  gatheringId={gatheringId}
+                  gatheringTitle={data.title}
+                  isOpen={isOpen}
+                  onClose={() => close(false)}
+                />
+              ));
             }}
           >
             {hasPendingApplication ? '참여 대기중' : '참여 신청하기'}
           </Button>
         </div>
       </div>
-
-      <BottomSheet isOpen={isOpen} onClose={handleClose}>
-        <BottomSheet.Header showCloseButton={currentStep === 'APPLY'}>{null}</BottomSheet.Header>
-        <BottomSheet.Body className='scrollbar-none pb-10'>
-          <Funnel>
-            <Step name='APPLY'>
-              <GatheringApplyForm gatheringTitle={data.title} onSubmit={mutate} isLoading={isPending} />
-            </Step>
-            <Step name='SUCCESS'>
-              <GatheringApplySuccess onClose={handleClose} />
-            </Step>
-          </Funnel>
-        </BottomSheet.Body>
-      </BottomSheet>
     </>
   );
 }
