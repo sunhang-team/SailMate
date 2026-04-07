@@ -81,7 +81,7 @@ export const proxy = async (request: NextRequest) => {
       if (isAuthRoute) {
         const redirect = NextResponse.redirect(new URL('/', request.url));
         refreshed.cookies.getAll().forEach((cookie) => {
-          redirect.cookies.set(cookie.name, cookie.value);
+          redirect.cookies.set(cookie);
         });
         return redirect;
       }
