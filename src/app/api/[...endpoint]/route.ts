@@ -5,6 +5,7 @@ import { isJsonResponse, extractTokens } from '@/lib/tokenUtils';
 
 const ACCESS_TOKEN_COOKIE = 'accessToken';
 const REFRESH_TOKEN_COOKIE = 'refreshToken';
+const AUTH_HINT_COOKIE = 'has-session';
 const isSecureCookie = process.env.NODE_ENV === 'production';
 
 const isAuthEndpoint = (endpoint: string) => {
@@ -54,6 +55,7 @@ async function proxy(request: NextRequest, params: { endpoint: string[] }) {
     if (isLogoutSuccess) {
       response.cookies.delete(ACCESS_TOKEN_COOKIE);
       response.cookies.delete(REFRESH_TOKEN_COOKIE);
+      response.cookies.delete(AUTH_HINT_COOKIE);
     }
 
     return response;
@@ -74,12 +76,20 @@ async function proxy(request: NextRequest, params: { endpoint: string[] }) {
   if (isLogoutSuccess) {
     response.cookies.delete(ACCESS_TOKEN_COOKIE);
     response.cookies.delete(REFRESH_TOKEN_COOKIE);
+    response.cookies.delete(AUTH_HINT_COOKIE);
   }
 
   if (nextAccessToken) {
     const expires = getExpirationDate(nextAccessToken) ?? undefined;
     response.cookies.set(ACCESS_TOKEN_COOKIE, nextAccessToken, {
       httpOnly: true,
+      secure: isSecureCookie,
+      sameSite: 'lax',
+      path: '/',
+      expires,
+    });
+    response.cookies.set(AUTH_HINT_COOKIE, '1', {
+      httpOnly: false,
       secure: isSecureCookie,
       sameSite: 'lax',
       path: '/',

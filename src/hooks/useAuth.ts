@@ -10,8 +10,18 @@ interface AuthState {
   isLoading: boolean;
 }
 
+const hasSessionHint = () => typeof document !== 'undefined' && document.cookie.includes('has-session=');
+
 export const useAuth = (): AuthState => {
-  const { data, isError, isLoading } = useQuery(userQueries.me());
+  const enabled = hasSessionHint();
+  const { data, isError, isLoading } = useQuery({
+    ...userQueries.me(),
+    enabled,
+  });
+
+  if (!enabled) {
+    return { user: null, isLoggedIn: false, isLoading: false };
+  }
 
   const isLoggedIn = !isLoading && !isError && data !== undefined;
 
