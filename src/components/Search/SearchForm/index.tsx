@@ -9,17 +9,15 @@ import { DEFAULT_CATEGORIES, GATHERING_TYPES } from '@/constants/gathering';
 import { useGatheringSearchParams } from '@/hooks/useGatheringSearchParams';
 
 import { ActiveFilters } from './ActiveFilters';
+import { CategoryMultiSelect } from './CategoryMultiSelect';
 import { FilterDropdown } from './FilterDropdown';
 import { SearchInput } from './SearchInput';
 
 const TYPE_ITEMS = [{ label: '전체', value: null }, ...GATHERING_TYPES.map((t) => ({ label: t, value: t }))] as const;
-const CATEGORY_ITEMS = [
-  { label: '전체', value: null },
-  ...DEFAULT_CATEGORIES.map((c) => ({ label: c.name, value: String(c.id) })),
-] as const;
+const CATEGORY_ITEMS = DEFAULT_CATEGORIES.map((c) => ({ label: c.name, value: c.id }));
 
 export function SearchForm() {
-  const { type, categoryId, setParams } = useGatheringSearchParams();
+  const { type, categoryIds, setParams } = useGatheringSearchParams();
   const [inputValue, setInputValue] = useState('');
 
   const handleSearch = () => {
@@ -44,9 +42,9 @@ export function SearchForm() {
     });
   };
 
-  const handleCategorySelect = (value: string | null) => {
+  const handleCategoryChange = (values: number[]) => {
     startTransition(() => {
-      setParams({ categoryId: value ? Number(value) : null, page: 1 }, { history: 'push' });
+      setParams({ categoryIds: values, page: 1 }, { history: 'push' });
     });
   };
 
@@ -68,12 +66,12 @@ export function SearchForm() {
 
           <div className='mx-5 border-t border-gray-200 md:mx-0 md:my-2 md:border-t-0 md:border-l' />
 
-          <FilterDropdown
+          <CategoryMultiSelect
             icon={<CategoryIcon size={20} className='shrink-0 text-gray-800 md:size-7' />}
             placeholder='카테고리를 선택해주세요'
-            selectedValue={categoryId ? String(categoryId) : null}
+            selectedValues={categoryIds}
             items={CATEGORY_ITEMS}
-            onSelect={handleCategorySelect}
+            onChange={handleCategoryChange}
           />
         </div>
 

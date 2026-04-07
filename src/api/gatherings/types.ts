@@ -2,8 +2,17 @@ import type { z } from 'zod';
 
 import type { gatheringFormSchema, gatheringUpdateFormSchema } from './schemas';
 
-/** 모임 유형 */
+/** 모임 유형 (응답/표시용) */
 export type GatheringType = '스터디' | '프로젝트';
+
+/** 모임 유형 (API 쿼리 파라미터용) */
+export type GatheringTypeParam = 'STUDY' | 'PROJECT';
+
+/** 프론트 한글 타입 → 백엔드 영어 타입 매핑 */
+export const GATHERING_TYPE_TO_PARAM: Record<GatheringType, GatheringTypeParam> = {
+  스터디: 'STUDY',
+  프로젝트: 'PROJECT',
+};
 
 /** 카테고리 항목 (GET /gatherings/categories 응답) */
 export interface Category {
@@ -90,7 +99,7 @@ export type GatheringUpdateForm = z.infer<typeof gatheringUpdateFormSchema>;
 
 /** GET `/gatherings` — 쿼리 파라미터 */
 export interface GetGatheringsParams {
-  type?: GatheringType;
+  type?: GatheringTypeParam;
   categoryIds?: number[];
   sort?: 'latest' | 'popular' | 'deadline';
   status?: GatheringStatus | 'ALL';
