@@ -13,8 +13,8 @@ interface MyGatheringsCardProps {
 }
 
 const TYPE_ICON = {
-  STUDY: ProjectIcon,
-  PROJECT: StudyIcon,
+  스터디: StudyIcon,
+  프로젝트: ProjectIcon,
 } as const;
 
 const STATUS_TAG_STATE: Record<GatheringStatus, 'recruiting' | 'progressing' | 'completed'> = {
