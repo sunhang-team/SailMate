@@ -1,16 +1,10 @@
-export const GATHERING_TYPES = ['STUDY', 'PROJECT'] as const;
+export const GATHERING_TYPES = ['스터디', '프로젝트'] as const;
 
-export const GATHERING_TYPE_LABEL: Record<(typeof GATHERING_TYPES)[number], string> = {
-  STUDY: '스터디',
-  PROJECT: '프로젝트',
-};
-
-export const GATHERING_CATEGORIES = ['DEVELOPMENT', 'LANGUAGE', 'BOOK', 'CERTIFICATE', 'DESIGN'] as const;
-
-export const GATHERING_CATEGORY_LABEL: Record<(typeof GATHERING_CATEGORIES)[number], string> = {
-  DEVELOPMENT: '개발',
-  LANGUAGE: '어학',
-  BOOK: '독서',
-  CERTIFICATE: '자격증',
-  DESIGN: '디자인',
-};
+/** 카테고리 기본값 (서버에서 GET /gatherings/categories로 동적 조회 가능) */
+export const DEFAULT_CATEGORIES = [
+  { id: 1, name: '개발' },
+  { id: 2, name: '어학' },
+  { id: 3, name: '독서' },
+  { id: 4, name: '자격증' },
+  { id: 5, name: '디자인' },
+] as const;

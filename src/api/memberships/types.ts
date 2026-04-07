@@ -1,6 +1,6 @@
 export type GatheringStatusFilter = 'recruiting' | 'in_progress' | 'completed' | 'all';
 
-import type { GatheringCategory, GatheringType } from '@/api/gatherings/types';
+import type { GatheringType } from '@/api/gatherings/types';
 
 // GET /users/me/gatherings 쿼리 파라미터
 export interface MyGatheringsParams {
@@ -17,7 +17,7 @@ export type MemberRole = 'LEADER' | 'MEMBER';
 export interface MembershipGathering {
   id: number;
   type: GatheringType;
-  category: GatheringCategory;
+  categories: string[];
   title: string;
   shortDescription: string;
   tags: string[];
@@ -27,7 +27,6 @@ export interface MembershipGathering {
   endDate: string;
   status: GatheringStatus;
   myRole: MemberRole;
-  isLiked: boolean;
 }
 
 // GET /users/me/gatherings 응답

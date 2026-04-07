@@ -4,12 +4,13 @@ import { startTransition } from 'react';
 
 import { ReplayIcon } from '@/components/ui/Icon/ReplayIcon';
 import { Tag } from '@/components/ui/Tag';
+import { DEFAULT_CATEGORIES } from '@/constants/gathering';
 import { useGatheringSearchParams } from '@/hooks/useGatheringSearchParams';
 
 export function ActiveFilters() {
-  const { query, type, category, setParams } = useGatheringSearchParams();
+  const { query, type, categoryId, setParams } = useGatheringSearchParams();
 
-  const hasActiveFilters = query !== '' || type !== null || category !== null;
+  const hasActiveFilters = query !== '' || type !== null || categoryId !== null;
   if (!hasActiveFilters) return null;
 
   const handleRemoveQuery = () => {
@@ -26,13 +27,13 @@ export function ActiveFilters() {
 
   const handleRemoveCategory = () => {
     startTransition(() => {
-      setParams({ category: null, page: 1 }, { history: 'push' });
+      setParams({ categoryId: null, page: 1 }, { history: 'push' });
     });
   };
 
   const handleResetFilters = () => {
     startTransition(() => {
-      setParams({ query: '', type: null, category: null, page: 1 }, { history: 'push' });
+      setParams({ query: '', type: null, categoryId: null, page: 1 }, { history: 'push' });
     });
   };
 
@@ -48,9 +49,9 @@ export function ActiveFilters() {
           {type}
         </Tag>
       )}
-      {category && (
+      {categoryId && (
         <Tag variant='filter' onRemove={handleRemoveCategory}>
-          {category}
+          {DEFAULT_CATEGORIES.find((c) => c.id === categoryId)?.name ?? categoryId}
         </Tag>
       )}
       <button

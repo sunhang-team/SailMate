@@ -3,7 +3,12 @@ import { queryOptions, useMutation, useQueryClient } from '@tanstack/react-query
 import { getUsersMe, getUsersUserId, updateProfile, updatePassword, deleteUser } from '.';
 
 import type { UseMutationOptions } from '@tanstack/react-query';
-import type { User, UpdateProfileForm, UpdatePasswordForm, UpdatePasswordResponseData } from './types';
+import type {
+  UpdateProfileResponseData,
+  UpdateProfileForm,
+  UpdatePasswordForm,
+  UpdatePasswordResponseData,
+} from './types';
 import { invalidateServerCache } from '@/lib/invalidateServerCache';
 
 export const userKeys = {
@@ -29,7 +34,9 @@ export const userQueries = {
 };
 
 /** PATCH /v1/users/me - 내 프로필 수정*/
-export const useUpdateProfile = (options?: UseMutationOptions<User, Error, UpdateProfileForm, unknown>) => {
+export const useUpdateProfile = (
+  options?: UseMutationOptions<UpdateProfileResponseData, Error, UpdateProfileForm, unknown>,
+) => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -37,7 +44,6 @@ export const useUpdateProfile = (options?: UseMutationOptions<User, Error, Updat
     ...options,
     onSuccess: (data, variables, onMutateResult, context) => {
       queryClient.invalidateQueries({ queryKey: userKeys.me() });
-      invalidateServerCache(userKeys.all[0]);
       options?.onSuccess?.(data, variables, onMutateResult, context);
     },
   });
