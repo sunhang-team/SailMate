@@ -5,6 +5,7 @@ import type { ApiResponse } from '@/api/common/types';
 import type {
   GatheringListItem,
   GatheringDetail,
+  GatheringTypeParam,
   GetApplicationStatusResponse,
   GetCategoriesResponse,
   GetGatheringsParams,
@@ -18,7 +19,13 @@ import type {
   UpdateGatheringResponse,
 } from './types';
 
-// ── 백엔드 호환 레이어 (백엔드가 categories: string[] 로 전환하면 제거) ──────
+// ── 백엔드 호환 레이어 ──────
+
+/** 프론트 한글 타입 → 백엔드 영어 타입 매핑 */
+const GATHERING_TYPE_TO_PARAM: Record<string, GatheringTypeParam> = {
+  스터디: 'STUDY',
+  프로젝트: 'PROJECT',
+};
 
 /** 백엔드 category 키 → 한글 라벨 매핑 */
 const CATEGORY_KEY_TO_LABEL: Record<string, string> = {
@@ -128,7 +135,8 @@ export const getGatherings = async (params?: GetGatheringsParams): Promise<GetGa
 export const createGathering = async (body: CreateGatheringRequest): Promise<CreateGatheringResponse> => {
   const formData = new FormData();
 
-  const { images, ...requestData } = body;
+  const { images, type, ...rest } = body;
+  const requestData = { ...rest, type: GATHERING_TYPE_TO_PARAM[type] };
 
   const requestBlob = new Blob([JSON.stringify(requestData)], { type: 'application/json' });
   formData.append('request', requestBlob);
@@ -148,7 +156,12 @@ export const updateGathering = async (
   gatheringId: number,
   body: UpdateGatheringRequest,
 ): Promise<UpdateGatheringResponse> => {
-  const { data } = await axiosClient.put<ApiResponse<UpdateGatheringResponse>>(`/v1/gatherings/${gatheringId}`, body);
+  const { type, ...rest } = body;
+  const requestData = { ...rest, ...(type && { type: GATHERING_TYPE_TO_PARAM[type] }) };
+  const { data } = await axiosClient.put<ApiResponse<UpdateGatheringResponse>>(
+    `/v1/gatherings/${gatheringId}`,
+    requestData,
+  );
   return unwrapResponse(data);
 };
 
