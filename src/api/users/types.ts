@@ -2,21 +2,11 @@ import type { z } from 'zod';
 
 import type { ApiResponse } from '@/api/common/types';
 
-import type {
-  updatePasswordFormSchema,
-  updatePasswordRequestSchema,
-  updateProfileFormSchema,
-  updateProfileRequestSchema,
-} from './schemas';
+import type { updatePasswordFormSchema, updatePasswordRequestSchema, updateProfileFormSchema } from './schemas';
 import { Review } from '../reviews/types';
 
 /**
- * PATCH /api/v1/users/me 요청 body
- */
-export type UpdateProfileRequest = z.infer<typeof updateProfileRequestSchema>;
-
-/**
- * PATCH /api/v1/users/me — 폼 (요청 body와 동일)
+ * PATCH /api/v1/users/me — 폼 (nickname?: string, profileImage?: File)
  */
 export type UpdateProfileForm = z.infer<typeof updateProfileFormSchema>;
 
@@ -72,9 +62,18 @@ export type GetMeResponse = ApiResponse<User>;
 export type GetUserByIdResponse = ApiResponse<UserPublicProfile>;
 
 /**
- * PATCH /api/v1/users/me 응답 (표준 래퍼, `data`는 갱신된 사용자)
+ * PATCH /api/v1/users/me 응답 `data`
  */
-export type PatchMeResponse = ApiResponse<User>;
+export interface UpdateProfileResponseData {
+  id: number;
+  nickname: string;
+  profileImage: string;
+}
+
+/**
+ * PATCH /api/v1/users/me 응답
+ */
+export type PatchMeResponse = ApiResponse<UpdateProfileResponseData>;
 
 /**
  * PATCH /api/v1/users/me/password 200 응답 `data`

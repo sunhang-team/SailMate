@@ -34,6 +34,8 @@ interface FilterDropdownProps {
 }
 
 export function FilterDropdown({ icon, placeholder, selectedValue, items, onSelect }: FilterDropdownProps) {
+  const selectedLabel = items.find((item) => item.value === selectedValue)?.label;
+
   return (
     <Dropdown className='flex-1 **:[[role=listbox]]:w-full *:[button]:w-full'>
       <Dropdown.Trigger>
@@ -43,7 +45,7 @@ export function FilterDropdown({ icon, placeholder, selectedValue, items, onSele
             <span
               className={cn('text-small-01-r md:text-body-01-r', selectedValue ? 'text-gray-900' : 'text-gray-400')}
             >
-              {selectedValue ?? placeholder}
+              {selectedLabel ?? placeholder}
             </span>
           </div>
           <RotatingArrow />

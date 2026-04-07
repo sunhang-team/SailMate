@@ -5,7 +5,7 @@ import { startTransition, useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { CategoryIcon } from '@/components/ui/Icon/CategoryIcon';
 import { TypeIcon } from '@/components/ui/Icon/TypeIcon';
-import { GATHERING_CATEGORIES, GATHERING_TYPES } from '@/constants/gathering';
+import { DEFAULT_CATEGORIES, GATHERING_TYPES } from '@/constants/gathering';
 import { useGatheringSearchParams } from '@/hooks/useGatheringSearchParams';
 
 import { ActiveFilters } from './ActiveFilters';
@@ -15,11 +15,11 @@ import { SearchInput } from './SearchInput';
 const TYPE_ITEMS = [{ label: '전체', value: null }, ...GATHERING_TYPES.map((t) => ({ label: t, value: t }))] as const;
 const CATEGORY_ITEMS = [
   { label: '전체', value: null },
-  ...GATHERING_CATEGORIES.map((c) => ({ label: c, value: c })),
+  ...DEFAULT_CATEGORIES.map((c) => ({ label: c.name, value: String(c.id) })),
 ] as const;
 
 export function SearchForm() {
-  const { type, category, setParams } = useGatheringSearchParams();
+  const { type, categoryId, setParams } = useGatheringSearchParams();
   const [inputValue, setInputValue] = useState('');
 
   const handleSearch = () => {
@@ -46,7 +46,7 @@ export function SearchForm() {
 
   const handleCategorySelect = (value: string | null) => {
     startTransition(() => {
-      setParams({ category: value, page: 1 }, { history: 'push' });
+      setParams({ categoryId: value ? Number(value) : null, page: 1 }, { history: 'push' });
     });
   };
 
@@ -71,7 +71,7 @@ export function SearchForm() {
           <FilterDropdown
             icon={<CategoryIcon size={20} className='shrink-0 text-gray-800 md:size-7' />}
             placeholder='카테고리를 선택해주세요'
-            selectedValue={category}
+            selectedValue={categoryId ? String(categoryId) : null}
             items={CATEGORY_ITEMS}
             onSelect={handleCategorySelect}
           />

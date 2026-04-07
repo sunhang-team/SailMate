@@ -10,8 +10,8 @@ const mockMyLikesResponse: GetMyLikesResponse = {
   gatherings: [
     {
       id: 1,
-      type: 'STUDY',
-      category: 'DEVELOPMENT',
+      type: '스터디',
+      categories: ['개발'],
       title: 'React 완전 정복 스터디',
       shortDescription: 'React 심화 학습을 함께해요',
       tags: ['React', 'Frontend'],
@@ -21,13 +21,12 @@ const mockMyLikesResponse: GetMyLikesResponse = {
       startDate: '2025-05-10',
       endDate: '2025-07-10',
       status: 'RECRUITING',
-      isLiked: true,
       leader: { id: 2, nickname: '항해사', profileImage: null },
     },
     {
       id: 2,
-      type: 'PROJECT',
-      category: 'DEVELOPMENT',
+      type: '프로젝트',
+      categories: ['개발'],
       title: 'TypeScript 딥다이브',
       shortDescription: 'TypeScript를 깊게 파봐요',
       tags: ['TypeScript', 'Backend'],
@@ -37,7 +36,6 @@ const mockMyLikesResponse: GetMyLikesResponse = {
       startDate: '2025-05-20',
       endDate: '2025-08-20',
       status: 'RECRUITING',
-      isLiked: true,
       leader: { id: 3, nickname: '마감왕', profileImage: null },
     },
   ],
@@ -57,6 +55,13 @@ export const likesHandlers = [
   http.delete('/api/v1/gatherings/:gatheringId/likes', async () => {
     await delay(MOCK_DELAY);
     return HttpResponse.json(createApiResponse({ success: true }));
+  }),
+
+  /** GET v1/users/me/likes/ids — 내가 찜한 모임 ID 목록 */
+  http.get('/api/v1/users/me/likes/ids', async () => {
+    await delay(MOCK_DELAY);
+    const ids = mockMyLikesResponse.gatherings.map((g) => g.id);
+    return HttpResponse.json(createApiResponse(ids));
   }),
 
   /** GET v1/users/me/likes — 내 찜 목록 */

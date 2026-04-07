@@ -27,7 +27,7 @@ export interface RegisterResponse {
 }
 
 export interface OAuthCallbackResponse {
-  newUser: boolean;
+  isNewUser: boolean;
 }
 
 export interface CheckAvailabilityResponse {

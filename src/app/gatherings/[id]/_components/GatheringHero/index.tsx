@@ -4,13 +4,12 @@ import { useQuery } from '@tanstack/react-query';
 
 import { StudyIcon, ProjectIcon, ArrowIcon } from '@/components/ui/Icon';
 import { gatheringQueries } from '@/api/gatherings/queries';
-import { GATHERING_CATEGORY_LABEL, GATHERING_TYPE_LABEL } from '@/constants/gathering';
 
 import type { GatheringType } from '@/api/gatherings/types';
 
 const TYPE_ICON: Record<GatheringType, typeof StudyIcon> = {
-  STUDY: StudyIcon,
-  PROJECT: ProjectIcon,
+  스터디: StudyIcon,
+  프로젝트: ProjectIcon,
 };
 
 interface GatheringHeroProps {
@@ -31,11 +30,9 @@ export function GatheringHero({ gatheringId }: GatheringHeroProps) {
         <div className='flex flex-col gap-1'>
           <p className='flex items-center gap-0.5 text-blue-500'>
             <TypeIcon size={14} className='text-blue-500' />
-            <span className='text-small-01-sb'>{GATHERING_TYPE_LABEL[data.type] || data.type}</span>
+            <span className='text-small-01-sb'>{data.type}</span>
             <ArrowIcon size={14} />
-            <span className='text-small-01-r'>
-              {GATHERING_CATEGORY_LABEL[data.category as keyof typeof GATHERING_CATEGORY_LABEL] || data.category}
-            </span>
+            <span className='text-small-01-r'>{data.categories.join(', ')}</span>
           </p>
           <h1 className='text-h5-b md:text-h3-b xl:text-h2-b text-blue-500'>{data.title}</h1>
         </div>

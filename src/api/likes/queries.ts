@@ -1,16 +1,24 @@
 import { queryOptions, useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { getMyLikes, addLike, removeLike } from './index';
+import { getMyLikeIds, getMyLikes, addLike, removeLike } from './index';
 
 import type { UseMutationOptions } from '@tanstack/react-query';
 import type { GetMyLikesParams } from './types';
 
 export const likeKeys = {
   all: ['likes'] as const,
+  myIds: () => [...likeKeys.all, 'myIds'] as const,
   my: (params?: GetMyLikesParams) => [...likeKeys.all, 'my', params ?? {}] as const,
 };
 
 export const likeQueries = {
+  /** GET /users/me/likes/ids — 내가 찜한 모임 ID 목록 */
+  myIds: () =>
+    queryOptions({
+      queryKey: likeKeys.myIds(),
+      queryFn: () => getMyLikeIds(),
+    }),
+
   /** GET /users/me/likes — 내 찜 목록 */
   my: (params?: GetMyLikesParams) =>
     queryOptions({
