@@ -12,17 +12,24 @@ import { Pagination } from '@/components/ui/Pagination';
 import { gatheringQueries } from '@/api/gatherings/queries';
 import { useGatheringSearchParams } from '@/hooks/useGatheringSearchParams';
 
+import type { GatheringTypeParam } from '@/api/gatherings/types';
+
+const GATHERING_TYPE_PARAM_MAP: Record<string, GatheringTypeParam> = {
+  스터디: 'STUDY',
+  프로젝트: 'PROJECT',
+};
+
 const PAGE_LIMIT = 12;
 
 export function GatheringList() {
   const router = useRouter();
-  const { query, type, categoryId, sort, status, page, setParams } = useGatheringSearchParams();
+  const { query, type, categoryIds, sort, status, page, setParams } = useGatheringSearchParams();
 
   const { data } = useSuspenseQuery(
     gatheringQueries.list({
       ...(query && { query }),
-      ...(type && { type }),
-      ...(categoryId && { categoryIds: [categoryId] }),
+      ...(type && { type: GATHERING_TYPE_PARAM_MAP[type] }),
+      ...(categoryIds.length > 0 && { categoryIds }),
       sort,
       status,
       page,
