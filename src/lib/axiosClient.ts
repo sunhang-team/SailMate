@@ -15,6 +15,17 @@ const isUnauthorized = (error: unknown) => {
 export const axiosClient: AxiosInstance = axios.create({
   baseURL: '/api',
   withCredentials: true,
+  paramsSerializer: (params) => {
+    const searchParams = new URLSearchParams();
+    Object.entries(params).forEach(([key, value]) => {
+      if (Array.isArray(value)) {
+        value.forEach((v) => searchParams.append(key, String(v)));
+      } else if (value !== undefined && value !== null) {
+        searchParams.append(key, String(value));
+      }
+    });
+    return searchParams.toString();
+  },
 });
 
 axiosClient.interceptors.response.use(
