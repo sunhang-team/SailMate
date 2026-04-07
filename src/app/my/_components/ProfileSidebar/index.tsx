@@ -62,7 +62,7 @@ export function ProfileSidebar({ className }: ProfileSidebarProps) {
     formState: { errors },
   } = useForm<UpdateProfileForm>({
     resolver: zodResolver(updateProfileFormSchema),
-    defaultValues: { nickname: user.nickname, profileImage: user.profileImage },
+    defaultValues: { nickname: user.nickname, profileImage: undefined },
   });
 
   const nicknameDraft = watch('nickname');
@@ -70,9 +70,21 @@ export function ProfileSidebar({ className }: ProfileSidebarProps) {
 
   useEffect(() => {
     if (!isEditing) {
-      reset({ nickname: user.nickname, profileImage: user.profileImage });
+      reset({ nickname: user.nickname, profileImage: undefined });
     }
   }, [user.nickname, user.profileImage, reset, isEditing]);
+
+  const [profileImageBlobUrl, setProfileImageBlobUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!isEditing || !(profileImageDraft instanceof File)) {
+      setProfileImageBlobUrl(null);
+      return;
+    }
+    const url = URL.createObjectURL(profileImageDraft);
+    setProfileImageBlobUrl(url);
+    return () => URL.revokeObjectURL(url);
+  }, [isEditing, profileImageDraft]);
 
   const { mutate, isPending } = useUpdateProfile({
     onSuccess: () => {
@@ -91,12 +103,12 @@ export function ProfileSidebar({ className }: ProfileSidebarProps) {
   const onSubmit = (data: UpdateProfileForm) => mutate(data);
 
   const handleCancelEdit = () => {
-    reset({ nickname: user.nickname, profileImage: user.profileImage });
+    reset({ nickname: user.nickname, profileImage: undefined });
     setIsEditing(false);
   };
 
   const startEdit = () => {
-    reset({ nickname: user.nickname, profileImage: user.profileImage });
+    reset({ nickname: user.nickname, profileImage: undefined });
     setIsEditing(true);
   };
 
@@ -110,7 +122,7 @@ export function ProfileSidebar({ className }: ProfileSidebarProps) {
     { label: '받은 리뷰', value: `${reviewCount}개` },
   ];
 
-  const previewImageUrl = isEditing ? (profileImageDraft ?? '') : user.profileImage;
+  const previewImageUrl = isEditing && profileImageBlobUrl ? profileImageBlobUrl : user.profileImage;
   const previewNickname = isEditing ? nicknameDraft || user.nickname : user.nickname;
 
   const identityProps = {
