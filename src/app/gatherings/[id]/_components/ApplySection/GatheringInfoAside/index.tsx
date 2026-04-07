@@ -2,16 +2,18 @@
 
 import { useState } from 'react';
 
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 
 import { gatheringQueries } from '@/api/gatherings/queries';
-import { useCreateApplication } from '@/api/applications/queries';
+import { applicationQueries, useCreateApplication } from '@/api/applications/queries';
 import { Button } from '@/components/ui/Button';
 import { GatheringCard } from '@/components/ui/GatheringCard';
 import { HeartIcon, StudyIcon, ProjectIcon } from '@/components/ui/Icon';
 import { Tag } from '@/components/ui/Tag';
-import { GATHERING_CATEGORY_LABEL, GATHERING_TYPE_LABEL } from '@/constants/gathering';
+import { AuthModal } from '@/components/AuthModal';
+import { useAuth } from '@/hooks/useAuth';
 import { useFunnel } from '@/hooks/useFunnel';
+import { useOverlay } from '@/hooks/useOverlay';
 
 import { DeadlineLabel } from '../DeadlineLabel';
 import { InfoAccordion } from '../InfoAccordion';
@@ -22,8 +24,8 @@ import { GatheringApplySuccess } from '../GatheringApplySuccess';
 import type { GatheringType } from '@/api/gatherings/types';
 
 const TYPE_ICON: Record<GatheringType, typeof StudyIcon> = {
-  STUDY: StudyIcon,
-  PROJECT: ProjectIcon,
+  스터디: StudyIcon,
+  프로젝트: ProjectIcon,
 };
 
 interface GatheringInfoAsideProps {
@@ -31,8 +33,17 @@ interface GatheringInfoAsideProps {
 }
 
 export function GatheringInfoAside({ gatheringId }: GatheringInfoAsideProps) {
+  const { isLoggedIn } = useAuth();
   const { data } = useSuspenseQuery(gatheringQueries.detail(gatheringId));
+  const { data: myApplications } = useQuery({
+    ...applicationQueries.myList(),
+    enabled: isLoggedIn,
+  });
+
+  const hasPendingApplication =
+    myApplications?.applications.some((app) => app.gathering.id === gatheringId && app.status === 'PENDING') ?? false;
   const [isFavorite, setIsFavorite] = useState(false);
+  const overlay = useOverlay();
   const { Funnel, Step, setStep } = useFunnel<'DEFAULT' | 'APPLY' | 'SUCCESS'>('DEFAULT');
 
   const { mutate, isPending } = useCreateApplication(gatheringId, {
@@ -42,14 +53,13 @@ export function GatheringInfoAside({ gatheringId }: GatheringInfoAsideProps) {
   });
 
   const TypeIcon = TYPE_ICON[data.type] || StudyIcon;
-  const TypeLabel = GATHERING_TYPE_LABEL[data.type] || data.type;
-  const CategoryLabel =
-    GATHERING_CATEGORY_LABEL[data.category as keyof typeof GATHERING_CATEGORY_LABEL] || data.category;
+  const TypeLabel = data.type;
+  const CategoryLabel = data.categories.join(', ');
 
   return (
-    <div className='sticky top-[0.1px]'>
+    <div className='sticky top-[-20px]'>
       {/* 모집 상태 바 - 항상 노출 */}
-      <div className='border-focus-100 mt-15 mb-4 flex justify-between rounded-[8px] border bg-blue-100 px-8 py-2.5'>
+      <div className='border-focus-100 mb-4 flex justify-between rounded-[8px] border bg-blue-100 px-8 py-2.5'>
         <div className='text-body-02-sb flex items-center text-blue-400'>모집중</div>
         <div className='flex items-center gap-2'>
           <span className='text-body-02-m text-gray-700'>모집 마감까지</span>
@@ -87,7 +97,15 @@ export function GatheringInfoAside({ gatheringId }: GatheringInfoAsideProps) {
                 data-selected={isFavorite}
                 aria-label='찜하기'
                 aria-pressed={isFavorite}
-                onClick={() => setIsFavorite((prev) => !prev)}
+                onClick={async () => {
+                  if (!isLoggedIn) {
+                    const isLoginSuccessful = await overlay.open(({ isOpen, close }) => (
+                      <AuthModal isOpen={isOpen} onClose={() => close(false)} onSuccess={() => close(true)} />
+                    ));
+                    if (!isLoginSuccessful) return;
+                  }
+                  setIsFavorite((prev) => !prev);
+                }}
               >
                 <HeartIcon size={20} variant={isFavorite ? 'filled' : 'outline'} />
               </Button>
@@ -112,11 +130,19 @@ export function GatheringInfoAside({ gatheringId }: GatheringInfoAsideProps) {
 
             <Button
               variant='action'
-              className={`text-body-01-sb h-13.5 flex-1 md:h-18 ${data.myApplicationStatus === 'PENDING' ? 'bg-gray-300' : ''}`}
-              disabled={data.myApplicationStatus === 'PENDING'}
-              onClick={() => setStep('APPLY')}
+              className={`text-body-01-sb h-13.5 flex-1 md:h-18 ${hasPendingApplication ? 'bg-gray-300' : ''}`}
+              disabled={hasPendingApplication}
+              onClick={async () => {
+                if (!isLoggedIn) {
+                  const isLoginSuccessful = await overlay.open(({ isOpen, close }) => (
+                    <AuthModal isOpen={isOpen} onClose={() => close(false)} onSuccess={() => close(true)} />
+                  ));
+                  if (!isLoginSuccessful) return;
+                }
+                setStep('APPLY');
+              }}
             >
-              {data.myApplicationStatus === 'PENDING' ? '참여 대기중' : '참여 신청하기'}
+              {hasPendingApplication ? '참여 대기중' : '참여 신청하기'}
             </Button>
           </GatheringCard>
         </Step>

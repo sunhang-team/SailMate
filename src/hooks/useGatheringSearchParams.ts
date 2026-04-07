@@ -11,7 +11,7 @@ export const useGatheringSearchParams = () => {
   return useQueryParams({
     query: parseAsString.withDefault(''),
     type: parseAsStringEnum(GATHERING_TYPES),
-    category: parseAsString,
+    categoryId: parseAsInteger,
     sort: parseAsStringEnum(SORT_OPTIONS).withDefault('latest'),
     status: parseAsStringEnum(STATUS_OPTIONS).withDefault('RECRUITING'),
     page: parseAsInteger.withDefault(1),

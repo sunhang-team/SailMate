@@ -3,10 +3,13 @@ import type { z } from 'zod';
 import type { gatheringFormSchema, gatheringUpdateFormSchema } from './schemas';
 
 /** 모임 유형 */
-export type GatheringType = 'STUDY' | 'PROJECT';
+export type GatheringType = '스터디' | '프로젝트';
 
-/** 모임 카테고리 */
-export type GatheringCategory = 'DEVELOPMENT' | 'LANGUAGE' | 'BOOK' | 'CERTIFICATE' | 'DESIGN';
+/** 카테고리 항목 (GET /gatherings/categories 응답) */
+export interface Category {
+  id: number;
+  name: string;
+}
 
 /** 모임 상태 */
 export type GatheringStatus = 'RECRUITING' | 'IN_PROGRESS' | 'COMPLETED';
@@ -50,7 +53,7 @@ export interface WeeklyPlan {
 export interface GatheringListItem {
   id: number;
   type: GatheringType;
-  category: string;
+  categories: string[];
   title: string;
   shortDescription: string;
   tags: string[];
@@ -60,7 +63,6 @@ export interface GatheringListItem {
   startDate: string;
   endDate: string;
   status: GatheringStatus;
-  isLiked: boolean;
   leader: LeaderInfo;
 }
 
@@ -75,6 +77,11 @@ export interface GatheringDetail extends GatheringListItem {
   myApplicationStatus: ApplicationStatus | null;
 }
 
+/** GET `/gatherings/{gatheringId}/application-status` — 모임 신청 상태 응답 */
+export interface GetApplicationStatusResponse {
+  myApplicationStatus: ApplicationStatus | null;
+}
+
 /** POST `/gatherings` — 모임 생성 폼 */
 export type GatheringForm = z.infer<typeof gatheringFormSchema>;
 
@@ -84,7 +91,7 @@ export type GatheringUpdateForm = z.infer<typeof gatheringUpdateFormSchema>;
 /** GET `/gatherings` — 쿼리 파라미터 */
 export interface GetGatheringsParams {
   type?: GatheringType;
-  category?: string;
+  categoryIds?: number[];
   sort?: 'latest' | 'popular' | 'deadline';
   status?: GatheringStatus | 'ALL';
   query?: string;
@@ -106,6 +113,11 @@ export type CreateGatheringRequest = GatheringForm;
 /** POST `/gatherings` — 모임 생성 응답 */
 export interface CreateGatheringResponse {
   gathering: GatheringDetail;
+}
+
+/** GET `/gatherings/categories` — 카테고리 목록 응답 */
+export interface GetCategoriesResponse {
+  categories: Category[];
 }
 
 /** GET `/gatherings/main` — 쿼리 파라미터 */

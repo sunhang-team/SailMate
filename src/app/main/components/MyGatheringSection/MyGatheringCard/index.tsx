@@ -8,8 +8,6 @@ import { ProgressBar } from '@/components/ui/Progress';
 import { Tag } from '@/components/ui/Tag';
 
 import type { Member, MembershipGathering } from '@/api/memberships/types';
-import { GATHERING_CATEGORY_LABEL, GATHERING_TYPE_LABEL } from '@/constants/gathering';
-
 interface MyGatheringCardProps {
   gathering: MembershipGathering;
   members?: Member[];
@@ -18,8 +16,8 @@ interface MyGatheringCardProps {
 }
 
 const TYPE_ICON = {
-  STUDY: ProjectIcon,
-  PROJECT: StudyIcon,
+  스터디: StudyIcon,
+  프로젝트: ProjectIcon,
 } as const;
 
 export function MyGatheringCard({ gathering, members = [], onClick, className }: MyGatheringCardProps) {
@@ -44,10 +42,8 @@ export function MyGatheringCard({ gathering, members = [], onClick, className }:
             const Icon = TYPE_ICON[gathering.type as keyof typeof TYPE_ICON] || StudyIcon;
             return <Icon size={14} className='text-blue-200' />;
           })()}
-          label={GATHERING_TYPE_LABEL[gathering.type as keyof typeof GATHERING_TYPE_LABEL] || gathering.type}
-          sublabel={
-            GATHERING_CATEGORY_LABEL[gathering.category as keyof typeof GATHERING_CATEGORY_LABEL] || gathering.category
-          }
+          label={gathering.type}
+          sublabel={gathering.categories.join(', ')}
         />
         <AvatarGroup max={4} avatars={members.map((m) => ({ id: m.userId, imageUrl: m.profileImage }))} size='sm' />
       </GatheringCard.Header>

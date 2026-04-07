@@ -11,17 +11,21 @@ export type ApplyGatheringForm = z.infer<typeof applyGatheringFormSchema>;
 /** 신청 상태 */
 export type ApplicationStatus = 'PENDING' | 'ACCEPTED' | 'REJECTED';
 
-// TODO: Reviews 도메인 타입 생성 후 ApplicantReview → Review 타입으로 교체
 /**
- * GET /gatherings/:gatheringId/applications 응답 내 신청자의 리뷰 정보
+ * GET /gatherings/:gatheringId/applications 응답 내 신청자의 리뷰 요약
  */
-export interface ApplicantReview {
+export interface ApplicantReviewSummary {
+  reviewCount: number;
+  topTags: string[];
+}
+
+/**
+ * GET /gatherings/:gatheringId/applications 응답 내 최근 리뷰 항목
+ */
+export interface ApplicantRecentReview {
   id: number;
-  reviewer: { id: number; nickname: string };
-  gatheringTitle: string;
-  tags: string[];
   comment?: string;
-  createdAt: string;
+  tags: string[];
 }
 
 /**
@@ -32,7 +36,8 @@ export interface Applicant {
   nickname: string;
   profileImage: string;
   reputationScore: number;
-  reviews: ApplicantReview[];
+  reviewSummary: ApplicantReviewSummary;
+  recentReviews: ApplicantRecentReview[];
 }
 
 /**
