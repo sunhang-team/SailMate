@@ -12,10 +12,10 @@ export const weeklyGuideSchema = z.object({
 
 /** POST `/gatherings` — 모임 생성 폼 */
 export const gatheringFormSchema = z.object({
-  type: z.enum(['STUDY', 'PROJECT'], {
+  type: z.enum(['스터디', '프로젝트'], {
     message: '모임 유형을 지정해 주세요.',
   }),
-  category: z.string().min(1, '카테고리를 선택해 주세요.'),
+  categoryIds: z.array(z.number()).min(1, '카테고리를 최소 1개 선택해 주세요.'),
   title: z.string().min(2, '제목은 2자 이상이어야 합니다.').max(30, '제목은 최대 30자까지 가능합니다.'),
   shortDescription: z
     .string()

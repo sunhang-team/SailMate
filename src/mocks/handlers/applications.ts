@@ -20,22 +20,20 @@ const mockApplicationListResponse: ApplicationListResponse = {
         nickname: '김선장',
         profileImage: 'https://example.com/profile.jpg',
         reputationScore: 36.5,
-        reviews: [
+        reviewSummary: {
+          reviewCount: 12,
+          topTags: ['성실해요', '소통이 좋아요'],
+        },
+        recentReviews: [
           {
             id: 1,
-            reviewer: { id: 2, nickname: '항해사' },
-            gatheringTitle: '리액트 스터디 1기',
-            tags: ['성실해요', '소통이 좋아요'],
             comment: '항상 열심히 참여해주셨어요!',
-            createdAt: '2023-11-01T00:00:00Z',
+            tags: ['성실해요', '소통이 좋아요'],
           },
           {
             id: 2,
-            reviewer: { id: 3, nickname: '조타수' },
-            gatheringTitle: '자바스크립트 딥다이브',
-            tags: ['시간을 잘 지켜요'],
             comment: '시간 약속을 잘 지켜요',
-            createdAt: '2023-12-15T00:00:00Z',
+            tags: ['시간을 잘 지켜요'],
           },
         ],
       },

@@ -26,8 +26,8 @@ const BASE_GATHERINGS: GatheringListItem[] = [
   // ── DEVELOPMENT ──
   {
     id: 1,
-    type: 'STUDY',
-    category: 'DEVELOPMENT',
+    type: '스터디',
+    categories: ['개발'],
     title: 'React 19 & Next.js 스터디',
     shortDescription: 'React 19의 새 기능과 Next.js App Router를 함께 파헤쳐요.',
     tags: ['React', 'Next.js', 'TypeScript'],
@@ -37,13 +37,12 @@ const BASE_GATHERINGS: GatheringListItem[] = [
     startDate: '2026-02-10',
     endDate: '2026-04-1',
     status: 'RECRUITING',
-    isLiked: false,
     leader: { id: 1, nickname: '김코딩', profileImage: 'https://avatars.githubusercontent.com/u/1?v=4' },
   },
   {
     id: 2,
-    type: 'PROJECT',
-    category: 'DEVELOPMENT',
+    type: '프로젝트',
+    categories: ['개발'],
     title: 'SaaS 사이드 프로젝트 팀 모집',
     shortDescription: '구독형 SaaS 서비스를 함께 기획·개발해요.',
     tags: ['SaaS', 'React', 'Node.js'],
@@ -53,13 +52,12 @@ const BASE_GATHERINGS: GatheringListItem[] = [
     startDate: '2026-05-01',
     endDate: '2026-09-30',
     status: 'RECRUITING',
-    isLiked: false,
     leader: { id: 2, nickname: '박프로', profileImage: 'https://avatars.githubusercontent.com/u/2?v=4' },
   },
   {
     id: 3,
-    type: 'STUDY',
-    category: 'DEVELOPMENT',
+    type: '스터디',
+    categories: ['개발'],
     title: 'Spring Boot 심화 스터디',
     shortDescription: 'JPA, Redis, Kafka를 활용한 실전 백엔드 구축.',
     tags: ['Java', 'Spring', 'JPA'],
@@ -69,14 +67,13 @@ const BASE_GATHERINGS: GatheringListItem[] = [
     startDate: '2026-04-05',
     endDate: '2026-07-05',
     status: 'IN_PROGRESS',
-    isLiked: true,
     leader: { id: 3, nickname: '이개발', profileImage: 'https://avatars.githubusercontent.com/u/3?v=4' },
   },
   // ── LANGUAGE ──
   {
     id: 4,
-    type: 'STUDY',
-    category: 'LANGUAGE',
+    type: '스터디',
+    categories: ['어학'],
     title: '매일 영어 회화 30분 챌린지',
     shortDescription: '매일 30분씩 영어 프리토킹으로 스피킹 실력을 키워요.',
     tags: ['영어', '회화', '스피킹'],
@@ -86,13 +83,12 @@ const BASE_GATHERINGS: GatheringListItem[] = [
     startDate: '2026-04-20',
     endDate: '2026-07-20',
     status: 'RECRUITING',
-    isLiked: true,
     leader: { id: 4, nickname: '영어왕', profileImage: 'https://avatars.githubusercontent.com/u/4?v=4' },
   },
   {
     id: 5,
-    type: 'STUDY',
-    category: 'LANGUAGE',
+    type: '스터디',
+    categories: ['어학'],
     title: 'JLPT N2 집중 대비반',
     shortDescription: '7월 시험 목표! 문법·독해·청해를 체계적으로 준비합니다.',
     tags: ['일본어', 'JLPT', 'N2'],
@@ -102,14 +98,13 @@ const BASE_GATHERINGS: GatheringListItem[] = [
     startDate: '2026-04-12',
     endDate: '2026-07-05',
     status: 'RECRUITING',
-    isLiked: false,
     leader: { id: 5, nickname: '일본어마스터', profileImage: 'https://avatars.githubusercontent.com/u/5?v=4' },
   },
   // ── BOOK ──
   {
     id: 6,
-    type: 'STUDY',
-    category: 'BOOK',
+    type: '스터디',
+    categories: ['독서'],
     title: '한 달에 한 권 완독 모임',
     shortDescription: '매달 한 권을 선정해 함께 읽고 토론해요.',
     tags: ['독서', '토론', '인문'],
@@ -119,13 +114,12 @@ const BASE_GATHERINGS: GatheringListItem[] = [
     startDate: '2026-04-15',
     endDate: '2026-10-15',
     status: 'RECRUITING',
-    isLiked: false,
     leader: { id: 1, nickname: '김코딩', profileImage: 'https://avatars.githubusercontent.com/u/1?v=4' },
   },
   {
     id: 7,
-    type: 'PROJECT',
-    category: 'BOOK',
+    type: '프로젝트',
+    categories: ['독서'],
     title: '독서 기록 앱 만들기',
     shortDescription: '읽은 책을 기록하고 공유하는 앱을 직접 만들어 봐요.',
     tags: ['독서', '사이드프로젝트', 'Flutter'],
@@ -135,14 +129,13 @@ const BASE_GATHERINGS: GatheringListItem[] = [
     startDate: '2026-04-01',
     endDate: '2026-07-31',
     status: 'COMPLETED',
-    isLiked: false,
     leader: { id: 6, nickname: '책벌레', profileImage: 'https://avatars.githubusercontent.com/u/6?v=4' },
   },
   // ── CERTIFICATE ──
   {
     id: 8,
-    type: 'STUDY',
-    category: 'CERTIFICATE',
+    type: '스터디',
+    categories: ['자격증'],
     title: '정보처리기사 실기 스터디',
     shortDescription: '기출 분석 + 모의고사로 실기 합격을 목표로 합니다.',
     tags: ['정보처리기사', '자격증', '실기'],
@@ -152,13 +145,12 @@ const BASE_GATHERINGS: GatheringListItem[] = [
     startDate: '2026-04-20',
     endDate: '2026-06-20',
     status: 'RECRUITING',
-    isLiked: true,
     leader: { id: 7, nickname: '합격러', profileImage: 'https://avatars.githubusercontent.com/u/7?v=4' },
   },
   {
     id: 9,
-    type: 'STUDY',
-    category: 'CERTIFICATE',
+    type: '스터디',
+    categories: ['자격증'],
     title: 'SQLD 자격증 4주 완성',
     shortDescription: 'SQL 기초부터 시험 대비까지 4주 만에 끝내요.',
     tags: ['SQLD', 'SQL', '데이터베이스'],
@@ -168,13 +160,12 @@ const BASE_GATHERINGS: GatheringListItem[] = [
     startDate: '2026-05-05',
     endDate: '2026-06-02',
     status: 'RECRUITING',
-    isLiked: false,
     leader: { id: 8, nickname: 'DB마스터', profileImage: 'https://avatars.githubusercontent.com/u/8?v=4' },
   },
   {
     id: 10,
-    type: 'STUDY',
-    category: 'CERTIFICATE',
+    type: '스터디',
+    categories: ['자격증'],
     title: 'TOEIC 900+ 달성 스터디',
     shortDescription: '파트별 전략 학습으로 900점 이상을 목표로 합니다.',
     tags: ['TOEIC', '영어', '자격증'],
@@ -184,7 +175,6 @@ const BASE_GATHERINGS: GatheringListItem[] = [
     startDate: '2026-04-10',
     endDate: '2026-06-10',
     status: 'RECRUITING',
-    isLiked: false,
     leader: { id: 4, nickname: '영어왕', profileImage: 'https://avatars.githubusercontent.com/u/4?v=4' },
   },
 ];
@@ -199,7 +189,6 @@ const generateMockGatherings = (): GatheringListItem[] => {
         id: round * BASE_GATHERINGS.length + base.id,
         title: round === 0 ? base.title : `${base.title} (${round + 1}기)`,
         currentMembers: Math.max(1, (base.currentMembers + round) % (base.maxMembers + 1)),
-        isLiked: (round + base.id) % 3 === 0,
       });
     }
   }
@@ -252,8 +241,8 @@ const mockDetails: Record<number, GatheringDetail> = {
   },
   8: {
     ...mockGatherings[7],
-    type: 'STUDY',
-    category: 'DESIGN',
+    type: '스터디',
+    categories: ['디자인'],
     title: '피그마 기초 스터디',
     shortDescription: '피그마를 통해 디자인 이론부터 실습까지 목표로',
     tags: ['실습', '디자인'],
@@ -263,7 +252,6 @@ const mockDetails: Record<number, GatheringDetail> = {
     startDate: '2026-03-15',
     endDate: '2026-04-05',
     status: 'RECRUITING',
-    isLiked: false,
     leader: { id: 10, nickname: '김민수', profileImage: null },
     description:
       '디자인 전공자, 비전공자 모두 환영합니다.\n피그마 기초를 함께 공부하고 최종적으로는 웹 서비스 1개를 완성하는 걸 목표로 합니다.\n적극적으로 스터디를 참여할 분들을 기다리겠습니다.',
@@ -332,13 +320,13 @@ const mockDetails: Record<number, GatheringDetail> = {
 
 /**
  * URL 쿼리스트링을 읽어 목록을 필터링 + 정렬한다.
- * - 필터: type, category, status (ALL이면 스킵), query (제목·짧은설명 부분 검색)
+ * - 필터: type, categoryIds, status (ALL이면 스킵), query (제목·짧은설명 부분 검색)
  * - 정렬: popular(참여자 많은 순) | deadline(마감 임박 순) | 기본값(id 내림차순 = 최신순)
  * - 얕은 복사본에서 작업하므로 mockGatherings 원본은 변경되지 않는다.
  */
 const applyFilters = (list: GatheringListItem[], url: URL): GatheringListItem[] => {
   const type = url.searchParams.get('type') as GatheringListItem['type'] | null;
-  const category = url.searchParams.get('category');
+  const categoryIds = url.searchParams.getAll('categoryIds').map(Number).filter(Boolean);
   const sort = url.searchParams.get('sort') as 'latest' | 'popular' | 'deadline' | null;
   const status = url.searchParams.get('status') as GatheringListItem['status'] | 'ALL' | null;
   const query = url.searchParams.get('query');
@@ -346,7 +334,8 @@ const applyFilters = (list: GatheringListItem[], url: URL): GatheringListItem[] 
   let result = [...list]; // 얕은 복사 → filter/sort가 mockGatherings 원본을 변경하지 않음
 
   if (type) result = result.filter((g) => g.type === type);
-  if (category) result = result.filter((g) => g.category === category);
+  // categoryIds 필터링은 mock에서 간소화 (실제로는 서버에서 ID 기반 필터링)
+  if (categoryIds.length > 0) result = result.filter(() => true);
   if (status && status !== 'ALL') result = result.filter((g) => g.status === status);
   if (query) {
     const q = query.toLowerCase();
@@ -386,6 +375,12 @@ const paginate = (list: GatheringListItem[], url: URL) => {
 const BASE = '/api/v1/gatherings';
 
 export const gatheringsHandlers = [
+  /** GET /api/v1/gatherings/:gatheringId/application-status — 모임 신청 상태 */
+  http.get(`${BASE}/:gatheringId/application-status`, async () => {
+    await delay(200);
+    return HttpResponse.json(createApiResponse({ myApplicationStatus: null }));
+  }),
+
   /** GET /api/v1/gatherings/main — 메인 페이지 모임 목록 */
   http.get(`${BASE}/main`, async ({ request }) => {
     await delay(300);
@@ -463,7 +458,10 @@ export const gatheringsHandlers = [
     const newGathering: GatheringListItem = {
       id: Date.now(),
       type: body.type,
-      category: body.category,
+      categories: body.categoryIds.map((id: number) => {
+        const names: Record<number, string> = { 1: '개발', 2: '어학', 3: '독서', 4: '자격증', 5: '디자인' };
+        return names[id] ?? `카테고리${id}`;
+      }),
       title: body.title,
       shortDescription: body.shortDescription,
       tags: body.tags ?? [],
@@ -473,7 +471,6 @@ export const gatheringsHandlers = [
       startDate: body.startDate,
       endDate: body.endDate,
       status: 'RECRUITING',
-      isLiked: false,
       leader: { id: 1, nickname: '김코딩', profileImage: null },
     };
 

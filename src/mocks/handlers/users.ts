@@ -2,7 +2,7 @@ import { http, HttpResponse, delay } from 'msw';
 
 import { createApiResponse } from '../utils';
 
-import type { User, UserPublicProfile, UpdateProfileForm, UpdatePasswordResponseData } from '@/api/users/types';
+import type { User, UserPublicProfile, UpdateProfileResponseData, UpdatePasswordResponseData } from '@/api/users/types';
 
 const BASE = '/api/v1/users';
 
@@ -52,7 +52,7 @@ const getPublicUser = (userId: number): UserPublicProfile => {
         id: 101,
         reviewer: { id: 99, nickname: '열정맨' },
         gatheringTitle: 'React 완전 정복 스터디',
-        tags: ['소통이 활발해요', '팀 분위기를 밝게 만들어요'],
+        tags: ['성실해요', '소통이 좋아요'],
         comment: '항상 열심히 참여해주셨어요!',
         createdAt: '2025-04-20T10:00:00Z',
       },
@@ -60,7 +60,7 @@ const getPublicUser = (userId: number): UserPublicProfile => {
         id: 102,
         reviewer: { id: 100, nickname: '친절한개발자' },
         gatheringTitle: 'Next.js 팀 프로젝트',
-        tags: ['소통이 활발해요', '팀 분위기를 밝게 만들어요'],
+        tags: ['잘 도와줘요', '다시 함께하고 싶어요'],
         comment: '덕분에 많이 배웠습니다.',
         createdAt: '2025-04-21T15:30:00Z',
       },
@@ -68,7 +68,7 @@ const getPublicUser = (userId: number): UserPublicProfile => {
         id: 103,
         reviewer: { id: 101, nickname: '타입스크립트장인' },
         gatheringTitle: '알고리즘 코테 스터디',
-        tags: ['약속을 잘 지켜요', '할 일을 미루지 않아요'],
+        tags: ['시간을 잘 지켜요', '성실해요'],
         comment: '시간 엄수 최고입니다!',
         createdAt: '2025-04-22T09:15:00Z',
       },
@@ -83,16 +83,24 @@ export const usersHandlers = [
     return HttpResponse.json(createApiResponse<User>(mockUser));
   }),
 
-  /** PATCH /api/v1/users/me - 내 프로필 수정*/
+  /** PATCH /api/v1/users/me - 내 프로필 수정 (multipart/form-data) */
   http.patch(`${BASE}/me`, async ({ request }) => {
-    await delay(400); // 폼 제출 액션이므로 조금 더 길게 지연
-    const body = (await request.json()) as UpdateProfileForm;
+    await delay(400);
+    const formData = await request.formData();
 
-    // 임의의 프로필 데이터 업데이트
-    if (body.nickname) mockUser.nickname = body.nickname;
-    if (body.profileImage) mockUser.profileImage = body.profileImage;
+    const nickname = formData.get('nickname');
+    const profileImage = formData.get('profileImage');
 
-    return HttpResponse.json(createApiResponse<User>(mockUser));
+    if (typeof nickname === 'string') mockUser.nickname = nickname;
+    if (profileImage instanceof File) mockUser.profileImage = `https://example.com/${profileImage.name}`;
+
+    const responseData: UpdateProfileResponseData = {
+      id: mockUser.id,
+      nickname: mockUser.nickname,
+      profileImage: mockUser.profileImage,
+    };
+
+    return HttpResponse.json(createApiResponse<UpdateProfileResponseData>(responseData));
   }),
 
   /** PATCH /api/v1/users/me/password - 비밀번호 변경*/

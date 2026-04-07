@@ -17,7 +17,7 @@ import { Textarea } from '@/components/ui/Textarea';
 import { useToastStore } from '@/components/ui/Toast/useToastStore';
 import { useCreateGathering } from '@/api/gatherings/queries';
 import { gatheringFormSchema } from '@/api/gatherings/schemas';
-import { GATHERING_CATEGORIES, GATHERING_TYPES } from '@/constants/gathering';
+import { DEFAULT_CATEGORIES, GATHERING_TYPES } from '@/constants/gathering';
 import { cn } from '@/lib/cn';
 
 import { ImageUpload } from './ImageUpload';
@@ -54,17 +54,14 @@ const CategoryTriggerBorder = ({ children }: { children: ReactNode }) => {
 };
 
 const TYPE_META = {
-  STUDY: { label: '스터디', subtitle: '함께 학습하고 성장해요', Icon: StudyIcon },
-  PROJECT: { label: '프로젝트', subtitle: '함께 만들고 완성해요', Icon: ProjectIcon },
+  스터디: { label: '스터디', subtitle: '함께 학습하고 성장해요', Icon: StudyIcon },
+  프로젝트: { label: '프로젝트', subtitle: '함께 만들고 완성해요', Icon: ProjectIcon },
 } as const;
 
-const CATEGORY_META = {
-  DEVELOPMENT: { label: '개발' },
-  LANGUAGE: { label: '어학' },
-  BOOK: { label: '독서' },
-  CERTIFICATE: { label: '자격증' },
-  DESIGN: { label: '디자인' },
-} as const;
+const CATEGORY_META = Object.fromEntries(DEFAULT_CATEGORIES.map((c) => [c.id, { label: c.name }])) as Record<
+  number,
+  { label: string }
+>;
 
 export function CreateGatheringForm() {
   const showToast = useToastStore((state) => state.showToast);
@@ -87,7 +84,7 @@ export function CreateGatheringForm() {
   const { mutate, isPending } = useCreateGathering();
 
   const typeValue = watch('type');
-  const categoryValue = watch('category');
+  const categoryIdsValue = watch('categoryIds') ?? [];
   const titleValue = watch('title') ?? '';
   const shortDescValue = watch('shortDescription') ?? '';
   const descValue = watch('description') ?? '';
@@ -116,7 +113,7 @@ export function CreateGatheringForm() {
 
   const isFormComplete =
     !!typeValue &&
-    !!categoryValue &&
+    categoryIdsValue.length > 0 &&
     !!titleValue &&
     !!shortDescValue &&
     !!descValue &&
@@ -223,55 +220,64 @@ export function CreateGatheringForm() {
             <p className='text-small-02-r self-end text-gray-400'>{titleValue.length}/30</p>
           </div>
           <Controller
-            name='category'
+            name='categoryIds'
             control={control}
-            render={({ field }) => (
-              <div className='flex w-full flex-col gap-1.5 lg:flex-1'>
-                <p className='text-small-02-m md:text-body-02-m lg:text-body-01-m text-gray-800'>카테고리</p>
-                <Dropdown className='flex w-full flex-col'>
-                  <Dropdown.Trigger>
-                    <CategoryTriggerBorder>
-                      <div className='flex items-center gap-2'>
-                        <CategoryIcon className='size-4 md:size-6 lg:size-7' />
-                        <span
+            render={({ field }) => {
+              const selected = field.value ?? [];
+              const selectedLabel =
+                selected.length > 0 ? selected.map((id) => CATEGORY_META[id]?.label).join(', ') : null;
+
+              const toggleCategory = (id: number) => {
+                const next = selected.includes(id) ? selected.filter((v) => v !== id) : [...selected, id];
+                field.onChange(next);
+              };
+
+              return (
+                <div className='flex w-full flex-col gap-1.5 lg:flex-1'>
+                  <p className='text-small-02-m md:text-body-02-m lg:text-body-01-m text-gray-800'>카테고리</p>
+                  <Dropdown className='flex w-full flex-col'>
+                    <Dropdown.Trigger>
+                      <CategoryTriggerBorder>
+                        <div className='flex items-center gap-2'>
+                          <CategoryIcon className='size-4 md:size-6 lg:size-7' />
+                          <span
+                            className={cn(
+                              'text-small-02-r md:text-body-02-r lg:text-body-01-r',
+                              selectedLabel ? 'text-gray-900' : 'text-gray-400',
+                            )}
+                          >
+                            {selectedLabel ?? '카테고리를 선택해주세요'}
+                          </span>
+                        </div>
+                        <RotatingArrow />
+                      </CategoryTriggerBorder>
+                    </Dropdown.Trigger>
+                    <Dropdown.Menu
+                      containerClassName='w-full'
+                      className='custom-scrollbar max-h-[240px] w-full overflow-y-auto rounded-lg border border-blue-100 bg-white p-2'
+                    >
+                      {DEFAULT_CATEGORIES.map((cat) => (
+                        <Dropdown.Item
+                          key={cat.id}
+                          onClick={() => toggleCategory(cat.id)}
                           className={cn(
-                            'text-small-02-r md:text-body-02-r lg:text-body-01-r',
-                            field.value ? 'text-gray-900' : 'text-gray-400',
+                            'cursor-pointer rounded-lg px-4 py-3 hover:bg-blue-100 hover:text-blue-400',
+                            selected.includes(cat.id) && 'bg-blue-100 text-blue-400',
                           )}
                         >
-                          {field.value
-                            ? CATEGORY_META[field.value as keyof typeof CATEGORY_META].label
-                            : '카테고리를 선택해주세요'}
-                        </span>
-                      </div>
-                      <RotatingArrow />
-                    </CategoryTriggerBorder>
-                  </Dropdown.Trigger>
-                  <Dropdown.Menu
-                    containerClassName='w-full'
-                    className='custom-scrollbar max-h-[240px] w-full overflow-y-auto rounded-lg border border-blue-100 bg-white p-2'
-                  >
-                    {GATHERING_CATEGORIES.map((cat) => (
-                      <Dropdown.Item
-                        key={cat}
-                        onClick={() => field.onChange(cat)}
-                        className={cn(
-                          'cursor-pointer rounded-lg px-4 py-3 hover:bg-blue-100 hover:text-blue-400',
-                          field.value === cat && 'bg-blue-100 text-blue-400',
-                        )}
-                      >
-                        {CATEGORY_META[cat].label}
-                      </Dropdown.Item>
-                    ))}
-                  </Dropdown.Menu>
-                </Dropdown>
-                {errors.category && (
-                  <p className='text-xs text-red-200' role='alert'>
-                    {errors.category.message}
-                  </p>
-                )}
-              </div>
-            )}
+                          {cat.name}
+                        </Dropdown.Item>
+                      ))}
+                    </Dropdown.Menu>
+                  </Dropdown>
+                  {errors.categoryIds && (
+                    <p className='text-xs text-red-200' role='alert'>
+                      {errors.categoryIds.message}
+                    </p>
+                  )}
+                </div>
+              );
+            }}
           />
         </div>
       </section>
