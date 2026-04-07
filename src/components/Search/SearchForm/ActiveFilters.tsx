@@ -8,9 +8,9 @@ import { DEFAULT_CATEGORIES } from '@/constants/gathering';
 import { useGatheringSearchParams } from '@/hooks/useGatheringSearchParams';
 
 export function ActiveFilters() {
-  const { query, type, categoryId, setParams } = useGatheringSearchParams();
+  const { query, type, categoryIds, setParams } = useGatheringSearchParams();
 
-  const hasActiveFilters = query !== '' || type !== null || categoryId !== null;
+  const hasActiveFilters = query !== '' || type !== null || categoryIds.length > 0;
   if (!hasActiveFilters) return null;
 
   const handleRemoveQuery = () => {
@@ -25,15 +25,15 @@ export function ActiveFilters() {
     });
   };
 
-  const handleRemoveCategory = () => {
+  const handleRemoveCategory = (id: number) => {
     startTransition(() => {
-      setParams({ categoryId: null, page: 1 }, { history: 'push' });
+      setParams({ categoryIds: categoryIds.filter((v) => v !== id), page: 1 }, { history: 'push' });
     });
   };
 
   const handleResetFilters = () => {
     startTransition(() => {
-      setParams({ query: '', type: null, categoryId: null, page: 1 }, { history: 'push' });
+      setParams({ query: '', type: null, categoryIds: [], page: 1 }, { history: 'push' });
     });
   };
 
@@ -49,11 +49,11 @@ export function ActiveFilters() {
           {type}
         </Tag>
       )}
-      {categoryId && (
-        <Tag variant='filter' onRemove={handleRemoveCategory}>
-          {DEFAULT_CATEGORIES.find((c) => c.id === categoryId)?.name ?? categoryId}
+      {categoryIds.map((id) => (
+        <Tag key={id} variant='filter' onRemove={() => handleRemoveCategory(id)}>
+          {DEFAULT_CATEGORIES.find((c) => c.id === id)?.name ?? id}
         </Tag>
-      )}
+      ))}
       <button
         type='button'
         onClick={handleResetFilters}
