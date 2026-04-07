@@ -15,7 +15,10 @@ export const gatheringFormSchema = z.object({
   type: z.enum(['스터디', '프로젝트'], {
     message: '모임 유형을 지정해 주세요.',
   }),
-  categoryIds: z.array(z.number()).min(1, '카테고리를 최소 1개 선택해 주세요.'),
+  categoryIds: z
+    .array(z.number())
+    .min(1, '카테고리를 최소 1개 선택해 주세요.')
+    .max(3, '카테고리는 최대 3개까지 선택 가능합니다.'),
   title: z.string().min(2, '제목은 2자 이상이어야 합니다.').max(30, '제목은 최대 30자까지 가능합니다.'),
   shortDescription: z
     .string()
