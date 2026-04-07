@@ -84,6 +84,10 @@ export function MyGatheringsList() {
 
   return (
     <div className='mt-6 flex flex-col gap-6'>
+      <div className='flex items-center gap-2'>
+        <span className='text-body-01-b md:text-h3-b text-gray-900'>{selectedStatusLabel}</span>
+        <span className='text-small-02-r md:text-body-01-r text-gray-500'>총 {sorted.length}건</span>
+      </div>
       <div className='flex items-center justify-between'>
         <div className='flex items-center gap-2 md:gap-4'>
           {SORT_OPTIONS.map((option, index) => {
@@ -122,7 +126,7 @@ export function MyGatheringsList() {
                   key={option.value}
                   onClick={() => handleFilterChange({ status: option.value })}
                   className={cn(
-                    'cursor-pointer rounded-lg px-4 py-2 hover:bg-blue-100 hover:text-blue-400',
+                    'text-small-02-m md:text-body-02-m cursor-pointer rounded-lg px-4 py-2 hover:bg-blue-100 hover:text-blue-400',
                     isSelected && 'bg-blue-100 text-blue-400',
                   )}
                 >
