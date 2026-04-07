@@ -5,6 +5,7 @@ import { isJsonResponse, extractTokens } from '@/lib/tokenUtils';
 
 const ACCESS_TOKEN_COOKIE = 'accessToken';
 const REFRESH_TOKEN_COOKIE = 'refreshToken';
+const AUTH_HINT_COOKIE = 'has-session';
 const isSecureCookie = process.env.NODE_ENV === 'production';
 
 const clearAuthCookies = (response: NextResponse) => {
@@ -17,6 +18,13 @@ const clearAuthCookies = (response: NextResponse) => {
   });
   response.cookies.set(REFRESH_TOKEN_COOKIE, '', {
     httpOnly: true,
+    secure: isSecureCookie,
+    sameSite: 'lax',
+    path: '/',
+    maxAge: 0,
+  });
+  response.cookies.set(AUTH_HINT_COOKIE, '', {
+    httpOnly: false,
     secure: isSecureCookie,
     sameSite: 'lax',
     path: '/',
@@ -40,7 +48,7 @@ export async function POST(request: NextRequest) {
   if (!baseUrl) throw new Error('BACKEND_BASE_URL is not defined');
   const backendBaseUrl = baseUrl.replace(/\/+$/, '');
 
-  const backendResponse = await fetch(`${backendBaseUrl}/auth/refresh`, {
+  const backendResponse = await fetch(`${backendBaseUrl}/v1/auth/refresh`, {
     method: 'POST',
     headers: {
       'content-type': 'application/json',
@@ -71,6 +79,13 @@ export async function POST(request: NextRequest) {
     const expires = getExpirationDate(nextAccessToken) ?? undefined;
     response.cookies.set(ACCESS_TOKEN_COOKIE, nextAccessToken, {
       httpOnly: true,
+      secure: isSecureCookie,
+      sameSite: 'lax',
+      path: '/',
+      expires,
+    });
+    response.cookies.set(AUTH_HINT_COOKIE, '1', {
+      httpOnly: false,
       secure: isSecureCookie,
       sameSite: 'lax',
       path: '/',
