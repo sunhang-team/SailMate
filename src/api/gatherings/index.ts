@@ -5,7 +5,6 @@ import type { ApiResponse } from '@/api/common/types';
 import type {
   GatheringListItem,
   GatheringDetail,
-  GatheringTypeParam,
   GetApplicationStatusResponse,
   GetCategoriesResponse,
   GetGatheringsParams,
@@ -18,14 +17,9 @@ import type {
   UpdateGatheringRequest,
   UpdateGatheringResponse,
 } from './types';
+import { GATHERING_TYPE_TO_PARAM } from './types';
 
 // ── 백엔드 호환 레이어 ──────
-
-/** 프론트 한글 타입 → 백엔드 영어 타입 매핑 */
-const GATHERING_TYPE_TO_PARAM: Record<string, GatheringTypeParam> = {
-  스터디: 'STUDY',
-  프로젝트: 'PROJECT',
-};
 
 /** 백엔드 category 키 → 한글 라벨 매핑 */
 const CATEGORY_KEY_TO_LABEL: Record<string, string> = {

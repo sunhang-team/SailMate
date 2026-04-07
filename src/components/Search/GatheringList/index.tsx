@@ -10,14 +10,8 @@ import { MainGatheringCard } from '@/components/MainGatheringCard';
 import { GatheringFilterBar } from '@/components/Search/GatheringFilterBar';
 import { Pagination } from '@/components/ui/Pagination';
 import { gatheringQueries } from '@/api/gatherings/queries';
+import { GATHERING_TYPE_TO_PARAM } from '@/api/gatherings/types';
 import { useGatheringSearchParams } from '@/hooks/useGatheringSearchParams';
-
-import type { GatheringTypeParam } from '@/api/gatherings/types';
-
-const GATHERING_TYPE_PARAM_MAP: Record<string, GatheringTypeParam> = {
-  스터디: 'STUDY',
-  프로젝트: 'PROJECT',
-};
 
 const PAGE_LIMIT = 12;
 
@@ -28,7 +22,7 @@ export function GatheringList() {
   const { data } = useSuspenseQuery(
     gatheringQueries.list({
       ...(query && { query }),
-      ...(type && { type: GATHERING_TYPE_PARAM_MAP[type] }),
+      ...(type && { type: GATHERING_TYPE_TO_PARAM[type] }),
       ...(categoryIds.length > 0 && { categoryIds }),
       sort,
       status,
