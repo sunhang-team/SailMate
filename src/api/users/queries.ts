@@ -37,7 +37,6 @@ export const useUpdateProfile = (options?: UseMutationOptions<User, Error, Updat
     ...options,
     onSuccess: (data, variables, onMutateResult, context) => {
       queryClient.invalidateQueries({ queryKey: userKeys.me() });
-      //invalidateServerCache(userKeys.all[0]);
       options?.onSuccess?.(data, variables, onMutateResult, context);
     },
   });
