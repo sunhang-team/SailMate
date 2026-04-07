@@ -13,14 +13,9 @@ export function MyPageContent({ activeTab }: MyPageContentProps) {
     return (
       <SuspenseBoundary
         pendingFallback={<div className='flex h-40 items-center justify-center text-gray-400'>불러오는 중...</div>}
-        errorFallback={(_, reset) => (
-          <div className='flex h-40 flex-col items-center justify-center gap-2 text-gray-500'>
-            <p>모임을 불러올 수 없습니다.</p>
-            <button onClick={reset} className='text-blue-400 underline'>
-              다시 시도
-            </button>
-          </div>
-        )}
+        errorFallback={
+          <p className='flex h-40 items-center justify-center text-gray-500'>모임을 불러올 수 없습니다.</p>
+        }
       >
         <MyGatheringsList />
       </SuspenseBoundary>

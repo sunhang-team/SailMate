@@ -53,12 +53,21 @@ export function MyGatheringsList() {
   const [page, setPage] = useState(1);
   const [isPending, startTransition] = useTransition();
 
-  const { data } = useSuspenseQuery(membershipQueries.my({ status, page, limit }));
+  // status=all: API가 RECRUITING 포함 반환 → 서버 totalPages 신뢰 불가
+  // → 전체를 한 번에 받아(limit=999) 클라이언트에서 필터/페이지네이션
+  // status=in_progress|completed: 서버 필터 정확 → 서버 페이지네이션 그대로 사용
+  const isAll = status === 'all';
+  const { data } = useSuspenseQuery(
+    membershipQueries.my({ status, page: isAll ? 1 : page, limit: isAll ? 999 : limit }),
+  );
 
-  const sortedGatherings = [...data.gatherings].sort((a, b) => {
+  const filtered = isAll ? data.gatherings.filter((g) => g.status !== 'RECRUITING') : data.gatherings;
+  const sorted = [...filtered].sort((a, b) => {
     const diff = new Date(a.startDate).getTime() - new Date(b.startDate).getTime();
     return sort === 'latest' ? -diff : diff;
   });
+  const totalPages = isAll ? Math.max(1, Math.ceil(sorted.length / limit)) : data.totalPages;
+  const paged = isAll ? sorted.slice((page - 1) * limit, page * limit) : sorted;
 
   const handleFilterChange = (next: Partial<{ status: MyStatusFilter; sort: SortOrder }>) => {
     if (next.sort !== undefined) {
@@ -105,7 +114,7 @@ export function MyGatheringsList() {
               <RotatingArrow />
             </div>
           </Dropdown.Trigger>
-          <Dropdown.Menu className='flex min-w-[100px] flex-col gap-2 overflow-hidden p-2'>
+          <Dropdown.Menu className='flex flex-col gap-2 overflow-hidden p-2 whitespace-nowrap'>
             {STATUS_OPTIONS.map((option) => {
               const isSelected = status === option.value;
               return (
@@ -125,23 +134,23 @@ export function MyGatheringsList() {
         </Dropdown>
       </div>
 
-      {sortedGatherings.length === 0 ? (
+      {paged.length === 0 ? (
         <div className='flex h-40 items-center justify-center'>
           <p className='text-body-02-r text-gray-400'>참여한 모임이 없습니다.</p>
         </div>
       ) : (
         <div className={cn('grid grid-cols-1 gap-4 lg:grid-cols-2', isPending && 'opacity-50')}>
-          {sortedGatherings.map((gathering) => (
+          {paged.map((gathering) => (
             <MyGatheringsCard key={gathering.id} gathering={gathering} />
           ))}
         </div>
       )}
 
-      {data.totalPages > 1 && (
+      {totalPages > 1 && (
         <Pagination
           variant='numbered'
           currentPage={page}
-          totalPages={data.totalPages}
+          totalPages={totalPages}
           onPageChange={(p) => startTransition(() => setPage(p))}
         />
       )}
