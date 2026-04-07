@@ -6,8 +6,6 @@ import { GatheringCard } from '@/components/ui/GatheringCard';
 import { CalendarIcon, ProjectIcon, ReviewIcon, StudyIcon } from '@/components/ui/Icon';
 import { ProgressBar } from '@/components/ui/Progress';
 import { Tag } from '@/components/ui/Tag';
-import { GATHERING_CATEGORY_LABEL, GATHERING_TYPE_LABEL } from '@/constants/gathering';
-
 import type { GatheringStatus, MembershipGathering } from '@/api/memberships/types';
 
 interface MyGatheringsCardProps {
@@ -51,11 +49,8 @@ export function MyGatheringsCard({ gathering }: MyGatheringsCardProps) {
           <Tag
             variant='category'
             icon={<Icon size={14} className='text-blue-200' />}
-            label={GATHERING_TYPE_LABEL[gathering.type as keyof typeof GATHERING_TYPE_LABEL] ?? gathering.type}
-            sublabel={
-              GATHERING_CATEGORY_LABEL[gathering.category as keyof typeof GATHERING_CATEGORY_LABEL] ??
-              gathering.category
-            }
+            label={gathering.type}
+            sublabel={gathering.categories.join(', ')}
           />
           <Tag variant='status' state={STATUS_TAG_STATE[gathering.status]}>
             {STATUS_LABEL[gathering.status]}
