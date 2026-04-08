@@ -76,7 +76,9 @@ export const useUpdateApplicationStatus = (
     onSuccess: (data, variables, onMutateResult, context) => {
       queryClient.invalidateQueries({ queryKey: applicationKeys.all });
       queryClient.invalidateQueries({ queryKey: gatheringKeys.detail(gatheringId) });
+      queryClient.invalidateQueries({ queryKey: gatheringKeys.applicationStatus(gatheringId) });
 
+      invalidateServerCache(GATHERING_TAGS.all);
       invalidateServerCache(GATHERING_TAGS.detail(gatheringId));
 
       options?.onSuccess?.(data, variables, onMutateResult, context);
