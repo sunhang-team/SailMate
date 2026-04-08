@@ -1,11 +1,8 @@
 import { NextResponse, type NextRequest } from 'next/server';
-import { getExpirationDate } from '@/lib/getExpirationDate';
+
+import { deleteAuthCookies, setAuthCookies } from '@/lib/authCookies';
 import { requestBackend } from '@/lib/serverFetch';
 import { isJsonResponse, extractTokens } from '@/lib/tokenUtils';
-
-const ACCESS_TOKEN_COOKIE = 'accessToken';
-const REFRESH_TOKEN_COOKIE = 'refreshToken';
-const isSecureCookie = process.env.NODE_ENV === 'production';
 
 const isAuthEndpoint = (endpoint: string) => {
   const normalized = endpoint.replace(/^\/+/, '');
@@ -52,8 +49,7 @@ async function proxy(request: NextRequest, params: { endpoint: string[] }) {
     });
 
     if (isLogoutSuccess) {
-      response.cookies.delete(ACCESS_TOKEN_COOKIE);
-      response.cookies.delete(REFRESH_TOKEN_COOKIE);
+      deleteAuthCookies(response);
     }
 
     return response;
@@ -72,31 +68,11 @@ async function proxy(request: NextRequest, params: { endpoint: string[] }) {
   });
 
   if (isLogoutSuccess) {
-    response.cookies.delete(ACCESS_TOKEN_COOKIE);
-    response.cookies.delete(REFRESH_TOKEN_COOKIE);
+    deleteAuthCookies(response);
+    return response;
   }
 
-  if (nextAccessToken) {
-    const expires = getExpirationDate(nextAccessToken) ?? undefined;
-    response.cookies.set(ACCESS_TOKEN_COOKIE, nextAccessToken, {
-      httpOnly: true,
-      secure: isSecureCookie,
-      sameSite: 'lax',
-      path: '/',
-      expires,
-    });
-  }
-
-  if (nextRefreshToken) {
-    const expires = getExpirationDate(nextRefreshToken) ?? undefined;
-    response.cookies.set(REFRESH_TOKEN_COOKIE, nextRefreshToken, {
-      httpOnly: true,
-      secure: isSecureCookie,
-      sameSite: 'lax',
-      path: '/',
-      expires,
-    });
-  }
+  setAuthCookies(response, { accessToken: nextAccessToken, refreshToken: nextRefreshToken });
 
   return response;
 }

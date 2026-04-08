@@ -34,7 +34,6 @@ const mockGatherings: MembershipGathering[] = [
     endDate: '2025-04-19',
     status: 'IN_PROGRESS',
     myRole: 'LEADER',
-    isLiked: false,
   },
   {
     id: 2,
@@ -49,7 +48,6 @@ const mockGatherings: MembershipGathering[] = [
     endDate: '2025-05-30',
     status: 'RECRUITING',
     myRole: 'MEMBER',
-    isLiked: false,
   },
   {
     id: 3,
@@ -64,7 +62,6 @@ const mockGatherings: MembershipGathering[] = [
     endDate: '2025-02-28',
     status: 'COMPLETED',
     myRole: 'MEMBER',
-    isLiked: false,
   },
   {
     id: 4,
@@ -79,7 +76,6 @@ const mockGatherings: MembershipGathering[] = [
     endDate: '2025-04-19',
     status: 'RECRUITING',
     myRole: 'MEMBER',
-    isLiked: false,
   },
   {
     id: 5,
@@ -94,7 +90,6 @@ const mockGatherings: MembershipGathering[] = [
     endDate: '2025-04-19',
     status: 'RECRUITING',
     myRole: 'MEMBER',
-    isLiked: false,
   },
   {
     id: 6,
@@ -109,7 +104,6 @@ const mockGatherings: MembershipGathering[] = [
     endDate: '2025-04-19',
     status: 'RECRUITING',
     myRole: 'MEMBER',
-    isLiked: false,
   },
   {
     id: 7,
@@ -124,7 +118,6 @@ const mockGatherings: MembershipGathering[] = [
     endDate: '2025-04-19',
     status: 'RECRUITING',
     myRole: 'MEMBER',
-    isLiked: false,
   },
   {
     id: 8,
@@ -139,7 +132,6 @@ const mockGatherings: MembershipGathering[] = [
     endDate: '2025-04-19',
     status: 'RECRUITING',
     myRole: 'MEMBER',
-    isLiked: false,
   },
 ];
 
