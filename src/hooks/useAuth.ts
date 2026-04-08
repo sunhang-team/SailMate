@@ -1,5 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 
+import { useIsMounted } from '@frontend-toolkit-js/hooks';
+
 import { userQueries } from '@/api/users/queries';
 
 import type { User } from '@/api/users/types';
@@ -10,16 +12,16 @@ interface AuthState {
   isLoading: boolean;
 }
 
-const hasSessionHint = () => typeof document !== 'undefined' && document.cookie.includes('has-session=');
-
 export const useAuth = (): AuthState => {
-  const enabled = hasSessionHint();
+  const isMounted = useIsMounted();
+  const hasSession = isMounted && document.cookie.includes('has-session=');
+
   const { data, isError, isLoading } = useQuery({
     ...userQueries.me(),
-    enabled,
+    enabled: hasSession,
   });
 
-  if (!enabled) {
+  if (!hasSession) {
     return { user: null, isLoggedIn: false, isLoading: false };
   }
 
