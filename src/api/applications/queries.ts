@@ -11,6 +11,7 @@ import {
 import { invalidateServerCache } from '@/lib/invalidateServerCache';
 
 import { GATHERING_TAGS } from '../gatherings';
+import { gatheringKeys } from '../gatherings/queries';
 
 import {
   ApplyGatheringForm,
@@ -74,6 +75,12 @@ export const useUpdateApplicationStatus = (
     ...options,
     onSuccess: (data, variables, onMutateResult, context) => {
       queryClient.invalidateQueries({ queryKey: applicationKeys.all });
+      queryClient.invalidateQueries({ queryKey: gatheringKeys.detail(gatheringId) });
+      queryClient.invalidateQueries({ queryKey: gatheringKeys.applicationStatus(gatheringId) });
+
+      invalidateServerCache(GATHERING_TAGS.all);
+      invalidateServerCache(GATHERING_TAGS.detail(gatheringId));
+
       options?.onSuccess?.(data, variables, onMutateResult, context);
     },
   });

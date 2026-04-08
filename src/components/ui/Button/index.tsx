@@ -42,6 +42,10 @@ export const buttonVariants = cva('cursor-pointer transition-colors disabled:cur
       /** 랜딩 Hero — 둘러보기: 기본 아웃라인, hover 시 그라데이션 채움 */
       'landing-browse':
         'inline-flex items-center justify-center bg-gray-0 text-gradient-primary border-gradient-primary shadow-01 transition-colors hover:bg-gradient-primary hover:text-gray-0 hover:[-webkit-background-clip:border-box] hover:[background-clip:border-box] hover:[-webkit-text-fill-color:var(--color-gray-0)] hover:shadow-03',
+      approve:
+        'rounded-lg flex items-center justify-center gap-1 text-body-01-sb text-blue-300 bg-blue-100 disabled:opacity-50',
+      reject:
+        'rounded-lg flex items-center justify-center gap-1 text-body-01-sb text-gray-700 bg-gray-150 disabled:opacity-50',
     },
     size: {
       'join-login': 'h-14 w-124',
@@ -74,6 +78,7 @@ export const buttonVariants = cva('cursor-pointer transition-colors disabled:cur
       /** Hero CTA: 모바일 Small, md 이상 Big */
       'landing-hero':
         'h-12 w-[120px] rounded-[33.333px] text-body-02-sb md:h-[72px] md:w-[179px] md:rounded-full md:text-h5-b',
+      'approve-reject': 'px-6 py-2',
     },
   },
   defaultVariants: {
