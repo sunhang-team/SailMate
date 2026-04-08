@@ -9,6 +9,7 @@ import { Tag } from '@/components/ui/Tag';
 import { getGatheringDisplayStatus } from '@/lib/gatheringStatus';
 
 import type { MembershipGathering } from '@/api/memberships/types';
+import Link from 'next/link';
 
 interface MyGatheringsCardProps {
   gathering: MembershipGathering;
@@ -41,79 +42,81 @@ export function MyGatheringsCard({ gathering }: MyGatheringsCardProps) {
   });
 
   return (
-    <GatheringCard>
-      <GatheringCard.Header className='items-start'>
-        <div className='flex gap-1'>
-          <Tag
-            variant='category'
-            icon={<Icon size={14} className='text-blue-200' />}
-            label={gathering.type}
-            sublabel={gathering.categories.join(', ')}
-          />
-          <Tag variant='status' state={tagState}>
-            {displayLabel}
-          </Tag>
-        </div>
-      </GatheringCard.Header>
-      <GatheringCard.Body>
-        <div>
+    <Link href={`/gatherings/${gathering.id}/dashboard`}>
+      <GatheringCard>
+        <GatheringCard.Header className='items-start'>
           <div className='flex gap-1'>
-            {gathering.tags.slice(0, 2).map((tag) => (
-              <span key={tag} className='text-small-02-r md:text-small-01-r text-gray-500'>
-                #{tag}
-              </span>
-            ))}
+            <Tag
+              variant='category'
+              icon={<Icon size={14} className='text-blue-200' />}
+              label={gathering.type}
+              sublabel={gathering.categories.join(', ')}
+            />
+            <Tag variant='status' state={tagState}>
+              {displayLabel}
+            </Tag>
           </div>
-          <div className='text-body-02-b md:text-body-01-b text-gray-900'>{gathering.title}</div>
-          <div className='mt-2 flex items-center gap-2'>
-            <CalendarIcon size={16} className='text-gray-600' />
-            <div className='flex items-center gap-1'>
-              <span className='text-small-02-r md:text-small-01-r text-gray-600'>
-                {formatDateDot(gathering.startDate)} ~ {formatDateDot(gathering.endDate)}
-              </span>
-              <span className='text-small-02-r md:text-small-01-r text-gray-600'>・</span>
-              <span className='text-small-02-r md:text-small-01-r text-gray-600'>{totalWeeks}주</span>
+        </GatheringCard.Header>
+        <GatheringCard.Body>
+          <div>
+            <div className='flex gap-1'>
+              {gathering.tags.slice(0, 2).map((tag) => (
+                <span key={tag} className='text-small-02-r md:text-small-01-r text-gray-500'>
+                  #{tag}
+                </span>
+              ))}
             </div>
-            <span className='text-small-02-r md:text-small-01-r text-gray-400'>|</span>
-            <ProjectIcon size={16} className='text-gray-600' />
-            <div className='flex items-center'>
-              <span className='text-small-02-r md:text-small-01-r text-gray-600'>{gathering.currentMembers}</span>
-              <span className='text-small-02-r md:text-small-01-r text-gray-400'>/{gathering.maxMembers}</span>
+            <div className='text-body-02-b md:text-body-01-b text-gray-900'>{gathering.title}</div>
+            <div className='mt-2 flex items-center gap-2'>
+              <CalendarIcon size={16} className='text-gray-600' />
+              <div className='flex items-center gap-1'>
+                <span className='text-small-02-r md:text-small-01-r text-gray-600'>
+                  {formatDateDot(gathering.startDate)} ~ {formatDateDot(gathering.endDate)}
+                </span>
+                <span className='text-small-02-r md:text-small-01-r text-gray-600'>・</span>
+                <span className='text-small-02-r md:text-small-01-r text-gray-600'>{totalWeeks}주</span>
+              </div>
+              <span className='text-small-02-r md:text-small-01-r text-gray-400'>|</span>
+              <ProjectIcon size={16} className='text-gray-600' />
+              <div className='flex items-center'>
+                <span className='text-small-02-r md:text-small-01-r text-gray-600'>{gathering.currentMembers}</span>
+                <span className='text-small-02-r md:text-small-01-r text-gray-400'>/{gathering.maxMembers}</span>
+              </div>
             </div>
+            <ProgressBar label='달성률' layout='horizontal' value={progressRate} className='mb-4' />
           </div>
-          <ProgressBar label='달성률' layout='horizontal' value={progressRate} className='mb-4' />
-        </div>
-      </GatheringCard.Body>
-      <GatheringCard.Footer>
-        {gathering.status === 'IN_PROGRESS' && (
-          <div className='border-gray-150 flex h-[54px] w-full items-center rounded-[8px] border bg-gray-100 md:h-[72px]'>
-            <div className='flex flex-1 items-center justify-center gap-1.5'>
-              <span className='text-small-01-m md:text-body-01-m text-gray-600'>총</span>
-              <span className='text-small-01-sb md:text-body-01-sb text-blue-300'>{totalWeeks}주</span>
+        </GatheringCard.Body>
+        <GatheringCard.Footer>
+          {gathering.status === 'IN_PROGRESS' && (
+            <div className='border-gray-150 flex h-[54px] w-full items-center rounded-[8px] border bg-gray-100 md:h-[72px]'>
+              <div className='flex flex-1 items-center justify-center gap-1.5'>
+                <span className='text-small-01-m md:text-body-01-m text-gray-600'>총</span>
+                <span className='text-small-01-sb md:text-body-01-sb text-blue-300'>{totalWeeks}주</span>
+              </div>
+              <div className='bg-gray-150 h-6 w-px' />
+              <div className='flex flex-1 items-center justify-center gap-1.5'>
+                <span className='text-small-01-sb md:text-body-01-sb text-blue-300'>
+                  {getCurrentWeek(gathering.startDate)}주차
+                </span>
+                <span className='text-small-01-m md:text-body-01-m text-gray-600'>진행중</span>
+              </div>
             </div>
-            <div className='bg-gray-150 h-6 w-px' />
-            <div className='flex flex-1 items-center justify-center gap-1.5'>
-              <span className='text-small-01-sb md:text-body-01-sb text-blue-300'>
-                {getCurrentWeek(gathering.startDate)}주차
-              </span>
-              <span className='text-small-01-m md:text-body-01-m text-gray-600'>진행중</span>
+          )}
+          {gathering.status === 'COMPLETED' && !hasReviewed && (
+            <div className='flex h-[54px] w-full items-center justify-center rounded-[8px] bg-blue-50 md:h-[72px]'>
+              <div className='flex items-center gap-2'>
+                <ReviewIcon size={16} className='text-blue-300 md:size-6' />
+                <span className='text-small-01-sb md:text-body-01-sb text-blue-300'>리뷰 쓰기</span>
+              </div>
             </div>
-          </div>
-        )}
-        {gathering.status === 'COMPLETED' && !hasReviewed && (
-          <div className='flex h-[54px] w-full items-center justify-center rounded-[8px] bg-blue-50 md:h-[72px]'>
-            <div className='flex items-center gap-2'>
-              <ReviewIcon size={16} className='text-blue-300 md:size-6' />
-              <span className='text-small-01-sb md:text-body-01-sb text-blue-300'>리뷰 쓰기</span>
+          )}
+          {gathering.status === 'COMPLETED' && hasReviewed && (
+            <div className='flex h-[54px] w-full items-center justify-center rounded-[8px] bg-blue-50 md:h-[72px]'>
+              <span className='text-small-01-sb md:text-body-01-sb text-gray-600'>리뷰 작성완료</span>
             </div>
-          </div>
-        )}
-        {gathering.status === 'COMPLETED' && hasReviewed && (
-          <div className='flex h-[54px] w-full items-center justify-center rounded-[8px] bg-blue-50 md:h-[72px]'>
-            <span className='text-small-01-sb md:text-body-01-sb text-gray-600'>리뷰 작성완료</span>
-          </div>
-        )}
-      </GatheringCard.Footer>
-    </GatheringCard>
+          )}
+        </GatheringCard.Footer>
+      </GatheringCard>
+    </Link>
   );
 }
