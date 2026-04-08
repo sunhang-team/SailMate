@@ -1,9 +1,4 @@
-const decodeBase64Url = (input: string) => {
-  const normalized = input.replace(/-/g, '+').replace(/_/g, '/');
-  const padded = normalized.padEnd(Math.ceil(normalized.length / 4) * 4, '=');
-  const decoded = typeof atob === 'function' ? atob(padded) : Buffer.from(padded, 'base64').toString('binary');
-  return decoded;
-};
+import { decodeBase64Url } from './decodeBase64Url';
 
 export const getExpirationDate = (jwt: string): Date | null => {
   const parts = jwt.split('.');

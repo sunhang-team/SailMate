@@ -7,10 +7,16 @@ const refreshClient = axios.create({
   withCredentials: true,
 });
 
-const isUnauthorized = (error: unknown) => {
+// TODO: 백엔드에서 인증 없는 요청에 401 통일 후 500 조건 제거
+const shouldAttemptRefresh = (error: unknown) => {
   if (!axios.isAxiosError(error)) return false;
-  return error.response?.status === 401;
+  const status = error.response?.status;
+  if (status === 401) return true;
+  if (status === 500 && !error.config?.headers?.Authorization) return true;
+  return false;
 };
+
+let refreshPromise: Promise<unknown> | null = null;
 
 export const axiosClient: AxiosInstance = axios.create({
   baseURL: '/api',
@@ -31,7 +37,7 @@ export const axiosClient: AxiosInstance = axios.create({
 axiosClient.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
-    if (!isUnauthorized(error)) throw error;
+    if (!shouldAttemptRefresh(error)) throw error;
 
     const config = error.config as (AxiosRequestConfig & { _retry?: boolean }) | undefined;
     if (!config || config._retry) throw error;
@@ -42,10 +48,18 @@ axiosClient.interceptors.response.use(
     config._retry = true;
 
     try {
-      await refreshClient.post(REFRESH_PATH);
+      if (!refreshPromise) {
+        refreshPromise = refreshClient.post(REFRESH_PATH).finally(() => {
+          refreshPromise = null;
+        });
+      }
+      await refreshPromise;
       return await axiosClient.request(config);
-    } catch (refreshError) {
-      throw refreshError;
+    } catch {
+      if (!window.location.pathname.startsWith('/login')) {
+        window.location.href = '/login';
+      }
+      throw error;
     }
   },
 );

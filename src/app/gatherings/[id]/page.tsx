@@ -39,7 +39,7 @@ export default async function GatheringDetailPage({ params }: GatheringDetailPag
 
           {/* TODO: [이슈 3] 앵커 탭 네비게이션 */}
 
-          <AnchorTabNav />
+          <AnchorTabNav gatheringId={gatheringId} />
 
           <div className='px-4 pt-10 md:px-7 xl:flex xl:gap-20 xl:px-30'>
             <section className='min-w-0 flex-1'>
