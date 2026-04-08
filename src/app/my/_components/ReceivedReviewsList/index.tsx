@@ -14,6 +14,8 @@ import { ActivityEnergyCard } from '../ActivityEnergyCard';
 import { KeywordSummaryCard } from '../KeywordSummaryCard';
 import { ReceivedReviewCard } from '../ReceivedReviewCard';
 
+import type { Review } from '@/api/reviews/types';
+
 export function ReceivedReviewsList() {
   const { user } = useAuth();
   if (!user) return null;
@@ -22,6 +24,29 @@ export function ReceivedReviewsList() {
 
 interface ReceivedReviewsContentProps {
   userId: number;
+}
+
+interface ReviewsGridProps {
+  paged: Review[];
+  reviewerProfilesMap: Record<number, string>;
+}
+
+function ReviewsGrid({ paged, reviewerProfilesMap }: ReviewsGridProps) {
+  if (paged.length === 0) {
+    return (
+      <div className='flex h-40 items-center justify-center'>
+        <p className='text-small-02-r md:text-body-02-r text-gray-400'>받은 리뷰가 없습니다.</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className='grid grid-cols-1 gap-4 lg:grid-cols-2'>
+      {paged.map((review) => (
+        <ReceivedReviewCard key={review.id} review={review} profileImage={reviewerProfilesMap[review.reviewer.id]} />
+      ))}
+    </div>
+  );
 }
 
 const PAGE_SIZE_DEFAULT = 3;
@@ -62,21 +87,7 @@ function ReceivedReviewsContent({ userId }: ReceivedReviewsContentProps) {
           <span className='text-body-02-sb md:text-h5-sb text-gray-900'>받은 리뷰</span>
           <span className='text-body-02-sb md:text-h5-sb text-gray-600'>{reviewsWithComment.length}</span>
         </div>
-        {reviewsWithComment.length === 0 ? (
-          <div className='flex h-40 items-center justify-center'>
-            <p className='text-small-02-r md:text-body-02-r text-gray-400'>받은 리뷰가 없습니다.</p>
-          </div>
-        ) : (
-          <div className='grid grid-cols-1 gap-4 lg:grid-cols-2'>
-            {paged.map((review) => (
-              <ReceivedReviewCard
-                key={review.id}
-                review={review}
-                profileImage={reviewerProfilesMap[review.reviewer.id]}
-              />
-            ))}
-          </div>
-        )}
+        <ReviewsGrid paged={paged} reviewerProfilesMap={reviewerProfilesMap} />
       </div>
       {totalPages > 1 && (
         <Pagination

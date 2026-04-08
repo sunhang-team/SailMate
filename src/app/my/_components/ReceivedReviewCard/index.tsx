@@ -1,4 +1,8 @@
+import { formatDistanceToNow } from 'date-fns';
+import { ko } from 'date-fns/locale';
+
 import { Profile } from '@/components/ui/Profile';
+
 import type { Review } from '@/api/reviews/types';
 
 interface ReceivedReviewCardProps {
@@ -6,10 +10,7 @@ interface ReceivedReviewCardProps {
   profileImage?: string;
 }
 
-const getDaysAgo = (dateStr: string): string => {
-  const diff = Math.floor((Date.now() - new Date(dateStr).getTime()) / (1000 * 60 * 60 * 24));
-  return `${diff}일전`;
-};
+const getDaysAgo = (dateStr: string): string => formatDistanceToNow(new Date(dateStr), { addSuffix: true, locale: ko });
 
 export function ReceivedReviewCard({ review, profileImage }: ReceivedReviewCardProps) {
   const { reviewer, gatheringTitle, comment, createdAt } = review;
