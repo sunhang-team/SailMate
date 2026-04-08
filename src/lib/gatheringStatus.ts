@@ -4,7 +4,7 @@ import { GATHERING_STATUS_LABEL } from '@/constants/gathering';
 
 import type { GatheringStatus } from '@/api/gatherings/types';
 
-interface GetGatheringDisplayStatusParams {
+export interface GatheringDisplayStatusInput {
   status: GatheringStatus;
   currentMembers: number;
   maxMembers: number;
@@ -16,9 +16,14 @@ interface GetGatheringDisplayStatusParams {
 /**
  * 모임의 실시간 상태와 시각적 태그 정보를 판별하는 공통 유틸리티
  */
-export const getGatheringDisplayStatus = (params: GetGatheringDisplayStatusParams) => {
-  const { status, currentMembers, maxMembers, startDate, endDate, recruitDeadline } = params;
-
+export const getGatheringDisplayStatus = ({
+  status,
+  currentMembers,
+  maxMembers,
+  startDate,
+  endDate,
+  recruitDeadline,
+}: GatheringDisplayStatusInput) => {
   const isFull = currentMembers >= maxMembers;
 
   // recruitDeadline이 없으면 startDate를 모집 마감일로 간주
@@ -62,4 +67,20 @@ export const getGatheringDisplayStatus = (params: GetGatheringDisplayStatusParam
     isDeadlinePassed,
     isFinished,
   };
+};
+
+export const getJoinButtonText = (params: {
+  isFinished: boolean;
+  isDeadlinePassed: boolean;
+  isFull: boolean;
+  hasPendingApplication: boolean;
+  status: GatheringStatus;
+}) => {
+  const { isFinished, isDeadlinePassed, isFull, hasPendingApplication, status } = params;
+
+  if (isFinished) return '완료된 모임';
+  if (status === 'IN_PROGRESS' || isDeadlinePassed) return '모집 마감';
+  if (isFull) return '모집 완료';
+  if (hasPendingApplication) return '참여 대기중';
+  return '참여 신청하기';
 };

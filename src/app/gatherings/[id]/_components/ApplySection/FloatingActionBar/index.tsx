@@ -6,7 +6,7 @@ import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 
 import { gatheringQueries } from '@/api/gatherings/queries';
 import { applicationQueries } from '@/api/applications/queries';
-import { getGatheringDisplayStatus } from '@/lib/gatheringStatus';
+import { getGatheringDisplayStatus, getJoinButtonText } from '@/lib/gatheringStatus';
 import { Button } from '@/components/ui/Button';
 import { HeartIcon } from '@/components/ui/Icon';
 import { AuthModal } from '@/components/AuthModal';
@@ -80,13 +80,13 @@ export function FloatingActionBar({ gatheringId }: FloatingActionBarProps) {
               ));
             }}
           >
-            {(() => {
-              if (isFinished) return '완료된 모임';
-              if (data.status === 'IN_PROGRESS' || isDeadlinePassed) return '모집 마감';
-              if (isFull) return '모집 완료';
-              if (hasPendingApplication) return '참여 대기중';
-              return '참여 신청하기';
-            })()}
+            {getJoinButtonText({
+              isFinished,
+              isDeadlinePassed,
+              isFull,
+              hasPendingApplication,
+              status: data.status,
+            })}
           </Button>
         </div>
       </div>

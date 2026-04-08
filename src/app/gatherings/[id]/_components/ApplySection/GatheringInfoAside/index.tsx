@@ -22,7 +22,7 @@ import { ParticipantsList } from '../ParticipantsList';
 import { GatheringApplyForm } from '../GatheringApplyForm';
 import { GatheringApplySuccess } from '../GatheringApplySuccess';
 
-import { getGatheringDisplayStatus } from '@/lib/gatheringStatus';
+import { getGatheringDisplayStatus, getJoinButtonText } from '@/lib/gatheringStatus';
 
 import type { GatheringType } from '@/api/gatherings/types';
 
@@ -166,13 +166,13 @@ export function GatheringInfoAside({ gatheringId }: GatheringInfoAsideProps) {
                 setStep('APPLY');
               }}
             >
-              {(() => {
-                if (isFinished) return '완료된 모임';
-                if (data.status === 'IN_PROGRESS' || isDeadlinePassed) return '모집 마감';
-                if (isFull) return '모집 완료';
-                if (hasPendingApplication) return '참여 대기중';
-                return '참여 신청하기';
-              })()}
+              {getJoinButtonText({
+                isFinished,
+                isDeadlinePassed,
+                isFull,
+                hasPendingApplication,
+                status: data.status,
+              })}
             </Button>
           </GatheringCard>
         </Step>
