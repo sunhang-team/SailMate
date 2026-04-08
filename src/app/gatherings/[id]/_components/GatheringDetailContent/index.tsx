@@ -3,6 +3,7 @@
 import { useQuery } from '@tanstack/react-query';
 
 import { gatheringQueries } from '@/api/gatherings/queries';
+import { SuspenseBoundary } from '@/components/SuspenseBoundary';
 import { cn } from '@/lib/cn';
 import { formatDateDot, formatDday } from '@/lib/formatGatheringDate';
 import { useAuth } from '@/hooks/useAuth';
@@ -11,6 +12,8 @@ import { GatheringDescription } from '../GatheringDescription';
 import { ImageCarousel } from '../ImageCarousel';
 import { InfoCard } from '../InfoCard';
 import { MembersStatus } from '../MembersStatus';
+import { PendingApplications } from '../PendingApplications';
+import { PendingApplicationsSkeleton } from '../PendingApplications/Skeleton';
 import { WeeklyPlanAccordion } from '../WeeklyPlanAccordion';
 
 interface GatheringDetailContentProps {
@@ -29,12 +32,16 @@ export function GatheringDetailContent({ gatheringId }: GatheringDetailContentPr
     <div className='flex flex-col'>
       {isLeader && (
         <section id='pending-applications' className='scroll-mt-10 xl:scroll-mt-12'>
-          <div className='flex flex-col gap-4'>
-            <h2 className='text-body-01-sb xl:text-h5-sb text-gray-900'>신청 대기자 👑</h2>
-            <div className='border-gray-150 rounded-lg border bg-gray-50 px-4 py-6'>
-              <p className='text-body-02-r text-gray-500'>신청 대기자 관리 기능은 준비 중입니다</p>
-            </div>
-          </div>
+          <SuspenseBoundary
+            pendingFallback={<PendingApplicationsSkeleton />}
+            errorFallback={
+              <div className='rounded-lg border border-gray-200 bg-gray-50 px-4 py-6'>
+                <p className='text-body-02-r text-gray-500'>신청 대기자 목록을 불러올 수 없습니다</p>
+              </div>
+            }
+          >
+            <PendingApplications gatheringId={gatheringId} />
+          </SuspenseBoundary>
         </section>
       )}
 
