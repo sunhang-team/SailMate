@@ -59,14 +59,7 @@ export function GatheringInfoAside({ gatheringId }: GatheringInfoAsideProps) {
   const TypeLabel = data.type;
   const CategoryLabel = data.categories.join(', ');
 
-  const { displayLabel, tagState, isJoinable, isFull, isDeadlinePassed, isFinished } = getGatheringDisplayStatus({
-    status: data.status,
-    currentMembers: data.currentMembers,
-    maxMembers: data.maxMembers,
-    startDate: data.startDate,
-    endDate: data.endDate,
-    recruitDeadline: data.recruitDeadline,
-  });
+  const { displayLabel, tagState, isJoinable, isFull, isDeadlinePassed, isFinished } = getGatheringDisplayStatus(data);
 
   return (
     <div className='sticky top-[-20px]'>

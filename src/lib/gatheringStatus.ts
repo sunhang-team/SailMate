@@ -1,5 +1,7 @@
-import { isPast, parseISO } from 'date-fns';
+import { endOfDay, isPast, parseISO } from 'date-fns';
+
 import { GATHERING_STATUS_LABEL } from '@/constants/gathering';
+
 import type { GatheringStatus } from '@/api/gatherings/types';
 
 interface GetGatheringDisplayStatusParams {
@@ -14,20 +16,20 @@ interface GetGatheringDisplayStatusParams {
 /**
  * 모임의 실시간 상태와 시각적 태그 정보를 판별하는 공통 유틸리티
  */
-export const getGatheringDisplayStatus = ({
-  status,
-  currentMembers,
-  maxMembers,
-  startDate,
-  endDate,
-  recruitDeadline,
-}: GetGatheringDisplayStatusParams) => {
+export const getGatheringDisplayStatus = (params: GetGatheringDisplayStatusParams) => {
+  const { status, currentMembers, maxMembers, startDate, endDate, recruitDeadline } = params;
+
   const isFull = currentMembers >= maxMembers;
+
   // recruitDeadline이 없으면 startDate를 모집 마감일로 간주
-  const deadlineDate = recruitDeadline ? parseISO(recruitDeadline) : parseISO(startDate);
+  // 날짜만 있는 경우(00:00:00) 해당 일자가 끝날 때까지 유효하도록 endOfDay 처리
+  const deadlineDate = recruitDeadline ? endOfDay(parseISO(recruitDeadline)) : endOfDay(parseISO(startDate));
+
   // date-fns의 isPast는 현재 시점(오늘)보다 이전인지 체크
   const isDeadlinePassed = isPast(deadlineDate);
-  const isFinished = status === 'COMPLETED' || isPast(parseISO(endDate));
+
+  // 모임 종료일도 당일 끝까지 포함되도록 endOfDay 처리
+  const isFinished = status === 'COMPLETED' || isPast(endOfDay(parseISO(endDate)));
 
   // 1. 시각적 태그 상태 (recruiting | progressing | completed)
   let tagState: 'recruiting' | 'progressing' | 'completed' = 'recruiting';

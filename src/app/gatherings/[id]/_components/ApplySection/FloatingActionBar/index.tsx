@@ -32,13 +32,7 @@ export function FloatingActionBar({ gatheringId }: FloatingActionBarProps) {
   const [isFavorite, setIsFavorite] = useState(false);
   const overlay = useOverlay();
 
-  const { isJoinable, isFinished, isFull, isDeadlinePassed } = getGatheringDisplayStatus({
-    status: data.status,
-    currentMembers: data.currentMembers,
-    maxMembers: data.maxMembers,
-    startDate: data.startDate,
-    endDate: data.endDate,
-  });
+  const { isJoinable, isFinished, isFull, isDeadlinePassed } = getGatheringDisplayStatus(data);
 
   const isJoinableStatus = isJoinable && !hasPendingApplication;
 

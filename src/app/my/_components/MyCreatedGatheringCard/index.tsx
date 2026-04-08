@@ -28,13 +28,7 @@ export function MyCreatedGatheringCard({ gathering, className }: MyCreatedGather
 
   const pendingCount = gathering.pendingApplicationCount ?? 0;
 
-  const { displayLabel, tagState } = getGatheringDisplayStatus({
-    status: gathering.status,
-    currentMembers: gathering.currentMembers,
-    maxMembers: gathering.maxMembers,
-    startDate: gathering.startDate,
-    endDate: gathering.endDate,
-  });
+  const { displayLabel, tagState } = getGatheringDisplayStatus(gathering);
 
   return (
     <Link href={`/gatherings/${gathering.id}`}>

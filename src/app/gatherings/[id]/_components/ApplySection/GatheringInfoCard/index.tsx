@@ -17,13 +17,7 @@ interface GatheringInfoCardProps {
 export function GatheringInfoCard({ gatheringId }: GatheringInfoCardProps) {
   const { data } = useSuspenseQuery(gatheringQueries.detail(gatheringId));
 
-  const { displayLabel, tagState } = getGatheringDisplayStatus({
-    status: data.status,
-    currentMembers: data.currentMembers,
-    maxMembers: data.maxMembers,
-    startDate: data.startDate,
-    endDate: data.endDate,
-  });
+  const { displayLabel, tagState } = getGatheringDisplayStatus(data);
 
   return (
     <section className='xl:hidden'>

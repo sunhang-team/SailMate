@@ -33,13 +33,7 @@ export function MyGatheringsCard({ gathering }: MyGatheringsCardProps) {
   const Icon = TYPE_ICON[gathering.type as keyof typeof TYPE_ICON] ?? ProjectIcon;
   const hasReviewed = !!gathering.hasReviewed;
 
-  const { displayLabel, tagState, isFinished } = getGatheringDisplayStatus({
-    status: gathering.status,
-    currentMembers: gathering.currentMembers,
-    maxMembers: gathering.maxMembers,
-    startDate: gathering.startDate,
-    endDate: gathering.endDate,
-  });
+  const { displayLabel, tagState, isFinished } = getGatheringDisplayStatus(gathering);
 
   return (
     <Link href={`/gatherings/${gathering.id}/dashboard`}>
