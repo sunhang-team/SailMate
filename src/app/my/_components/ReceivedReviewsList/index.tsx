@@ -31,7 +31,9 @@ function ReceivedReviewsContent({ userId }: ReceivedReviewsContentProps) {
   const [, startTransition] = useTransition();
 
   const { data } = useSuspenseQuery(reviewQueries.list(userId));
-  const { reviews, totalCount } = data;
+  const { reviews } = data;
+
+  const reviewsWithComment = reviews.filter((r) => !!r.comment);
 
   const reviewerProfileQueries = useSuspenseQueries({
     queries: reviews.map((review) => userQueries.userId(review.reviewer.id)),
@@ -45,8 +47,8 @@ function ReceivedReviewsContent({ userId }: ReceivedReviewsContentProps) {
     return acc;
   }, {});
 
-  const paged = reviews.slice((page - 1) * pageSize, page * pageSize);
-  const totalPages = Math.max(1, Math.ceil(totalCount / pageSize));
+  const paged = reviewsWithComment.slice((page - 1) * pageSize, page * pageSize);
+  const totalPages = Math.max(1, Math.ceil(reviewsWithComment.length / pageSize));
 
   return (
     <div className='mt-6 flex flex-col gap-6'>
@@ -54,12 +56,12 @@ function ReceivedReviewsContent({ userId }: ReceivedReviewsContentProps) {
       <KeywordSummaryCard reviews={reviews} />
       <div className='border-gray-150 bg-gray-0 shadow-02 flex flex-col gap-4 rounded-lg border p-6'>
         <div className='flex items-center gap-2'>
-          <span className='text-h5-sb text-gray-900'>받은 리뷰</span>
-          <span className='text-h5-sb text-gray-600'>{totalCount}</span>
+          <span className='text-body-02-sb md:text-h5-sb text-gray-900'>받은 리뷰</span>
+          <span className='text-body-02-sb md:text-h5-sb text-gray-600'>{reviewsWithComment.length}</span>
         </div>
-        {reviews.length === 0 ? (
+        {reviewsWithComment.length === 0 ? (
           <div className='flex h-40 items-center justify-center'>
-            <p className='text-body-02-r text-gray-400'>받은 리뷰가 없습니다.</p>
+            <p className='text-small-02-r md:text-body-02-r text-gray-400'>받은 리뷰가 없습니다.</p>
           </div>
         ) : (
           <div className='grid grid-cols-1 gap-4 lg:grid-cols-2'>
