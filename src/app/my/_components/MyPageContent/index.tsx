@@ -3,6 +3,10 @@ import { SuspenseBoundary } from '@/components/SuspenseBoundary';
 
 import type { MyPageTab, PendingGatheringSort } from '../../_constants';
 
+import { MyGatheringsList } from '../MyGatheringsList';
+
+import { MyCreatedGatheringList } from '../MyCreatedGatheringList';
+
 interface MyPageContentProps {
   activeTab: MyPageTab;
   pendingSort: PendingGatheringSort;
@@ -16,8 +20,28 @@ const PendingGatheringsSkeleton = () => (
 );
 
 export function MyPageContent({ activeTab, pendingSort }: MyPageContentProps) {
-  if (activeTab === 'my-gatherings') return <p>나의 모임</p>;
-  if (activeTab === 'created-gatherings') return <p>만든 모임</p>;
+  if (activeTab === 'my-gatherings')
+    return (
+      <SuspenseBoundary
+        pendingFallback={<div className='flex h-40 items-center justify-center text-gray-400'>불러오는 중...</div>}
+        errorFallback={
+          <p className='flex h-40 items-center justify-center text-gray-500'>모임을 불러올 수 없습니다.</p>
+        }
+      >
+        <MyGatheringsList />
+      </SuspenseBoundary>
+    );
+  if (activeTab === 'created-gatherings')
+    return (
+      <SuspenseBoundary
+        pendingFallback={<div className='flex h-40 items-center justify-center text-gray-400'>불러오는 중...</div>}
+        errorFallback={
+          <p className='flex h-40 items-center justify-center text-gray-500'>모임을 불러올 수 없습니다.</p>
+        }
+      >
+        <MyCreatedGatheringList />
+      </SuspenseBoundary>
+    );
   if (activeTab === 'pending-gatherings') {
     return (
       <SuspenseBoundary

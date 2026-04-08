@@ -1,32 +1,31 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-
 import { useSuspenseQuery } from '@tanstack/react-query';
 
-import { cn } from '@/lib/cn';
+import { membershipQueries } from '@/api/memberships/queries';
 import { Dropdown } from '@/components/ui/Dropdown';
 import { useDropdown } from '@/components/ui/Dropdown/context';
 import { ArrowIcon } from '@/components/ui/Icon/ArrowIcon';
 import { CheckIcon } from '@/components/ui/Icon/CheckIcon';
 import { Pagination } from '@/components/ui/Pagination';
-import { membershipQueries } from '@/api/memberships/queries';
+import { cn } from '@/lib/cn';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 
-import { MyGatheringsCard } from '../MyGatheringsCard';
+import { MyCreatedGatheringCard } from '../MyCreatedGatheringCard';
 
 import type { GatheringStatusFilter } from '@/api/memberships/types';
 
 type SortOrder = 'latest' | 'oldest';
-type MyStatusFilter = Extract<GatheringStatusFilter, 'all' | 'in_progress' | 'completed'>;
 
 const SORT_OPTIONS: { label: string; value: SortOrder }[] = [
   { label: '최신순', value: 'latest' },
   { label: '과거순', value: 'oldest' },
 ];
 
-const STATUS_OPTIONS: { label: string; value: MyStatusFilter }[] = [
+const STATUS_OPTIONS: { label: string; value: GatheringStatusFilter }[] = [
   { label: '전체', value: 'all' },
+  { label: '모집중', value: 'recruiting' },
   { label: '진행중', value: 'in_progress' },
   { label: '진행완료', value: 'completed' },
 ];
@@ -44,32 +43,39 @@ function RotatingArrow() {
   );
 }
 
-export function MyGatheringsList() {
-  const isLg = useMediaQuery('(min-width: 1024px)');
-  const limit = isLg ? 6 : 5;
+export function MyCreatedGatheringList() {
+  const isXl = useMediaQuery('(min-width: 1280px)');
+  const limit = isXl ? 6 : 4;
 
-  const [status, setStatus] = useState<MyStatusFilter>('all');
+  const [status, setStatus] = useState<GatheringStatusFilter>('all');
   const [sort, setSort] = useState<SortOrder>('latest');
   const [page, setPage] = useState(1);
   const [isPending, startTransition] = useTransition();
 
-  // status=all: API가 RECRUITING 포함 반환 → 서버 totalPages 신뢰 불가
-  // → 전체를 한 번에 받아(limit=999) 클라이언트에서 필터/페이지네이션
-  // status=in_progress|completed: 서버 필터 정확 → 서버 페이지네이션 그대로 사용
-  const isAll = status === 'all';
-  const { data } = useSuspenseQuery(
-    membershipQueries.my({ status, page: isAll ? 1 : page, limit: isAll ? 999 : limit }),
-  );
+  // "내 모임"과 달리 "만든 모임"은 모든 상태를 보여주므로 특별한 클라이언트 필터링 없이 서버 응답을 신뢰
+  // 단, getMyGatherings API가 참여/생성 구분 없이 가져오므로 프론트엔드에서 LEADER 필터링이 필요함
+  // (임시 조치이므로 limit=999로 가져와 처리)
+  // TODO: 서비스 오픈 후 성능 모니터링 필요
+  // - 백엔드 API에 role 파라미터 지원 요청 (GET /users/me/gatherings?role=LEADER)
+  // - 또는 별도 엔드포인트 추가 고려 (GET /users/me/created-gatherings)
+  const { data } = useSuspenseQuery({
+    ...membershipQueries.my({ status, page: 1, limit: 999 }),
+  });
 
-  const filtered = isAll ? data.gatherings.filter((g) => g.status !== 'RECRUITING') : data.gatherings;
-  const sorted = [...filtered].sort((a, b) => {
+  // LEADER인 것만 필터링
+  const myCreated = data.gatherings.filter((g) => g.myRole === 'LEADER');
+
+  // 정렬
+  const sorted = [...myCreated].sort((a, b) => {
     const diff = new Date(a.startDate).getTime() - new Date(b.startDate).getTime();
     return sort === 'latest' ? -diff : diff;
   });
-  const totalPages = isAll ? Math.max(1, Math.ceil(sorted.length / limit)) : data.totalPages;
-  const paged = isAll ? sorted.slice((page - 1) * limit, page * limit) : sorted;
 
-  const handleFilterChange = (next: Partial<{ status: MyStatusFilter; sort: SortOrder }>) => {
+  // 페이지네이션
+  const totalPages = Math.max(1, Math.ceil(sorted.length / limit));
+  const paged = sorted.slice((page - 1) * limit, page * limit);
+
+  const handleFilterChange = (next: Partial<{ status: GatheringStatusFilter; sort: SortOrder }>) => {
     if (next.sort !== undefined) {
       setSort(next.sort);
       return;
@@ -88,6 +94,7 @@ export function MyGatheringsList() {
         <span className='text-body-01-b md:text-h3-b text-gray-900'>{selectedStatusLabel}</span>
         <span className='text-small-02-r md:text-body-01-r text-gray-500'>총 {sorted.length}건</span>
       </div>
+
       <div className='flex items-center justify-between'>
         <div className='flex items-center gap-2 md:gap-4'>
           {SORT_OPTIONS.map((option, index) => {
@@ -113,12 +120,12 @@ export function MyGatheringsList() {
 
         <Dropdown className='**:[[role=listbox]]:right-0'>
           <Dropdown.Trigger>
-            <div className='flex items-center gap-2'>
+            <div className='flex cursor-pointer items-center gap-2'>
               <span className='text-small-02-m md:text-body-02-m text-gray-800'>{selectedStatusLabel}</span>
               <RotatingArrow />
             </div>
           </Dropdown.Trigger>
-          <Dropdown.Menu className='flex flex-col gap-2 overflow-hidden p-2 whitespace-nowrap'>
+          <Dropdown.Menu className='flex min-w-[100px] flex-col gap-2 overflow-hidden p-2 whitespace-nowrap'>
             {STATUS_OPTIONS.map((option) => {
               const isSelected = status === option.value;
               return (
@@ -140,12 +147,12 @@ export function MyGatheringsList() {
 
       {paged.length === 0 ? (
         <div className='flex h-40 items-center justify-center'>
-          <p className='text-body-02-r text-gray-400'>참여한 모임이 없습니다.</p>
+          <p className='text-body-02-r text-gray-400'>만든 모임이 없습니다.</p>
         </div>
       ) : (
         <div className={cn('grid grid-cols-1 gap-4 xl:grid-cols-2', isPending && 'opacity-50')}>
           {paged.map((gathering) => (
-            <MyGatheringsCard key={gathering.id} gathering={gathering} />
+            <MyCreatedGatheringCard key={gathering.id} gathering={gathering} />
           ))}
         </div>
       )}

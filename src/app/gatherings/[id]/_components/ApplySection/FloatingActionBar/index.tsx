@@ -6,6 +6,7 @@ import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 
 import { gatheringQueries } from '@/api/gatherings/queries';
 import { applicationQueries } from '@/api/applications/queries';
+import { getGatheringDisplayStatus, getJoinButtonText } from '@/lib/gatheringStatus';
 import { Button } from '@/components/ui/Button';
 import { HeartIcon } from '@/components/ui/Icon';
 import { AuthModal } from '@/components/AuthModal';
@@ -30,6 +31,10 @@ export function FloatingActionBar({ gatheringId }: FloatingActionBarProps) {
     myApplications?.applications.some((app) => app.gathering.id === gatheringId && app.status === 'PENDING') ?? false;
   const [isFavorite, setIsFavorite] = useState(false);
   const overlay = useOverlay();
+
+  const { isJoinable, isFinished, isFull, isDeadlinePassed } = getGatheringDisplayStatus(data);
+
+  const isJoinableStatus = isJoinable && !hasPendingApplication;
 
   return (
     <>
@@ -56,8 +61,8 @@ export function FloatingActionBar({ gatheringId }: FloatingActionBarProps) {
           </Button>
           <Button
             variant='action'
-            className={`text-body-01-sb h-13.5 flex-1 md:h-18 ${hasPendingApplication ? 'bg-gray-300' : ''}`}
-            disabled={hasPendingApplication}
+            className='text-body-01-sb h-13.5 flex-1 md:h-18'
+            disabled={!isJoinableStatus}
             onClick={async () => {
               if (!isLoggedIn) {
                 const isLoginSuccessful = await overlay.open(({ isOpen, close }) => {
@@ -75,7 +80,13 @@ export function FloatingActionBar({ gatheringId }: FloatingActionBarProps) {
               ));
             }}
           >
-            {hasPendingApplication ? '참여 대기중' : '참여 신청하기'}
+            {getJoinButtonText({
+              isFinished,
+              isDeadlinePassed,
+              isFull,
+              hasPendingApplication,
+              status: data.status,
+            })}
           </Button>
         </div>
       </div>
