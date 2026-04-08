@@ -4,13 +4,21 @@ import { cn } from '@/lib/cn';
 
 import { MY_PAGE_TAB_ITEMS } from '../../_constants';
 
-import type { MyPageTab } from '../../_constants';
+import type { MyPageTab, PendingGatheringSort } from '../../_constants';
 
 interface MyPageTabsProps {
   activeTab: MyPageTab;
+  pendingSort: PendingGatheringSort;
 }
 
-export function MyPageTabs({ activeTab }: MyPageTabsProps) {
+const buildTabHref = (key: MyPageTab, pendingSort: PendingGatheringSort) => {
+  if (key === 'pending-gatherings') {
+    return `/my?tab=${key}&pendingSort=${pendingSort}`;
+  }
+  return `/my?tab=${key}`;
+};
+
+export function MyPageTabs({ activeTab, pendingSort }: MyPageTabsProps) {
   return (
     <nav>
       <ul className='scrollbar-none flex flex-nowrap gap-2 overflow-x-auto'>
@@ -20,7 +28,7 @@ export function MyPageTabs({ activeTab }: MyPageTabsProps) {
           return (
             <li key={key} className='shrink-0'>
               <Link
-                href={`/my?tab=${key}`}
+                href={buildTabHref(key, pendingSort)}
                 replace
                 scroll={false}
                 className={cn(
