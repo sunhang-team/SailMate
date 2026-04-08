@@ -61,8 +61,10 @@ function ReceivedReviewsContent({ userId }: ReceivedReviewsContentProps) {
   const { data } = useSuspenseQuery(reviewQueries.list(userId));
   const { reviews } = data;
 
+  // 받은 리뷰 섹션에는 comment가 있는 리뷰만 표시되므로, comment가 있는 리뷰를 따로 구분
   const reviewsWithComment = reviews.filter((r) => !!r.comment);
 
+  // 현재 페이지에 해당하는 리뷰만 슬라이싱 — 페이지별로 프로필 이미지를 fetch하기 위해 구분
   const paged = reviewsWithComment.slice((page - 1) * pageSize, page * pageSize);
   const totalPages = Math.max(1, Math.ceil(reviewsWithComment.length / pageSize));
 
