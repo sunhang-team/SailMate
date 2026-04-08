@@ -55,6 +55,9 @@ export function MyCreatedGatheringList() {
   // "내 모임"과 달리 "만든 모임"은 모든 상태를 보여주므로 특별한 클라이언트 필터링 없이 서버 응답을 신뢰
   // 단, getMyGatherings API가 참여/생성 구분 없이 가져오므로 프론트엔드에서 LEADER 필터링이 필요함
   // (임시 조치이므로 limit=999로 가져와 처리)
+  // TODO: 서비스 오픈 후 성능 모니터링 필요
+  // - 백엔드 API에 role 파라미터 지원 요청 (GET /users/me/gatherings?role=LEADER)
+  // - 또는 별도 엔드포인트 추가 고려 (GET /users/me/created-gatherings)
   const { data } = useSuspenseQuery({
     ...membershipQueries.my({ status, page: 1, limit: 999 }),
   });

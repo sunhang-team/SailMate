@@ -173,15 +173,13 @@ export function GatheringInfoAside({ gatheringId }: GatheringInfoAsideProps) {
                 setStep('APPLY');
               }}
             >
-              {isFinished
-                ? '완료된 모임'
-                : data.status === 'IN_PROGRESS' || isDeadlinePassed
-                  ? '모집 마감'
-                  : isFull
-                    ? '모집 완료'
-                    : hasPendingApplication
-                      ? '참여 대기중'
-                      : '참여 신청하기'}
+              {(() => {
+                if (isFinished) return '완료된 모임';
+                if (data.status === 'IN_PROGRESS' || isDeadlinePassed) return '모집 마감';
+                if (isFull) return '모집 완료';
+                if (hasPendingApplication) return '참여 대기중';
+                return '참여 신청하기';
+              })()}
             </Button>
           </GatheringCard>
         </Step>
