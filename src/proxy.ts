@@ -1,12 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-import { getExpirationDate } from '@/lib/getExpirationDate';
+import { setAuthCookies } from '@/lib/authCookies';
 import { extractTokens } from '@/lib/tokenUtils';
 
-const PROTECTED_ROUTES = ['/my', '/gatherings/new', '/gathering/dashboard'];
+const PROTECTED_ROUTES = ['/my', '/gatherings/new'];
+const PROTECTED_PATTERNS = [/^\/gatherings\/\d+\/dashboard/];
 const AUTH_ROUTES = ['/login', '/register'];
-
-const isSecureCookie = process.env.NODE_ENV === 'production';
 
 const tryRefreshToken = async (request: NextRequest): Promise<NextResponse | null> => {
   const refreshToken = request.cookies.get('refreshToken')?.value;
@@ -30,34 +29,7 @@ const tryRefreshToken = async (request: NextRequest): Promise<NextResponse | nul
     if (!nextAccessToken) return null;
 
     const response = NextResponse.next();
-    const accessTokenExpires = getExpirationDate(nextAccessToken) ?? undefined;
-
-    response.cookies.set('accessToken', nextAccessToken, {
-      httpOnly: true,
-      secure: isSecureCookie,
-      sameSite: 'lax',
-      path: '/',
-      expires: accessTokenExpires,
-    });
-
-    response.cookies.set('has-session', '1', {
-      httpOnly: false,
-      secure: isSecureCookie,
-      sameSite: 'lax',
-      path: '/',
-      expires: accessTokenExpires,
-    });
-
-    if (nextRefreshToken) {
-      const refreshTokenExpires = getExpirationDate(nextRefreshToken) ?? undefined;
-      response.cookies.set('refreshToken', nextRefreshToken, {
-        httpOnly: true,
-        secure: isSecureCookie,
-        sameSite: 'lax',
-        path: '/',
-        expires: refreshTokenExpires,
-      });
-    }
+    setAuthCookies(response, { accessToken: nextAccessToken, refreshToken: nextRefreshToken });
 
     return response;
   } catch {
@@ -69,7 +41,9 @@ export const proxy = async (request: NextRequest) => {
   const { pathname } = request.nextUrl;
   const hasAccessToken = request.cookies.has('accessToken');
   const hasRefreshToken = request.cookies.has('refreshToken');
-  const isProtectedRoute = PROTECTED_ROUTES.some((route) => pathname.startsWith(route));
+  const isProtectedRoute =
+    PROTECTED_ROUTES.some((route) => pathname.startsWith(route)) ||
+    PROTECTED_PATTERNS.some((pattern) => pattern.test(pathname));
   const isAuthRoute = AUTH_ROUTES.some((route) => pathname.startsWith(route));
 
   // accessToken 없고 refreshToken만 있으면 → 갱신 시도
@@ -104,7 +78,7 @@ export const proxy = async (request: NextRequest) => {
 
   // 인증 라우트: accessToken 있으면 홈으로
   if (isAuthRoute && hasAccessToken) {
-    return NextResponse.redirect(new URL('/', request.url));
+    return NextResponse.redirect(new URL('/main', request.url));
   }
 
   return NextResponse.next();

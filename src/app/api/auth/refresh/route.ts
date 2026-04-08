@@ -1,36 +1,9 @@
 import { NextResponse, type NextRequest } from 'next/server';
 
-import { getExpirationDate } from '@/lib/getExpirationDate';
+import { clearAuthCookies, setAuthCookies } from '@/lib/authCookies';
 import { isJsonResponse, extractTokens } from '@/lib/tokenUtils';
 
-const ACCESS_TOKEN_COOKIE = 'accessToken';
 const REFRESH_TOKEN_COOKIE = 'refreshToken';
-const AUTH_HINT_COOKIE = 'has-session';
-const isSecureCookie = process.env.NODE_ENV === 'production';
-
-const clearAuthCookies = (response: NextResponse) => {
-  response.cookies.set(ACCESS_TOKEN_COOKIE, '', {
-    httpOnly: true,
-    secure: isSecureCookie,
-    sameSite: 'lax',
-    path: '/',
-    maxAge: 0,
-  });
-  response.cookies.set(REFRESH_TOKEN_COOKIE, '', {
-    httpOnly: true,
-    secure: isSecureCookie,
-    sameSite: 'lax',
-    path: '/',
-    maxAge: 0,
-  });
-  response.cookies.set(AUTH_HINT_COOKIE, '', {
-    httpOnly: false,
-    secure: isSecureCookie,
-    sameSite: 'lax',
-    path: '/',
-    maxAge: 0,
-  });
-};
 
 export async function POST(request: NextRequest) {
   const refreshToken = request.cookies.get(REFRESH_TOKEN_COOKIE)?.value ?? null;
@@ -75,34 +48,7 @@ export async function POST(request: NextRequest) {
     return response;
   }
 
-  if (nextAccessToken) {
-    const expires = getExpirationDate(nextAccessToken) ?? undefined;
-    response.cookies.set(ACCESS_TOKEN_COOKIE, nextAccessToken, {
-      httpOnly: true,
-      secure: isSecureCookie,
-      sameSite: 'lax',
-      path: '/',
-      expires,
-    });
-    response.cookies.set(AUTH_HINT_COOKIE, '1', {
-      httpOnly: false,
-      secure: isSecureCookie,
-      sameSite: 'lax',
-      path: '/',
-      expires,
-    });
-  }
-
-  if (nextRefreshToken) {
-    const expires = getExpirationDate(nextRefreshToken) ?? undefined;
-    response.cookies.set(REFRESH_TOKEN_COOKIE, nextRefreshToken, {
-      httpOnly: true,
-      secure: isSecureCookie,
-      sameSite: 'lax',
-      path: '/',
-      expires,
-    });
-  }
+  setAuthCookies(response, { accessToken: nextAccessToken, refreshToken: nextRefreshToken });
   // 새로 발급받은 토큰은 프론트엔드에 주는 대신, Next.js 서버가 다시 httpOnly 쿠키로 브라우저에 심어줍니다.
 
   return response;
