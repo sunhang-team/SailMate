@@ -5,6 +5,7 @@ import { createApiResponse } from '../utils';
 import type {
   ApplicationListResponse,
   CreateApplicationResponse,
+  MyApplicationListResponse,
   UpdateApplicationStatusRequest,
   UpdateApplicationStatusResponse,
 } from '@/api/applications/types';
@@ -41,6 +42,47 @@ const mockApplicationListResponse: ApplicationListResponse = {
       selfIntroduction: '안녕하세요! React 기초를 배우고 싶어서 신청했습니다. 잘 부탁드립니다.',
       status: 'PENDING', // 'PENDING' | 'ACCEPTED' | 'REJECTED'
       createdAt: '2026-03-24T18:24:00Z',
+    },
+  ],
+};
+
+const mockMyApplicationListResponse: MyApplicationListResponse = {
+  applications: [
+    {
+      id: 101,
+      gathering: {
+        id: 1,
+        title: 'React 19 & Next.js 스터디',
+        type: '스터디',
+        status: 'RECRUITING',
+      },
+      personalGoal: 'React 기초 완벽 이해',
+      status: 'PENDING',
+      createdAt: '2026-03-24T18:24:00Z',
+    },
+    {
+      id: 102,
+      gathering: {
+        id: 2,
+        title: 'SaaS 사이드 프로젝트 팀 모집',
+        type: '프로젝트',
+        status: 'RECRUITING',
+      },
+      personalGoal: '풀스택 경험 쌓기',
+      status: 'PENDING',
+      createdAt: '2026-03-20T12:00:00Z',
+    },
+    {
+      id: 103,
+      gathering: {
+        id: 4,
+        title: '매일 영어 회화 30분 챌린지',
+        type: '스터디',
+        status: 'RECRUITING',
+      },
+      personalGoal: '스피킹 루틴 만들기',
+      status: 'PENDING',
+      createdAt: '2026-03-18T09:00:00Z',
     },
   ],
 };
@@ -92,20 +134,20 @@ export const applicationsHandlers = [
     await delay(MOCK_DELAY);
     const applicationId = Number(params.applicationId);
 
-    const targetApplication = mockApplicationListResponse.applications.find((app) => app.id === applicationId);
+    const targetApplication = mockMyApplicationListResponse.applications.find((app) => app.id === applicationId);
 
     if (targetApplication) {
-      mockApplicationListResponse.applications = mockApplicationListResponse.applications.filter(
+      mockMyApplicationListResponse.applications = mockMyApplicationListResponse.applications.filter(
         (app) => app.id !== applicationId,
       );
     }
 
-    return HttpResponse.json(createApiResponse(mockApplicationListResponse));
+    return HttpResponse.json(createApiResponse(null));
   }),
 
   /** GET v1/users/me/applications — 내 신청 목록 조회(신청자) */
   http.get(`/api/v1/users/me/applications`, async () => {
     await delay(MOCK_DELAY);
-    return HttpResponse.json(createApiResponse(mockApplicationListResponse));
+    return HttpResponse.json(createApiResponse(mockMyApplicationListResponse));
   }),
 ];

@@ -92,6 +92,9 @@ export const useDeleteApplication = (
     ...options,
     onSuccess: (data, variables, onMutateResult, context) => {
       queryClient.invalidateQueries({ queryKey: applicationKeys.all });
+
+      invalidateServerCache(GATHERING_TAGS.all);
+      invalidateServerCache(GATHERING_TAGS.detail(gatheringId));
       options?.onSuccess?.(data, variables, onMutateResult, context);
     },
   });
