@@ -24,9 +24,12 @@ interface ReceivedReviewsContentProps {
   userId: number;
 }
 
+const PAGE_SIZE_DEFAULT = 3;
+const PAGE_SIZE_LG = 6;
+
 function ReceivedReviewsContent({ userId }: ReceivedReviewsContentProps) {
   const isLg = useMediaQuery('(min-width: 1024px)');
-  const pageSize = isLg ? 6 : 3;
+  const pageSize = isLg ? PAGE_SIZE_LG : PAGE_SIZE_DEFAULT;
   const [page, setPage] = useState(1);
   const [, startTransition] = useTransition();
 
@@ -35,20 +38,20 @@ function ReceivedReviewsContent({ userId }: ReceivedReviewsContentProps) {
 
   const reviewsWithComment = reviews.filter((r) => !!r.comment);
 
+  const paged = reviewsWithComment.slice((page - 1) * pageSize, page * pageSize);
+  const totalPages = Math.max(1, Math.ceil(reviewsWithComment.length / pageSize));
+
   const reviewerProfileQueries = useSuspenseQueries({
-    queries: reviews.map((review) => userQueries.userId(review.reviewer.id)),
+    queries: paged.map((review) => userQueries.userId(review.reviewer.id)),
   });
 
   const reviewerProfilesMap = reviewerProfileQueries.reduce<Record<number, string>>((acc, query, index) => {
-    const review = reviews[index];
+    const review = paged[index];
     if (review && query.data?.profileImage) {
       acc[review.reviewer.id] = query.data.profileImage;
     }
     return acc;
   }, {});
-
-  const paged = reviewsWithComment.slice((page - 1) * pageSize, page * pageSize);
-  const totalPages = Math.max(1, Math.ceil(reviewsWithComment.length / pageSize));
 
   return (
     <div className='mt-6 flex flex-col gap-6'>
