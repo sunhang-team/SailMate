@@ -6,6 +6,7 @@ import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 
 import { gatheringQueries } from '@/api/gatherings/queries';
 import { applicationQueries } from '@/api/applications/queries';
+import { getGatheringDisplayStatus } from '@/lib/gatheringStatus';
 import { Button } from '@/components/ui/Button';
 import { HeartIcon } from '@/components/ui/Icon';
 import { AuthModal } from '@/components/AuthModal';
@@ -30,6 +31,16 @@ export function FloatingActionBar({ gatheringId }: FloatingActionBarProps) {
     myApplications?.applications.some((app) => app.gathering.id === gatheringId && app.status === 'PENDING') ?? false;
   const [isFavorite, setIsFavorite] = useState(false);
   const overlay = useOverlay();
+
+  const { isJoinable, isFinished, isFull, isDeadlinePassed } = getGatheringDisplayStatus({
+    status: data.status,
+    currentMembers: data.currentMembers,
+    maxMembers: data.maxMembers,
+    startDate: data.startDate,
+    endDate: data.endDate,
+  });
+
+  const isJoinableStatus = isJoinable && !hasPendingApplication;
 
   return (
     <>
@@ -56,8 +67,8 @@ export function FloatingActionBar({ gatheringId }: FloatingActionBarProps) {
           </Button>
           <Button
             variant='action'
-            className={`text-body-01-sb h-13.5 flex-1 md:h-18 ${hasPendingApplication ? 'bg-gray-300' : ''}`}
-            disabled={hasPendingApplication}
+            className='text-body-01-sb h-13.5 flex-1 md:h-18'
+            disabled={!isJoinableStatus}
             onClick={async () => {
               if (!isLoggedIn) {
                 const isLoginSuccessful = await overlay.open(({ isOpen, close }) => {
@@ -75,7 +86,13 @@ export function FloatingActionBar({ gatheringId }: FloatingActionBarProps) {
               ));
             }}
           >
-            {hasPendingApplication ? '참여 대기중' : '참여 신청하기'}
+            {(() => {
+              if (isFinished) return '완료된 모임';
+              if (data.status === 'IN_PROGRESS' || isDeadlinePassed) return '모집 마감';
+              if (isFull) return '모집 완료';
+              if (hasPendingApplication) return '참여 대기중';
+              return '참여 신청하기';
+            })()}
           </Button>
         </div>
       </div>
