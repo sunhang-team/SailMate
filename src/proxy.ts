@@ -76,8 +76,13 @@ export const proxy = async (request: NextRequest) => {
     return NextResponse.redirect(new URL('/login', request.url));
   }
 
-  // 인증 라우트: accessToken 있으면 홈으로
+  // 인증 라우트: accessToken 있으면 /main으로
   if (isAuthRoute && hasAccessToken) {
+    return NextResponse.redirect(new URL('/main', request.url));
+  }
+
+  // 랜딩 페이지: 로그인 상태면 /main으로
+  if (pathname === '/' && hasAccessToken) {
     return NextResponse.redirect(new URL('/main', request.url));
   }
 
