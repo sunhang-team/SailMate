@@ -143,7 +143,7 @@ export function MyGatheringsList() {
           <p className='text-body-02-r text-gray-400'>참여한 모임이 없습니다.</p>
         </div>
       ) : (
-        <div className={cn('grid grid-cols-1 gap-4 lg:grid-cols-2', isPending && 'opacity-50')}>
+        <div className={cn('grid grid-cols-1 gap-4 xl:grid-cols-2', isPending && 'opacity-50')}>
           {paged.map((gathering) => (
             <MyGatheringsCard key={gathering.id} gathering={gathering} />
           ))}

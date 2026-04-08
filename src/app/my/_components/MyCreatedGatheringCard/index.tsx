@@ -7,7 +7,7 @@ import { CalendarIcon, StudyIcon, ProjectIcon } from '@/components/ui/Icon';
 import { Tag } from '@/components/ui/Tag';
 import { cn } from '@/lib/cn';
 import { formatDateDot, getTotalWeeks } from '@/lib/formatGatheringDate';
-import { GATHERING_STATUS_TAG_STATE, GATHERING_STATUS_LABEL } from '@/constants/gathering';
+import { getGatheringDisplayStatus } from '@/lib/gatheringStatus';
 
 import type { MembershipGathering } from '@/api/memberships/types';
 
@@ -28,8 +28,13 @@ export function MyCreatedGatheringCard({ gathering, className }: MyCreatedGather
 
   const pendingCount = gathering.pendingApplicationCount ?? 0;
 
-  const statusState = GATHERING_STATUS_TAG_STATE[gathering.status];
-  const statusText = GATHERING_STATUS_LABEL[gathering.status];
+  const { displayLabel, tagState } = getGatheringDisplayStatus({
+    status: gathering.status,
+    currentMembers: gathering.currentMembers,
+    maxMembers: gathering.maxMembers,
+    startDate: gathering.startDate,
+    endDate: gathering.endDate,
+  });
 
   return (
     <Link href={`/gatherings/${gathering.id}`}>
@@ -45,8 +50,8 @@ export function MyCreatedGatheringCard({ gathering, className }: MyCreatedGather
               label={gathering.type}
               sublabel={gathering.categories.join(', ')}
             />
-            <Tag variant='status' state={statusState}>
-              {statusText}
+            <Tag variant='status' state={tagState}>
+              {displayLabel}
             </Tag>
           </div>
         </GatheringCard.Header>

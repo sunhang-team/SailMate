@@ -29,6 +29,7 @@ export interface MembershipGathering {
   myRole: MemberRole;
   /** 리뷰 작성 여부 — 백엔드 연동 전까지 응답에 포함되지 않으므로 optional. undefined는 미작성(false)으로 처리 */
   hasReviewed?: boolean;
+  pendingApplicationCount: number;
 }
 
 // GET /users/me/gatherings 응답

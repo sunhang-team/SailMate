@@ -34,6 +34,8 @@ const mockGatherings: MembershipGathering[] = [
     endDate: '2025-04-19',
     status: 'IN_PROGRESS',
     myRole: 'LEADER',
+    hasReviewed: false,
+    pendingApplicationCount: 2,
   },
   {
     id: 2,
@@ -48,6 +50,8 @@ const mockGatherings: MembershipGathering[] = [
     endDate: '2025-05-30',
     status: 'RECRUITING',
     myRole: 'MEMBER',
+    hasReviewed: false,
+    pendingApplicationCount: 2,
   },
   {
     id: 3,
@@ -62,6 +66,8 @@ const mockGatherings: MembershipGathering[] = [
     endDate: '2025-02-28',
     status: 'COMPLETED',
     myRole: 'MEMBER',
+    hasReviewed: false,
+    pendingApplicationCount: 9,
   },
   {
     id: 4,
@@ -76,6 +82,8 @@ const mockGatherings: MembershipGathering[] = [
     endDate: '2025-04-19',
     status: 'RECRUITING',
     myRole: 'MEMBER',
+    hasReviewed: false,
+    pendingApplicationCount: 1,
   },
   {
     id: 5,
@@ -90,6 +98,8 @@ const mockGatherings: MembershipGathering[] = [
     endDate: '2025-04-19',
     status: 'RECRUITING',
     myRole: 'MEMBER',
+    hasReviewed: false,
+    pendingApplicationCount: 5,
   },
   {
     id: 6,
@@ -104,6 +114,8 @@ const mockGatherings: MembershipGathering[] = [
     endDate: '2025-04-19',
     status: 'RECRUITING',
     myRole: 'MEMBER',
+    hasReviewed: false,
+    pendingApplicationCount: 7,
   },
   {
     id: 7,
@@ -118,6 +130,8 @@ const mockGatherings: MembershipGathering[] = [
     endDate: '2025-04-19',
     status: 'RECRUITING',
     myRole: 'MEMBER',
+    hasReviewed: false,
+    pendingApplicationCount: 1,
   },
   {
     id: 8,
@@ -132,6 +146,8 @@ const mockGatherings: MembershipGathering[] = [
     endDate: '2025-04-19',
     status: 'RECRUITING',
     myRole: 'MEMBER',
+    hasReviewed: true,
+    pendingApplicationCount: 4,
   },
 ];
 

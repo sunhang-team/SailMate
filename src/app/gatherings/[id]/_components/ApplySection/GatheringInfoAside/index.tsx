@@ -6,6 +6,7 @@ import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 
 import { gatheringQueries } from '@/api/gatherings/queries';
 import { applicationQueries, useCreateApplication } from '@/api/applications/queries';
+import { getCurrentWeek } from '@/lib/formatGatheringDate';
 import { Button } from '@/components/ui/Button';
 import { GatheringCard } from '@/components/ui/GatheringCard';
 import { HeartIcon, StudyIcon, ProjectIcon } from '@/components/ui/Icon';
@@ -20,6 +21,8 @@ import { InfoAccordion } from '../InfoAccordion';
 import { ParticipantsList } from '../ParticipantsList';
 import { GatheringApplyForm } from '../GatheringApplyForm';
 import { GatheringApplySuccess } from '../GatheringApplySuccess';
+
+import { getGatheringDisplayStatus } from '@/lib/gatheringStatus';
 
 import type { GatheringType } from '@/api/gatherings/types';
 
@@ -56,18 +59,46 @@ export function GatheringInfoAside({ gatheringId }: GatheringInfoAsideProps) {
   const TypeLabel = data.type;
   const CategoryLabel = data.categories.join(', ');
 
+  const { displayLabel, tagState, isJoinable, isFull, isDeadlinePassed, isFinished } = getGatheringDisplayStatus({
+    status: data.status,
+    currentMembers: data.currentMembers,
+    maxMembers: data.maxMembers,
+    startDate: data.startDate,
+    endDate: data.endDate,
+    recruitDeadline: data.recruitDeadline,
+  });
+
   return (
     <div className='sticky top-[-20px]'>
       {/* 모집 상태 바 - 항상 노출 */}
-      <div className='border-focus-100 mb-4 flex justify-between rounded-[8px] border bg-blue-100 px-8 py-2.5'>
-        <div className='text-body-02-sb flex items-center text-blue-400'>모집중</div>
-        <div className='flex items-center gap-2'>
-          <span className='text-body-02-m text-gray-700'>모집 마감까지</span>
-          <Tag variant='day' state='short'>
-            <DeadlineLabel recruitDeadline={data.recruitDeadline} />
-          </Tag>
+      {tagState === 'recruiting' && (
+        <div className='border-focus-100 mb-4 flex justify-between rounded-[8px] border bg-blue-100 px-8 py-2.5'>
+          <div className='text-body-02-sb flex items-center text-blue-400'>{displayLabel}</div>
+          <div className='flex items-center gap-2'>
+            <span className='text-body-02-m text-gray-700'>모집 마감까지</span>
+            <Tag variant='day' state='short'>
+              <DeadlineLabel recruitDeadline={data.recruitDeadline} />
+            </Tag>
+          </div>
         </div>
-      </div>
+      )}
+      {tagState === 'progressing' && (
+        <div className='border-focus-100 mb-4 flex justify-between rounded-[8px] border bg-blue-100 px-8 py-2.5'>
+          <div className='text-body-02-sb flex items-center text-blue-400'>{displayLabel}</div>
+          <div className='flex items-center gap-2'>
+            <span className='text-body-02-sb text-blue-300'>{getCurrentWeek(data.startDate)}주차</span>
+            <span className='text-body-02-m text-gray-700'>진행중 (총 {data.totalWeeks}주)</span>
+          </div>
+        </div>
+      )}
+      {tagState === 'completed' && (
+        <div className='border-gray-150 bg-gray-150 mb-4 flex justify-between rounded-[8px] border px-8 py-2.5'>
+          <div className='text-body-02-sb flex items-center text-gray-600'>{displayLabel}</div>
+          <div className='flex items-center gap-2'>
+            <span className='text-body-02-m text-gray-500'>완료된 모임</span>
+          </div>
+        </div>
+      )}
 
       <Funnel>
         <Step name='APPLY'>
@@ -130,8 +161,8 @@ export function GatheringInfoAside({ gatheringId }: GatheringInfoAsideProps) {
 
             <Button
               variant='action'
-              className={`text-body-01-sb h-13.5 flex-1 md:h-18 ${hasPendingApplication ? 'bg-gray-300' : ''}`}
-              disabled={hasPendingApplication}
+              className={`text-body-01-sb h-13.5 flex-1 md:h-18 ${!isJoinable || hasPendingApplication ? 'bg-gray-300' : ''}`}
+              disabled={!isJoinable || hasPendingApplication}
               onClick={async () => {
                 if (!isLoggedIn) {
                   const isLoginSuccessful = await overlay.open(({ isOpen, close }) => (
@@ -142,7 +173,15 @@ export function GatheringInfoAside({ gatheringId }: GatheringInfoAsideProps) {
                 setStep('APPLY');
               }}
             >
-              {hasPendingApplication ? '참여 대기중' : '참여 신청하기'}
+              {isFinished
+                ? '완료된 모임'
+                : data.status === 'IN_PROGRESS' || isDeadlinePassed
+                  ? '모집 마감'
+                  : isFull
+                    ? '모집 완료'
+                    : hasPendingApplication
+                      ? '참여 대기중'
+                      : '참여 신청하기'}
             </Button>
           </GatheringCard>
         </Step>

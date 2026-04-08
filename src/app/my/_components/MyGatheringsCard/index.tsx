@@ -6,7 +6,9 @@ import { GatheringCard } from '@/components/ui/GatheringCard';
 import { CalendarIcon, ProjectIcon, ReviewIcon, StudyIcon } from '@/components/ui/Icon';
 import { ProgressBar } from '@/components/ui/Progress';
 import { Tag } from '@/components/ui/Tag';
-import type { GatheringStatus, MembershipGathering } from '@/api/memberships/types';
+import { getGatheringDisplayStatus } from '@/lib/gatheringStatus';
+
+import type { MembershipGathering } from '@/api/memberships/types';
 
 interface MyGatheringsCardProps {
   gathering: MembershipGathering;
@@ -16,18 +18,6 @@ const TYPE_ICON = {
   스터디: StudyIcon,
   프로젝트: ProjectIcon,
 } as const;
-
-const STATUS_TAG_STATE: Record<GatheringStatus, 'recruiting' | 'progressing' | 'completed'> = {
-  RECRUITING: 'recruiting',
-  IN_PROGRESS: 'progressing',
-  COMPLETED: 'completed',
-};
-
-const STATUS_LABEL: Record<GatheringStatus, string> = {
-  RECRUITING: '모집중',
-  IN_PROGRESS: '진행중',
-  COMPLETED: '진행완료',
-};
 
 export function MyGatheringsCard({ gathering }: MyGatheringsCardProps) {
   const now = startOfDay(new Date());
@@ -42,6 +32,14 @@ export function MyGatheringsCard({ gathering }: MyGatheringsCardProps) {
   const Icon = TYPE_ICON[gathering.type as keyof typeof TYPE_ICON] ?? ProjectIcon;
   const hasReviewed = !!gathering.hasReviewed;
 
+  const { displayLabel, tagState, isFinished } = getGatheringDisplayStatus({
+    status: gathering.status,
+    currentMembers: gathering.currentMembers,
+    maxMembers: gathering.maxMembers,
+    startDate: gathering.startDate,
+    endDate: gathering.endDate,
+  });
+
   return (
     <GatheringCard>
       <GatheringCard.Header className='items-start'>
@@ -52,8 +50,8 @@ export function MyGatheringsCard({ gathering }: MyGatheringsCardProps) {
             label={gathering.type}
             sublabel={gathering.categories.join(', ')}
           />
-          <Tag variant='status' state={STATUS_TAG_STATE[gathering.status]}>
-            {STATUS_LABEL[gathering.status]}
+          <Tag variant='status' state={tagState}>
+            {displayLabel}
           </Tag>
         </div>
       </GatheringCard.Header>
