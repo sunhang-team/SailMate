@@ -28,3 +28,11 @@ export const formatDday = (targetDateString: string): string => {
   if (diff === 0) return 'D-Day';
   return `D+${Math.abs(diff)}`;
 };
+
+/** 시작일과 종료일 사이의 총 주차 반환 */
+export const getTotalWeeks = (startDate: string, endDate: string): number => {
+  const start = startOfDay(new Date(startDate));
+  const end = startOfDay(new Date(endDate));
+  const diffDays = Math.max(0, differenceInDays(end, start));
+  return Math.max(1, Math.ceil(diffDays / 7));
+};
