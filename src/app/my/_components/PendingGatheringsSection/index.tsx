@@ -1,12 +1,13 @@
 'use client';
 
 import Link from 'next/link';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { useQueries, useSuspenseQuery } from '@tanstack/react-query';
 
 import { applicationQueries } from '@/api/applications/queries';
 import { gatheringQueries } from '@/api/gatherings/queries';
+import { Pagination } from '@/components/ui/Pagination';
 import { CheckIcon } from '@/components/ui/Icon/CheckIcon';
 import { cn } from '@/lib/cn';
 
@@ -36,15 +37,24 @@ const PendingGatheringRowSkeleton = () => (
 
 const PendingGatheringRowError = ({ message }: { message: string }) => (
   <div
-    className='border-gray-150 text-small-01-r flex min-h-24 items-center justify-center rounded-lg border bg-white px-4 py-6 text-gray-600'
+    className='border-gray-150 text-small-01-r bg-gray-0 flex min-h-24 items-center justify-center rounded-lg border px-4 py-6 text-gray-600'
     role='status'
   >
     {message}
   </div>
 );
 
+const LG_BREAKPOINT_MEDIA_QUERY = '(min-width: 1024px)';
+const PAGE_SIZE_TWO_COLUMN = 6;
+const PAGE_SIZE_ONE_COLUMN = 5;
+
 export function PendingGatheringsSection({ pendingSort }: PendingGatheringsSectionProps) {
   const { data: myList } = useSuspenseQuery(applicationQueries.myList());
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isTwoColumnLayout, setIsTwoColumnLayout] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return window.matchMedia(LG_BREAKPOINT_MEDIA_QUERY).matches;
+  });
 
   const pendingApplications = useMemo(
     () => myList.applications.filter((a) => a?.status === 'PENDING' && typeof a?.gathering?.id === 'number'),
@@ -57,6 +67,25 @@ export function PendingGatheringsSection({ pendingSort }: PendingGatheringsSecti
     () => sortPendingApplications(pendingApplications, pendingSort),
     [pendingApplications, pendingSort],
   );
+
+  useEffect(() => {
+    const media = window.matchMedia(LG_BREAKPOINT_MEDIA_QUERY);
+
+    const handleChange = () => setIsTwoColumnLayout(media.matches);
+    media.addEventListener('change', handleChange);
+    return () => {
+      media.removeEventListener('change', handleChange);
+    };
+  }, []);
+
+  const pageSize = isTwoColumnLayout ? PAGE_SIZE_TWO_COLUMN : PAGE_SIZE_ONE_COLUMN;
+  const totalPages = Math.max(1, Math.ceil(sortedApplications.length / pageSize));
+  const effectivePage = Math.min(currentPage, totalPages);
+
+  const pagedApplications = useMemo(() => {
+    const startIndex = (effectivePage - 1) * pageSize;
+    return sortedApplications.slice(startIndex, startIndex + pageSize);
+  }, [effectivePage, pageSize, sortedApplications]);
 
   const uniqueGatheringIds = useMemo(
     () => [...new Set(pendingApplications.map((a) => a.gathering.id))],
@@ -80,37 +109,37 @@ export function PendingGatheringsSection({ pendingSort }: PendingGatheringsSecti
   const sortHref = (sort: PendingGatheringSort) => `/my?tab=pending-gatherings&pendingSort=${sort}`;
 
   return (
-    <div className='mt-10 flex flex-col'>
-      <div className='mb-12 flex flex-col'>
-        <div className='mb-4 flex items-center gap-4'>
-          <h2 className='text-h3-b text-gray-900'>대기중</h2>
-          <span className='text-body-01-r text-gray-500'>총 {totalCount}건</span>
+    <div className='mt-8 flex flex-col md:mt-10'>
+      <div className='mb-10 flex flex-col md:mb-12'>
+        <div className='mb-5.5 flex items-center gap-4 md:mb-4'>
+          <h2 className='text-body-01-b md:text-h3-b text-gray-900'>대기중</h2>
+          <span className='text-small-02-r md:text-body-01-r text-gray-500'>총 {totalCount}건</span>
         </div>
 
-        <div className='flex items-center gap-4'>
+        <div className='flex items-center gap-2 md:gap-4'>
           <Link
             href={sortHref('latest')}
             replace
             scroll={false}
             className={cn(
-              'text-body-02-r flex items-center text-gray-500',
-              pendingSort === 'latest' && 'text-body-02-r text-gray-800',
+              'md:text-body-02-r text-small-02-r flex items-center text-gray-500',
+              pendingSort === 'latest' && 'md:text-body-02-r text-small-02-r font-semibold text-gray-800',
             )}
           >
-            <CheckIcon size={24} className={cn(!(pendingSort === 'latest') && 'hidden')} />
+            <CheckIcon size={16} className={cn('md:size-6', !(pendingSort === 'latest') && 'hidden')} />
             최신순
           </Link>
-          <span className='text-body-02-r text-gray-500'>|</span>
+          <span className='md:text-body-02-r text-small-02-r text-gray-500'>|</span>
           <Link
             href={sortHref('oldest')}
             replace
             scroll={false}
             className={cn(
-              'text-body-02-r flex items-center text-gray-500',
-              pendingSort === 'oldest' && 'text-body-02-r text-gray-800',
+              'md:text-body-02-r text-small-02-r flex items-center text-gray-500',
+              pendingSort === 'oldest' && 'md:text-body-02-r text-small-02-r font-semibold text-gray-800',
             )}
           >
-            <CheckIcon size={24} className={cn(!(pendingSort === 'oldest') && 'hidden')} />
+            <CheckIcon size={16} className={cn('md:size-6', !(pendingSort === 'oldest') && 'hidden')} />
             과거순
           </Link>
         </div>
@@ -122,26 +151,38 @@ export function PendingGatheringsSection({ pendingSort }: PendingGatheringsSecti
           <p className='text-body-02-r text-gray-500'>모임에 참여 신청하면 이곳에 표시됩니다.</p>
         </div>
       ) : (
-        <ul className='grid grid-cols-1 gap-6 lg:grid-cols-2'>
-          {sortedApplications.map((application) => {
-            const qIndex = gatheringIdToQueryIndex.get(application.gathering.id);
-            const query = qIndex !== undefined ? detailQueries[qIndex] : undefined;
+        <>
+          <ul className='grid grid-cols-1 gap-4 md:gap-6 lg:grid-cols-2'>
+            {pagedApplications.map((application) => {
+              const qIndex = gatheringIdToQueryIndex.get(application.gathering.id);
+              const query = qIndex !== undefined ? detailQueries[qIndex] : undefined;
 
-            return (
-              <li key={application.id}>
-                {!query || query.isPending ? (
-                  <PendingGatheringRowSkeleton />
-                ) : query.isError ? (
-                  <PendingGatheringRowError message='모임 정보를 불러오지 못했습니다.' />
-                ) : query.data ? (
-                  <PendingGatheringCard application={application} gathering={query.data} />
-                ) : (
-                  <PendingGatheringRowError message='모임 정보를 불러오지 못했습니다.' />
-                )}
-              </li>
-            );
-          })}
-        </ul>
+              return (
+                <li key={application.id}>
+                  {!query || query.isPending ? (
+                    <PendingGatheringRowSkeleton />
+                  ) : query.isError ? (
+                    <PendingGatheringRowError message='모임 정보를 불러오지 못했습니다.' />
+                  ) : query.data ? (
+                    <PendingGatheringCard application={application} gathering={query.data} />
+                  ) : (
+                    <PendingGatheringRowError message='모임 정보를 불러오지 못했습니다.' />
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+
+          {totalPages > 1 && (
+            <Pagination
+              variant='numbered'
+              currentPage={effectivePage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+              className='mt-12'
+            />
+          )}
+        </>
       )}
     </div>
   );

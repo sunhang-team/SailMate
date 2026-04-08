@@ -28,7 +28,7 @@ export function MyPageContent({ activeTab, pendingSort }: MyPageContentProps) {
           </p>
         }
       >
-        <PendingGatheringsSection pendingSort={pendingSort} />
+        <PendingGatheringsSection key={pendingSort} pendingSort={pendingSort} />
       </SuspenseBoundary>
     );
   }

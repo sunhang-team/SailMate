@@ -26,20 +26,6 @@ const TYPE_ICON = {
   프로젝트: ProjectIcon,
 } as const;
 
-const toDeadlineDdayLabel = (recruitDeadline: string) => {
-  const today = new Date();
-  const todayMidnight = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-
-  const deadline = new Date(recruitDeadline);
-  if (Number.isNaN(deadline.getTime())) {
-    return `모집 마감 ${formatDate(recruitDeadline)}`;
-  }
-  const deadlineMidnight = new Date(deadline.getFullYear(), deadline.getMonth(), deadline.getDate());
-  const diffDays = Math.ceil((deadlineMidnight.getTime() - todayMidnight.getTime()) / MILLISECONDS_IN_A_DAY);
-
-  return `모집 마감 D-${Math.max(0, diffDays)}`;
-};
-
 const toWeeksLabel = (startDate: string, endDate: string) => {
   const start = new Date(startDate);
   const end = new Date(endDate);
@@ -79,9 +65,9 @@ export function PendingGatheringCard({ application, gathering }: PendingGatherin
         </GatheringCard.Header>
         <GatheringCard.Body className='gap-0'>
           {hashtagLabel.length > 0 && <p className='text-small-02-r text-gray-500'>{hashtagLabel}</p>}
-          <p className='text-body-01-b text-gray-900'>{gathering.title}</p>
+          <p className='md:text-body-01-b text-body-02-b text-gray-900'>{gathering.title}</p>
 
-          <div className='text-small-01-r mt-2 flex flex-wrap items-center gap-2 text-gray-600'>
+          <div className='md:text-small-01-r text-small-02-r mt-2 flex flex-wrap items-center gap-2 text-gray-600'>
             <div className='flex items-center gap-1.5'>
               <CalendarIcon size={16} className='text-gray-600' />
               <span>{dateRangeLabel}</span>
