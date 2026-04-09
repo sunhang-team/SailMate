@@ -27,10 +27,10 @@ export const LANDING_IMAGES = {
   bottomImagePC: encodePublicImage('bottom', 'bottom CTA-PC.png'),
   bottomImageTablet: encodePublicImage('bottom', 'bottom CTA.png'),
   bottomImageMobile: encodePublicImage('bottom', 'bottom CTA-Mobile.png'),
-  featureTeam: encodePublicImage('featrue', 'feature-team.png'),
-  featureGoal: encodePublicImage('featrue', 'feature-goal.png'),
-  featureAchievement: encodePublicImage('featrue', 'feature-achievement.png'),
-  featureManners: encodePublicImage('featrue', 'feature-manners.png'),
+  featureTeam: encodePublicImage('feature', 'feature-team.png'),
+  featureGoal: encodePublicImage('feature', 'feature-goal.png'),
+  featureAchievement: encodePublicImage('feature', 'feature-achievement.png'),
+  featureManners: encodePublicImage('feature', 'feature-manners.png'),
 } as const;
 
 export interface LandingFeatureItem {

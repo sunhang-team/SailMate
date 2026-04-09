@@ -12,12 +12,14 @@ interface MyPageContentProps {
   pendingSort: PendingGatheringSort;
 }
 
-const PendingGatheringsSkeleton = () => (
-  <div className='mt-6 space-y-4' aria-busy>
-    <div className='bg-gray-150 h-9 w-48 max-w-full animate-pulse rounded-md' />
-    <div className='bg-gray-0 border-gray-150 h-72 w-full animate-pulse rounded-lg border' />
-  </div>
-);
+function PendingGatheringsSkeleton() {
+  return (
+    <div className='mt-6 space-y-4' aria-busy>
+      <div className='bg-gray-150 h-9 w-48 max-w-full animate-pulse rounded-md' />
+      <div className='bg-gray-0 border-gray-150 h-72 w-full animate-pulse rounded-lg border' />
+    </div>
+  );
+}
 
 export function MyPageContent({ activeTab, pendingSort }: MyPageContentProps) {
   if (activeTab === 'my-gatherings')

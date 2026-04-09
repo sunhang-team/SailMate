@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import { useQueries, useSuspenseQuery } from '@tanstack/react-query';
 
@@ -10,11 +10,11 @@ import { gatheringQueries } from '@/api/gatherings/queries';
 import { Pagination } from '@/components/ui/Pagination';
 import { CheckIcon } from '@/components/ui/Icon/CheckIcon';
 import { cn } from '@/lib/cn';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
 
 import { PendingGatheringCard } from './PendingGatheringCard';
 
 import type { MyApplication } from '@/api/applications/types';
-
 import type { PendingGatheringSort } from '../../_constants';
 
 interface PendingGatheringsSectionProps {
@@ -31,30 +31,25 @@ const sortPendingApplications = (applications: MyApplication[], sort: PendingGat
   return next;
 };
 
-const PendingGatheringRowSkeleton = () => (
-  <div className='bg-gray-0 border-gray-150 h-72 w-full animate-pulse rounded-lg border' aria-hidden />
-);
+function PendingGatheringRowSkeleton() {
+  return <div className='bg-gray-0 border-gray-150 h-72 w-full animate-pulse rounded-lg border' aria-hidden />;
+}
 
-const PendingGatheringRowError = ({ message }: { message: string }) => (
-  <div
-    className='border-gray-150 text-small-01-r bg-gray-0 flex min-h-24 items-center justify-center rounded-lg border px-4 py-6 text-gray-600'
-    role='status'
-  >
-    {message}
-  </div>
-);
-
-const LG_BREAKPOINT_MEDIA_QUERY = '(min-width: 1024px)';
-const PAGE_SIZE_TWO_COLUMN = 6;
-const PAGE_SIZE_ONE_COLUMN = 5;
+function PendingGatheringRowError({ message }: { message: string }) {
+  return (
+    <div
+      className='border-gray-150 text-small-01-r bg-gray-0 flex min-h-24 items-center justify-center rounded-lg border px-4 py-6 text-gray-600'
+      role='status'
+    >
+      {message}
+    </div>
+  );
+}
 
 export function PendingGatheringsSection({ pendingSort }: PendingGatheringsSectionProps) {
   const { data: myList } = useSuspenseQuery(applicationQueries.myList());
   const [currentPage, setCurrentPage] = useState(1);
-  const [isTwoColumnLayout, setIsTwoColumnLayout] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    return window.matchMedia(LG_BREAKPOINT_MEDIA_QUERY).matches;
-  });
+  const isTwoColumnLayout = useMediaQuery('(min-width: 1024px)');
 
   const pendingApplications = useMemo(
     () => myList.applications.filter((a) => a?.status === 'PENDING' && typeof a?.gathering?.id === 'number'),
@@ -68,17 +63,7 @@ export function PendingGatheringsSection({ pendingSort }: PendingGatheringsSecti
     [pendingApplications, pendingSort],
   );
 
-  useEffect(() => {
-    const media = window.matchMedia(LG_BREAKPOINT_MEDIA_QUERY);
-
-    const handleChange = () => setIsTwoColumnLayout(media.matches);
-    media.addEventListener('change', handleChange);
-    return () => {
-      media.removeEventListener('change', handleChange);
-    };
-  }, []);
-
-  const pageSize = isTwoColumnLayout ? PAGE_SIZE_TWO_COLUMN : PAGE_SIZE_ONE_COLUMN;
+  const pageSize = isTwoColumnLayout ? 6 : 5;
   const totalPages = Math.max(1, Math.ceil(sortedApplications.length / pageSize));
   const effectivePage = Math.min(currentPage, totalPages);
 
