@@ -12,12 +12,43 @@ import type {
   UpdateGatheringResponse,
 } from '@/api/gatherings/types';
 
-// gatheringFormSchema의 images 필드는 z.instanceof(File)로 브라우저 File 객체를 검사하지만,
-// MSW 핸들러에서 request.json()으로 받은 바디는 순수 JSON이라 File 객체가 존재하지 않음
-// → images 필드를 omit한 파생 스키마로 JSON 바디를 안전하게 파싱
-// 이미지 업로드 구현 시 multipart/form-data 파싱으로 교체 필요
-const createBodySchema = gatheringFormSchema.omit({ images: true });
-const updateBodySchema = gatheringUpdateFormSchema.omit({ images: true });
+// 실제 API는 FormData(multipart)로 요청을 받음
+// FormData 내 'request' blob에서 JSON을 추출하는 헬퍼
+const parseFormDataRequest = async (request: Request): Promise<unknown> => {
+  const contentType = request.headers.get('content-type') ?? '';
+
+  if (contentType.includes('multipart/form-data')) {
+    const formData = await request.formData();
+    const requestBlob = formData.get('request');
+    if (requestBlob instanceof Blob) {
+      return JSON.parse(await requestBlob.text());
+    }
+    return {};
+  }
+
+  // fallback: JSON body (테스트 등에서 직접 JSON 전송 시)
+  return request.json();
+};
+
+import { z } from 'zod';
+
+import type { GatheringType } from '@/api/gatherings/types';
+
+// API 함수에서 type이 한글 → 영어(STUDY/PROJECT)로 변환된 후 전송되므로
+// MSW 스키마에서도 영어 enum을 허용
+const createBodySchema = gatheringFormSchema
+  .omit({ images: true })
+  .extend({ type: z.enum(['STUDY', 'PROJECT', '스터디', '프로젝트']) });
+const updateBodySchema = gatheringUpdateFormSchema
+  .omit({ images: true })
+  .extend({ type: z.enum(['STUDY', 'PROJECT', '스터디', '프로젝트']).optional() });
+
+const PARAM_TO_TYPE: Record<string, GatheringType> = {
+  STUDY: '스터디',
+  PROJECT: '프로젝트',
+  스터디: '스터디',
+  프로젝트: '프로젝트',
+};
 
 // ─── 목 데이터 ────────────────────────────────────────────────────────────────
 
@@ -487,13 +518,13 @@ export const gatheringsHandlers = [
   http.post(BASE, async ({ request }) => {
     await delay(300);
 
-    const parsed = createBodySchema.safeParse(await request.json());
+    const parsed = createBodySchema.safeParse(await parseFormDataRequest(request));
     if (!parsed.success)
       return HttpResponse.json({ success: false, data: null, message: '잘못된 요청입니다.' }, { status: 400 });
     const body = parsed.data;
     const newGathering: GatheringListItem = {
       id: Date.now(),
-      type: body.type,
+      type: PARAM_TO_TYPE[body.type] ?? '스터디',
       categories: body.categoryIds.map((id: number) => {
         const names: Record<number, string> = { 1: '개발', 2: '어학', 3: '독서', 4: '자격증', 5: '디자인' };
         return names[id] ?? `카테고리${id}`;
@@ -533,7 +564,7 @@ export const gatheringsHandlers = [
     await delay(300);
 
     const gatheringId = Number(params.gatheringId);
-    const parsed = updateBodySchema.safeParse(await request.json());
+    const parsed = updateBodySchema.safeParse(await parseFormDataRequest(request));
     if (!parsed.success)
       return HttpResponse.json({ success: false, data: null, message: '잘못된 요청입니다.' }, { status: 400 });
     const body = parsed.data;
