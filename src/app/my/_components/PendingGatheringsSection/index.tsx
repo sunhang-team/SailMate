@@ -137,7 +137,7 @@ export function PendingGatheringsSection({ pendingSort }: PendingGatheringsSecti
         </div>
       ) : (
         <>
-          <ul className='grid grid-cols-1 gap-4 md:gap-6 lg:grid-cols-2'>
+          <ul className='grid grid-cols-1 gap-4 md:gap-6 xl:grid-cols-2'>
             {pagedApplications.map((application) => {
               const qIndex = gatheringIdToQueryIndex.get(application.gathering.id);
               const query = qIndex !== undefined ? detailQueries[qIndex] : undefined;
