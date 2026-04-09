@@ -9,6 +9,7 @@ export { CollaborationMannersIcon } from './CollaborationMannersIcon';
 export { CompletedIcon } from './CompletedIcon';
 export { DistanceIcon } from './DistanceIcon';
 export { EmailIcon } from './EmailIcon';
+export { ExclamationIcon } from './ExclamationIcon';
 export { FireButtonIcon } from './FireButtonIcon';
 export { IllustrationIcon } from './IllustrationIcon';
 export { FlagIcon } from './FlagIcon';
