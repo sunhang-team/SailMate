@@ -9,7 +9,7 @@ import { useToastStore } from '@/components/ui/Toast/useToastStore';
 
 import { likeQueries, useAddLike, useRemoveLike } from './queries';
 
-export function useLikeToggle(gatheringId: number) {
+export const useLikeToggle = (gatheringId: number) => {
   const { isLoggedIn } = useAuth();
   const overlay = useOverlay();
   const { showToast } = useToastStore();
@@ -51,4 +51,4 @@ export function useLikeToggle(gatheringId: number) {
     toggleLike,
     isPending: isAdding || isRemoving,
   };
-}
+};
