@@ -60,16 +60,25 @@ export function WeeklyPlanAccordion({ weeklyPlans }: WeeklyPlanAccordionProps) {
             >
               <div className='overflow-hidden'>
                 <div role='region' className='flex flex-col items-start px-6 xl:px-8'>
-                  <div className='bg-blue-150 mx-[5px] h-[30px] w-px' />
-                  <div className='flex items-center gap-4'>
-                    <div className='bg-blue-150 h-3 w-3 shrink-0 rounded-full' />
-                    <p className='text-body-02-r xl:text-body-01-r text-gray-800'>01. {plan.title}</p>
-                  </div>
-                  <div className='bg-blue-150 mx-[5px] h-[36px] w-px' />
-                  <div className='flex items-center gap-4'>
-                    <div className='bg-blue-150 h-3 w-3 shrink-0 rounded-full' />
-                    <p className='text-body-02-r xl:text-body-01-r text-gray-800'>02. {plan.title}</p>
-                  </div>
+                  {(plan.details ?? []).length > 0 ? (
+                    (plan.details ?? []).map((detail, detailIndex) => (
+                      <div key={detailIndex} className='flex flex-col items-start'>
+                        <div className='bg-blue-150 mx-[5px] h-[30px] w-px' />
+                        <div className='flex items-center gap-4'>
+                          <div className='bg-blue-150 h-3 w-3 shrink-0 rounded-full' />
+                          <p className='text-body-02-r xl:text-body-01-r text-gray-800'>{detail}</p>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className='flex flex-col items-start'>
+                      <div className='bg-blue-150 mx-[5px] h-[30px] w-px' />
+                      <div className='flex items-center gap-4'>
+                        <div className='bg-blue-150 h-3 w-3 shrink-0 rounded-full' />
+                        <p className='text-body-02-r xl:text-body-01-r text-gray-500'>세부 계획이 없습니다</p>
+                      </div>
+                    </div>
+                  )}
                   <div className='bg-blue-150 mx-[5px] h-[30px] w-px' />
                 </div>
               </div>
