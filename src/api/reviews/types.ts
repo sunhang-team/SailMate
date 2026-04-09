@@ -25,6 +25,7 @@ export interface UserReviewsParams {
 export interface ReviewerInfo {
   id: number;
   nickname: string;
+  profileImage?: string;
 }
 
 /** GET `/users/:userId/reviews` 응답 내 리뷰 항목 */

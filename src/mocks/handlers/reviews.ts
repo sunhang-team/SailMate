@@ -64,7 +64,7 @@ export const reviewsHandlers = [
 
     const reviews = Array.from({ length: totalCount }).map((_, index) => ({
       id: userId * 100 + index,
-      reviewer: { id: index + 10, nickname: `닉네임${index + 10}` },
+      reviewer: { id: index + 10, nickname: `닉네임${index + 10}`, profileImage: undefined },
       gatheringTitle: MOCK_TITLES[index % MOCK_TITLES.length],
       tags: [MOCK_TAGS[index % MOCK_TAGS.length], MOCK_TAGS[(index + 1) % MOCK_TAGS.length]],
       matesTag: MOCK_MATES_TAGS[index % MOCK_MATES_TAGS.length],
