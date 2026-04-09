@@ -24,9 +24,12 @@ export function ActivityEnergyCard({ matesTagCounts }: ActivityEnergyCardProps) 
           index > 0 && (
             <span key={`divider-${variant}`} className='bg-gray-150 mx-2 w-px self-stretch md:mx-4' aria-hidden />
           ),
-          <div key={variant} className='flex flex-1 flex-col items-center gap-1 md:flex-row md:justify-center md:gap-2'>
+          <div
+            key={variant}
+            className='flex flex-1 flex-col items-center gap-1 md:flex-row md:justify-center md:gap-2 lg:flex-col lg:justify-normal lg:gap-1 xl:flex-row xl:justify-center xl:gap-2'
+          >
             <IllustrationIcon variant={variant} className='size-5 shrink-0 md:size-6' aria-hidden />
-            <div className='flex items-center gap-1 md:contents'>
+            <div className='flex items-center gap-1 md:contents lg:flex lg:items-center lg:gap-1 xl:contents'>
               <span className='text-small-02-sb md:text-body-02-sb lg:text-body-01-sb text-gray-800'>{label}</span>
               <CloseIcon className='size-3 text-gray-300 md:size-4' aria-hidden />
               <span className='text-small-02-r md:text-body-02-r lg:text-body-01-r text-gray-600'>
