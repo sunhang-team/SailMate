@@ -1,6 +1,6 @@
 'use client';
 
-import { GatheringSectionSkeleton } from '@/components/GatheringSectionSkeleton';
+import { GatheringSectionSkeleton } from '@/app/main/components/GatheringSectionSkeleton';
 import { SuspenseBoundary } from '@/components/SuspenseBoundary';
 import { useAuth } from '@/hooks/useAuth';
 
@@ -15,7 +15,6 @@ export function MyGatheringSection() {
 
   return (
     <SuspenseBoundary
-      // 🟢 단순 텍스트 대신 새로 만든 고퀄리티 스켈레톤을 적용합니다.
       pendingFallback={<GatheringSectionSkeleton />}
       errorFallback={(error, reset) => (
         <div className='p-4 text-center text-red-500'>

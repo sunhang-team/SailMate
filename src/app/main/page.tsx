@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 
-import { GatheringSectionSkeleton } from '@/components/GatheringSectionSkeleton';
+import { GatheringSectionSkeleton } from '@/app/main/components/GatheringSectionSkeleton';
 
 import { HeroSection } from './components/HeroSection';
 import { MainGatheringContainer } from './components/MainGatheringContainer';

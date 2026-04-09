@@ -66,7 +66,7 @@ export function MainGatheringCard({
   const deadlineLabel = `${toDeadlineDdayLabel(gathering.recruitDeadline)}`;
 
   return (
-    <GatheringCard className={cn('w-full', className)}>
+    <GatheringCard className={cn('flex h-full flex-col', className)}>
       <GatheringCard.Header className='items-center'>
         <Tag
           variant='category'
@@ -84,7 +84,7 @@ export function MainGatheringCard({
           <span className='text-gray-600'>{gathering.maxMembers}</span>
         </div>
       </GatheringCard.Header>
-      <GatheringCard.Body className='mb-6 gap-3'>
+      <GatheringCard.Body className='mb-6 flex-1 gap-3'>
         <div className='flex flex-col gap-0.5'>
           <div className='flex flex-wrap gap-1'>
             {gathering.tags.map((tag) => (
@@ -93,8 +93,8 @@ export function MainGatheringCard({
               </span>
             ))}
           </div>
-          <p className='text-body-01-b text-gray-900'>{gathering.title}</p>
-          <p className='text-small-01-r text-gray-800'>{gathering.shortDescription}</p>
+          <p className='text-body-01-b line-clamp-2 text-gray-900'>{gathering.title}</p>
+          <p className='text-small-01-r line-clamp-1 text-gray-800'>{gathering.shortDescription}</p>
         </div>
         <div className='flex items-center gap-1'>
           <Tag variant='duration'>{totalWeeksLabel}</Tag>
@@ -103,14 +103,18 @@ export function MainGatheringCard({
           </Tag>
         </div>
       </GatheringCard.Body>
-      <GatheringCard.Footer className='border-gray-150 items-center gap-2 border-t pt-4'>
+      <GatheringCard.Footer className='border-gray-150 mt-auto items-center gap-2 border-t pt-4'>
         <Button
           variant='bookmark'
           size='bookmark-sm'
           data-selected={isFavorite}
           aria-label='찜하기'
           aria-pressed={isFavorite}
-          onClick={() => setIsFavorite((prev) => !prev)}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setIsFavorite((prev) => !prev);
+          }}
         >
           <HeartIcon size={20} variant={isFavorite ? 'filled' : 'outline'} />
         </Button>
