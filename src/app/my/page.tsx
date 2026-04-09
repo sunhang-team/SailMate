@@ -1,18 +1,19 @@
 import { MyPageContent } from './_components/MyPageContent';
 import { MyPageTabs } from './_components/MyPageTabs';
 import { ProfileSidebar, ProfileSidebarSkeleton } from './_components/ProfileSidebar';
-import { DEFAULT_TAB } from './_constants';
+import { DEFAULT_TAB, parsePendingGatheringSort } from './_constants';
 import { SuspenseBoundary } from '@/components/SuspenseBoundary';
 
-import type { MyPageTab } from './_constants';
+import type { MyPageTab, PendingGatheringSort } from './_constants';
 
 interface MyPageProps {
-  searchParams: Promise<{ tab?: MyPageTab }>;
+  searchParams: Promise<{ tab?: MyPageTab; pendingSort?: string }>;
 }
 
 export default async function MyPage({ searchParams }: MyPageProps) {
-  const { tab } = await searchParams;
+  const { tab, pendingSort: pendingSortRaw } = await searchParams;
   const activeTab = tab ?? DEFAULT_TAB;
+  const pendingSort: PendingGatheringSort = parsePendingGatheringSort(pendingSortRaw);
 
   return (
     <main className='min-h-screen bg-gray-50'>
@@ -27,8 +28,8 @@ export default async function MyPage({ searchParams }: MyPageProps) {
           </SuspenseBoundary>
 
           <div className='min-w-0 flex-1'>
-            <MyPageTabs activeTab={activeTab} />
-            <MyPageContent activeTab={activeTab} />
+            <MyPageTabs activeTab={activeTab} pendingSort={pendingSort} />
+            <MyPageContent activeTab={activeTab} pendingSort={pendingSort} />
           </div>
         </div>
       </div>

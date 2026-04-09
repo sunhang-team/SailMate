@@ -17,7 +17,7 @@ export const buttonVariants = cva('cursor-pointer transition-colors disabled:cur
       'file-upload': 'rounded-lg text-body-01-sb text-gray-800 border border-gray-300',
       'participation-outline':
         'rounded-lg text-body-01-sb text-blue-400 border-gradient-primary enabled:hover:bg-gradient-primary enabled:hover:text-white disabled:bg-gray-100 disabled:text-gray-600 disabled:border disabled:border-gray-150 disabled:before:hidden ',
-      cancel: 'rounded-lg text-body-01-sb text-blue-300 bg-blue-50 aria-pressed:bg-blue-100',
+      cancel: 'rounded-lg md:text-body-01-sb text-small-01-sb text-blue-300 bg-blue-50 aria-pressed:bg-blue-100',
       'mypage-edit':
         'rounded-lg text-small-01-m lg:text-body-01-m text-gray-600 bg-gray-100 border border-gray-150 md:text-body-02-m',
       'icon-hand': 'rounded-lg flex items-center justify-center text-gray-400 bg-gray-150',
@@ -58,7 +58,7 @@ export const buttonVariants = cva('cursor-pointer transition-colors disabled:cur
       participation: 'h-18 w-[447px]',
       'file-upload': 'h-12 w-[122px]',
       'action-sm': 'h-20 w-75',
-      cancel: 'h-18 w-[527px]',
+      cancel: 'h-18',
       'mypage-edit': 'lg:h-[60px] lg:w-[394px] md:w-[200px] md:h-[50px] w-[295px] h-[48px]',
       'icon-hand': 'h-12 w-12',
       tag: 'h-12 w-12',
