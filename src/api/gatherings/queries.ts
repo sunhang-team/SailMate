@@ -96,7 +96,10 @@ export const useUpdateGathering = (
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (body: UpdateGatheringRequest) => updateGathering(gatheringId, body),
+    mutationFn: (body: UpdateGatheringRequest) => {
+      if (!gatheringId) throw new Error('gatheringId is required for update');
+      return updateGathering(gatheringId, body);
+    },
     ...options,
     onSuccess: (data, variables, onMutateResult, context) => {
       queryClient.invalidateQueries({ queryKey: gatheringKeys.all });

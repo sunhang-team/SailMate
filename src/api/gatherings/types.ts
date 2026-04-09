@@ -56,6 +56,7 @@ export interface WeeklyPlan {
   title: string;
   startDate: string;
   endDate: string;
+  details?: string[];
 }
 
 /** GET `/gatherings` — 모임 목록 아이템 */

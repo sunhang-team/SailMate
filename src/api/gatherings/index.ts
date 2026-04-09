@@ -145,16 +145,28 @@ export const createGathering = async (body: CreateGatheringRequest): Promise<Cre
   return unwrapResponse(data);
 };
 
-/** PUT /v1/gatherings/:gatheringId — 모임 수정 (이미지 업로드 시 multipart/form-data 처리 필요할 수 있음) */
+/** PUT /v1/gatherings/:gatheringId — 모임 수정 */
 export const updateGathering = async (
   gatheringId: number,
   body: UpdateGatheringRequest,
 ): Promise<UpdateGatheringResponse> => {
-  const { type, ...rest } = body;
+  const formData = new FormData();
+
+  const { images, type, ...rest } = body;
   const requestData = { ...rest, ...(type && { type: GATHERING_TYPE_TO_PARAM[type] }) };
+
+  const requestBlob = new Blob([JSON.stringify(requestData)], { type: 'application/json' });
+  formData.append('request', requestBlob);
+
+  if (images && images.length > 0) {
+    images.forEach((file) => {
+      formData.append('images', file);
+    });
+  }
+
   const { data } = await axiosClient.put<ApiResponse<UpdateGatheringResponse>>(
     `/v1/gatherings/${gatheringId}`,
-    requestData,
+    formData,
   );
   return unwrapResponse(data);
 };
