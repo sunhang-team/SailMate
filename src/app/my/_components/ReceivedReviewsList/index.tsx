@@ -51,8 +51,8 @@ const PAGE_SIZE_DEFAULT = 3;
 const PAGE_SIZE_LG = 6;
 
 function ReceivedReviewsContent({ userId }: ReceivedReviewsContentProps) {
-  const isLg = useMediaQuery('(min-width: 1024px)');
-  const pageSize = isLg ? PAGE_SIZE_LG : PAGE_SIZE_DEFAULT;
+  const isXl = useMediaQuery('(min-width: 1280px)');
+  const pageSize = isXl ? PAGE_SIZE_LG : PAGE_SIZE_DEFAULT;
   const [page, setPage] = useState(1);
   const [, startTransition] = useTransition();
 
