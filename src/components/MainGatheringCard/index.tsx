@@ -1,12 +1,11 @@
 'use client';
 
-import { useState } from 'react';
-
 import { Button } from '@/components/ui/Button';
 import { GatheringCard } from '@/components/ui/GatheringCard';
 import { HeartIcon, PersonIcon, StudyIcon, ProjectIcon } from '@/components/ui/Icon';
 import { Tag } from '@/components/ui/Tag';
 import { cn } from '@/lib/cn';
+import { useLikeToggle } from '@/api/likes/hooks';
 
 import type { GatheringListItem } from '@/api/gatherings/types';
 
@@ -56,11 +55,10 @@ export function MainGatheringCard({
   joinButtonLabel = '참여하기',
   joinButtonClassName,
   isJoinDisabled = false,
-  initialFavorite = false,
   onJoin,
   className,
 }: MainGatheringCardProps) {
-  const [isFavorite, setIsFavorite] = useState(initialFavorite);
+  const { isLiked, toggleLike, isPending } = useLikeToggle(gathering.id);
 
   const totalWeeksLabel = toWeeksLabel(gathering.startDate, gathering.endDate);
   const deadlineLabel = `${toDeadlineDdayLabel(gathering.recruitDeadline)}`;
@@ -107,16 +105,17 @@ export function MainGatheringCard({
         <Button
           variant='bookmark'
           size='bookmark-sm'
-          data-selected={isFavorite}
+          data-selected={isLiked}
           aria-label='찜하기'
-          aria-pressed={isFavorite}
+          aria-pressed={isLiked}
+          disabled={isPending}
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            setIsFavorite((prev) => !prev);
+            toggleLike();
           }}
         >
-          <HeartIcon size={20} variant={isFavorite ? 'filled' : 'outline'} />
+          <HeartIcon size={20} variant={isLiked ? 'filled' : 'outline'} />
         </Button>
         <Button
           variant='participation-outline-sm'
