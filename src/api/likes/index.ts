@@ -25,3 +25,26 @@ export const getMyLikes = async (params?: GetMyLikesParams): Promise<GetMyLikesR
   const { data } = await axiosClient.get<ApiResponse<GetMyLikesResponse>>('/v1/users/me/likes', { params });
   return unwrapResponse(data);
 };
+
+const MY_LIKES_FETCH_LIMIT = 999;
+
+/** 클라이언트 필터용 — `totalPages`만큼 이어 받아 전체 찜 목록 병합 */
+export const getAllMyLikes = async (): Promise<GetMyLikesResponse> => {
+  const first = await getMyLikes({ page: 1, limit: MY_LIKES_FETCH_LIMIT });
+  if (first.totalPages <= 1) {
+    return first;
+  }
+
+  const gatherings = [...first.gatherings];
+  for (let page = 2; page <= first.totalPages; page++) {
+    const next = await getMyLikes({ page, limit: MY_LIKES_FETCH_LIMIT });
+    gatherings.push(...next.gatherings);
+  }
+
+  return {
+    gatherings,
+    totalCount: first.totalCount,
+    totalPages: 1,
+    currentPage: 1,
+  };
+};

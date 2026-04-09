@@ -7,6 +7,8 @@ import { MyGatheringsList } from '../MyGatheringsList';
 
 import { MyCreatedGatheringList } from '../MyCreatedGatheringList';
 
+import { LikedGatheringsList } from '../LikedGatheringsList';
+
 interface MyPageContentProps {
   activeTab: MyPageTab;
   pendingSort: PendingGatheringSort;
@@ -59,5 +61,16 @@ export function MyPageContent({ activeTab, pendingSort }: MyPageContentProps) {
     );
   }
   if (activeTab === 'received-reviews') return <p>받은 리뷰</p>;
-  if (activeTab === 'liked-gatherings') return <p>찜한 모임</p>;
+  if (activeTab === 'liked-gatherings') {
+    return (
+      <SuspenseBoundary
+        pendingFallback={<div className='flex h-40 items-center justify-center text-gray-400'>불러오는 중...</div>}
+        errorFallback={
+          <p className='flex h-40 items-center justify-center text-gray-500'>찜한 모임을 불러올 수 없습니다.</p>
+        }
+      >
+        <LikedGatheringsList />
+      </SuspenseBoundary>
+    );
+  }
 }

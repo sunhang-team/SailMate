@@ -22,7 +22,7 @@ const updateBodySchema = gatheringUpdateFormSchema.omit({ images: true });
 // ─── 목 데이터 ────────────────────────────────────────────────────────────────
 
 // 카테고리: DEVELOPMENT, LANGUAGE, BOOK, CERTIFICATE / 유형: STUDY, PROJECT
-const BASE_GATHERINGS: GatheringListItem[] = [
+export const BASE_GATHERINGS: GatheringListItem[] = [
   // ── DEVELOPMENT ──
   {
     id: 1,
