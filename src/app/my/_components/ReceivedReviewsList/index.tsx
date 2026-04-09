@@ -57,7 +57,7 @@ function ReceivedReviewsContent({ userId }: ReceivedReviewsContentProps) {
   const [, startTransition] = useTransition();
 
   const { data } = useSuspenseQuery(reviewQueries.list(userId));
-  const { reviews, matesTagCounts } = data;
+  const { reviews, matesTagCounts = [] } = data;
 
   // 받은 리뷰 섹션에는 comment가 있는 리뷰만 표시되므로, comment가 있는 리뷰를 따로 구분
   const reviewsWithComment = reviews.filter((r) => !!r.comment);
