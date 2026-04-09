@@ -4,6 +4,7 @@ import { SuspenseBoundary } from '@/components/SuspenseBoundary';
 import type { MyPageTab, PendingGatheringSort } from '../../_constants';
 
 import { MyGatheringsList } from '../MyGatheringsList';
+import { ReceivedReviewsList } from '../ReceivedReviewsList';
 
 import { MyCreatedGatheringList } from '../MyCreatedGatheringList';
 
@@ -58,6 +59,17 @@ export function MyPageContent({ activeTab, pendingSort }: MyPageContentProps) {
       </SuspenseBoundary>
     );
   }
-  if (activeTab === 'received-reviews') return <p>받은 리뷰</p>;
+
+  if (activeTab === 'received-reviews')
+    return (
+      <SuspenseBoundary
+        pendingFallback={<div className='flex h-40 items-center justify-center text-gray-400'>불러오는 중...</div>}
+        errorFallback={
+          <p className='flex h-40 items-center justify-center text-gray-500'>리뷰를 불러올 수 없습니다.</p>
+        }
+      >
+        <ReceivedReviewsList />
+      </SuspenseBoundary>
+    );
   if (activeTab === 'liked-gatherings') return <p>찜한 모임</p>;
 }
