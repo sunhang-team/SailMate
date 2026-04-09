@@ -28,28 +28,69 @@ export const likeQueries = {
 };
 
 /** POST /gatherings/:gatheringId/likes — 찜 추가 */
-export const useAddLike = (options?: UseMutationOptions<void, Error, number, unknown>) => {
+export const useAddLike = (options?: UseMutationOptions<void, Error, number, { previousIds?: number[] }>) => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: (gatheringId: number) => addLike(gatheringId),
     ...options,
-    onSuccess: (data, variables, onMutateResult, context) => {
+    onMutate: async (gatheringId) => {
+      await queryClient.cancelQueries({ queryKey: likeKeys.all });
+
+      const previousIds = queryClient.getQueryData<number[]>(likeKeys.myIds());
+
+      if (previousIds) {
+        queryClient.setQueryData<number[]>(likeKeys.myIds(), Array.from(new Set([...previousIds, gatheringId])));
+      }
+
+      return { previousIds };
+    },
+    onError: (err, variables, onMutateResult, context) => {
+      if (onMutateResult?.previousIds) {
+        queryClient.setQueryData(likeKeys.myIds(), onMutateResult.previousIds);
+      }
+      options?.onError?.(err, variables, onMutateResult, context);
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: likeKeys.all });
+    },
+    onSuccess: (data, variables, onMutateResult, context) => {
       options?.onSuccess?.(data, variables, onMutateResult, context);
     },
   });
 };
 
 /** DELETE /gatherings/:gatheringId/likes — 찜 취소 */
-export const useRemoveLike = (options?: UseMutationOptions<void, Error, number, unknown>) => {
+export const useRemoveLike = (options?: UseMutationOptions<void, Error, number, { previousIds?: number[] }>) => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: (gatheringId: number) => removeLike(gatheringId),
     ...options,
-    onSuccess: (data, variables, onMutateResult, context) => {
+    onMutate: async (gatheringId) => {
+      await queryClient.cancelQueries({ queryKey: likeKeys.all });
+
+      const previousIds = queryClient.getQueryData<number[]>(likeKeys.myIds());
+
+      if (previousIds) {
+        queryClient.setQueryData<number[]>(
+          likeKeys.myIds(),
+          previousIds.filter((id) => id !== gatheringId),
+        );
+      }
+
+      return { previousIds };
+    },
+    onError: (err, variables, onMutateResult, context) => {
+      if (onMutateResult?.previousIds) {
+        queryClient.setQueryData(likeKeys.myIds(), onMutateResult.previousIds);
+      }
+      options?.onError?.(err, variables, onMutateResult, context);
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: likeKeys.all });
+    },
+    onSuccess: (data, variables, onMutateResult, context) => {
       options?.onSuccess?.(data, variables, onMutateResult, context);
     },
   });
