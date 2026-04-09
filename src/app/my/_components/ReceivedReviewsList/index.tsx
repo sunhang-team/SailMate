@@ -59,7 +59,7 @@ function ReceivedReviewsContent({ userId }: ReceivedReviewsContentProps) {
   const [, startTransition] = useTransition();
 
   const { data } = useSuspenseQuery(reviewQueries.list(userId));
-  const { reviews } = data;
+  const { reviews, matesTagCounts } = data;
 
   // 받은 리뷰 섹션에는 comment가 있는 리뷰만 표시되므로, comment가 있는 리뷰를 따로 구분
   const reviewsWithComment = reviews.filter((r) => !!r.comment);
@@ -82,7 +82,7 @@ function ReceivedReviewsContent({ userId }: ReceivedReviewsContentProps) {
 
   return (
     <div className='mt-6 flex flex-col gap-6'>
-      <ActivityEnergyCard />
+      <ActivityEnergyCard matesTagCounts={matesTagCounts} />
       <KeywordSummaryCard reviews={reviews} />
       <div className='border-gray-150 bg-gray-0 shadow-02 flex flex-col gap-4 rounded-lg border p-6'>
         <div className='flex items-center gap-2'>

@@ -37,8 +37,15 @@ export interface Review {
   createdAt: string;
 }
 
+/** GET `/users/:userId/reviews` 응답 내 활동 에너지 항목 */
+export interface MatesTagCount {
+  tag: string; // 에너지 레벨 (연기, 불씨, 불꽃, 태양)
+  count: number;
+}
+
 /** GET `/users/:userId/reviews` 응답 */
 export interface UserReviewListResponse {
   reviews: Review[];
   totalCount: number;
+  matesTagCounts: MatesTagCount[];
 }
