@@ -36,10 +36,11 @@ export const getAllMyLikes = async (): Promise<GetMyLikesResponse> => {
   }
 
   const gatherings = [...first.gatherings];
-  for (let page = 2; page <= first.totalPages; page++) {
-    const next = await getMyLikes({ page, limit: MY_LIKES_FETCH_LIMIT });
-    gatherings.push(...next.gatherings);
-  }
+  const remainingPages = Array.from({ length: first.totalPages - 1 }, (_, i) => i + 2);
+  const remainingResults = await Promise.all(
+    remainingPages.map((page) => getMyLikes({ page, limit: MY_LIKES_FETCH_LIMIT })),
+  );
+  remainingResults.forEach((result) => gatherings.push(...result.gatherings));
 
   return {
     gatherings,
