@@ -1,6 +1,7 @@
 'use client';
 
 import { type ReactNode, useMemo } from 'react';
+import { useRouter } from 'next/navigation';
 import { differenceInWeeks, isValid, parseISO } from 'date-fns';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -15,7 +16,7 @@ import { useDropdown } from '@/components/ui/Dropdown/context';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import { useToastStore } from '@/components/ui/Toast/useToastStore';
-import { useCreateGathering } from '@/api/gatherings/queries';
+import { useCreateGathering, useUpdateGathering } from '@/api/gatherings/queries';
 import { gatheringFormSchema } from '@/api/gatherings/schemas';
 import { DEFAULT_CATEGORIES, GATHERING_TYPES } from '@/constants/gathering';
 import { cn } from '@/lib/cn';
@@ -63,8 +64,16 @@ const CATEGORY_META = Object.fromEntries(DEFAULT_CATEGORIES.map((c) => [c.id, { 
   { label: string }
 >;
 
-export function CreateGatheringForm() {
+interface CreateGatheringFormProps {
+  mode?: 'create' | 'edit';
+  gatheringId?: number;
+  initialValues?: Partial<GatheringForm>;
+}
+
+export function CreateGatheringForm({ mode = 'create', gatheringId, initialValues }: CreateGatheringFormProps) {
+  const router = useRouter();
   const showToast = useToastStore((state) => state.showToast);
+  const isEditMode = mode === 'edit';
 
   const {
     register,
@@ -78,10 +87,14 @@ export function CreateGatheringForm() {
     defaultValues: {
       tags: [],
       weeklyGuides: [],
+      ...initialValues,
     },
   });
 
-  const { mutate, isPending } = useCreateGathering();
+  const { mutate: createMutate, isPending: isCreatePending } = useCreateGathering();
+  const { mutate: updateMutate, isPending: isUpdatePending } = useUpdateGathering(gatheringId ?? 0);
+  const mutate = isEditMode ? updateMutate : createMutate;
+  const isPending = isEditMode ? isUpdatePending : isCreatePending;
 
   const typeValue = watch('type');
   const categoryIdsValue = watch('categoryIds') ?? [];
@@ -108,8 +121,7 @@ export function CreateGatheringForm() {
   }, [endDateValue, startDateValue]);
 
   const isWeeklyGuidesComplete =
-    weeklyGuidesValue.length > 0 &&
-    weeklyGuidesValue.every((guide) => Boolean(guide?.title?.trim()) && Boolean(guide?.content?.trim()));
+    weeklyGuidesValue.length > 0 && weeklyGuidesValue.every((guide) => Boolean(guide?.title?.trim()));
 
   const isFormComplete =
     !!typeValue &&
@@ -130,11 +142,13 @@ export function CreateGatheringForm() {
   const onSubmit = (data: GatheringForm) => {
     mutate(data, {
       onSuccess: () => {
-        showToast({ variant: 'success', title: '모임이 생성되었습니다.' });
-        // 리다이렉트
+        showToast({ variant: 'success', title: isEditMode ? '모임이 수정되었습니다.' : '모임이 생성되었습니다.' });
+        if (isEditMode && gatheringId) {
+          router.push(`/gatherings/${gatheringId}`);
+        }
       },
       onError: () => {
-        showToast({ variant: 'error', title: '모임 생성에 실패했습니다.' });
+        showToast({ variant: 'error', title: isEditMode ? '모임 수정에 실패했습니다.' : '모임 생성에 실패했습니다.' });
       },
     });
   };
@@ -227,9 +241,15 @@ export function CreateGatheringForm() {
               const selectedLabel =
                 selected.length > 0 ? selected.map((id) => CATEGORY_META[id]?.label).join(', ') : null;
 
+              const MAX_CATEGORIES = 3;
+
               const toggleCategory = (id: number) => {
-                const next = selected.includes(id) ? selected.filter((v) => v !== id) : [...selected, id];
-                field.onChange(next);
+                if (selected.includes(id)) {
+                  field.onChange(selected.filter((v) => v !== id));
+                  return;
+                }
+                if (selected.length >= MAX_CATEGORIES) return;
+                field.onChange([...selected, id]);
               };
 
               return (
@@ -459,7 +479,7 @@ export function CreateGatheringForm() {
         disabled={isPending || !isFormComplete}
         className='text-small-01-sb md:text-body-01-sb lg:text-h5-b h-12 w-[164px] self-end md:h-[72px] md:w-75 lg:h-20'
       >
-        작성 완료
+        {isEditMode ? '수정 완료' : '작성 완료'}
       </Button>
     </form>
   );
