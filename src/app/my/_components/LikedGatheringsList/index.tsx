@@ -104,58 +104,61 @@ export function LikedGatheringsList() {
 
   return (
     <div className='mt-8 flex flex-col md:mt-10'>
-      <div className='mb-5.5 flex items-center gap-4 md:mb-4'>
-        <span className='text-body-01-b md:text-h3-b text-gray-900'>{selectedStatusLabel}</span>
-        <span className='text-small-02-r md:text-body-01-r text-gray-500'>총 {sorted.length}건</span>
-      </div>
-      <div className='mb-10 flex items-center justify-between md:mb-12'>
-        <div className='flex items-center gap-2 md:gap-4'>
-          {SORT_OPTIONS.map((option, index) => {
-            const isSelected = sort === option.value;
-            return (
-              <div key={option.value} className='flex items-center gap-2 md:gap-4'>
-                {index > 0 && <span className='text-small-02-r md:text-body-02-r text-gray-500'>|</span>}
-                <button
-                  type='button'
-                  onClick={() => handleFilterChange({ sort: option.value })}
-                  className={cn(
-                    'text-small-02-r md:text-body-02-r flex cursor-pointer items-center gap-0.5',
-                    isSelected ? 'text-small-02-sb md:text-body-02-sb text-gray-800' : 'text-gray-500',
-                  )}
-                >
-                  <CheckIcon size={16} className={cn('md:size-6', !isSelected && 'hidden')} />
-                  {option.label}
-                </button>
-              </div>
-            );
-          })}
+      <div className='mb-10 flex flex-col md:mb-12'>
+        <div className='mb-5.5 flex items-center gap-4 md:mb-4'>
+          <h2 className='text-body-01-b md:text-h3-b text-gray-900'>{selectedStatusLabel}</h2>
+          <span className='text-small-02-r md:text-body-01-r text-gray-500'>총 {sorted.length}건</span>
         </div>
 
-        <Dropdown className='**:[[role=listbox]]:right-0'>
-          <Dropdown.Trigger>
-            <div className='flex items-center gap-2'>
-              <span className='text-small-02-m md:text-body-02-m text-gray-800'>{selectedStatusLabel}</span>
-              <RotatingArrow />
-            </div>
-          </Dropdown.Trigger>
-          <Dropdown.Menu className='flex flex-col gap-3 overflow-hidden px-3 py-2 whitespace-nowrap'>
-            {STATUS_OPTIONS.map((option) => {
-              const isSelected = status === option.value;
+        <div className='flex items-center justify-between gap-4'>
+          <div className='flex items-center gap-2 md:gap-4'>
+            {SORT_OPTIONS.map((option, index) => {
+              const isSelected = sort === option.value;
               return (
-                <Dropdown.Item
-                  key={option.value}
-                  onClick={() => handleFilterChange({ status: option.value })}
-                  className={cn(
-                    'text-small-02-m md:text-body-02-r cursor-pointer rounded-lg px-4 py-2 text-gray-500 hover:bg-blue-100 hover:text-blue-400',
-                    isSelected && 'text-small-02-m md:text-body-02-m bg-blue-100 text-gray-900',
-                  )}
-                >
-                  {option.label}
-                </Dropdown.Item>
+                <div key={option.value} className='flex items-center gap-2 md:gap-4'>
+                  {index > 0 && <span className='text-small-02-r md:text-body-02-r text-gray-500'>|</span>}
+                  <button
+                    type='button'
+                    onClick={() => handleFilterChange({ sort: option.value })}
+                    className={cn(
+                      'text-small-02-r md:text-body-02-r flex cursor-pointer items-center gap-0.5',
+                      isSelected ? 'text-small-02-sb md:text-body-02-sb text-gray-800' : 'text-gray-500',
+                    )}
+                  >
+                    <CheckIcon size={16} className={cn('md:size-6', !isSelected && 'hidden')} />
+                    {option.label}
+                  </button>
+                </div>
               );
             })}
-          </Dropdown.Menu>
-        </Dropdown>
+          </div>
+
+          <Dropdown className='**:[[role=listbox]]:right-0'>
+            <Dropdown.Trigger>
+              <div className='flex items-center gap-2'>
+                <span className='text-small-02-m md:text-body-02-m text-gray-800'>{selectedStatusLabel}</span>
+                <RotatingArrow />
+              </div>
+            </Dropdown.Trigger>
+            <Dropdown.Menu className='flex flex-col gap-3 overflow-hidden px-3 py-2 whitespace-nowrap'>
+              {STATUS_OPTIONS.map((option) => {
+                const isSelected = status === option.value;
+                return (
+                  <Dropdown.Item
+                    key={option.value}
+                    onClick={() => handleFilterChange({ status: option.value })}
+                    className={cn(
+                      'text-small-02-m md:text-body-02-r cursor-pointer rounded-lg px-4 py-2 text-gray-500 hover:bg-blue-100 hover:text-blue-400',
+                      isSelected && 'text-small-02-m md:text-body-02-m bg-blue-100 text-gray-900',
+                    )}
+                  >
+                    {option.label}
+                  </Dropdown.Item>
+                );
+              })}
+            </Dropdown.Menu>
+          </Dropdown>
+        </div>
       </div>
 
       {paged.length === 0 ? (
