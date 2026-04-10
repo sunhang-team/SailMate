@@ -2,16 +2,24 @@ import { queryOptions, useMutation, useQueryClient } from '@tanstack/react-query
 
 import { userKeys } from '@/api/users/queries';
 
-import { checkEmail, checkNickname, login, logout, register } from './index';
+import { checkEmail, checkNickname, login, logout, register, socialLoginCallback } from './index';
 
 import type { UseMutationOptions } from '@tanstack/react-query';
-import type { CheckAvailabilityResponse, LoginForm, LoginResponse, RegisterResponse, SignupForm } from './types';
+import type {
+  CheckAvailabilityResponse,
+  LoginForm,
+  LoginResponse,
+  RegisterResponse,
+  SignupForm,
+  OAuthCallbackResponse,
+} from './types';
 
 export const authKeys = {
   all: ['auth'] as const,
   checks: () => [...authKeys.all, 'check'] as const,
   checkEmail: (email: string) => [...authKeys.checks(), 'email', email] as const,
   checkNickname: (nickname: string) => [...authKeys.checks(), 'nickname', nickname] as const,
+  oauth: () => [...authKeys.all, 'oauth'] as const,
 };
 
 export const authQueries = {
@@ -85,6 +93,27 @@ export const useLogout = (options?: UseMutationOptions<void, Error, void, unknow
     ...options,
     onSuccess: (...args) => {
       queryClient.removeQueries({ queryKey: userKeys.me() });
+      options?.onSuccess?.(...args);
+    },
+  });
+};
+
+/** GET /auth/{provider}/callback — 소셜 로그인 콜백 */
+export const useSocialLoginCallback = (
+  options?: UseMutationOptions<
+    OAuthCallbackResponse,
+    Error,
+    { provider: string; code: string; redirectUri: string },
+    unknown
+  >,
+) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ provider, code, redirectUri }) => socialLoginCallback(provider, code, redirectUri),
+    ...options,
+    onSuccess: (...args) => {
+      queryClient.invalidateQueries({ queryKey: userKeys.me() });
       options?.onSuccess?.(...args);
     },
   });

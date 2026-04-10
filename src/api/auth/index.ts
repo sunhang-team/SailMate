@@ -2,7 +2,14 @@ import { axiosClient } from '@/lib/axiosClient';
 import { unwrapResponse } from '@/api/common/utils';
 
 import type { ApiResponse } from '@/api/common/types';
-import type { LoginForm, LoginResponse, SignupForm, RegisterResponse, CheckAvailabilityResponse } from './types';
+import type {
+  LoginForm,
+  LoginResponse,
+  SignupForm,
+  RegisterResponse,
+  CheckAvailabilityResponse,
+  OAuthCallbackResponse,
+} from './types';
 
 /** POST /v1/auth/register — 이메일 회원가입 */
 export const register = async ({ passwordConfirmation, ...body }: SignupForm): Promise<RegisterResponse> => {
@@ -33,6 +40,19 @@ export const checkEmail = async (email: string): Promise<CheckAvailabilityRespon
 export const checkNickname = async (nickname: string): Promise<CheckAvailabilityResponse> => {
   const { data } = await axiosClient.get<ApiResponse<CheckAvailabilityResponse>>('/v1/auth/check/nickname', {
     params: { nickname },
+  });
+  return unwrapResponse(data);
+};
+
+/** POST /v1/auth/{provider}/callback — 소셜 로그인 콜백 */
+export const socialLoginCallback = async (
+  provider: string,
+  code: string,
+  redirectUri: string,
+): Promise<OAuthCallbackResponse> => {
+  const { data } = await axiosClient.post<ApiResponse<OAuthCallbackResponse>>(`/v1/auth/${provider}/callback`, {
+    code,
+    redirectUri,
   });
   return unwrapResponse(data);
 };
