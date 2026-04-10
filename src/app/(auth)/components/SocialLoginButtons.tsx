@@ -14,7 +14,8 @@ export function SocialLoginButtons({ kakaoLabel, googleLabel }: SocialLoginButto
     const redirectUri = `${process.env.NEXT_PUBLIC_APP_URL}/auth/kakao/callback`;
     const authUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code`;
 
-    if (typeof window !== 'undefined' && !window.location.pathname.includes('/login')) {
+    const isNotLoginPage = typeof window !== 'undefined' && !window.location.pathname.includes('/login');
+    if (isNotLoginPage) {
       sessionStorage.setItem('returnTo', window.location.pathname + window.location.search);
     }
 
@@ -27,7 +28,8 @@ export function SocialLoginButtons({ kakaoLabel, googleLabel }: SocialLoginButto
     const scope = encodeURIComponent('openid email profile');
     const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}`;
 
-    if (typeof window !== 'undefined' && !window.location.pathname.includes('/login')) {
+    const isNotLoginPage = typeof window !== 'undefined' && !window.location.pathname.includes('/login');
+    if (isNotLoginPage) {
       sessionStorage.setItem('returnTo', window.location.pathname + window.location.search);
     }
 
