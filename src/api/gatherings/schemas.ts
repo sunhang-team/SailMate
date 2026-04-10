@@ -44,7 +44,7 @@ export const gatheringFormSchema = z.object({
   recruitDeadline: dateStringSchema('모집 마감일을 선택해주세요.'),
   startDate: dateStringSchema('모임 시작일을 선택해주세요.'),
   endDate: dateStringSchema('모임 종료일을 선택해주세요.'),
-  weeklyGuides: z.array(weeklyGuideSchema).min(1, '최소 1주차 계획은 입력해 주세요.'),
+  weeklyGuides: z.array(weeklyGuideSchema).optional(),
   images: z
     .array(z.instanceof(File, { message: '유효한 파일이 아닙니다.' }))
     .max(6, '이미지는 최대 6장까지 업로드 가능합니다.')

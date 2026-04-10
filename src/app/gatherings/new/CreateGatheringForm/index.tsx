@@ -107,8 +107,6 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
   const recruitDeadlineValue = watch('recruitDeadline');
   const startDateValue = watch('startDate');
   const endDateValue = watch('endDate');
-  const weeklyGuidesValue = watch('weeklyGuides') ?? [];
-
   const totalWeeks = useMemo(() => {
     if (!startDateValue || !endDateValue) return 0;
 
@@ -120,9 +118,6 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
     return Math.max(1, differenceInWeeks(endDate, startDate));
   }, [endDateValue, startDateValue]);
 
-  const isWeeklyGuidesComplete =
-    weeklyGuidesValue.length > 0 && weeklyGuidesValue.every((guide) => Boolean(guide?.title?.trim()));
-
   const isFormComplete =
     !!typeValue &&
     categoryIdsValue.length > 0 &&
@@ -133,11 +128,10 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
     tagsValue.length > 0 &&
     typeof maxMembersValue === 'number' &&
     maxMembersValue >= 2 &&
-    maxMembersValue <= 20 &&
+    maxMembersValue <= 10 &&
     !!recruitDeadlineValue &&
     !!startDateValue &&
-    !!endDateValue &&
-    isWeeklyGuidesComplete;
+    !!endDateValue;
 
   const onSubmit = (data: GatheringForm) => {
     mutate(data, {

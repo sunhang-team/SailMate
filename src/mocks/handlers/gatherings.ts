@@ -1,6 +1,7 @@
 import { http, HttpResponse, delay } from 'msw';
 
 import { gatheringFormSchema, gatheringUpdateFormSchema } from '@/api/gatherings/schemas';
+import { getTotalWeeks } from '@/lib/formatGatheringDate';
 import { createApiResponse } from '../utils';
 
 import type {
@@ -545,7 +546,7 @@ export const gatheringsHandlers = [
       ...newGathering,
       description: body.description,
       goal: body.goal,
-      totalWeeks: body.weeklyGuides.length,
+      totalWeeks: getTotalWeeks(body.startDate, body.endDate),
       images: [],
       weeklyPlans: [],
       members: [{ userId: 1, nickname: '김코딩', profileImage: null, role: 'LEADER' }],
