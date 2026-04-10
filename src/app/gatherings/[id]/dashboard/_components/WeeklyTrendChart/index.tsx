@@ -56,7 +56,7 @@ export function WeeklyTrendChart({ gatheringId }: WeeklyTrendChartProps) {
       <div className='custom-scrollbar w-full overflow-x-auto'>
         <div className='h-[300px]' style={{ minWidth: chartMinWidth }}>
           <ResponsiveContainer width='100%' height='100%'>
-            <BarChart accessibilityLayer={false} data={chartData} margin={{ top: 40, right: 0, left: -20, bottom: 0 }}>
+            <BarChart accessibilityLayer={false} data={chartData} margin={{ top: 60, right: 0, left: -20, bottom: 0 }}>
               <defs>
                 <linearGradient id='dashboard-focus' x1='0' y1='0' x2='0' y2='1'>
                   <stop offset='0%' stopColor='#3779fe' />
