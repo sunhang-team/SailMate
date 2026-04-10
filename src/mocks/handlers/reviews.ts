@@ -26,6 +26,12 @@ const mockUserReviewListResponse: UserReviewListResponse = {
     },
   ],
   totalCount: 12,
+  matesTagCounts: [
+    { tag: '연기', count: 3 },
+    { tag: '불씨', count: 2 },
+    { tag: '불꽃', count: 4 },
+    { tag: '태양', count: 1 },
+  ],
 };
 
 const MOCK_TITLES = ['React 완전 정복 스터디', 'JavaScript 딥다이브', 'Next.js 프로그래밍', '실전 TypeScript'];
@@ -36,6 +42,7 @@ const MOCK_COMMENTS = [
   '함께 협업하면서 배울 점이 많았던 팀원입니다.',
 ];
 const MOCK_TAGS = ['성실해요', '소통이 좋아요', '잘 도와줘요', '시간을 잘 지켜요', '다시 함께하고 싶어요'];
+const MOCK_MATES_TAGS = ['연기', '불씨', '불꽃', '태양'];
 
 export const reviewsHandlers = [
   /** POST v1/gatherings/:gatheringId/reviews — 리뷰 작성 */
@@ -57,11 +64,17 @@ export const reviewsHandlers = [
 
     const reviews = Array.from({ length: totalCount }).map((_, index) => ({
       id: userId * 100 + index,
-      reviewer: { id: index + 10, nickname: `닉네임${index + 10}` },
+      reviewer: { id: index + 10, nickname: `닉네임${index + 10}`, profileImage: undefined },
       gatheringTitle: MOCK_TITLES[index % MOCK_TITLES.length],
       tags: [MOCK_TAGS[index % MOCK_TAGS.length], MOCK_TAGS[(index + 1) % MOCK_TAGS.length]],
+      matesTag: MOCK_MATES_TAGS[index % MOCK_MATES_TAGS.length],
       comment: MOCK_COMMENTS[index % MOCK_COMMENTS.length],
       createdAt: new Date(Date.now() - index * 86400000).toISOString(),
+    }));
+
+    const matesTagCounts = MOCK_MATES_TAGS.map((tag) => ({
+      tag,
+      count: reviews.filter((r) => r.matesTag === tag).length,
     }));
 
     const startIndex = (page - 1) * limit;
@@ -71,6 +84,7 @@ export const reviewsHandlers = [
       createApiResponse({
         reviews: paginatedReviews,
         totalCount,
+        matesTagCounts,
       }),
     );
   }),
