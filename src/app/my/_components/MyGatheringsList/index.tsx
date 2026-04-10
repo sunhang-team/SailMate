@@ -128,8 +128,8 @@ export function MyGatheringsList() {
                     key={option.value}
                     onClick={() => handleFilterChange({ status: option.value })}
                     className={cn(
-                      'text-small-02-m md:text-body-02-m cursor-pointer rounded-lg px-4 py-2 hover:bg-blue-100 hover:text-blue-400',
-                      isSelected && 'bg-blue-100 text-blue-400',
+                      'text-small-02-m md:text-body-02-r cursor-pointer rounded-lg px-4 py-2 text-gray-500 hover:bg-blue-100 hover:text-blue-400',
+                      isSelected && 'text-body-02-m bg-blue-100 text-gray-900',
                     )}
                   >
                     {option.label}
