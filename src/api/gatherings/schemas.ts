@@ -14,8 +14,8 @@ export const weeklyGuideSchema = z.object({
     .optional(),
 });
 
-/** POST `/gatherings` — 모임 생성 폼 */
-export const gatheringFormSchema = z.object({
+/** 모임 생성/수정 폼 공통 필드 (cross-field 검증 전 base) */
+const gatheringFormBaseSchema = z.object({
   type: z.enum(['스터디', '프로젝트'], {
     message: '모임 유형을 지정해 주세요.',
   }),
@@ -51,8 +51,30 @@ export const gatheringFormSchema = z.object({
     .optional(),
 });
 
-/** PUT `/gatherings/:gatheringId` — 모임 수정 폼 (모든 필드 optional) */
-export const gatheringUpdateFormSchema = gatheringFormSchema.partial();
+/** POST `/gatherings` — 모임 생성 폼 */
+export const gatheringFormSchema = gatheringFormBaseSchema.superRefine((data, ctx) => {
+  const today = new Date().toISOString().slice(0, 10);
 
-/** POST `/gatherings` — 모임 생성 폼 (호환용 별칭) */
-export const gatheringFormPartialSchema = gatheringFormSchema;
+  if (data.recruitDeadline && data.recruitDeadline < today) {
+    ctx.addIssue({ code: 'custom', message: '모집 마감일은 오늘 이후여야 합니다.', path: ['recruitDeadline'] });
+  }
+  if (data.startDate && data.startDate < today) {
+    ctx.addIssue({ code: 'custom', message: '모임 시작일은 오늘 이후여야 합니다.', path: ['startDate'] });
+  }
+  if (data.endDate && data.endDate < today) {
+    ctx.addIssue({ code: 'custom', message: '모임 종료일은 오늘 이후여야 합니다.', path: ['endDate'] });
+  }
+  if (data.recruitDeadline && data.startDate && data.recruitDeadline >= data.startDate) {
+    ctx.addIssue({
+      code: 'custom',
+      message: '모집 마감일은 모임 시작일보다 빨라야 합니다.',
+      path: ['recruitDeadline'],
+    });
+  }
+  if (data.startDate && data.endDate && data.endDate <= data.startDate) {
+    ctx.addIssue({ code: 'custom', message: '종료일은 시작일 이후여야 합니다.', path: ['endDate'] });
+  }
+});
+
+/** PUT `/gatherings/:gatheringId` — 모임 수정 폼 (모든 필드 optional) */
+export const gatheringUpdateFormSchema = gatheringFormBaseSchema.partial();
