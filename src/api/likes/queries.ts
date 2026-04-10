@@ -1,6 +1,6 @@
 import { queryOptions, useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { getAllMyLikes, getMyLikeIds, getMyLikes, addLike, removeLike } from './index';
+import { getAllMyLikes, getMyLikeIds, getMyLikes } from './index';
 
 import type { QueryKey } from '@tanstack/react-query';
 import type { UseMutationOptions } from '@tanstack/react-query';
@@ -35,13 +35,6 @@ export const likeQueries = {
       queryFn: () => getAllMyLikes(),
     }),
 };
-
-interface RemoveLikeMutationContext {
-  previousMy: [QueryKey, GetMyLikesResponse | undefined][];
-  previousIds: GetMyLikeIdsResponse | undefined;
-}
-
-const isMyLikesListQueryKey = (key: QueryKey) => key[0] === 'likes' && key[1] === 'my';
 
 /** POST /gatherings/:gatheringId/likes — 찜 추가 */
 export const useAddLike = (options?: UseMutationOptions<void, Error, number, { previousIds?: number[] }>) => {

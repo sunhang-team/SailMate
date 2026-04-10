@@ -104,11 +104,11 @@ export function LikedGatheringsList() {
 
   return (
     <div className='mt-8 flex flex-col md:mt-10'>
-      <div className='mb-4 flex items-center gap-4'>
+      <div className='mb-5.5 flex items-center gap-4 md:mb-4'>
         <span className='text-body-01-b md:text-h3-b text-gray-900'>{selectedStatusLabel}</span>
         <span className='text-small-02-r md:text-body-01-r text-gray-500'>총 {sorted.length}건</span>
       </div>
-      <div className='mb-10 flex items-center justify-between md:mb-12 lg:mb-10'>
+      <div className='mb-10 flex items-center justify-between md:mb-12'>
         <div className='flex items-center gap-2 md:gap-4'>
           {SORT_OPTIONS.map((option, index) => {
             const isSelected = sort === option.value;
