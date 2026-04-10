@@ -1,10 +1,9 @@
 'use client';
 
-import { useState } from 'react';
-
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 
 import { gatheringQueries } from '@/api/gatherings/queries';
+import { useLikeToggle } from '@/api/likes/hooks';
 import { applicationQueries, useCreateApplication } from '@/api/applications/queries';
 import { getCurrentWeek } from '@/lib/formatGatheringDate';
 import { Button } from '@/components/ui/Button';
@@ -45,7 +44,7 @@ export function GatheringInfoAside({ gatheringId }: GatheringInfoAsideProps) {
 
   const hasPendingApplication =
     myApplications?.applications.some((app) => app.gathering.id === gatheringId && app.status === 'PENDING') ?? false;
-  const [isFavorite, setIsFavorite] = useState(false);
+  const { isLiked, isPending: isLikePending, toggleLike } = useLikeToggle(gatheringId);
   const overlay = useOverlay();
   const { Funnel, Step, setStep } = useFunnel<'DEFAULT' | 'APPLY' | 'SUCCESS'>('DEFAULT');
 
@@ -118,20 +117,13 @@ export function GatheringInfoAside({ gatheringId }: GatheringInfoAsideProps) {
               <Button
                 variant='bookmark'
                 size='bookmark-sm'
-                data-selected={isFavorite}
+                data-selected={isLiked}
                 aria-label='찜하기'
-                aria-pressed={isFavorite}
-                onClick={async () => {
-                  if (!isLoggedIn) {
-                    const isLoginSuccessful = await overlay.open(({ isOpen, close }) => (
-                      <AuthModal isOpen={isOpen} onClose={() => close(false)} onSuccess={() => close(true)} />
-                    ));
-                    if (!isLoginSuccessful) return;
-                  }
-                  setIsFavorite((prev) => !prev);
-                }}
+                aria-pressed={isLiked}
+                onClick={toggleLike}
+                disabled={isLikePending}
               >
-                <HeartIcon size={20} variant={isFavorite ? 'filled' : 'outline'} />
+                <HeartIcon size={20} variant={isLiked ? 'filled' : 'outline'} />
               </Button>
             </GatheringCard.Header>
 

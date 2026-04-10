@@ -34,16 +34,12 @@ export function EmailStep({ onResolved }: { onResolved: (email: string, isAvaila
   };
 
   return (
-    <div className='flex flex-col gap-8'>
+    <div className='flex flex-col gap-5.5'>
       <div className='flex flex-col gap-2'>
         <h2 className='text-h4-b text-center text-gray-900'>로그인 / 회원가입</h2>
-        <p className='text-body-02-r text-center text-gray-600'>
-          이메일을 입력하시면 가입 여부에 따라 로그인 또는 회원가입을 진행합니다.
-        </p>
       </div>
 
       <SocialLoginButtons kakaoLabel='카카오로 시작하기' googleLabel='구글로 시작하기' />
-      <AuthDivider text='또는 이메일로 시작' />
 
       <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-6'>
         <Input
@@ -52,7 +48,7 @@ export function EmailStep({ onResolved }: { onResolved: (email: string, isAvaila
               이메일 <span className='ml-1 text-blue-400'>*</span>
             </>
           }
-          placeholder='이메일을 입력해주세요'
+          placeholder='가입 여부에 따라 로그인/회원가입이 진행됩니다.'
           type='email'
           error={errors.email?.message}
           {...register('email')}
