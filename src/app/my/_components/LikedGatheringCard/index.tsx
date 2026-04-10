@@ -111,7 +111,7 @@ export function LikedGatheringCard({
           </Tag>
         </div>
       </GatheringCard.Body>
-      <GatheringCard.Footer className='border-gray-150 hap-1 items-center border-t pt-4 md:gap-2'>
+      <GatheringCard.Footer className='border-gray-150 items-center gap-1 border-t pt-4 md:gap-2'>
         <Button
           type='button'
           variant='bookmark'
