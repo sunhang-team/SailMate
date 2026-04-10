@@ -12,12 +12,43 @@ import type {
   UpdateGatheringResponse,
 } from '@/api/gatherings/types';
 
-// gatheringFormSchema의 images 필드는 z.instanceof(File)로 브라우저 File 객체를 검사하지만,
-// MSW 핸들러에서 request.json()으로 받은 바디는 순수 JSON이라 File 객체가 존재하지 않음
-// → images 필드를 omit한 파생 스키마로 JSON 바디를 안전하게 파싱
-// 이미지 업로드 구현 시 multipart/form-data 파싱으로 교체 필요
-const createBodySchema = gatheringFormSchema.omit({ images: true });
-const updateBodySchema = gatheringUpdateFormSchema.omit({ images: true });
+// 실제 API는 FormData(multipart)로 요청을 받음
+// FormData 내 'request' blob에서 JSON을 추출하는 헬퍼
+const parseFormDataRequest = async (request: Request): Promise<unknown> => {
+  const contentType = request.headers.get('content-type') ?? '';
+
+  if (contentType.includes('multipart/form-data')) {
+    const formData = await request.formData();
+    const requestBlob = formData.get('request');
+    if (requestBlob instanceof Blob) {
+      return JSON.parse(await requestBlob.text());
+    }
+    return {};
+  }
+
+  // fallback: JSON body (테스트 등에서 직접 JSON 전송 시)
+  return request.json();
+};
+
+import { z } from 'zod';
+
+import type { GatheringType } from '@/api/gatherings/types';
+
+// API 함수에서 type이 한글 → 영어(STUDY/PROJECT)로 변환된 후 전송되므로
+// MSW 스키마에서도 영어 enum을 허용
+const createBodySchema = gatheringFormSchema
+  .omit({ images: true })
+  .extend({ type: z.enum(['STUDY', 'PROJECT', '스터디', '프로젝트']) });
+const updateBodySchema = gatheringUpdateFormSchema
+  .omit({ images: true })
+  .extend({ type: z.enum(['STUDY', 'PROJECT', '스터디', '프로젝트']).optional() });
+
+const PARAM_TO_TYPE: Record<string, GatheringType> = {
+  STUDY: '스터디',
+  PROJECT: '프로젝트',
+  스터디: '스터디',
+  프로젝트: '프로젝트',
+};
 
 // ─── 목 데이터 ────────────────────────────────────────────────────────────────
 
@@ -217,14 +248,32 @@ const mockDetails: Record<number, GatheringDetail> = {
       { url: 'https://placehold.co/800x500/81ecec/333333?text=React+10', displayOrder: 9 },
     ],
     weeklyPlans: [
-      { week: 1, title: 'React 19 개요 & useTransition', startDate: '2026-04-15', endDate: '2026-04-21' },
-      { week: 2, title: 'Server Components & Actions', startDate: '2026-04-22', endDate: '2026-04-28' },
-      { week: 3, title: 'Next.js App Router 심화', startDate: '2026-04-29', endDate: '2026-05-05' },
-      { week: 4, title: 'Data Fetching 패턴', startDate: '2026-05-06', endDate: '2026-05-12' },
-      { week: 5, title: 'TanStack Query 연동', startDate: '2026-05-13', endDate: '2026-05-19' },
-      { week: 6, title: '인증 & 미들웨어', startDate: '2026-05-20', endDate: '2026-05-26' },
-      { week: 7, title: '배포 & CI/CD', startDate: '2026-05-27', endDate: '2026-06-02' },
-      { week: 8, title: '최종 프로젝트 발표', startDate: '2026-06-03', endDate: '2026-06-09' },
+      {
+        week: 1,
+        title: 'React 19 개요 & useTransition',
+        startDate: '2026-04-15',
+        endDate: '2026-04-21',
+        details: ['React 19 공식문서 읽기', 'useTransition 실습'],
+      },
+      {
+        week: 2,
+        title: 'Server Components & Actions',
+        startDate: '2026-04-22',
+        endDate: '2026-04-28',
+        details: ['Server Components 개념 정리'],
+      },
+      { week: 3, title: 'Next.js App Router 심화', startDate: '2026-04-29', endDate: '2026-05-05', details: [] },
+      {
+        week: 4,
+        title: 'Data Fetching 패턴',
+        startDate: '2026-05-06',
+        endDate: '2026-05-12',
+        details: ['TanStack Query 패턴 비교', 'SWR vs React Query'],
+      },
+      { week: 5, title: 'TanStack Query 연동', startDate: '2026-05-13', endDate: '2026-05-19', details: [] },
+      { week: 6, title: '인증 & 미들웨어', startDate: '2026-05-20', endDate: '2026-05-26', details: [] },
+      { week: 7, title: '배포 & CI/CD', startDate: '2026-05-27', endDate: '2026-06-02', details: [] },
+      { week: 8, title: '최종 프로젝트 발표', startDate: '2026-06-03', endDate: '2026-06-09', details: [] },
     ],
     members: [
       { userId: 1, nickname: '김코딩', profileImage: 'https://avatars.githubusercontent.com/u/1?v=4', role: 'LEADER' },
@@ -269,10 +318,28 @@ const mockDetails: Record<number, GatheringDetail> = {
       { url: 'https://placehold.co/336x418/74b9ff/333333?text=Figma+9', displayOrder: 8 },
     ],
     weeklyPlans: [
-      { week: 1, title: '피그마 이론 마스터', startDate: '2026-03-15', endDate: '2026-03-21' },
-      { week: 2, title: '피그마 실무', startDate: '2026-03-22', endDate: '2026-03-28' },
-      { week: 3, title: '서비스 기획 및 와이어프레임 작업', startDate: '2026-03-29', endDate: '2026-04-04' },
-      { week: 4, title: '서비스 완성', startDate: '2026-04-05', endDate: '2026-04-05' },
+      {
+        week: 1,
+        title: '피그마 이론 마스터',
+        startDate: '2026-03-15',
+        endDate: '2026-03-21',
+        details: ['01. 피그마 프레임 이론', '02. 피그마 컴포넌트 마스터'],
+      },
+      {
+        week: 2,
+        title: '피그마 실무',
+        startDate: '2026-03-22',
+        endDate: '2026-03-28',
+        details: ['01. 실무 프로젝트 분석'],
+      },
+      {
+        week: 3,
+        title: '서비스 기획 및 와이어프레임 작업',
+        startDate: '2026-03-29',
+        endDate: '2026-04-04',
+        details: [],
+      },
+      { week: 4, title: '서비스 완성', startDate: '2026-04-05', endDate: '2026-04-05', details: [] },
     ],
     members: [
       {
@@ -451,13 +518,13 @@ export const gatheringsHandlers = [
   http.post(BASE, async ({ request }) => {
     await delay(300);
 
-    const parsed = createBodySchema.safeParse(await request.json());
+    const parsed = createBodySchema.safeParse(await parseFormDataRequest(request));
     if (!parsed.success)
       return HttpResponse.json({ success: false, data: null, message: '잘못된 요청입니다.' }, { status: 400 });
     const body = parsed.data;
     const newGathering: GatheringListItem = {
       id: Date.now(),
-      type: body.type,
+      type: PARAM_TO_TYPE[body.type] ?? '스터디',
       categories: body.categoryIds.map((id: number) => {
         const names: Record<number, string> = { 1: '개발', 2: '어학', 3: '독서', 4: '자격증', 5: '디자인' };
         return names[id] ?? `카테고리${id}`;
@@ -497,7 +564,7 @@ export const gatheringsHandlers = [
     await delay(300);
 
     const gatheringId = Number(params.gatheringId);
-    const parsed = updateBodySchema.safeParse(await request.json());
+    const parsed = updateBodySchema.safeParse(await parseFormDataRequest(request));
     if (!parsed.success)
       return HttpResponse.json({ success: false, data: null, message: '잘못된 요청입니다.' }, { status: 400 });
     const body = parsed.data;

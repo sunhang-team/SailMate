@@ -17,23 +17,13 @@ interface WeeklyPlanFormProps {
   totalWeeks: number;
 }
 
-interface WeeklyGuideItem {
-  week: number;
-  title: string;
-  content: string;
-}
+const MAX_DETAILS = 2;
 
-const createEmptyGuide = (week: number): WeeklyGuideItem => ({
+const createEmptyGuide = (week: number) => ({
   week,
   title: '',
-  content: '',
+  details: [] as string[],
 });
-
-const parseDetailLines = (value: string | undefined) => {
-  if (!value) return [''];
-  const parsed = value.split('\n');
-  return parsed.length > 0 ? parsed : [''];
-};
 
 interface WeekDetailInputsProps {
   control: Control<GatheringForm>;
@@ -44,68 +34,87 @@ interface WeekDetailInputsProps {
 function WeekDetailInputs({ control, index, error }: WeekDetailInputsProps) {
   const { field } = useController({
     control,
-    name: `weeklyGuides.${index}.content`,
+    name: `weeklyGuides.${index}.details`,
   });
-  const detailLines = parseDetailLines(field.value);
+  const details = field.value ?? [];
 
-  const updateDetailLine = (lineIndex: number, nextValue: string) => {
-    const currentLines = parseDetailLines(field.value);
-    const nextLines = currentLines.map((line, idx) => (idx === lineIndex ? nextValue : line));
-    field.onChange(nextLines.join('\n'));
+  const updateDetail = (detailIndex: number, nextValue: string) => {
+    const nextDetails = details.map((d, i) => (i === detailIndex ? nextValue : d));
+    field.onChange(nextDetails);
   };
 
-  const handleAddDetailLine = () => {
-    const nextLines = [...parseDetailLines(field.value), ''];
-    field.onChange(nextLines.join('\n'));
+  const handleAddDetail = () => {
+    if (details.length >= MAX_DETAILS) return;
+    field.onChange([...details, '']);
   };
+
+  const canAddDetail = details.length < MAX_DETAILS;
 
   return (
     <div className='flex flex-col gap-3'>
       <p className='text-small-02-m md:text-body-02-m text-gray-800'>세부 계획</p>
 
-      <div className='flex flex-col gap-3 lg:flex-row'>
-        <div className='flex w-full flex-col gap-1.5 lg:w-1/2'>
-          <Input
-            placeholder='세부 계획을 적어주세요'
-            value={detailLines[0] ?? ''}
-            onBlur={field.onBlur}
-            onChange={(event) => updateDetailLine(0, event.target.value)}
-            error={error}
-            className='text-small-02-r md:text-body-02-r h-11 md:h-14.5'
-          />
-        </div>
+      {details.length === 0 ? (
         <Button
           type='button'
           variant='add-detail'
           size='add-detail'
-          className='hidden h-[calc(2.75rem+5px)] w-full md:h-[calc(3.625rem+5px)] lg:block lg:w-1/2'
-          onClick={handleAddDetailLine}
+          className='h-[calc(2.75rem+2px)] w-full md:h-[calc(3.625rem+2px)]'
+          onClick={handleAddDetail}
         >
           + 세부 계획 추가
         </Button>
-      </div>
+      ) : (
+        <>
+          <div className='flex flex-col gap-3 lg:flex-row'>
+            <div className='flex w-full flex-col gap-1.5 lg:w-1/2'>
+              <Input
+                placeholder='세부 계획을 적어주세요'
+                value={details[0] ?? ''}
+                onBlur={field.onBlur}
+                onChange={(event) => updateDetail(0, event.target.value)}
+                error={error}
+                className='text-small-02-r md:text-body-02-r h-11 md:h-14.5'
+              />
+            </div>
+            {canAddDetail && (
+              <Button
+                type='button'
+                variant='add-detail'
+                size='add-detail'
+                className='hidden h-[calc(2.75rem+5px)] w-full md:h-[calc(3.625rem+5px)] lg:block lg:w-1/2'
+                onClick={handleAddDetail}
+              >
+                + 세부 계획 추가
+              </Button>
+            )}
+          </div>
 
-      {detailLines.slice(1).map((detailLine, lineIndex) => (
-        <div key={`${index}-detail-${lineIndex + 1}`} className='flex w-full flex-col gap-1.5 lg:w-1/2'>
-          <Input
-            placeholder='세부 계획을 적어주세요'
-            value={detailLine}
-            onBlur={field.onBlur}
-            onChange={(event) => updateDetailLine(lineIndex + 1, event.target.value)}
-            className='text-small-02-r md:text-body-02-r h-11 md:h-14.5'
-          />
-        </div>
-      ))}
+          {details.length > 1 && (
+            <div className='flex w-full flex-col gap-1.5 lg:w-1/2'>
+              <Input
+                placeholder='세부 계획을 적어주세요'
+                value={details[1] ?? ''}
+                onBlur={field.onBlur}
+                onChange={(event) => updateDetail(1, event.target.value)}
+                className='text-small-02-r md:text-body-02-r h-11 md:h-14.5'
+              />
+            </div>
+          )}
 
-      <Button
-        type='button'
-        variant='add-detail'
-        size='add-detail'
-        className='h-[calc(2.75rem+2px)] w-full md:h-[calc(3.625rem+2px)] lg:hidden'
-        onClick={handleAddDetailLine}
-      >
-        + 세부 계획 추가
-      </Button>
+          {canAddDetail && (
+            <Button
+              type='button'
+              variant='add-detail'
+              size='add-detail'
+              className='h-[calc(2.75rem+2px)] w-full md:h-[calc(3.625rem+2px)] lg:hidden'
+              onClick={handleAddDetail}
+            >
+              + 세부 계획 추가
+            </Button>
+          )}
+        </>
+      )}
     </div>
   );
 }
@@ -143,7 +152,7 @@ export function WeeklyPlanForm({ control, register, errors, totalWeeks }: Weekly
     const normalized = fields.map((field, index) => ({
       week: index + 1,
       title: field.title ?? '',
-      content: field.content ?? '',
+      details: field.details ?? [],
     }));
     const hasSameWeekOrder = normalized.every((item, index) => item.week === fields[index]?.week);
     if (!hasSameWeekOrder) {
@@ -188,7 +197,7 @@ export function WeeklyPlanForm({ control, register, errors, totalWeeks }: Weekly
               <WeekDetailInputs
                 control={control}
                 index={index}
-                error={guideErrors?.[index]?.content?.message as string | undefined}
+                error={guideErrors?.[index]?.details?.message as string | undefined}
               />
             </div>
           ))}

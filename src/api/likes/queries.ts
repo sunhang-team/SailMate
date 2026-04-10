@@ -44,66 +44,68 @@ interface RemoveLikeMutationContext {
 const isMyLikesListQueryKey = (key: QueryKey) => key[0] === 'likes' && key[1] === 'my';
 
 /** POST /gatherings/:gatheringId/likes — 찜 추가 */
-export const useAddLike = (options?: UseMutationOptions<void, Error, number, unknown>) => {
+export const useAddLike = (options?: UseMutationOptions<void, Error, number, { previousIds?: number[] }>) => {
   const queryClient = useQueryClient();
 
   return useMutation({
     ...options,
-    mutationFn: (gatheringId: number) => addLike(gatheringId),
-    onSettled: (...args) => {
-      void queryClient.invalidateQueries({ queryKey: likeKeys.all });
-      return options?.onSettled?.(...args);
+    onMutate: async (gatheringId) => {
+      await queryClient.cancelQueries({ queryKey: likeKeys.all });
+
+      const previousIds = queryClient.getQueryData<number[]>(likeKeys.myIds());
+
+      if (previousIds) {
+        queryClient.setQueryData<number[]>(likeKeys.myIds(), Array.from(new Set([...previousIds, gatheringId])));
+      }
+
+      return { previousIds };
+    },
+    onError: (err, variables, onMutateResult, context) => {
+      if (onMutateResult?.previousIds) {
+        queryClient.setQueryData(likeKeys.myIds(), onMutateResult.previousIds);
+      }
+      options?.onError?.(err, variables, onMutateResult, context);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: likeKeys.all });
+    },
+    onSuccess: (data, variables, onMutateResult, context) => {
+      options?.onSuccess?.(data, variables, onMutateResult, context);
     },
   });
 };
 
-/** DELETE /gatherings/:gatheringId/likes — 찜 취소 (낙관적 업데이트) */
-export const useRemoveLike = (options?: UseMutationOptions<void, Error, number, RemoveLikeMutationContext>) => {
+/** DELETE /gatherings/:gatheringId/likes — 찜 취소 */
+export const useRemoveLike = (options?: UseMutationOptions<void, Error, number, { previousIds?: number[] }>) => {
   const queryClient = useQueryClient();
 
   return useMutation({
     ...options,
-    mutationFn: (gatheringId: number) => removeLike(gatheringId),
     onMutate: async (gatheringId) => {
       await queryClient.cancelQueries({ queryKey: likeKeys.all });
 
-      const previousMy = queryClient.getQueriesData<GetMyLikesResponse>({
-        predicate: (q) => isMyLikesListQueryKey(q.queryKey),
-      });
+      const previousIds = queryClient.getQueryData<number[]>(likeKeys.myIds());
 
-      const previousIds = queryClient.getQueryData<GetMyLikeIdsResponse>(likeKeys.myIds());
-
-      queryClient.setQueriesData<GetMyLikesResponse>({ predicate: (q) => isMyLikesListQueryKey(q.queryKey) }, (old) => {
-        if (!old) return old;
-        const nextGatherings = old.gatherings.filter((g) => g.id !== gatheringId);
-        return {
-          ...old,
-          gatherings: nextGatherings,
-          totalCount: Math.max(0, old.totalCount - 1),
-        };
-      });
-
-      queryClient.setQueryData<GetMyLikeIdsResponse>(likeKeys.myIds(), (old) =>
-        old ? old.filter((id) => id !== gatheringId) : old,
-      );
-
-      return { previousMy, previousIds };
-    },
-    onError: (...args) => {
-      const context = args[2] as RemoveLikeMutationContext | undefined;
-      if (context?.previousMy) {
-        for (const [key, data] of context.previousMy) {
-          queryClient.setQueryData(key, data);
-        }
+      if (previousIds) {
+        queryClient.setQueryData<number[]>(
+          likeKeys.myIds(),
+          previousIds.filter((id) => id !== gatheringId),
+        );
       }
-      if (context?.previousIds !== undefined) {
-        queryClient.setQueryData(likeKeys.myIds(), context.previousIds);
-      }
-      options?.onError?.(...args);
+
+      return { previousIds };
     },
-    onSettled: (...args) => {
-      void queryClient.invalidateQueries({ queryKey: likeKeys.all });
-      return options?.onSettled?.(...args);
+    onError: (err, variables, onMutateResult, context) => {
+      if (onMutateResult?.previousIds) {
+        queryClient.setQueryData(likeKeys.myIds(), onMutateResult.previousIds);
+      }
+      options?.onError?.(err, variables, onMutateResult, context);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: likeKeys.all });
+    },
+    onSuccess: (data, variables, onMutateResult, context) => {
+      options?.onSuccess?.(data, variables, onMutateResult, context);
     },
   });
 };

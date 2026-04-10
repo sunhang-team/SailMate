@@ -34,7 +34,7 @@ export function MyGatheringCard({ gathering, members = [], onClick, className }:
   const dDayText = dDay > 0 ? `D-${dDay}` : dDay === 0 ? 'D-Day' : `D+${Math.abs(dDay)}`;
 
   return (
-    <GatheringCard onClick={onClick} className={cn('w-full cursor-pointer', className)}>
+    <GatheringCard onClick={onClick} className={cn('flex h-full cursor-pointer flex-col', className)}>
       <GatheringCard.Header className='items-center'>
         <Tag
           variant='category'
@@ -47,7 +47,7 @@ export function MyGatheringCard({ gathering, members = [], onClick, className }:
         />
         <AvatarGroup max={4} avatars={members.map((m) => ({ id: m.userId, imageUrl: m.profileImage }))} size='sm' />
       </GatheringCard.Header>
-      <GatheringCard.Body>
+      <GatheringCard.Body className='flex-1'>
         <div className='flex flex-col gap-0.5'>
           <div>
             <div className='flex gap-1'>
@@ -57,7 +57,7 @@ export function MyGatheringCard({ gathering, members = [], onClick, className }:
                 </div>
               ))}
             </div>
-            <div className='text-body-01-b text-gray-900'>{gathering.title}</div>
+            <div className='text-body-01-b line-clamp-2 text-gray-900'>{gathering.title}</div>
           </div>
         </div>
         <div className='mb-1.5 flex gap-1'>
@@ -66,9 +66,9 @@ export function MyGatheringCard({ gathering, members = [], onClick, className }:
             목표 {dDayText}
           </Tag>
         </div>
-        <div className='border-gray-150 mb-4.5 border'></div>
       </GatheringCard.Body>
-      <GatheringCard.Footer className='flex-col gap-1'>
+      <GatheringCard.Footer className='mt-auto flex-col gap-1'>
+        <div className='border-gray-150 my-4 border'></div>
         <ProgressBar value={progressRate} label='달성률' />
       </GatheringCard.Footer>
     </GatheringCard>
