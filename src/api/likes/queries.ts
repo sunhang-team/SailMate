@@ -1,6 +1,6 @@
 import { queryOptions, useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { getMyLikeIds, getMyLikes, addLike, removeLike } from './index';
+import { getAllMyLikes, getMyLikeIds, getMyLikes, addLike, removeLike } from './index';
 
 import type { UseMutationOptions } from '@tanstack/react-query';
 import type { GetMyLikesParams } from './types';
@@ -9,6 +9,7 @@ export const likeKeys = {
   all: ['likes'] as const,
   myIds: () => [...likeKeys.all, 'myIds'] as const,
   my: (params?: GetMyLikesParams) => [...likeKeys.all, 'my', params ?? {}] as const,
+  myAll: () => [...likeKeys.all, 'myAll'] as const,
 };
 
 export const likeQueries = {
@@ -25,6 +26,13 @@ export const likeQueries = {
       queryKey: likeKeys.my(params),
       queryFn: () => getMyLikes(params),
     }),
+
+  /** 클라이언트 필터/정렬용 — 페이지를 이어 받아 전체 찜 목록 */
+  myAll: () =>
+    queryOptions({
+      queryKey: likeKeys.myAll(),
+      queryFn: () => getAllMyLikes(),
+    }),
 };
 
 /** POST /gatherings/:gatheringId/likes — 찜 추가 */
@@ -32,8 +40,8 @@ export const useAddLike = (options?: UseMutationOptions<void, Error, number, { p
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (gatheringId: number) => addLike(gatheringId),
     ...options,
+    mutationFn: (gatheringId: number) => addLike(gatheringId),
     onMutate: async (gatheringId) => {
       await queryClient.cancelQueries({ queryKey: likeKeys.all });
 
@@ -65,8 +73,8 @@ export const useRemoveLike = (options?: UseMutationOptions<void, Error, number, 
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (gatheringId: number) => removeLike(gatheringId),
     ...options,
+    mutationFn: (gatheringId: number) => removeLike(gatheringId),
     onMutate: async (gatheringId) => {
       await queryClient.cancelQueries({ queryKey: likeKeys.all });
 

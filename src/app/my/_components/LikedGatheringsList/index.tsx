@@ -1,33 +1,36 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useEffect, useState, useTransition } from 'react';
 
 import { useSuspenseQuery } from '@tanstack/react-query';
 
-import { cn } from '@/lib/cn';
+import { likeQueries, useRemoveLike } from '@/api/likes/queries';
 import { Dropdown } from '@/components/ui/Dropdown';
 import { useDropdown } from '@/components/ui/Dropdown/context';
 import { ArrowIcon } from '@/components/ui/Icon/ArrowIcon';
 import { CheckIcon } from '@/components/ui/Icon/CheckIcon';
 import { Pagination } from '@/components/ui/Pagination';
-import { membershipQueries } from '@/api/memberships/queries';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
+import { cn } from '@/lib/cn';
+import { getGatheringDisplayStatus } from '@/lib/gatheringStatus';
 
-import { MyGatheringsCard } from '../MyGatheringsCard';
+import { LikedGatheringCard } from '../LikedGatheringCard';
 
-import type { GatheringStatusFilter } from '@/api/memberships/types';
+import type { GatheringListItem } from '@/api/gatherings/types';
 
 type SortOrder = 'latest' | 'oldest';
-type MyStatusFilter = Extract<GatheringStatusFilter, 'all' | 'in_progress' | 'completed'>;
+
+type LikedDisplayStatusFilter = 'all' | 'recruiting' | 'progressing' | 'completed';
 
 const SORT_OPTIONS: { label: string; value: SortOrder }[] = [
   { label: '최신순', value: 'latest' },
   { label: '과거순', value: 'oldest' },
 ];
 
-const STATUS_OPTIONS: { label: string; value: MyStatusFilter }[] = [
+const STATUS_OPTIONS: { label: string; value: LikedDisplayStatusFilter }[] = [
   { label: '전체', value: 'all' },
-  { label: '진행중', value: 'in_progress' },
+  { label: '모집중', value: 'recruiting' },
+  { label: '진행중', value: 'progressing' },
   { label: '진행완료', value: 'completed' },
 ];
 
@@ -44,32 +47,49 @@ function RotatingArrow() {
   );
 }
 
-export function MyGatheringsList() {
+const matchesStatusFilter = (gathering: GatheringListItem, status: LikedDisplayStatusFilter) => {
+  if (status === 'all') return true;
+  const display = getGatheringDisplayStatus({
+    status: gathering.status,
+    currentMembers: gathering.currentMembers,
+    maxMembers: gathering.maxMembers,
+    startDate: gathering.startDate,
+    endDate: gathering.endDate,
+    recruitDeadline: gathering.recruitDeadline,
+  });
+  return display.tagState === status;
+};
+
+export function LikedGatheringsList() {
   const isLg = useMediaQuery('(min-width: 1024px)');
   const limit = isLg ? 6 : 5;
 
-  const [status, setStatus] = useState<MyStatusFilter>('all');
+  const [status, setStatus] = useState<LikedDisplayStatusFilter>('all');
   const [sort, setSort] = useState<SortOrder>('latest');
   const [page, setPage] = useState(1);
   const [isPending, startTransition] = useTransition();
 
-  // status=all: API가 RECRUITING 포함 반환 → 서버 totalPages 신뢰 불가
-  // → 전체를 한 번에 받아(limit=999) 클라이언트에서 필터/페이지네이션
-  // status=in_progress|completed: 서버 필터 정확 → 서버 페이지네이션 그대로 사용
-  const isAll = status === 'all';
-  const { data } = useSuspenseQuery(
-    membershipQueries.my({ status, page: isAll ? 1 : page, limit: isAll ? 999 : limit }),
-  );
+  const { data } = useSuspenseQuery(likeQueries.myAll());
 
-  const filtered = isAll ? data.gatherings.filter((g) => g.status !== 'RECRUITING') : data.gatherings;
+  const removeLikeMutation = useRemoveLike();
+
+  const filtered = data.gatherings.filter((g) => matchesStatusFilter(g, status));
   const sorted = [...filtered].sort((a, b) => {
     const diff = new Date(a.startDate).getTime() - new Date(b.startDate).getTime();
     return sort === 'latest' ? -diff : diff;
   });
-  const totalPages = isAll ? Math.max(1, Math.ceil(sorted.length / limit)) : data.totalPages;
-  const paged = isAll ? sorted.slice((page - 1) * limit, page * limit) : sorted;
 
-  const handleFilterChange = (next: Partial<{ status: MyStatusFilter; sort: SortOrder }>) => {
+  const totalPages = Math.max(1, Math.ceil(sorted.length / limit));
+  const displayPage = Math.min(page, totalPages);
+  const paged = sorted.slice((displayPage - 1) * limit, displayPage * limit);
+
+  useEffect(() => {
+    if (page > totalPages) {
+      startTransition(() => setPage(totalPages));
+    }
+  }, [page, totalPages, startTransition]);
+
+  const handleFilterChange = (next: Partial<{ status: LikedDisplayStatusFilter; sort: SortOrder }>) => {
     if (next.sort !== undefined) {
       setSort(next.sort);
       return;
@@ -102,7 +122,7 @@ export function MyGatheringsList() {
                     onClick={() => handleFilterChange({ sort: option.value })}
                     className={cn(
                       'text-small-02-r md:text-body-02-r flex cursor-pointer items-center gap-0.5',
-                      isSelected ? 'font-semibold text-gray-800' : 'text-gray-500',
+                      isSelected ? 'text-small-02-sb md:text-body-02-sb text-gray-800' : 'text-gray-500',
                     )}
                   >
                     <CheckIcon size={16} className={cn('md:size-6', !isSelected && 'hidden')} />
@@ -143,12 +163,17 @@ export function MyGatheringsList() {
 
       {paged.length === 0 ? (
         <div className='flex h-40 items-center justify-center'>
-          <p className='text-body-02-r text-gray-400'>참여한 모임이 없습니다.</p>
+          <p className='text-body-02-r text-gray-400'>찜한 모임이 없습니다.</p>
         </div>
       ) : (
         <div className={cn('grid grid-cols-1 gap-4 xl:grid-cols-2', isPending && 'opacity-50')}>
           {paged.map((gathering) => (
-            <MyGatheringsCard key={gathering.id} gathering={gathering} />
+            <LikedGatheringCard
+              key={gathering.id}
+              gathering={gathering}
+              onUnlike={() => removeLikeMutation.mutate(gathering.id)}
+              isUnlikePending={removeLikeMutation.isPending && removeLikeMutation.variables === gathering.id}
+            />
           ))}
         </div>
       )}
@@ -156,10 +181,10 @@ export function MyGatheringsList() {
       {totalPages > 1 && (
         <Pagination
           variant='numbered'
-          currentPage={page}
+          currentPage={displayPage}
           totalPages={totalPages}
           onPageChange={(p) => startTransition(() => setPage(p))}
-          className='mt-12'
+          className='mt-15 mb-30 md:mt-20 md:mb-40 lg:mb-41.5'
         />
       )}
     </div>

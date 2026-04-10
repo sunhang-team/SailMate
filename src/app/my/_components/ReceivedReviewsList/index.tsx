@@ -66,7 +66,7 @@ function ReceivedReviewsContent({ userId }: ReceivedReviewsContentProps) {
   const totalPages = Math.max(1, Math.ceil(reviewsWithComment.length / pageSize));
 
   return (
-    <div className='mt-6 flex flex-col gap-6'>
+    <div className='mt-8 flex flex-col gap-6 md:mt-10 lg:mt-11'>
       <ActivityEnergyCard matesTagCounts={matesTagCounts} />
       <KeywordSummaryCard reviews={reviews} />
       <div className='border-gray-150 bg-gray-0 shadow-02 flex flex-col gap-4 rounded-lg border p-6'>
@@ -82,6 +82,7 @@ function ReceivedReviewsContent({ userId }: ReceivedReviewsContentProps) {
           currentPage={page}
           totalPages={totalPages}
           onPageChange={(p) => startTransition(() => setPage(p))}
+          className='mt-12'
         />
       )}
     </div>
