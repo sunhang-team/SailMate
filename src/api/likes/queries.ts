@@ -40,8 +40,8 @@ export const useAddLike = (options?: UseMutationOptions<void, Error, number, { p
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (gatheringId: number) => addLike(gatheringId),
     ...options,
+    mutationFn: (gatheringId: number) => addLike(gatheringId),
     onMutate: async (gatheringId) => {
       await queryClient.cancelQueries({ queryKey: likeKeys.all });
 
@@ -73,8 +73,8 @@ export const useRemoveLike = (options?: UseMutationOptions<void, Error, number, 
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (gatheringId: number) => removeLike(gatheringId),
     ...options,
+    mutationFn: (gatheringId: number) => removeLike(gatheringId),
     onMutate: async (gatheringId) => {
       await queryClient.cancelQueries({ queryKey: likeKeys.all });
 
