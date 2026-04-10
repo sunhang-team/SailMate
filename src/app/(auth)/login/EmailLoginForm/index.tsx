@@ -22,10 +22,10 @@ export function EmailLoginForm() {
     register,
     handleSubmit,
     setError,
-    formState: { errors, isValid },
+    formState: { errors, isValid, submitCount, touchedFields },
   } = useForm<LoginForm>({
     resolver: zodResolver(loginFormSchema),
-    mode: 'onBlur',
+    mode: 'onChange',
   });
 
   const { mutate: loginMutate, isPending } = useLogin({
@@ -34,6 +34,8 @@ export function EmailLoginForm() {
   });
 
   const onSubmit = (data: LoginForm) => loginMutate(data);
+  const showEmailError = !!touchedFields.email || submitCount > 0;
+  const showPasswordError = !!touchedFields.password || submitCount > 0;
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-8'>
@@ -46,7 +48,7 @@ export function EmailLoginForm() {
         }
         placeholder='이메일을 입력해주세요'
         type='email'
-        error={errors.email?.message}
+        error={showEmailError ? errors.email?.message : undefined}
         {...register('email')}
         className='h-11'
       />
@@ -60,7 +62,7 @@ export function EmailLoginForm() {
           }
           placeholder='영문, 숫자, 특수문자 포함 8자 이상 입력해주세요'
           type={showPassword ? 'text' : 'password'}
-          error={errors.password?.message}
+          error={showPasswordError ? errors.password?.message : undefined}
           {...register('password')}
           className='h-11'
         />
