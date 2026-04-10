@@ -40,8 +40,8 @@ export function Header() {
 
   return (
     <>
-      <header className='border-gray-150 bg-gray-0 h-[88px] border-b px-15 max-lg:h-[56px] max-lg:px-4'>
-        <div className='mx-auto flex h-full w-full max-w-[1200px] items-center justify-between'>
+      <header className='border-gray-150 bg-gray-0 h-[88px] border-b max-lg:h-[56px] max-lg:px-4 md:px-7 xl:px-30'>
+        <div className='flex h-full w-full items-center justify-between'>
           <div className='flex items-center gap-20'>
             <Link href='/'>
               <Image
