@@ -100,12 +100,17 @@ export const useLogout = (options?: UseMutationOptions<void, Error, void, unknow
 
 /** GET /auth/{provider}/callback — 소셜 로그인 콜백 */
 export const useSocialLoginCallback = (
-  options?: UseMutationOptions<OAuthCallbackResponse, Error, { provider: string; code: string }, unknown>,
+  options?: UseMutationOptions<
+    OAuthCallbackResponse,
+    Error,
+    { provider: string; code: string; redirectUri: string },
+    unknown
+  >,
 ) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ provider, code }) => socialLoginCallback(provider, code),
+    mutationFn: ({ provider, code, redirectUri }) => socialLoginCallback(provider, code, redirectUri),
     ...options,
     onSuccess: (...args) => {
       queryClient.invalidateQueries({ queryKey: userKeys.me() });

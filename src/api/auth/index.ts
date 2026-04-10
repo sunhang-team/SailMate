@@ -44,10 +44,15 @@ export const checkNickname = async (nickname: string): Promise<CheckAvailability
   return unwrapResponse(data);
 };
 
-/** GET /v1/auth/{provider}/callback — 소셜 로그인 콜백 */
-export const socialLoginCallback = async (provider: string, code: string): Promise<OAuthCallbackResponse> => {
-  const { data } = await axiosClient.get<ApiResponse<OAuthCallbackResponse>>(`/v1/auth/${provider}/callback`, {
-    params: { code },
+/** POST /v1/auth/{provider}/callback — 소셜 로그인 콜백 */
+export const socialLoginCallback = async (
+  provider: string,
+  code: string,
+  redirectUri: string,
+): Promise<OAuthCallbackResponse> => {
+  const { data } = await axiosClient.post<ApiResponse<OAuthCallbackResponse>>(`/v1/auth/${provider}/callback`, {
+    code,
+    redirectUri,
   });
   return unwrapResponse(data);
 };

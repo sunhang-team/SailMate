@@ -13,44 +13,50 @@ export function OAuthCallbackClient() {
   const code = searchParams.get('code');
   const { showToast } = useToastStore();
 
-  const { mutate: loginCallback, isPending } = useSocialLoginCallback();
+  const { mutate: loginCallback, isPending } = useSocialLoginCallback({
+    onSuccess: (data) => {
+      console.log('[OAuth 성공 응답 데이터]:', data);
+      // 신규 유저인 경우 무조건 메인으로 이동
+      if (data.newUser) {
+        router.replace('/main');
+      } else {
+        // 기존 유저인 경우 이전 페이지(returnTo)가 있다면 해당 페이지로, 없다면 메인으로 이동
+        const returnTo = sessionStorage.getItem('returnTo');
+        if (returnTo) {
+          router.replace(returnTo);
+          sessionStorage.removeItem('returnTo');
+        } else {
+          router.replace('/main');
+        }
+      }
+    },
+    onError: (error) => {
+      console.error('[OAuth 실패 에러]:', error);
+      showToast({
+        variant: 'error',
+        title: '로그인에 실패했습니다.',
+        description: '다시 시도해 주세요.',
+      });
+      router.replace('/login');
+    },
+  });
+
   const hasCalled = useRef(false);
 
   useEffect(() => {
     if (!code || !provider || hasCalled.current) return;
 
-    hasCalled.current = true;
+    // React 18 StrictMode의 더블 마운트로 인한 중복 호출 방지를 위해 sessionStorage 사용
+    const processedCodeKey = `processed_code_${code}`;
+    if (sessionStorage.getItem(processedCodeKey)) return;
 
-    loginCallback(
-      { provider, code },
-      {
-        onSuccess: (data) => {
-          // 신규 유저인 경우 무조건 메인으로 이동
-          if (data.newUser) {
-            router.replace('/main');
-          } else {
-            // 기존 유저인 경우 이전 페이지(returnTo)가 있다면 해당 페이지로, 없다면 메인으로 이동
-            const returnTo = sessionStorage.getItem('returnTo');
-            if (returnTo) {
-              router.replace(returnTo);
-              sessionStorage.removeItem('returnTo');
-            } else {
-              router.replace('/main');
-            }
-          }
-        },
-        onError: (error) => {
-          console.error('소셜 로그인 실패:', error);
-          showToast({
-            variant: 'error',
-            title: '로그인에 실패했습니다.',
-            description: '다시 시도해 주세요.',
-          });
-          router.replace('/login');
-        },
-      },
-    );
-  }, [code, provider, loginCallback, router, showToast]);
+    hasCalled.current = true;
+    sessionStorage.setItem(processedCodeKey, 'true');
+
+    const redirectUri = `${window.location.origin}${window.location.pathname}`;
+
+    loginCallback({ provider, code, redirectUri });
+  }, [code, provider, loginCallback]);
 
   return (
     <div className='flex min-h-screen flex-col items-center justify-center p-4 text-center'>
