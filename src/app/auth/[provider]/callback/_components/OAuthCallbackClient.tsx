@@ -26,7 +26,7 @@ export function OAuthCallbackClient() {
       {
         onSuccess: (data) => {
           // 신규 유저인 경우 무조건 메인으로 이동
-          if (data.isNewUser) {
+          if (data.newUser) {
             router.replace('/main');
           } else {
             // 기존 유저인 경우 이전 페이지(returnTo)가 있다면 해당 페이지로, 없다면 메인으로 이동
