@@ -107,6 +107,7 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
   const recruitDeadlineValue = watch('recruitDeadline');
   const startDateValue = watch('startDate');
   const endDateValue = watch('endDate');
+  const weeklyGuidesValue = watch('weeklyGuides') ?? [];
   const totalWeeks = useMemo(() => {
     if (!startDateValue || !endDateValue) return 0;
 
@@ -117,6 +118,9 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
 
     return Math.max(1, differenceInWeeks(endDate, startDate));
   }, [endDateValue, startDateValue]);
+
+  const isWeeklyGuidesComplete =
+    weeklyGuidesValue.length > 0 && weeklyGuidesValue.every((guide) => Boolean(guide?.title?.trim()));
 
   const isFormComplete =
     !!typeValue &&
@@ -131,7 +135,8 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
     maxMembersValue <= 10 &&
     !!recruitDeadlineValue &&
     !!startDateValue &&
-    !!endDateValue;
+    !!endDateValue &&
+    isWeeklyGuidesComplete;
 
   const onSubmit = (data: GatheringForm) => {
     mutate(data, {
@@ -384,7 +389,7 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
             <Input
               type='number'
               min={2}
-              max={20}
+              max={10}
               label={
                 <span className='text-small-02-m md:text-body-02-m lg:text-body-01-m text-gray-800'>모집 인원</span>
               }

@@ -7,7 +7,7 @@ const dateStringSchema = (requiredMessage: string) =>
 /** 주차별 가이드 스키마 (모임 생성 폼용) */
 export const weeklyGuideSchema = z.object({
   week: z.number().min(1, '주차는 1 이상이어야 합니다.'),
-  title: z.string().max(100, '제목은 최대 100자까지 가능합니다.').optional().or(z.literal('')),
+  title: z.string().min(1, '제목을 입력해주세요.').max(100, '제목은 최대 100자까지 가능합니다.'),
   details: z
     .array(z.string().max(200, '세부 계획은 200자 이하여야 합니다.'))
     .max(2, '세부 계획은 최대 2개까지 입력할 수 있습니다.')
@@ -44,7 +44,7 @@ const gatheringFormBaseSchema = z.object({
   recruitDeadline: dateStringSchema('모집 마감일을 선택해주세요.'),
   startDate: dateStringSchema('모임 시작일을 선택해주세요.'),
   endDate: dateStringSchema('모임 종료일을 선택해주세요.'),
-  weeklyGuides: z.array(weeklyGuideSchema).optional(),
+  weeklyGuides: z.array(weeklyGuideSchema).min(1, '최소 1주차 계획은 입력해 주세요.'),
   images: z
     .array(z.instanceof(File, { message: '유효한 파일이 아닙니다.' }))
     .max(6, '이미지는 최대 6장까지 업로드 가능합니다.')
