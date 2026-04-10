@@ -15,7 +15,7 @@ export const weeklyGuideSchema = z.object({
 });
 
 /** 모임 생성/수정 폼 공통 필드 (cross-field 검증 전 base) */
-const gatheringFormBaseSchema = z.object({
+export const gatheringFormBaseSchema = z.object({
   type: z.enum(['스터디', '프로젝트'], {
     message: '모임 유형을 지정해 주세요.',
   }),
