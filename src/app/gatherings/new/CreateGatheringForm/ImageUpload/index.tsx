@@ -87,7 +87,7 @@ export function ImageUpload({ value, onChange, error }: ImageUploadProps) {
   const openFilePicker = () => fileInputRef.current?.click();
 
   const hasImages = value.length > 0;
-  const emptySlotCount = MAX_IMAGES - value.length;
+  const emptySlotCount = value.length < MAX_IMAGES ? 1 : 0;
 
   return (
     <div className='flex flex-col gap-1.5'>
@@ -128,8 +128,8 @@ export function ImageUpload({ value, onChange, error }: ImageUploadProps) {
         /* ── 1장 이상: 썸네일 + 빈 슬롯 ── */
         <div
           className={cn(
-            'flex flex-row gap-2 overflow-x-auto rounded-lg md:flex-wrap md:overflow-x-visible',
-            isDragging && 'outline-2 outline-blue-300 outline-dashed',
+            'flex flex-row gap-2 overflow-x-auto rounded-lg border border-dashed border-gray-300 bg-gray-100 p-3 md:flex-wrap md:overflow-x-visible',
+            isDragging && 'border-blue-300',
           )}
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
