@@ -331,3 +331,9 @@
   outline: none;
   box-shadow: none;
 }
+
+/* Edge/IE: password reveal(눈) 아이콘 숨김 */
+input[type='password']::-ms-reveal,
+input[type='password']::-ms-clear {
+  display: none;
+}
