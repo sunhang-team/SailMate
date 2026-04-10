@@ -1,7 +1,8 @@
 import { z } from 'zod';
 
 /** 날짜 문자열 스키마 (YYYY-MM-DD) */
-const dateStringSchema = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, '날짜 형식이 올바르지 않습니다. (YYYY-MM-DD)');
+const dateStringSchema = (requiredMessage: string) =>
+  z.string({ error: requiredMessage }).regex(/^\d{4}-\d{2}-\d{2}$/, '날짜 형식이 올바르지 않습니다. (YYYY-MM-DD)');
 
 /** 주차별 가이드 스키마 (모임 생성 폼용) */
 export const weeklyGuideSchema = z.object({
@@ -36,10 +37,13 @@ export const gatheringFormSchema = z.object({
     .max(10, '태그는 최대 10개까지 가능합니다.')
     .optional(),
   goal: z.string().min(1, '모임 목표를 입력해 주세요.').max(200, '모임 목표는 최대 200자까지 가능합니다.'),
-  maxMembers: z.number().min(2, '최소 2명 이상이어야 합니다.').max(20, '최대 20명 이하이어야 합니다.'),
-  recruitDeadline: dateStringSchema,
-  startDate: dateStringSchema,
-  endDate: dateStringSchema,
+  maxMembers: z
+    .number({ error: '모집 인원을 입력해주세요.' })
+    .min(2, '최소 2명 이상이어야 합니다.')
+    .max(10, '최대 10명 이하이어야 합니다.'),
+  recruitDeadline: dateStringSchema('모집 마감일을 선택해주세요.'),
+  startDate: dateStringSchema('모임 시작일을 선택해주세요.'),
+  endDate: dateStringSchema('모임 종료일을 선택해주세요.'),
   weeklyGuides: z.array(weeklyGuideSchema).min(1, '최소 1주차 계획은 입력해 주세요.'),
   images: z
     .array(z.instanceof(File, { message: '유효한 파일이 아닙니다.' }))
