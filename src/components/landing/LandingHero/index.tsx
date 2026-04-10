@@ -5,45 +5,100 @@ import { LANDING_IMAGES, LANDING_LINKS } from '@/components/landing/landingConst
 import { buttonVariants } from '@/components/ui/Button';
 import { cn } from '@/lib/cn';
 
+/**
+ * Hero 배경 그라데이션 blob 위치/크기 (Figma node 52-24498 기준)
+ *
+ * 원본 캔버스 1920x992 위에서 blob 레이어가 (-73, 132) 위치에 2169x1087 크기로 배치되어
+ * 섹션을 살짝 overflow하는 형태. 모든 값은 상위 섹션 대비 % 비율로 환산하여 viewport 독립적으로 동작.
+ */
+const HERO_BLOB_LAYER = {
+  width: '113.0%',
+  height: '109.6%',
+  left: '-3.8%',
+  top: '13.3%',
+} as const;
+
+const BLUE_BLOB_GRADIENT = 'bg-[radial-gradient(ellipse_50%_50%_at_50%_50%,_#3779FE_0%,_rgba(55,121,254,0)_100%)]';
+const CYAN_BLOB_GRADIENT = 'bg-[radial-gradient(ellipse_50%_50%_at_50%_50%,_#00CCFF_0%,_rgba(0,204,255,0)_100%)]';
+
+interface HeroBlob {
+  gradientClass: string;
+  opacityClass: string;
+  width: string;
+  height: string;
+  left: string;
+  top: string;
+}
+
+const HERO_BLOBS: readonly HeroBlob[] = [
+  {
+    gradientClass: BLUE_BLOB_GRADIENT,
+    opacityClass: 'opacity-30',
+    width: '61.23%',
+    height: '69.83%',
+    left: '38.77%',
+    top: '27.78%',
+  },
+  {
+    gradientClass: BLUE_BLOB_GRADIENT,
+    opacityClass: 'opacity-30',
+    width: '54.82%',
+    height: '79.39%',
+    left: '3.37%',
+    top: '3.59%',
+  },
+  {
+    gradientClass: CYAN_BLOB_GRADIENT,
+    opacityClass: 'opacity-20',
+    width: '50.30%',
+    height: '59.89%',
+    left: '0%',
+    top: '40.11%',
+  },
+  {
+    gradientClass: CYAN_BLOB_GRADIENT,
+    opacityClass: 'opacity-20',
+    width: '52.79%',
+    height: '84.99%',
+    left: '39.10%',
+    top: '0%',
+  },
+];
+
 export function LandingHero() {
   return (
-    <section className='relative h-[512px] w-full overflow-hidden md:h-[738px] lg:h-[992px]'>
-      <div className='pointer-events-none absolute inset-0' aria-hidden>
-        <div className='relative hidden h-full w-full lg:block'>
-          <Image src={LANDING_IMAGES.heroImagePC} alt='' fill className='object-cover' priority sizes='100vw' />
-        </div>
-
-        <div className='relative hidden h-full w-full md:block lg:hidden'>
-          <Image src={LANDING_IMAGES.heroImageTablet} alt='' fill className='object-cover' priority sizes='100vw' />
-        </div>
-
-        <div className='relative block h-full w-full md:hidden'>
-          <Image
-            src={LANDING_IMAGES.heroImageMobile}
-            alt=''
-            fill
-            className='object-cover object-top'
-            priority
-            sizes='100vw'
+    <section className='relative h-[512px] w-full overflow-hidden bg-[linear-gradient(180deg,#F1F8FF_0%,#DFEFFF_100%)] sm:h-[640px] md:h-[738px] lg:h-[992px]'>
+      <div className='pointer-events-none absolute' style={HERO_BLOB_LAYER} aria-hidden>
+        {HERO_BLOBS.map((blob, index) => (
+          <div
+            key={index}
+            className={cn('absolute', blob.gradientClass, blob.opacityClass)}
+            style={{ width: blob.width, height: blob.height, left: blob.left, top: blob.top }}
           />
-        </div>
+        ))}
+      </div>
+
+      <div
+        className='pointer-events-none absolute inset-x-0 bottom-0 mx-auto flex w-full max-w-[440px] justify-center sm:max-w-[560px] md:max-w-[820px] lg:max-w-[1200px]'
+        aria-hidden
+      >
+        <Image
+          src={LANDING_IMAGES.heroImagePC}
+          alt=''
+          width={1200}
+          height={700}
+          priority
+          className='h-auto w-full object-contain'
+          sizes='(max-width: 640px) 440px, (max-width: 768px) 560px, (max-width: 1024px) 820px, 1200px'
+        />
       </div>
 
       <div className='relative mx-auto w-full px-10 pt-[80px] md:px-36 md:pt-16 md:pb-20 lg:pt-20 lg:pb-24'>
-        {/* 예시처럼: 상단 카피/버튼, 하단 노트북 이미지 */}
         <div className='flex flex-col items-center text-center'>
-          <h1 className='text-gradient-primary lg:text-h1-b md:text-h2-b text-h4-b'>더 높은 완성도를 향한 항해</h1>
-          <p className='md:text-body-02-r lg:text-body-01-r mt-6 hidden break-keep text-gray-800 md:block md:max-w-[456px] lg:max-w-[569px]'>
-            사이드 프로젝트와 스터디 팀을 만들고 목표를 관리하는 가장 확실한 방법.
-            <br />
-            매주 목표를 완성하며 &apos;완성&apos;이라는 섬에 도착하세요.
-          </p>
-
-          {/* 💡 4. 모바일용 텍스트 (PC에서는 숨김) -> 여기서 '만들고' 뒤에 완벽하게 줄바꿈! */}
-          <p className='text-small-02-r mt-6 block break-keep text-gray-800 md:hidden'>
+          <h1 className='text-h4-b md:text-h2-b lg:text-h1-b text-gradient-primary'>더 높은 완성도를 향한 항해</h1>
+          <p className='text-small-02-r md:text-body-02-r lg:text-body-01-r mt-6 break-keep text-gray-800 md:max-w-[456px] lg:max-w-[569px]'>
             사이드 프로젝트와 스터디 팀을 만들고
-            <br />
-            목표를 관리하는 가장 확실한 방법.
+            <br className='md:hidden' /> 목표를 관리하는 가장 확실한 방법.
             <br />
             매주 목표를 완성하며 &apos;완성&apos;이라는 섬에 도착하세요.
           </p>
