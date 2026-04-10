@@ -128,7 +128,7 @@ export function ImageUpload({ value, onChange, error }: ImageUploadProps) {
         /* ── 1장 이상: 썸네일 + 빈 슬롯 ── */
         <div
           className={cn(
-            'flex flex-row gap-2 overflow-x-auto rounded-lg border border-dashed border-gray-300 bg-gray-100 p-3 md:flex-wrap md:overflow-x-visible',
+            'flex flex-row gap-2 overflow-x-auto rounded-lg border border-dashed border-gray-300 bg-gray-100 px-1 py-3 md:flex-wrap md:overflow-x-visible',
             isDragging && 'border-blue-300',
           )}
           onDragOver={handleDragOver}
