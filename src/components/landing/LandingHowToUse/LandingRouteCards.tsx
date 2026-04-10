@@ -95,9 +95,7 @@ function RouteStepCard({
           return (
             <div key={item.label} className='flex items-center gap-3 text-gray-700'>
               <Icon size={44} className='shrink-0' />
-              <span className='lg:text-body-01-sb md:text-body-02-sb text-small-02-sb max-md:text-small-01-sb'>
-                {item.label}
-              </span>
+              <span className='text-small-01-sb md:text-body-02-sb lg:text-body-01-sb'>{item.label}</span>
             </div>
           );
         })}

@@ -21,7 +21,7 @@ export function LandingCoreFeatures() {
                   <Tag variant='coreFeature'>{item.featureLabel}</Tag>
                   <div>
                     <h3 className='text-body-01-b md:text-h5-b lg:text-h4-b break-keep text-gray-800'>{item.title}</h3>
-                    <div className='text-small-02-r lg:text-body-02-r md:text-body-01-r flex flex-1 flex-col gap-1 text-gray-700'>
+                    <div className='text-small-02-r md:text-body-01-r lg:text-body-02-r flex flex-1 flex-col gap-1 text-gray-700'>
                       {item.description.map((line) => (
                         <p key={line}>{line}</p>
                       ))}
