@@ -78,14 +78,17 @@ export function LandingHero() {
         ))}
       </div>
 
-      <div className='pointer-events-none absolute inset-x-0 bottom-0 flex justify-center' aria-hidden>
+      <div
+        className='pointer-events-none absolute inset-x-0 bottom-0 mx-auto flex w-full max-w-[440px] justify-center sm:max-w-[560px] md:max-w-[820px] lg:max-w-[1200px]'
+        aria-hidden
+      >
         <Image
           src={LANDING_IMAGES.heroImagePC}
           alt=''
-          width={2400}
-          height={1400}
+          width={1200}
+          height={700}
           priority
-          className='h-auto w-full max-w-[440px] object-contain sm:max-w-[560px] md:max-w-[820px] lg:max-w-[1200px]'
+          className='h-auto w-full object-contain'
           sizes='(max-width: 640px) 440px, (max-width: 768px) 560px, (max-width: 1024px) 820px, 1200px'
         />
       </div>
