@@ -69,7 +69,7 @@ export function LikedGatheringsList() {
   const [page, setPage] = useState(1);
   const [isPending, startTransition] = useTransition();
 
-  const { data } = useSuspenseQuery(likeQueries.myFull());
+  const { data } = useSuspenseQuery(likeQueries.myAll());
 
   const removeLikeMutation = useRemoveLike();
 
