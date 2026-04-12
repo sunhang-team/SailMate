@@ -169,7 +169,7 @@ export function WeeklyPlanForm({ control, register, errors, totalWeeks }: Weekly
 
     // 최초 1주차는 자동 생성, 이후 주차는 "다음 주차 추가" 버튼으로만 생성
     if (currentLength === 0) {
-      append(createEmptyGuide(1));
+      append(createEmptyGuide(1), { shouldFocus: false });
       return;
     }
 

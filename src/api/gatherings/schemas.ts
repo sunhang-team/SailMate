@@ -51,30 +51,39 @@ export const gatheringFormBaseSchema = z.object({
     .optional(),
 });
 
-/** POST `/gatherings` — 모임 생성 폼 */
-export const gatheringFormSchema = gatheringFormBaseSchema.superRefine((data, ctx) => {
-  const today = new Date().toISOString().slice(0, 10);
+/** 날짜 크로스필드 검증 스키마 */
+const dateRefinementSchema = z
+  .object({
+    recruitDeadline: dateStringSchema('모집 마감일을 선택해주세요.').optional(),
+    startDate: dateStringSchema('모임 시작일을 선택해주세요.').optional(),
+    endDate: dateStringSchema('모임 종료일을 선택해주세요.').optional(),
+  })
+  .superRefine((data, ctx) => {
+    const today = new Date().toISOString().slice(0, 10);
 
-  if (data.recruitDeadline && data.recruitDeadline < today) {
-    ctx.addIssue({ code: 'custom', message: '모집 마감일은 오늘 이후여야 합니다.', path: ['recruitDeadline'] });
-  }
-  if (data.startDate && data.startDate < today) {
-    ctx.addIssue({ code: 'custom', message: '모임 시작일은 오늘 이후여야 합니다.', path: ['startDate'] });
-  }
-  if (data.endDate && data.endDate < today) {
-    ctx.addIssue({ code: 'custom', message: '모임 종료일은 오늘 이후여야 합니다.', path: ['endDate'] });
-  }
-  if (data.recruitDeadline && data.startDate && data.recruitDeadline >= data.startDate) {
-    ctx.addIssue({
-      code: 'custom',
-      message: '모집 마감일은 모임 시작일보다 빨라야 합니다.',
-      path: ['recruitDeadline'],
-    });
-  }
-  if (data.startDate && data.endDate && data.endDate <= data.startDate) {
-    ctx.addIssue({ code: 'custom', message: '종료일은 시작일 이후여야 합니다.', path: ['endDate'] });
-  }
-});
+    if (data.recruitDeadline && data.recruitDeadline < today) {
+      ctx.addIssue({ code: 'custom', message: '모집 마감일은 오늘 이후여야 합니다.', path: ['recruitDeadline'] });
+    }
+    if (data.startDate && data.startDate < today) {
+      ctx.addIssue({ code: 'custom', message: '모임 시작일은 오늘 이후여야 합니다.', path: ['startDate'] });
+    }
+    if (data.endDate && data.endDate < today) {
+      ctx.addIssue({ code: 'custom', message: '모임 종료일은 오늘 이후여야 합니다.', path: ['endDate'] });
+    }
+    if (data.recruitDeadline && data.startDate && data.recruitDeadline >= data.startDate) {
+      ctx.addIssue({
+        code: 'custom',
+        message: '모집 마감일은 모임 시작일보다 빨라야 합니다.',
+        path: ['recruitDeadline'],
+      });
+    }
+    if (data.startDate && data.endDate && data.endDate <= data.startDate) {
+      ctx.addIssue({ code: 'custom', message: '종료일은 시작일 이후여야 합니다.', path: ['endDate'] });
+    }
+  });
+
+/** POST `/gatherings` — 모임 생성 폼 */
+export const gatheringFormSchema = gatheringFormBaseSchema.and(dateRefinementSchema);
 
 /** PUT `/gatherings/:gatheringId` — 모임 수정 폼 (모든 필드 optional) */
 export const gatheringUpdateFormSchema = gatheringFormBaseSchema.partial();
