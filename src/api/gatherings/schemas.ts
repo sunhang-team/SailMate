@@ -51,12 +51,12 @@ export const gatheringFormBaseSchema = z.object({
     .optional(),
 });
 
-/** 날짜 크로스필드 검증 스키마 */
+/** 날짜 크로스필드 검증 스키마 — 필드 검증은 base schema에 위임, 여기서는 cross-field 검증만 담당 */
 const dateRefinementSchema = z
   .object({
-    recruitDeadline: dateStringSchema('모집 마감일을 선택해주세요.').optional(),
-    startDate: dateStringSchema('모임 시작일을 선택해주세요.').optional(),
-    endDate: dateStringSchema('모임 종료일을 선택해주세요.').optional(),
+    recruitDeadline: z.string().optional(),
+    startDate: z.string().optional(),
+    endDate: z.string().optional(),
   })
   .superRefine((data, ctx) => {
     const today = new Date().toISOString().slice(0, 10);
