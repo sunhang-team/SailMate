@@ -72,24 +72,22 @@ function WeekDetailInputs({ control, index, error }: WeekDetailInputsProps) {
       ) : (
         <>
           <div className='flex flex-col gap-3 lg:flex-row'>
-            <div className='flex w-full flex-col gap-1.5 lg:w-1/2'>
-              <div className='flex items-center gap-2'>
-                <Input
-                  placeholder='세부 계획을 적어주세요'
-                  value={details[0] ?? ''}
-                  onBlur={field.onBlur}
-                  onChange={(event) => updateDetail(0, event.target.value)}
-                  error={error}
-                  className='text-small-02-r md:text-body-02-r lg:text-body-01-r bg-gray-0 h-[43px] md:h-[58px] lg:h-[72px] lg:px-7 lg:py-5'
-                />
-                <button
-                  type='button'
-                  onClick={() => handleRemoveDetail(0)}
-                  className='shrink-0 text-gray-400 hover:text-gray-600'
-                >
-                  <CloseIcon className='size-4' />
-                </button>
-              </div>
+            <div className='relative w-full lg:w-1/2'>
+              <Input
+                placeholder='세부 계획을 적어주세요'
+                value={details[0] ?? ''}
+                onBlur={field.onBlur}
+                onChange={(event) => updateDetail(0, event.target.value)}
+                error={error}
+                className='text-small-02-r md:text-body-02-r lg:text-body-01-r bg-gray-0 h-[43px] pr-10 md:h-[58px] lg:h-[72px] lg:px-7 lg:py-5 lg:pr-10'
+              />
+              <button
+                type='button'
+                onClick={() => handleRemoveDetail(0)}
+                className='absolute top-1/2 right-3 -translate-y-1/2 text-gray-400 hover:text-gray-600'
+              >
+                <CloseIcon className='size-4 md:size-5 lg:size-5' />
+              </button>
             </div>
             {canAddDetail && (
               <Button
@@ -105,23 +103,21 @@ function WeekDetailInputs({ control, index, error }: WeekDetailInputsProps) {
           </div>
 
           {details.length > 1 && (
-            <div className='flex w-full flex-col gap-1.5 lg:w-1/2'>
-              <div className='flex items-center gap-2'>
-                <Input
-                  placeholder='세부 계획을 적어주세요'
-                  value={details[1] ?? ''}
-                  onBlur={field.onBlur}
-                  onChange={(event) => updateDetail(1, event.target.value)}
-                  className='text-small-02-r md:text-body-02-r lg:text-body-01-r bg-gray-0 h-[43px] md:h-[58px] lg:h-[72px] lg:px-7 lg:py-5'
-                />
-                <button
-                  type='button'
-                  onClick={() => handleRemoveDetail(1)}
-                  className='shrink-0 text-gray-400 hover:text-gray-600'
-                >
-                  <CloseIcon className='size-4' />
-                </button>
-              </div>
+            <div className='relative w-full lg:w-1/2'>
+              <Input
+                placeholder='세부 계획을 적어주세요'
+                value={details[1] ?? ''}
+                onBlur={field.onBlur}
+                onChange={(event) => updateDetail(1, event.target.value)}
+                className='text-small-02-r md:text-body-02-r lg:text-body-01-r bg-gray-0 h-[43px] pr-10 md:h-[58px] lg:h-[72px] lg:px-7 lg:py-5 lg:pr-10'
+              />
+              <button
+                type='button'
+                onClick={() => handleRemoveDetail(1)}
+                className='absolute top-1/2 right-3 -translate-y-1/2 text-gray-400 hover:text-gray-600'
+              >
+                <CloseIcon className='size-4 md:size-5 lg:size-5' />
+              </button>
             </div>
           )}
 

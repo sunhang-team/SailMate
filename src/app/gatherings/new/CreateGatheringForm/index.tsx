@@ -221,19 +221,29 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
         <p className='text-small-01-sb md:text-body-01-sb lg:text-h5-b text-gray-800'>
           기본 정보 <span className='text-blue-400'>*</span>
         </p>
-        <div className='flex flex-col gap-6 pb-6 lg:flex-row lg:gap-4'>
+        <div className='flex flex-col gap-6 lg:flex-row lg:gap-4'>
           <div className='flex w-full flex-col gap-1 lg:flex-1'>
-            <Input
-              label={
-                <span className='text-small-02-m md:text-body-02-m lg:text-body-01-m text-gray-800'>모임 제목</span>
-              }
-              maxLength={30}
-              placeholder='제목을 입력하세요'
-              error={errors.title?.message}
-              {...register('title')}
-              className='text-small-02-r md:text-body-02-r lg:text-body-01-r bg-gray-0 h-[43px] md:h-[58px] lg:h-[72px] lg:px-7 lg:py-5'
-            />
-            <p className='text-small-02-r self-end text-gray-400'>{titleValue.length}/30</p>
+            <div className='relative'>
+              <Input
+                label={
+                  <span className='text-small-02-m md:text-body-02-m lg:text-body-01-m text-gray-800'>모임 제목</span>
+                }
+                maxLength={30}
+                placeholder='제목을 입력하세요'
+                error={errors.title?.message}
+                hideErrorMessage
+                {...register('title')}
+                className='text-small-02-r md:text-body-02-r lg:text-body-01-r bg-gray-0 h-[43px] pr-12 md:h-[58px] lg:h-[72px] lg:px-7 lg:py-5 lg:pr-20'
+              />
+              <span className='md:text-small-02-r pointer-events-none absolute right-3 bottom-1 text-[8px] text-gray-400 lg:right-5 lg:bottom-4'>
+                {titleValue.length}/30
+              </span>
+            </div>
+            {errors.title?.message && (
+              <p className='text-xs text-red-200' role='alert'>
+                {errors.title.message}
+              </p>
+            )}
           </div>
           <Controller
             name='categoryIds'
@@ -312,35 +322,55 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
 
         {/* 한 줄 소개 */}
         <div className='flex flex-1 flex-col gap-1'>
-          <Input
-            label={
-              <span className='text-small-02-m md:text-body-02-m lg:text-body-01-m text-gray-800'>한 줄 소개</span>
-            }
-            maxLength={50}
-            placeholder='소개를 적어주세요'
-            error={errors.shortDescription?.message}
-            {...register('shortDescription')}
-            className='text-small-02-r md:text-body-02-r lg:text-body-01-r bg-gray-0 h-[43px] md:h-[58px] lg:h-[72px] lg:px-7 lg:py-5'
-          />
-          <p className='text-small-02-r self-end text-gray-400'>{shortDescValue.length}/50</p>
+          <div className='relative'>
+            <Input
+              label={
+                <span className='text-small-02-m md:text-body-02-m lg:text-body-01-m text-gray-800'>한 줄 소개</span>
+              }
+              maxLength={50}
+              placeholder='소개를 적어주세요'
+              error={errors.shortDescription?.message}
+              hideErrorMessage
+              {...register('shortDescription')}
+              className='text-small-02-r md:text-body-02-r lg:text-body-01-r bg-gray-0 h-[43px] pr-12 md:h-[58px] lg:h-[72px] lg:px-7 lg:py-5 lg:pr-20'
+            />
+            <span className='md:text-small-02-r pointer-events-none absolute right-3 bottom-1 text-[8px] text-gray-400 lg:right-5 lg:bottom-4'>
+              {shortDescValue.length}/50
+            </span>
+          </div>
+          {errors.shortDescription?.message && (
+            <p className='text-xs text-red-200' role='alert'>
+              {errors.shortDescription.message}
+            </p>
+          )}
         </div>
 
         {/* 상세 설명 */}
         <div className='flex flex-col gap-1'>
           <p className='text-small-02-m md:text-body-02-m lg:text-body-01-m text-gray-800'>상세 설명</p>
-          <Textarea
-            maxLength={1000}
-            rows={8}
-            placeholder='모임을 설명을 상세히 적어주세요'
-            error={errors.description?.message}
-            {...register('description')}
-            className='text-small-02-r md:text-body-02-r lg:text-body-01-r bg-gray-0 px-4 py-3 lg:px-7 lg:py-5'
-          />
-          <p className='text-small-02-r self-end text-gray-400'>{descValue.length}/1000</p>
+          <div className='relative'>
+            <Textarea
+              maxLength={1000}
+              rows={8}
+              placeholder='모임을 설명을 상세히 적어주세요'
+              error={errors.description?.message}
+              hideErrorMessage
+              {...register('description')}
+              className='text-small-02-r md:text-body-02-r lg:text-body-01-r bg-gray-0 px-4 py-3 pb-7 lg:px-7 lg:py-5 lg:pb-8'
+            />
+            <span className='md:text-small-02-r pointer-events-none absolute right-3 bottom-3 text-[8px] text-gray-400 lg:right-5 lg:bottom-4'>
+              {descValue.length}/1000
+            </span>
+          </div>
+          {errors.description?.message && (
+            <p className='text-xs text-red-200' role='alert'>
+              {errors.description.message}
+            </p>
+          )}
         </div>
 
         {/* 태그 */}
-        <div className='flex flex-col gap-1 pb-6'>
+        <div className='flex flex-col gap-1'>
           <p className='text-small-02-m md:text-body-02-m lg:text-body-01-m text-gray-800'>태그</p>
           <Controller
             name='tags'
@@ -371,19 +401,29 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
 
       {/* 모임 최종 목표 */}
       <div className='flex flex-col gap-1'>
-        <Input
-          label={
-            <span className='text-small-01-sb md:text-body-01-sb lg:text-h5-b text-gray-800'>
-              모임 최종 목표 <span className='text-blue-400'>*</span>
-            </span>
-          }
-          maxLength={200}
-          placeholder='모임의 최종 목표를 적어주세요'
-          error={errors.goal?.message}
-          {...register('goal')}
-          className='text-small-02-r md:text-body-02-r lg:text-body-01-r bg-gray-0 h-[43px] md:h-[58px] lg:h-[72px] lg:px-7 lg:py-5'
-        />
-        <p className='text-small-02-r self-end text-gray-400'>{goalValue.length}/200</p>
+        <div className='relative'>
+          <Input
+            label={
+              <span className='text-small-01-sb md:text-body-01-sb lg:text-h5-b text-gray-800'>
+                모임 최종 목표 <span className='text-blue-400'>*</span>
+              </span>
+            }
+            maxLength={200}
+            placeholder='모임의 최종 목표를 적어주세요'
+            error={errors.goal?.message}
+            hideErrorMessage
+            {...register('goal')}
+            className='text-small-02-r md:text-body-02-r lg:text-body-01-r bg-gray-0 h-[43px] pr-14 md:h-[58px] lg:h-[72px] lg:px-7 lg:py-5 lg:pr-24'
+          />
+          <span className='md:text-small-02-r pointer-events-none absolute right-3 bottom-1 text-[8px] text-gray-400 lg:right-7 lg:bottom-4'>
+            {goalValue.length}/200
+          </span>
+        </div>
+        {errors.goal?.message && (
+          <p className='text-xs text-red-200' role='alert'>
+            {errors.goal.message}
+          </p>
+        )}
       </div>
 
       {/* 모집 정보 */}

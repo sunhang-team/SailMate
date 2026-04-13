@@ -105,7 +105,7 @@ export function DatePicker({
           >
             {displayValue || placeholder}
           </span>
-          <CalendarIcon className='text-gray-800 sm:size-4 lg:size-6' />
+          <CalendarIcon className='size-4 text-gray-800 md:size-5' />
         </button>
       ) : (
         <div className={fieldGradientFocusWrapperClass}>
