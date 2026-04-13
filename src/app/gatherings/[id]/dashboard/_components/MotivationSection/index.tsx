@@ -29,7 +29,7 @@ export function MotivationSection({ gatheringId }: MotivationSectionProps) {
   const weatherLevel = getWeatherLevel(hp);
 
   return (
-    <div className='flex flex-col gap-4 lg:flex-row'>
+    <div className='flex h-[376px] flex-col gap-4 lg:flex-row'>
       {/* 카드 영역 */}
       <div className='border-gray-150 bg-gray-0 shadow-02 flex-1 rounded-2xl border p-6 lg:p-7'>
         <div className='flex flex-col gap-4 lg:gap-6'>
