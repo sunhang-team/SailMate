@@ -49,8 +49,8 @@ export function StatusFilter({ value, onChange }: StatusFilterProps) {
               key={option.value}
               onClick={() => onChange(option.value)}
               className={cn(
-                'cursor-pointer rounded-lg px-4 py-2 text-gray-500 hover:text-gray-900',
-                isSelected && 'text-gray-900',
+                'text-body-02-r cursor-pointer rounded-lg px-4 py-2 text-gray-500 hover:text-gray-900',
+                isSelected && 'text-body-02-m text-gray-900',
               )}
             >
               {option.label}
