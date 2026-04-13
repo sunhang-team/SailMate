@@ -33,7 +33,7 @@ function WeeklySummarySkeleton() {
   );
 }
 
-const shellWeeklyMembers = 'px-4 py-10 md:px-7 xl:px-30';
+const shellWeeklyMembers = 'px-4 py-10 md:py-15 lg:py-20 md:px-7 xl:px-30';
 const innerMax = 'mx-auto max-w-[1680px]';
 
 export function DashboardContent({ activeTab, gatheringId }: DashboardContentProps) {
@@ -85,7 +85,7 @@ export function DashboardContent({ activeTab, gatheringId }: DashboardContentPro
   if (activeTab === 'weekly') {
     return (
       <section className={shellWeeklyMembers}>
-        <div className={`${innerMax} flex flex-col gap-6`}>
+        <div className={`${innerMax} flex flex-col gap-10`}>
           <SuspenseBoundary
             pendingFallback={<MyTodoSectionSkeleton />}
             errorFallback={
