@@ -11,11 +11,13 @@ interface ItemProps {
   onClick?: () => void;
   className?: string;
   closeOnSelect?: boolean;
+  disabled?: boolean;
 }
-export function Item({ children, onClick, className, closeOnSelect = true }: ItemProps) {
+export function Item({ children, onClick, className, closeOnSelect = true, disabled = false }: ItemProps) {
   const { close } = useDropdown();
 
   const handleClick = () => {
+    if (disabled) return;
     onClick?.();
     if (closeOnSelect) close();
   };
@@ -23,6 +25,7 @@ export function Item({ children, onClick, className, closeOnSelect = true }: Ite
     <li
       role='option'
       tabIndex={-1}
+      aria-disabled={disabled}
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
@@ -31,7 +34,7 @@ export function Item({ children, onClick, className, closeOnSelect = true }: Ite
         if (e.key === 'Escape') close();
       }}
       onClick={handleClick}
-      className={cn('transition-colors', className)}
+      className={cn('transition-colors', disabled && 'cursor-not-allowed opacity-40', className)}
     >
       {children}
     </li>
