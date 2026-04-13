@@ -50,7 +50,7 @@ export function EmailLoginForm() {
         type='email'
         error={showEmailError ? errors.email?.message : undefined}
         {...register('email')}
-        className='h-11'
+        className='h-11 placeholder:text-gray-300'
       />
       {/* 비밀번호 입력 필드 + 보기/숨기기 토글 버튼 */}
       <div className='relative'>
@@ -64,7 +64,7 @@ export function EmailLoginForm() {
           type={showPassword ? 'text' : 'password'}
           error={showPasswordError ? errors.password?.message : undefined}
           {...register('password')}
-          className='h-11'
+          className='h-11 placeholder:text-gray-300'
         />
         <button
           type='button'
