@@ -161,15 +161,15 @@ export function DatePicker({
             </button>
           </div>
 
-          <div className='mb-2 grid grid-cols-7 gap-y-2'>
+          <div className='mb-2 grid grid-cols-7 gap-y-1'>
             {WEEKDAY_LABELS.map((label, index) => (
-              <span key={`${label}-${index}`} className='text-center text-xs text-gray-500'>
+              <span key={`${label}-${index}`} className='text-body-02-r text-center text-gray-500'>
                 {label}
               </span>
             ))}
           </div>
 
-          <div className='grid grid-cols-7 gap-y-2'>
+          <div className='grid grid-cols-7 gap-y-1'>
             {days.map((day) => {
               const isSelected = value === format(day.date, ISO_DATE_FORMAT);
               return (
@@ -178,7 +178,7 @@ export function DatePicker({
                   key={day.date.toISOString()}
                   onClick={() => handleSelectDate(day.date)}
                   className={cn(
-                    'mx-auto flex size-7 items-center justify-center rounded-full text-xs',
+                    'text-body-02-r mx-auto flex size-[34px] items-center justify-center rounded-full',
                     day.isCurrentMonth ? 'text-gray-800' : 'text-gray-300',
                     day.isToday && !isSelected && 'font-bold text-blue-400',
                     isSelected && 'bg-blue-300 text-white',
