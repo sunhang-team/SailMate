@@ -17,8 +17,8 @@ export default async function MyPage({ searchParams }: MyPageProps) {
 
   return (
     <main className='min-h-screen bg-gray-50'>
-      <div className='px-4 py-6 md:px-7 lg:px-15'>
-        <h1 className='text-body-01-b md:text-h4-b lg:text-h3-b mt-12'>마이페이지</h1>
+      <div className='px-4 py-6 md:px-7 xl:px-30 xl:pt-20 xl:pb-40'>
+        <h1 className='text-body-01-b md:text-h4-b lg:text-h3-b'>마이페이지</h1>
         <div className='mt-11 flex flex-col gap-8 lg:flex-row lg:items-start'>
           <SuspenseBoundary
             pendingFallback={<ProfileSidebarSkeleton />}
