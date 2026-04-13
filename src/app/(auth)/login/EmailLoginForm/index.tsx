@@ -42,33 +42,33 @@ export function EmailLoginForm() {
       {/* 이메일 입력 필드 */}
       <Input
         label={
-          <>
+          <span className='text-small-01-m md:text-body-02-m'>
             이메일 <span className='ml-1 text-blue-400'>*</span>
-          </>
+          </span>
         }
         placeholder='이메일을 입력해주세요'
         type='email'
         error={showEmailError ? errors.email?.message : undefined}
         {...register('email')}
-        className='h-11'
+        className='h-11 placeholder:text-gray-300'
       />
       {/* 비밀번호 입력 필드 + 보기/숨기기 토글 버튼 */}
       <div className='relative'>
         <Input
           label={
-            <>
+            <span className='text-small-01-m md:text-body-02-m'>
               비밀번호 <span className='ml-1 text-blue-400'>*</span>
-            </>
+            </span>
           }
           placeholder='영문, 숫자, 특수문자 포함 8자 이상 입력해주세요'
           type={showPassword ? 'text' : 'password'}
           error={showPasswordError ? errors.password?.message : undefined}
           {...register('password')}
-          className='h-11'
+          className='h-11 placeholder:text-gray-300'
         />
         <button
           type='button'
-          className='absolute top-9 right-3 cursor-pointer text-gray-400'
+          className='absolute top-9 right-3 cursor-pointer text-gray-400 md:top-10'
           onClick={() => setShowPassword((prev) => !prev)}
           aria-label={showPassword ? '비밀번호 숨기기' : '비밀번호 보기'}
         >

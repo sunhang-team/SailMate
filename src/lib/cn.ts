@@ -3,9 +3,12 @@ import { extendTailwindMerge } from 'tailwind-merge';
 
 // tailwind-merge는 커스텀 텍스트 유틸리티(text-h5-b 등)를 텍스트 색상 클래스(text-blue-400 등)와
 // 동일 그룹으로 잘못 인식해 충돌 시 제거한다. font-size 그룹으로 명시 등록해 이를 방지한다.
-const twMerge = extendTailwindMerge({
+const twMerge = extendTailwindMerge<'border-gradient'>({
   extend: {
     classGroups: {
+      // border-gradient-primary를 border-color 그룹으로 잘못 인식해
+      // border-gray-200 등 border-color 클래스를 제거하는 문제 방지
+      'border-gradient': ['border-gradient-primary'],
       'font-size': [
         'text-h1-b',
         'text-h2-b',
