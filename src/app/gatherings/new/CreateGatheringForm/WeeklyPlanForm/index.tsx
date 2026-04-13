@@ -80,7 +80,7 @@ function WeekDetailInputs({ control, index, error }: WeekDetailInputsProps) {
                   onBlur={field.onBlur}
                   onChange={(event) => updateDetail(0, event.target.value)}
                   error={error}
-                  className='text-small-02-r md:text-body-02-r lg:text-body-01-r h-[43px] md:h-[58px] lg:h-[72px] lg:px-7 lg:py-5'
+                  className='text-small-02-r md:text-body-02-r lg:text-body-01-r bg-gray-0 h-[43px] md:h-[58px] lg:h-[72px] lg:px-7 lg:py-5'
                 />
                 <button
                   type='button'
@@ -112,7 +112,7 @@ function WeekDetailInputs({ control, index, error }: WeekDetailInputsProps) {
                   value={details[1] ?? ''}
                   onBlur={field.onBlur}
                   onChange={(event) => updateDetail(1, event.target.value)}
-                  className='text-small-02-r md:text-body-02-r lg:text-body-01-r h-[43px] md:h-[58px] lg:h-[72px] lg:px-7 lg:py-5'
+                  className='text-small-02-r md:text-body-02-r lg:text-body-01-r bg-gray-0 h-[43px] md:h-[58px] lg:h-[72px] lg:px-7 lg:py-5'
                 />
                 <button
                   type='button'
@@ -197,7 +197,10 @@ export function WeeklyPlanForm({ control, register, errors, totalWeeks }: Weekly
       <button
         type='button'
         onClick={() => setIsOpenOverride((prev) => !(prev ?? totalWeeks > 0))}
-        className='bg-gray-150 flex h-[43px] items-center justify-between rounded-lg border border-gray-200 px-7 py-5 md:h-[58px] lg:h-[72px]'
+        className={cn(
+          'bg-gray-150 flex h-[43px] items-center justify-between border border-gray-200 px-7 py-5 md:h-[58px] lg:h-[72px]',
+          isOpen ? 'rounded-t-lg rounded-b-none' : 'rounded-lg',
+        )}
       >
         <span className='text-small-02-sb md:text-body-02-sb lg:text-body-01-sb text-gray-800'>
           주차별 계획 <span className='text-blue-400'>*</span>
@@ -240,7 +243,7 @@ export function WeeklyPlanForm({ control, register, errors, totalWeeks }: Weekly
                     placeholder={`${index + 1}주차 계획의 제목을 적어주세요`}
                     error={guideErrors?.[index]?.title?.message as string | undefined}
                     {...register(`weeklyGuides.${index}.title`)}
-                    className='text-small-02-r md:text-body-02-r lg:text-body-01-r h-[43px] md:h-[58px] lg:h-[72px] lg:px-7 lg:py-5'
+                    className='text-small-02-r md:text-body-02-r lg:text-body-01-r bg-gray-0 h-[43px] md:h-[58px] lg:h-[72px] lg:px-7 lg:py-5'
                   />
 
                   <WeekDetailInputs

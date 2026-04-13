@@ -44,7 +44,7 @@ export function TagInput({ value, onChange, onBlur, error }: TagInputProps) {
         <div
           className={cn(
             'flex min-h-[43px] flex-wrap items-center gap-2 px-3 py-2 md:min-h-[58px] lg:min-h-[72px] lg:px-7',
-            !hasError && 'rounded-[calc(0.375rem-1px)] bg-gray-50',
+            !hasError && 'bg-gray-0 rounded-[calc(0.375rem-1px)]',
           )}
         >
           {value.map((tag) => (

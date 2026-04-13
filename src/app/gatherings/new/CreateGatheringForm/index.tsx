@@ -231,7 +231,7 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
               placeholder='제목을 입력하세요'
               error={errors.title?.message}
               {...register('title')}
-              className='text-small-02-r md:text-body-02-r lg:text-body-01-r h-[43px] md:h-[58px] lg:h-[72px] lg:px-7 lg:py-5'
+              className='text-small-02-r md:text-body-02-r lg:text-body-01-r bg-gray-0 h-[43px] md:h-[58px] lg:h-[72px] lg:px-7 lg:py-5'
             />
             <p className='text-small-02-r self-end text-gray-400'>{titleValue.length}/30</p>
           </div>
@@ -320,7 +320,7 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
             placeholder='소개를 적어주세요'
             error={errors.shortDescription?.message}
             {...register('shortDescription')}
-            className='text-small-02-r md:text-body-02-r lg:text-body-01-r h-[43px] md:h-[58px] lg:h-[72px] lg:px-7 lg:py-5'
+            className='text-small-02-r md:text-body-02-r lg:text-body-01-r bg-gray-0 h-[43px] md:h-[58px] lg:h-[72px] lg:px-7 lg:py-5'
           />
           <p className='text-small-02-r self-end text-gray-400'>{shortDescValue.length}/50</p>
         </div>
@@ -334,7 +334,7 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
             placeholder='모임을 설명을 상세히 적어주세요'
             error={errors.description?.message}
             {...register('description')}
-            className='text-small-02-r md:text-body-02-r lg:text-body-01-r px-4 py-3 lg:px-7 lg:py-5'
+            className='text-small-02-r md:text-body-02-r lg:text-body-01-r bg-gray-0 px-4 py-3 lg:px-7 lg:py-5'
           />
           <p className='text-small-02-r self-end text-gray-400'>{descValue.length}/1000</p>
         </div>
@@ -381,7 +381,7 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
           placeholder='모임의 최종 목표를 적어주세요'
           error={errors.goal?.message}
           {...register('goal')}
-          className='text-small-02-r md:text-body-02-r lg:text-body-01-r h-[43px] md:h-[58px] lg:h-[72px] lg:px-7 lg:py-5'
+          className='text-small-02-r md:text-body-02-r lg:text-body-01-r bg-gray-0 h-[43px] md:h-[58px] lg:h-[72px] lg:px-7 lg:py-5'
         />
         <p className='text-small-02-r self-end text-gray-400'>{goalValue.length}/200</p>
       </div>
@@ -404,7 +404,7 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
               placeholder='모집 인원을 적어주세요'
               error={errors.maxMembers?.message}
               {...register('maxMembers', { valueAsNumber: true })}
-              className='text-small-02-r md:text-body-02-r lg:text-body-01-r h-[43px] md:h-[58px] lg:h-[72px] lg:px-7 lg:py-5'
+              className='text-small-02-r md:text-body-02-r lg:text-body-01-r bg-gray-0 h-[43px] md:h-[58px] lg:h-[72px] lg:px-7 lg:py-5'
             />
           </div>
 
@@ -424,7 +424,7 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
                   onBlur={field.onBlur}
                   placeholder='모집 마감 일정을 선택해주세요'
                   error={errors.recruitDeadline?.message}
-                  className='h-[43px] md:h-[58px] lg:h-[72px] lg:px-7 lg:py-5'
+                  className='bg-gray-0 h-[43px] md:h-[58px] lg:h-[72px] lg:px-7 lg:py-5'
                 />
               </div>
             )}
@@ -455,7 +455,7 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
                   onBlur={field.onBlur}
                   placeholder='모임 시작일을 선택해주세요'
                   error={errors.startDate?.message}
-                  className='h-[43px] md:h-[58px] lg:h-[72px] lg:px-7 lg:py-5'
+                  className='bg-gray-0 h-[43px] md:h-[58px] lg:h-[72px] lg:px-7 lg:py-5'
                 />
               </div>
             )}
@@ -477,7 +477,7 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
                   onBlur={field.onBlur}
                   placeholder='모임 종료일을 선택해주세요'
                   error={errors.endDate?.message}
-                  className='h-[43px] md:h-[58px] lg:h-[72px] lg:px-7 lg:py-5'
+                  className='bg-gray-0 h-[43px] md:h-[58px] lg:h-[72px] lg:px-7 lg:py-5'
                 />
               </div>
             )}
