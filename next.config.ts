@@ -5,10 +5,12 @@ const nextConfig: NextConfig = {
   transpilePackages: ['until-async'],
   serverExternalPackages: ['msw'],
   async rewrites() {
+    const backendBaseUrl = process.env.BACKEND_BASE_URL;
+    if (!backendBaseUrl) return [];
     return [
       {
         source: '/images/:path*',
-        destination: `${process.env.BACKEND_BASE_URL}/images/:path*`,
+        destination: `${backendBaseUrl}/images/:path*`,
       },
     ];
   },
