@@ -4,6 +4,14 @@ import type { NextConfig } from 'next';
 const nextConfig: NextConfig = {
   transpilePackages: ['until-async'],
   serverExternalPackages: ['msw'],
+  async rewrites() {
+    return [
+      {
+        source: '/images/:path*',
+        destination: `${process.env.BACKEND_BASE_URL}/images/:path*`,
+      },
+    ];
+  },
 };
 
 export default withSentryConfig(nextConfig, {
