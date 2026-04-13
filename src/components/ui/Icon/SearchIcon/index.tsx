@@ -2,8 +2,8 @@ import { IconBase } from '../IconBase';
 import type { IconProps } from '../types';
 
 const VIEW_BOX = '0 0 24 24';
-const PATH =
-  'M17.6 16.55L14.8 13.75C15.1 13.33 15.33 12.86 15.49 12.34C15.66 11.82 15.74 11.27 15.74 10.7C15.74 9.14 15.18 7.81 14.07 6.7C12.96 5.59 11.63 5.03 10.07 5.03C8.51 5.03 7.18 5.59 6.07 6.7C4.96 7.81 4.4 9.14 4.4 10.7C4.4 12.26 4.96 13.59 6.07 14.7C7.18 15.81 8.51 16.37 10.07 16.37C10.67 16.37 11.24 16.29 11.76 16.12C12.29 15.94 12.77 15.7 13.2 15.39L16 18.2L17.6 16.55ZM10.07 14.37C9.07 14.37 8.21 14.01 7.49 13.29C6.77 12.57 6.4 11.71 6.4 10.7C6.4 9.7 6.76 8.84 7.49 8.12C8.21 7.4 9.07 7.03 10.07 7.03C11.07 7.03 11.93 7.39 12.65 8.12C13.37 8.84 13.74 9.7 13.74 10.7C13.74 11.7 13.38 12.56 12.65 13.28C11.93 14 11.07 14.37 10.07 14.37Z';
+const CIRCLE = { cx: 10.5, cy: 10.5, r: 5.5 };
+const LINE = { x1: 14.5, y1: 14.5, x2: 20, y2: 20 };
 
 // SVG fill은 CSS currentColor로 그라디언트를 적용할 수 없어,
 // gradient prop이 true일 때 <defs>에 linearGradient를 정의하고 fill='url(#id)'로 참조한다.
@@ -24,7 +24,23 @@ export function SearchIcon({ gradient = false, ...props }: SearchIconProps) {
           </linearGradient>
         </defs>
       )}
-      <path d={PATH} fill={gradient ? `url(#${GRADIENT_ID})` : 'currentColor'} />
+      <circle
+        cx={CIRCLE.cx}
+        cy={CIRCLE.cy}
+        r={CIRCLE.r}
+        fill='none'
+        stroke={gradient ? `url(#${GRADIENT_ID})` : 'currentColor'}
+        strokeWidth={1.8}
+      />
+      <line
+        x1={LINE.x1}
+        y1={LINE.y1}
+        x2={LINE.x2}
+        y2={LINE.y2}
+        stroke={gradient ? `url(#${GRADIENT_ID})` : 'currentColor'}
+        strokeWidth={1.8}
+        strokeLinecap='round'
+      />
     </IconBase>
   );
 }

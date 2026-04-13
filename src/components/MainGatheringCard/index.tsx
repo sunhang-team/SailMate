@@ -105,6 +105,7 @@ export function MainGatheringCard({
         <Button
           variant='bookmark'
           size='bookmark-sm'
+          className='shrink-0'
           data-selected={isLiked}
           aria-label='찜하기'
           aria-pressed={isLiked}
@@ -115,7 +116,7 @@ export function MainGatheringCard({
             toggleLike();
           }}
         >
-          <HeartIcon size={20} variant={isLiked ? 'filled' : 'outline'} />
+          <HeartIcon size={24} variant={isLiked ? 'filled' : 'outline'} />
         </Button>
         <Button
           variant='participation-outline-sm'
