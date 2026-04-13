@@ -11,7 +11,7 @@ import { Card } from '@/components/ui/Card';
 import { DatePicker } from '@/components/ui/DatePicker';
 import { Dropdown } from '@/components/ui/Dropdown';
 import { CheckIcon } from '@/components/ui/Icon/CheckIcon';
-import { StudyIcon, ProjectIcon, CategoryIcon, ArrowIcon } from '@/components/ui/Icon';
+import { StudyIcon, ProjectIcon, CategoryIcon, ArrowIcon, CloseIcon } from '@/components/ui/Icon';
 import { useDropdown } from '@/components/ui/Dropdown/context';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
@@ -217,11 +217,11 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
       </section>
 
       {/* 기본 정보 */}
-      <section className='flex flex-col gap-4'>
+      <section className='flex flex-col gap-6'>
         <p className='text-small-01-sb md:text-body-01-sb lg:text-h5-b text-gray-800'>
           기본 정보 <span className='text-blue-400'>*</span>
         </p>
-        <div className='flex flex-col gap-4 lg:flex-row'>
+        <div className='flex flex-col gap-6 pb-6 lg:flex-row lg:gap-4'>
           <div className='flex w-full flex-col gap-1 lg:flex-1'>
             <Input
               label={
@@ -255,21 +255,27 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
               };
 
               return (
-                <div className='flex w-full flex-col gap-1.5 lg:flex-1'>
+                <div className='flex w-full flex-col gap-1 lg:flex-1'>
                   <p className='text-small-02-m md:text-body-02-m lg:text-body-01-m text-gray-800'>카테고리</p>
                   <Dropdown className='flex w-full flex-col'>
                     <Dropdown.Trigger>
                       <CategoryTriggerBorder>
                         <div className='flex items-center gap-2'>
                           <CategoryIcon className='size-4 md:size-6 lg:size-7' />
-                          <span
-                            className={cn(
-                              'text-small-02-r md:text-body-02-r lg:text-body-01-r',
-                              selectedLabel ? 'text-gray-900' : 'text-gray-400',
-                            )}
-                          >
-                            {selectedLabel ?? '카테고리를 선택해주세요'}
-                          </span>
+                          {selected.length > 0 ? (
+                            <div className='flex items-center gap-1'>
+                              <span className='text-small-02-sb md:text-body-02-sb lg:text-body-01-sb text-gray-900'>
+                                카테고리({selected.length})
+                              </span>
+                              <span className='text-small-02-m md:text-body-02-m lg:text-body-01-m text-gray-900'>
+                                {selected.map((id) => CATEGORY_META[id]?.label).join(', ')}
+                              </span>
+                            </div>
+                          ) : (
+                            <span className='text-small-02-r md:text-body-02-r lg:text-body-01-r text-gray-400'>
+                              카테고리를 선택해주세요
+                            </span>
+                          )}
                         </div>
                         <RotatingArrow />
                       </CategoryTriggerBorder>
@@ -283,11 +289,12 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
                           key={cat.id}
                           onClick={() => toggleCategory(cat.id)}
                           className={cn(
-                            'cursor-pointer rounded-lg px-4 py-3 hover:bg-blue-100 hover:text-blue-400',
+                            'text-small-02-m md:text-body-02-m lg:text-body-01-m flex cursor-pointer items-center justify-between rounded-lg px-4 py-3 text-gray-700 hover:bg-blue-100 hover:text-blue-400',
                             selected.includes(cat.id) && 'bg-blue-100 text-blue-400',
                           )}
                         >
                           {cat.name}
+                          {selected.includes(cat.id) && <CloseIcon className='size-4 text-blue-400 md:size-5' />}
                         </Dropdown.Item>
                       ))}
                     </Dropdown.Menu>
@@ -333,7 +340,7 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
         </div>
 
         {/* 태그 */}
-        <div className='flex flex-col gap-1'>
+        <div className='flex flex-col gap-1 pb-6'>
           <p className='text-small-02-m md:text-body-02-m lg:text-body-01-m text-gray-800'>태그</p>
           <Controller
             name='tags'
