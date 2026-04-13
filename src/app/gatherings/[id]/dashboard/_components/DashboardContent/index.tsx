@@ -43,9 +43,9 @@ export function DashboardContent({ activeTab, gatheringId }: DashboardContentPro
 
   if (activeTab === 'summary') {
     return (
-      <section className='px-4 py-10 md:px-8 xl:px-30'>
+      <section className='mb-40 px-4 py-10 md:px-8 md:py-20 xl:px-30'>
         <div className={innerMax}>
-          <div className='flex flex-col gap-6'>
+          <div className='flex flex-col gap-10'>
             <SuspenseBoundary
               pendingFallback={<div className='h-96 animate-pulse rounded-2xl bg-gray-100' />}
               errorFallback={<p className='text-body-02-r text-gray-400'>동기부여 섹션을 불러오는데 실패했습니다.</p>}
