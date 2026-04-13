@@ -7,7 +7,7 @@ import { Tag } from '@/components/ui/Tag';
 
 export function LandingCoreFeatures() {
   return (
-    <section className='bg-gray-100 px-4 py-16 md:px-7 md:py-20 lg:px-30 lg:py-24'>
+    <section className='bg-gray-100 px-4 py-20 md:px-7 lg:px-30 lg:py-40'>
       <div className='w-full text-center'>
         <LandingSectionHeading eyebrow='Core Features' title='팀 구성부터 목표 관리, 최종 달성까지' align='center' />
         <p className='text-small-02-r md:text-body-02-r lg:text-body-01-r mt-2 text-gray-800'>

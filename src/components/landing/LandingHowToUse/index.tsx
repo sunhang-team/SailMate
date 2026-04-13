@@ -3,7 +3,7 @@ import { LandingSectionHeading } from '@/components/landing/LandingSectionHeadin
 
 export function LandingHowToUse() {
   return (
-    <section className='bg-gray-0 py-16 md:py-20 lg:py-24'>
+    <section className='bg-gray-0 py-16 md:py-20 lg:py-40'>
       <div className='mx-auto w-full'>
         <LandingSectionHeading eyebrow='How to use' title='완성도를 향해 항해하는 법' align='center' />
         <p className='text-small-02-r md:text-body-02-r lg:text-body-01-r mt-2 text-center text-gray-800'>

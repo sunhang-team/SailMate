@@ -28,7 +28,7 @@ const tagVariants = cva('inline-flex w-fit items-center justify-center rounded-l
       coreFeature: 'bg-blue-100 text-blue-300 px-3 py-1 gap-1 text-small-01-sb',
       coreFeatureSmall: 'bg-blue-100 text-blue-300 px-3 py-1 gap-1 text-small-02-sb',
       route:
-        'h-[27px] w-[65px] rounded-xl bg-blue-100 text-small-01-sb text-blue-300 md:h-[34px] md:w-[78px] md:text-body-02-sb lg:h-[40px] lg:w-[91px] lg:text-body-01-sb',
+        'h-[27px] w-[65px] rounded-xl bg-blue-150 text-small-01-sb text-blue-300 md:h-[34px] md:w-[78px] md:text-body-02-sb lg:h-[40px] lg:w-[91px] lg:text-body-01-sb',
     },
     state: {
       goal: '',

@@ -40,6 +40,25 @@ interface RouteMetaItem {
   label: string;
 }
 
+/** 데스크톱(xl) 시안 — 텍스트 블록 패딩(px). 모바일·태블릿은 아래 공통 클래스 유지 */
+const ROUTE_TEXT_PADDING_XL: Record<RouteLabel, string> = {
+  'Route 1': 'xl:pt-[138px] xl:pb-[139px] xl:pl-[100px] xl:pr-[230px]',
+  'Route 2': 'xl:pt-[138px] xl:pb-[139px] xl:pl-[80px] xl:pr-[192px]',
+  'Route 3': 'xl:pt-[138px] xl:pb-[139px] xl:pl-[100px] xl:pr-[215px]',
+  'Route 4': 'xl:pt-[138px] xl:pb-[139px] xl:pl-[80px] xl:pr-[255px]',
+};
+
+const ROUTE_IMAGE_PADDING_XL: Record<RouteLabel, string> = {
+  'Route 1': 'xl:pt-[60px] xl:pb-[60px] xl:pl-0 xl:pr-[100px]',
+  'Route 3': 'xl:pt-[60px] xl:pb-[60px] xl:pl-0 xl:pr-[100px]',
+  'Route 2': 'xl:pt-[60px] xl:pb-[60px] xl:pl-[100px] xl:pr-0',
+  'Route 4': 'xl:pt-[60px] xl:pb-[60px] xl:pl-[100px] xl:pr-0',
+};
+
+/** Route N-PC.png 실제 픽셀 (Next/Image 종횡비·CLS) */
+const ROUTE_STEP_IMAGE_WIDTH = 2400;
+const ROUTE_STEP_IMAGE_HEIGHT = 1464;
+
 const ROUTE_META: Record<RouteLabel, readonly [RouteMetaItem, RouteMetaItem]> = {
   'Route 1': [
     { icon: LandingSearchIcon, label: '모임 탐색' },
@@ -85,9 +104,14 @@ function RouteStepCard({
   const enableScrollEffects = !shouldReduceMotion;
 
   const textBlock = (
-    <div className='flex flex-1 flex-col items-center justify-center gap-3 bg-gray-100 px-2 py-6 text-center md:px-29 md:py-15 xl:items-start xl:px-25 xl:py-15 xl:text-left'>
+    <div
+      className={cn(
+        'flex flex-1 flex-col items-center justify-center bg-gray-100 px-4 pt-8 pb-10 text-center md:px-29 md:py-15 xl:w-[52%] xl:flex-none xl:items-start xl:text-left',
+        ROUTE_TEXT_PADDING_XL[routeLabel],
+      )}
+    >
       <Tag variant='route'>{routeLabel}</Tag>
-      <h3 className='text-body-01-b md:text-h4-b lg:text-h3-b mb-2 break-keep text-gray-900'>{title}</h3>
+      <h3 className='text-body-01-b md:text-h4-b lg:text-h3-b mb-2 break-keep text-gray-900 xl:mt-6'>{title}</h3>
       <p className='text-small-02-r md:text-body-02-r lg:text-body-01-r break-keep text-gray-800'>{description}</p>
       <div className='mt-6 flex flex-wrap items-center justify-center gap-8 md:mt-10 xl:mt-25 xl:justify-start'>
         {meta.map((item) => {
@@ -95,7 +119,7 @@ function RouteStepCard({
           return (
             <div key={item.label} className='flex items-center gap-3 text-gray-700'>
               <Icon size={44} className='shrink-0' />
-              <span className='text-small-01-sb md:text-body-02-sb lg:text-body-01-sb'>{item.label}</span>
+              <span className='text-small-02-sb md:text-body-02-sb lg:text-body-01-sb'>{item.label}</span>
             </div>
           );
         })}
@@ -104,15 +128,23 @@ function RouteStepCard({
   );
 
   const imageBlock = (
-    <div className='flex flex-1 items-center justify-center bg-gray-100 p-4 md:p-6 xl:p-8'>
-      <Image
-        src={imageSrc}
-        alt={imageAlt}
-        width={1600}
-        height={976}
-        className='h-auto max-h-[320px] w-full object-contain md:max-h-[380px] lg:max-h-[420px]'
-        sizes='(max-width: 768px) 100vw, 50vw'
-      />
+    <div
+      className={cn(
+        'flex flex-1 items-center justify-center bg-gray-100 p-4 md:p-7 xl:w-[48%] xl:flex-none',
+        /** 시안: 상·하 60px, 좌·우 100px (`padding: 60px 100px 60px`). xl에서 md:p-7 덮어씀 */
+        ROUTE_IMAGE_PADDING_XL[routeLabel],
+      )}
+    >
+      <div className='aspect-800/488 w-full max-w-[800px] xl:w-[800px] xl:max-w-none'>
+        <Image
+          src={imageSrc}
+          alt={imageAlt}
+          width={ROUTE_STEP_IMAGE_WIDTH}
+          height={ROUTE_STEP_IMAGE_HEIGHT}
+          className='size-full object-contain'
+          sizes='(max-width: 800px) 100vw, 800px'
+        />
+      </div>
     </div>
   );
 
@@ -153,10 +185,7 @@ export function LandingRouteCards() {
   });
 
   return (
-    <div
-      ref={containerRef}
-      className='mt-12 px-4 pb-[10vh] md:mt-14 md:px-7 md:pb-[12vh] lg:mt-16 lg:px-30 lg:pb-[15vh]'
-    >
+    <div ref={containerRef} className='relative mt-12 px-4 pt-8 pb-[10vh] md:mt-14 md:px-7 md:pb-[12vh]'>
       {LANDING_ROUTE_STEPS.map((step, index) => (
         <RouteStepCard
           key={step.routeLabel}
