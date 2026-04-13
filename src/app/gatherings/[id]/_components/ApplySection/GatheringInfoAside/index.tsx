@@ -155,7 +155,7 @@ export function GatheringInfoAside({ gatheringId }: GatheringInfoAsideProps) {
 
             <Button
               variant='action'
-              className={`text-body-01-sb h-13.5 flex-1 md:h-18 ${!isJoinable || hasPendingApplication ? 'bg-gray-300' : ''}`}
+              className='text-body-01-sb h-13.5 w-full md:h-18 lg:h-20'
               disabled={!isJoinable || hasPendingApplication}
               onClick={async () => {
                 if (!isLoggedIn) {

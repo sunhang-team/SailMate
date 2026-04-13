@@ -100,7 +100,12 @@ export function GatheringApplyForm({ gatheringTitle, onSubmit, isLoading }: Gath
         </label>
       </div>
 
-      <Button type='submit' variant='action' className='w-full' disabled={!isValid || isLoading}>
+      <Button
+        type='submit'
+        variant='action'
+        className='text-body-01-sb h-13.5 w-full md:h-18 lg:h-20'
+        disabled={!isValid || isLoading}
+      >
         {isLoading ? '신청 중...' : '작성 완료'}
       </Button>
     </form>
