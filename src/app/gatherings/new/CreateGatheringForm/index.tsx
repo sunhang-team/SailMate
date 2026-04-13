@@ -373,7 +373,10 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
 
         {/* 태그 */}
         <div className='flex flex-col gap-1'>
-          <p className='text-small-02-m md:text-body-02-m lg:text-body-01-m text-gray-800'>태그</p>
+          <p className='text-small-02-m md:text-body-02-m lg:text-body-01-m flex items-center gap-1 text-gray-800'>
+            태그
+            <span className='md:text-small-02-r lg:text-small-01-r text-[8px] font-normal text-gray-400'>(선택)</span>
+          </p>
           <Controller
             name='tags'
             control={control}
@@ -390,7 +393,10 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
 
         {/* 이미지 */}
         <div className='flex flex-col gap-1'>
-          <p className='text-small-02-m md:text-body-02-m lg:text-body-01-m text-gray-800'>이미지</p>
+          <p className='text-small-02-m md:text-body-02-m lg:text-body-01-m flex items-center gap-1 text-gray-800'>
+            이미지
+            <span className='md:text-small-02-r lg:text-small-01-r text-[8px] font-normal text-gray-400'>(선택)</span>
+          </p>
           <Controller
             name='images'
             control={control}

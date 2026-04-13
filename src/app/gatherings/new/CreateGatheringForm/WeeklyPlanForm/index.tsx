@@ -57,7 +57,10 @@ function WeekDetailInputs({ control, index, error }: WeekDetailInputsProps) {
 
   return (
     <div className='flex flex-col gap-3'>
-      <p className='text-small-02-sb md:text-small-01-m lg:text-body-02-m text-gray-800'>세부 계획</p>
+      <p className='text-small-02-sb md:text-small-01-m lg:text-body-02-m flex items-center gap-1 text-gray-800'>
+        세부 계획
+        <span className='md:text-small-02-r lg:text-small-01-r text-[8px] font-normal text-gray-400'>(선택)</span>
+      </p>
 
       {details.length === 0 ? (
         <Button
