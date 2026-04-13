@@ -43,7 +43,11 @@ export function ParticipantsList({ members, maxMembers, className }: Participant
               className='flex cursor-pointer items-center justify-between rounded-md p-2 hover:bg-blue-100'
             >
               <div className='flex items-center gap-2'>
-                <AvatarGroup avatars={[{ id: member.userId, imageUrl: member.profileImage }]} size='md' />
+                <AvatarGroup
+                  avatars={[{ id: member.userId, imageUrl: member.profileImage }]}
+                  size='md'
+                  shape='square'
+                />
                 <span className='text-sm font-medium'>{member.nickname}</span>
               </div>
               <span className='text-small-02-r text-blue-300'>상세보기</span>

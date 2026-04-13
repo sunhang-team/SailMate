@@ -1,19 +1,20 @@
 'use client';
 
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
+import axios from 'axios';
 
 import { gatheringQueries } from '@/api/gatherings/queries';
 import { useLikeToggle } from '@/api/likes/hooks';
 import { applicationQueries, useCreateApplication } from '@/api/applications/queries';
 import { getCurrentWeek } from '@/lib/formatGatheringDate';
 import { Button } from '@/components/ui/Button';
-import { GatheringCard } from '@/components/ui/GatheringCard';
 import { HeartIcon, StudyIcon, ProjectIcon } from '@/components/ui/Icon';
 import { Tag } from '@/components/ui/Tag';
 import { AuthModal } from '@/components/AuthModal';
 import { useAuth } from '@/hooks/useAuth';
 import { useFunnel } from '@/hooks/useFunnel';
 import { useOverlay } from '@/hooks/useOverlay';
+import { useToastStore } from '@/components/ui/Toast/useToastStore';
 
 import { DeadlineLabel } from '../DeadlineLabel';
 import { InfoAccordion } from '../InfoAccordion';
@@ -46,11 +47,19 @@ export function GatheringInfoAside({ gatheringId }: GatheringInfoAsideProps) {
     myApplications?.applications.some((app) => app.gathering.id === gatheringId && app.status === 'PENDING') ?? false;
   const { isLiked, isPending: isLikePending, toggleLike } = useLikeToggle(gatheringId);
   const overlay = useOverlay();
+  const { showToast } = useToastStore();
   const { Funnel, Step, setStep } = useFunnel<'DEFAULT' | 'APPLY' | 'SUCCESS'>('DEFAULT');
 
   const { mutate, isPending } = useCreateApplication(gatheringId, {
     onSuccess: () => {
       setStep('SUCCESS');
+    },
+    onError: (error) => {
+      if (axios.isAxiosError(error) && error.response?.data?.message) {
+        showToast({ variant: 'error', title: error.response.data.message });
+        return;
+      }
+      showToast({ variant: 'error', title: '신청에 실패했습니다.' });
     },
   });
 
@@ -61,7 +70,7 @@ export function GatheringInfoAside({ gatheringId }: GatheringInfoAsideProps) {
   const { displayLabel, tagState, isJoinable, isFull, isDeadlinePassed, isFinished } = getGatheringDisplayStatus(data);
 
   return (
-    <div className='sticky top-[-20px]'>
+    <div>
       {/* 모집 상태 바 - 항상 노출 */}
       {tagState === 'recruiting' && (
         <div className='border-focus-100 mb-4 flex justify-between rounded-[8px] border bg-blue-100 px-8 py-2.5'>
@@ -94,20 +103,20 @@ export function GatheringInfoAside({ gatheringId }: GatheringInfoAsideProps) {
 
       <Funnel>
         <Step name='APPLY'>
-          <div className='border-gray-150 rounded-2xl border bg-white p-8 shadow-sm'>
+          <div className='border-focus-100 shadow-01 w-full rounded-2xl border bg-white p-8'>
             <GatheringApplyForm gatheringTitle={data.title} onSubmit={mutate} isLoading={isPending} />
           </div>
         </Step>
 
         <Step name='SUCCESS'>
-          <div className='border-gray-150 rounded-2xl border bg-white p-8 shadow-sm'>
+          <div className='border-focus-100 shadow-01 w-full rounded-2xl border bg-white p-8'>
             <GatheringApplySuccess onClose={() => setStep('DEFAULT')} />
           </div>
         </Step>
 
         <Step name='DEFAULT'>
-          <GatheringCard className='border-focus-100 w-full border'>
-            <GatheringCard.Header className='items-center'>
+          <div className='border-focus-100 shadow-01 w-full rounded-2xl border bg-white p-7'>
+            <div className='mb-6 flex items-center justify-between'>
               <Tag
                 variant='category'
                 icon={<TypeIcon size={14} className='text-blue-200' />}
@@ -125,9 +134,9 @@ export function GatheringInfoAside({ gatheringId }: GatheringInfoAsideProps) {
               >
                 <HeartIcon size={20} variant={isLiked ? 'filled' : 'outline'} />
               </Button>
-            </GatheringCard.Header>
+            </div>
 
-            <GatheringCard.Body className='mb-10 gap-2'>
+            <div className='mb-10 flex flex-col gap-2'>
               <div className='flex flex-wrap gap-1'>
                 {data.tags.map((tag) => (
                   <span key={tag} className='text-body-02-r text-gray-700'>
@@ -135,18 +144,18 @@ export function GatheringInfoAside({ gatheringId }: GatheringInfoAsideProps) {
                   </span>
                 ))}
               </div>
-              <p className='text-body-01-b text-gray-900'>{data.title}</p>
-              <p className='text-small-01-r text-gray-800'>{data.shortDescription}</p>
-            </GatheringCard.Body>
+              <h3 className='text-h3-b text-gray-900'>{data.title}</h3>
+              <p className='text-body-02-r text-gray-800'>{data.shortDescription}</p>
+            </div>
 
-            <GatheringCard.Footer className='flex-col'>
+            <div className='flex flex-col'>
               <InfoAccordion data={data} className='mb-7' />
               <ParticipantsList members={data.members} maxMembers={data.maxMembers} className='mb-7' />
-            </GatheringCard.Footer>
+            </div>
 
             <Button
               variant='action'
-              className={`text-body-01-sb h-13.5 flex-1 md:h-18 ${!isJoinable || hasPendingApplication ? 'bg-gray-300' : ''}`}
+              className='text-body-01-sb h-13.5 w-full md:h-18 lg:h-20'
               disabled={!isJoinable || hasPendingApplication}
               onClick={async () => {
                 if (!isLoggedIn) {
@@ -166,7 +175,7 @@ export function GatheringInfoAside({ gatheringId }: GatheringInfoAsideProps) {
                 status: data.status,
               })}
             </Button>
-          </GatheringCard>
+          </div>
         </Step>
       </Funnel>
     </div>

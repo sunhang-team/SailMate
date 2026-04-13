@@ -54,16 +54,16 @@ export function GatheringApplyForm({ gatheringTitle, onSubmit, isLoading }: Gath
       <div className='flex flex-col gap-2'>
         <h2 className='text-h3-b text-gray-900'>모임 신청</h2>
         <p className='text-body-02-m text-gray-600'>
-          신청 모임 <span className='mx-2 text-gray-300'>|</span>{' '}
-          <span className='text-body-02-b text-gray-900'>{gatheringTitle}</span>
+          신청 모임 <span className='mx-2 text-gray-600'>|</span>{' '}
+          <span className='text-body-02-sb text-gray-900'>{gatheringTitle}</span>
         </p>
       </div>
 
       <div className='flex flex-col gap-4'>
         <div className='relative flex flex-col gap-2'>
           <div className='flex justify-between'>
-            <label className='text-body-02-b text-gray-900'>
-              나의 목표 <span className='text-blue-300'>*</span>
+            <label className='text-body-02-m text-gray-800'>
+              나의 목표 <span className='text-blue-400'>*</span>
             </label>
           </div>
           <Textarea
@@ -76,7 +76,7 @@ export function GatheringApplyForm({ gatheringTitle, onSubmit, isLoading }: Gath
         </div>
 
         <div className='relative flex flex-col gap-2'>
-          <label className='text-body-02-b text-gray-900'>한 줄 소개</label>
+          <label className='text-body-02-m text-gray-800'>한 줄 소개</label>
           <Textarea
             {...register('selfIntroduction')}
             placeholder='(선택) 모임장에게 한마디를 적어주세요.'
@@ -90,21 +90,22 @@ export function GatheringApplyForm({ gatheringTitle, onSubmit, isLoading }: Gath
       </div>
 
       <div className='flex flex-col gap-2'>
-        <p className='text-body-02-b text-gray-900'>팀 구성을 위해 닉네임과 평판 점수가 모임장에게 전달됩니다.</p>
+        <p className='text-body-02-m text-gray-800'>팀 구성을 위해 닉네임과 평판 점수가 모임장에게 전달됩니다.</p>
         <label className='flex cursor-pointer items-center gap-2'>
-          <div className='relative flex h-5 w-5 items-center justify-center'>
-            <input type='checkbox' {...register('agreement')} className='peer sr-only' />
-            <div className='flex h-4 w-4 items-center justify-center rounded-md border border-gray-200 bg-white transition-colors peer-checked:border-blue-300 peer-checked:bg-blue-300'>
-              <CheckIcon size={16} className='text-white' />
-            </div>
-          </div>
-          <span className={cn('text-body-02-m transition-colors', agreement ? 'text-gray-900' : 'text-gray-400')}>
+          <input type='checkbox' {...register('agreement')} className='peer sr-only' />
+          <CheckIcon className={cn('size-5 transition-colors', agreement ? 'text-blue-300' : 'text-gray-500')} />
+          <span className={cn('text-small-01-r transition-colors', agreement ? 'text-blue-300' : 'text-gray-500')}>
             내용을 확인했으며 제공에 동의합니다.
           </span>
         </label>
       </div>
 
-      <Button type='submit' variant='action' className='w-full' disabled={!isValid || isLoading}>
+      <Button
+        type='submit'
+        variant='action'
+        className='text-body-01-sb h-13.5 w-full md:h-18 lg:h-20'
+        disabled={!isValid || isLoading}
+      >
         {isLoading ? '신청 중...' : '작성 완료'}
       </Button>
     </form>
