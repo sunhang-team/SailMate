@@ -2,7 +2,7 @@ import { cva } from 'class-variance-authority';
 import Image from 'next/image';
 
 import { cn } from '@/lib/cn';
-import { DEFAULT_PROFILE_IMAGE } from '@/constants/image';
+import { DEFAULT_PROFILE_IMAGE, normalizeImageUrl } from '@/constants/image';
 
 const avatarSizeVariants = cva('relative bg-gray-300 flex items-center justify-center overflow-hidden', {
   variants: {
@@ -83,7 +83,7 @@ export function AvatarGroup({
       {displayAvatars.map((avatar, index) => (
         <div key={avatar.id ?? index} className={avatarSizeVariants({ size, shape, hasBorder })}>
           <Image
-            src={avatar.imageUrl || DEFAULT_PROFILE_IMAGE}
+            src={normalizeImageUrl(avatar.imageUrl)}
             alt={`멤버 ${index + 1}`}
             fill
             className='object-cover'

@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/Button';
 import { HandIcon, StateIcon } from '@/components/ui/Icon';
 import { ProgressBar } from '@/components/ui/Progress';
 import { Tag } from '@/components/ui/Tag';
-import { DEFAULT_PROFILE_IMAGE } from '@/constants/image';
+import { DEFAULT_PROFILE_IMAGE, normalizeImageUrl } from '@/constants/image';
 
 import { RankBadge } from '../RankBadge';
 
@@ -26,7 +26,7 @@ export function RankingItem({ item, isMe }: RankingItemProps) {
 
       <div className='relative h-8 w-8 shrink-0 overflow-hidden rounded-lg md:h-12 md:w-12'>
         <Image
-          src={item.profileImage || DEFAULT_PROFILE_IMAGE}
+          src={normalizeImageUrl(item.profileImage)}
           alt={`${item.nickname} 프로필 이미지`}
           fill
           className='object-cover'

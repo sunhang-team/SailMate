@@ -1,6 +1,6 @@
 import Image from 'next/image';
 
-import { DEFAULT_PROFILE_IMAGE } from '@/constants/image';
+import { DEFAULT_PROFILE_IMAGE, normalizeImageUrl } from '@/constants/image';
 import { formatReviewDate } from '../../utils/dateUtils';
 import type { Review } from '@/api/reviews/types';
 
@@ -15,7 +15,7 @@ export function ReviewItem({ review, profileImg }: ReviewItemProps) {
       <div className='flex items-start gap-2'>
         <div className='relative h-6 w-6 shrink-0 overflow-hidden rounded-lg bg-gray-200 md:h-12 md:w-12'>
           <Image
-            src={profileImg || DEFAULT_PROFILE_IMAGE}
+            src={normalizeImageUrl(profileImg)}
             alt={`${review.reviewer?.nickname || '익명'} 프로필`}
             fill
             className='object-cover'

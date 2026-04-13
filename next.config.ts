@@ -22,8 +22,20 @@ const nextConfig: NextConfig = {
         hostname: 'img1.kakaocdn.net',
       },
       {
+        protocol: 'https',
+        hostname: 'img1.kakaocdn.net',
+      },
+      {
         protocol: 'http',
         hostname: 't1.kakaocdn.net',
+      },
+      {
+        protocol: 'https',
+        hostname: 't1.kakaocdn.net',
+      },
+      {
+        protocol: 'https',
+        hostname: 'chukjibeob.store',
       },
     ],
   },

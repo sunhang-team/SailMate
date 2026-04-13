@@ -4,7 +4,7 @@ import { Modal } from '@/components/ui/Modal';
 import { ProgressBar } from '@/components/ui/Progress';
 import { Tag } from '@/components/ui/Tag';
 import { IllustrationIcon } from '@/components/ui/Icon';
-import { DEFAULT_PROFILE_IMAGE } from '@/constants/image';
+import { DEFAULT_PROFILE_IMAGE, normalizeImageUrl } from '@/constants/image';
 import type { UserPublicProfile } from '@/api/users/types';
 
 interface ProfileHeaderProps {
@@ -16,7 +16,7 @@ export function ProfileHeader({ profile }: ProfileHeaderProps) {
     <>
       <div className='relative h-19.75 w-19.75 shrink-0 overflow-hidden rounded-2xl bg-gray-100 shadow-sm md:h-32.75 md:w-32.75'>
         <Image
-          src={profile.profileImage || DEFAULT_PROFILE_IMAGE}
+          src={normalizeImageUrl(profile.profileImage)}
           alt={`${profile.nickname} 프로필 이미지`}
           fill
           className='object-cover'

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 
-import { DEFAULT_PROFILE_IMAGE } from '@/constants/image';
+import { DEFAULT_PROFILE_IMAGE, normalizeImageUrl } from '@/constants/image';
 
 interface SidebarAvatarProps {
   imageUrl: string;
@@ -16,7 +16,7 @@ export function SidebarAvatar({ imageUrl, nickname, size = 200 }: SidebarAvatarP
       style={{ width: size, height: size }}
     >
       <Image
-        src={imageUrl || DEFAULT_PROFILE_IMAGE}
+        src={normalizeImageUrl(imageUrl)}
         alt={`${nickname} 프로필 이미지`}
         fill
         className='object-cover'
