@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
   transpilePackages: ['until-async'],
   serverExternalPackages: ['msw'],
   async rewrites() {
-    const backendBaseUrl = process.env.BACKEND_BASE_URL;
+    const backendBaseUrl = process.env.BACKEND_BASE_URL?.replace(/\/+$/, '');
     if (!backendBaseUrl) return [];
     return [
       {
