@@ -24,9 +24,13 @@ export const getUsersMe = async (): Promise<User> => {
 export const updateProfile = async (body: UpdateProfileForm): Promise<UpdateProfileResponseData> => {
   const formData = new FormData();
 
+  const requestData: Record<string, string> = {};
   if (body.nickname !== undefined) {
-    formData.append('nickname', body.nickname);
+    requestData.nickname = body.nickname;
   }
+
+  const requestBlob = new Blob([JSON.stringify(requestData)], { type: 'application/json' });
+  formData.append('request', requestBlob);
 
   if (body.profileImage) {
     formData.append('profileImage', body.profileImage);
