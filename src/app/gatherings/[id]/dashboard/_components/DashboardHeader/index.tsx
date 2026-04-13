@@ -89,7 +89,7 @@ export function DashboardHeader({ gatheringId }: DashboardHeaderProps) {
         </div>
 
         {/* 통계 카드 — PC: 4열 그리드 (스와이프 없음) */}
-        <div className='mt-8 hidden lg:grid lg:grid-cols-4 lg:gap-4'>
+        <div className='mt-10 hidden lg:grid lg:grid-cols-4 lg:gap-4'>
           {cards.map((card) => (
             <StatCard key={card.label} {...card} />
           ))}
