@@ -4,6 +4,7 @@ import type { NextConfig } from 'next';
 const nextConfig: NextConfig = {
   transpilePackages: ['until-async'],
   serverExternalPackages: ['msw'],
+
   async rewrites() {
     const backendBaseUrl = process.env.BACKEND_BASE_URL?.replace(/\/+$/, '');
     if (!backendBaseUrl) return [];
@@ -13,6 +14,18 @@ const nextConfig: NextConfig = {
         destination: `${backendBaseUrl}/images/:path*`,
       },
     ];
+  },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'http',
+        hostname: 'img1.kakaocdn.net',
+      },
+      {
+        protocol: 'http',
+        hostname: 't1.kakaocdn.net',
+      },
+    ],
   },
 };
 

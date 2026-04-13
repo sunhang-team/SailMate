@@ -63,7 +63,7 @@ export function DashboardHeader({ gatheringId }: DashboardHeaderProps) {
       icon: <PeopleIcon size={24} className='lg:h-8 lg:w-8' />,
       label: '모임 구성원',
       value: `${gathering.members.length}명`,
-      subInfo: <AvatarGroup avatars={avatars} max={5} size='sm' />,
+      subInfo: <AvatarGroup avatars={avatars} max={5} size='sm' shape='full' />,
     },
     {
       icon: <RisingIcon size={24} className='lg:h-8 lg:w-8' />,

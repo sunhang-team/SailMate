@@ -1,7 +1,10 @@
+import Image from 'next/image';
+
 import { Button } from '@/components/ui/Button';
 import { HandIcon, StateIcon } from '@/components/ui/Icon';
 import { ProgressBar } from '@/components/ui/Progress';
 import { Tag } from '@/components/ui/Tag';
+import { DEFAULT_PROFILE_IMAGE } from '@/constants/image';
 
 import { RankBadge } from '../RankBadge';
 
@@ -14,10 +17,6 @@ interface RankingItemProps {
 
 const WARNING_THRESHOLD = 50;
 
-// 프로필 이미지 로드 실패 시 보여줄 회색 빈 SVG (base64 인코딩)
-const FALLBACK_IMAGE =
-  'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiNFMkU4RjAiLz48L3N2Zz4=';
-
 export function RankingItem({ item, isMe }: RankingItemProps) {
   const isWarning = item.overallRate < WARNING_THRESHOLD;
 
@@ -25,14 +24,15 @@ export function RankingItem({ item, isMe }: RankingItemProps) {
     <div className={`flex items-center gap-3 rounded-2xl bg-gray-100 p-3 ${isMe ? 'border border-blue-300' : ''}`}>
       <RankBadge rank={item.rank} />
 
-      <div className='h-8 w-8 shrink-0 overflow-hidden rounded-full bg-gray-200 md:h-12 md:w-12'>
-        {/* next/image는 onError를 안정적으로 지원하지 않아 <img> 사용 */}
-        <img
-          src={item.profileImage}
+      <div className='relative h-8 w-8 shrink-0 overflow-hidden rounded-lg md:h-12 md:w-12'>
+        <Image
+          src={item.profileImage || DEFAULT_PROFILE_IMAGE}
           alt={`${item.nickname} 프로필 이미지`}
-          className='h-full w-full object-cover'
+          fill
+          className='object-cover'
           onError={(e) => {
-            (e.target as HTMLImageElement).src = FALLBACK_IMAGE;
+            // next/image의 onError는 브라우저 네이티브 이벤트 객체를 전달합니다.
+            (e.target as HTMLImageElement).src = DEFAULT_PROFILE_IMAGE;
           }}
         />
       </div>

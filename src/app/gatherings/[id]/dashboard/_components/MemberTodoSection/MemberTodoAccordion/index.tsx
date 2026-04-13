@@ -39,7 +39,11 @@ export function MemberTodoAccordion({ member, todos }: MemberTodoAccordionProps)
         aria-expanded={isOpen}
       >
         <div className='flex items-center gap-3 md:gap-5'>
-          <Profile imageUrl={member.profileImage} className='size-8 rounded-lg shadow-sm md:size-12' />
+          <Profile
+            imageUrl={member.profileImage}
+            className='size-8 rounded-lg shadow-sm md:size-12'
+            hasBorder={false}
+          />
 
           <div className='flex items-center gap-1 md:flex-row md:items-center md:gap-4'>
             <span className='text-small-01-m md:text-body-01-m text-gray-900'>{member.nickname}</span>

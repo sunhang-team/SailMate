@@ -42,7 +42,11 @@ export function MemberCard({
   return (
     <article className={cn('rounded-2xl border bg-white', 'p-6 md:p-7', isMe ? 'border-focus-100' : 'border-gray-150')}>
       <div className='flex items-start gap-2 md:gap-4'>
-        <Profile imageUrl={member.profileImage} className='h-12 w-12 shrink-0 rounded-lg md:h-[78px] md:w-[78px]' />
+        <Profile
+          imageUrl={member.profileImage}
+          className='h-12 w-12 shrink-0 rounded-lg md:h-[78px] md:w-[78px]'
+          hasBorder={false}
+        />
         <div className='min-w-0 flex-1'>
           <div className='flex items-center gap-1.5'>
             <span className='text-body-02-sb md:text-h5-sb truncate text-gray-900'>{member.nickname}</span>
