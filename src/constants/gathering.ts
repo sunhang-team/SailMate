@@ -15,9 +15,9 @@ export const GATHERING_STATUS_LABEL = {
 } as const;
 
 export const DEFAULT_CATEGORIES = [
-  { id: 1, name: '개발' },
-  { id: 2, name: '어학' },
-  { id: 3, name: '독서' },
-  { id: 4, name: '자격증' },
-  { id: 5, name: '디자인' },
+  { id: 7, name: '개발' },
+  { id: 8, name: '어학' },
+  { id: 9, name: '독서' },
+  { id: 10, name: '자격증' },
+  { id: 11, name: '디자인' },
 ] as const;
