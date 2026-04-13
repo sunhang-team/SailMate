@@ -1,6 +1,7 @@
 'use client';
 
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
+import axios from 'axios';
 
 import { gatheringQueries } from '@/api/gatherings/queries';
 import { useLikeToggle } from '@/api/likes/hooks';
@@ -14,6 +15,7 @@ import { AuthModal } from '@/components/AuthModal';
 import { useAuth } from '@/hooks/useAuth';
 import { useFunnel } from '@/hooks/useFunnel';
 import { useOverlay } from '@/hooks/useOverlay';
+import { useToastStore } from '@/components/ui/Toast/useToastStore';
 
 import { DeadlineLabel } from '../DeadlineLabel';
 import { InfoAccordion } from '../InfoAccordion';
@@ -46,11 +48,19 @@ export function GatheringInfoAside({ gatheringId }: GatheringInfoAsideProps) {
     myApplications?.applications.some((app) => app.gathering.id === gatheringId && app.status === 'PENDING') ?? false;
   const { isLiked, isPending: isLikePending, toggleLike } = useLikeToggle(gatheringId);
   const overlay = useOverlay();
+  const { showToast } = useToastStore();
   const { Funnel, Step, setStep } = useFunnel<'DEFAULT' | 'APPLY' | 'SUCCESS'>('DEFAULT');
 
   const { mutate, isPending } = useCreateApplication(gatheringId, {
     onSuccess: () => {
       setStep('SUCCESS');
+    },
+    onError: (error) => {
+      if (axios.isAxiosError(error) && error.response?.data?.message) {
+        showToast({ variant: 'error', title: error.response.data.message });
+        return;
+      }
+      showToast({ variant: 'error', title: '신청에 실패했습니다.' });
     },
   });
 
