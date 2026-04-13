@@ -8,7 +8,6 @@ import { useLikeToggle } from '@/api/likes/hooks';
 import { applicationQueries, useCreateApplication } from '@/api/applications/queries';
 import { getCurrentWeek } from '@/lib/formatGatheringDate';
 import { Button } from '@/components/ui/Button';
-import { GatheringCard } from '@/components/ui/GatheringCard';
 import { HeartIcon, StudyIcon, ProjectIcon } from '@/components/ui/Icon';
 import { Tag } from '@/components/ui/Tag';
 import { AuthModal } from '@/components/AuthModal';
@@ -104,20 +103,20 @@ export function GatheringInfoAside({ gatheringId }: GatheringInfoAsideProps) {
 
       <Funnel>
         <Step name='APPLY'>
-          <div className='border-gray-150 rounded-2xl border bg-white p-8 shadow-sm'>
+          <div className='border-focus-100 shadow-01 w-full rounded-2xl border bg-white p-8'>
             <GatheringApplyForm gatheringTitle={data.title} onSubmit={mutate} isLoading={isPending} />
           </div>
         </Step>
 
         <Step name='SUCCESS'>
-          <div className='border-gray-150 rounded-2xl border bg-white p-8 shadow-sm'>
+          <div className='border-focus-100 shadow-01 w-full rounded-2xl border bg-white p-8'>
             <GatheringApplySuccess onClose={() => setStep('DEFAULT')} />
           </div>
         </Step>
 
         <Step name='DEFAULT'>
-          <GatheringCard className='border-focus-100 w-full border'>
-            <GatheringCard.Header className='items-center'>
+          <div className='border-focus-100 shadow-01 w-full rounded-2xl border bg-white p-7'>
+            <div className='mb-6 flex items-center justify-between'>
               <Tag
                 variant='category'
                 icon={<TypeIcon size={14} className='text-blue-200' />}
@@ -135,9 +134,9 @@ export function GatheringInfoAside({ gatheringId }: GatheringInfoAsideProps) {
               >
                 <HeartIcon size={20} variant={isLiked ? 'filled' : 'outline'} />
               </Button>
-            </GatheringCard.Header>
+            </div>
 
-            <GatheringCard.Body className='mb-10 gap-2'>
+            <div className='mb-10 flex flex-col gap-2'>
               <div className='flex flex-wrap gap-1'>
                 {data.tags.map((tag) => (
                   <span key={tag} className='text-body-02-r text-gray-700'>
@@ -145,14 +144,14 @@ export function GatheringInfoAside({ gatheringId }: GatheringInfoAsideProps) {
                   </span>
                 ))}
               </div>
-              <p className='text-body-01-b text-gray-900'>{data.title}</p>
-              <p className='text-small-01-r text-gray-800'>{data.shortDescription}</p>
-            </GatheringCard.Body>
+              <h3 className='text-h3-b text-gray-900'>{data.title}</h3>
+              <p className='text-body-02-r text-gray-800'>{data.shortDescription}</p>
+            </div>
 
-            <GatheringCard.Footer className='flex-col'>
+            <div className='flex flex-col'>
               <InfoAccordion data={data} className='mb-7' />
               <ParticipantsList members={data.members} maxMembers={data.maxMembers} className='mb-7' />
-            </GatheringCard.Footer>
+            </div>
 
             <Button
               variant='action'
@@ -176,7 +175,7 @@ export function GatheringInfoAside({ gatheringId }: GatheringInfoAsideProps) {
                 status: data.status,
               })}
             </Button>
-          </GatheringCard>
+          </div>
         </Step>
       </Funnel>
     </div>
