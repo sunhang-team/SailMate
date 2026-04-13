@@ -57,14 +57,14 @@ function WeekDetailInputs({ control, index, error }: WeekDetailInputsProps) {
 
   return (
     <div className='flex flex-col gap-3'>
-      <p className='text-small-02-m md:text-body-02-m text-gray-800'>세부 계획</p>
+      <p className='text-small-02-sb md:text-small-01-m lg:text-body-02-m text-gray-800'>세부 계획</p>
 
       {details.length === 0 ? (
         <Button
           type='button'
           variant='add-detail'
           size='add-detail'
-          className='h-[calc(2.75rem+2px)] w-full md:h-[calc(3.625rem+2px)]'
+          className='text-small-02-m md:text-body-02-m lg:text-body-01-m h-[43px] w-full md:h-[58px] lg:h-[72px]'
           onClick={handleAddDetail}
         >
           + 세부 계획 추가
@@ -80,7 +80,7 @@ function WeekDetailInputs({ control, index, error }: WeekDetailInputsProps) {
                   onBlur={field.onBlur}
                   onChange={(event) => updateDetail(0, event.target.value)}
                   error={error}
-                  className='text-small-02-r md:text-body-02-r h-11 md:h-14.5'
+                  className='text-small-02-r md:text-body-02-r lg:text-body-01-r h-[43px] md:h-[58px] lg:h-[72px] lg:px-7 lg:py-5'
                 />
                 <button
                   type='button'
@@ -96,7 +96,7 @@ function WeekDetailInputs({ control, index, error }: WeekDetailInputsProps) {
                 type='button'
                 variant='add-detail'
                 size='add-detail'
-                className='hidden h-[calc(2.75rem+5px)] w-full md:h-[calc(3.625rem+5px)] lg:block lg:w-1/2'
+                className='text-small-02-m md:text-body-02-m lg:text-body-01-m hidden h-[43px] w-full md:h-[58px] lg:block lg:h-[72px] lg:w-1/2'
                 onClick={handleAddDetail}
               >
                 + 세부 계획 추가
@@ -112,7 +112,7 @@ function WeekDetailInputs({ control, index, error }: WeekDetailInputsProps) {
                   value={details[1] ?? ''}
                   onBlur={field.onBlur}
                   onChange={(event) => updateDetail(1, event.target.value)}
-                  className='text-small-02-r md:text-body-02-r h-11 md:h-14.5'
+                  className='text-small-02-r md:text-body-02-r lg:text-body-01-r h-[43px] md:h-[58px] lg:h-[72px] lg:px-7 lg:py-5'
                 />
                 <button
                   type='button'
@@ -130,7 +130,7 @@ function WeekDetailInputs({ control, index, error }: WeekDetailInputsProps) {
               type='button'
               variant='add-detail'
               size='add-detail'
-              className='h-[calc(2.75rem+2px)] w-full md:h-[calc(3.625rem+2px)] lg:hidden'
+              className='text-small-02-m md:text-body-02-m lg:text-body-01-m h-[43px] w-full md:h-[58px] lg:hidden lg:h-[72px]'
               onClick={handleAddDetail}
             >
               + 세부 계획 추가
@@ -197,9 +197,9 @@ export function WeeklyPlanForm({ control, register, errors, totalWeeks }: Weekly
       <button
         type='button'
         onClick={() => setIsOpenOverride((prev) => !(prev ?? totalWeeks > 0))}
-        className='bg-gray-150 flex h-12 items-center justify-between rounded-lg border border-gray-200 px-7 py-5'
+        className='bg-gray-150 flex h-[43px] items-center justify-between rounded-lg border border-gray-200 px-7 py-5 md:h-[58px] lg:h-[72px]'
       >
-        <span className='text-small-01-sb md:text-body-02-sb text-gray-800'>
+        <span className='text-small-02-sb md:text-body-02-sb lg:text-body-01-sb text-gray-800'>
           주차별 계획 <span className='text-blue-400'>*</span>
         </span>
         <ArrowIcon className={cn('size-4 rotate-90 text-gray-800 transition-transform', isOpen && '-rotate-90')} />
@@ -229,13 +229,18 @@ export function WeeklyPlanForm({ control, register, errors, totalWeeks }: Weekly
                   key={field.id}
                   className='border-gray-150 flex flex-col gap-3 border-b pb-5 last:border-b-0 last:pb-0'
                 >
-                  <p className='text-small-01-sb md:text-body-01-sb text-gray-800'>{index + 1}주차</p>
+                  <p className='text-small-02-sb md:text-body-02-sb lg:text-body-01-sb text-gray-800'>
+                    {index + 1}주차
+                  </p>
 
                   <Input
-                    label={<span className='text-small-02-m md:text-body-02-m text-gray-800'>제목</span>}
+                    label={
+                      <span className='md:text-small-01-m lg:text-body-02-m hidden text-gray-800 md:inline'>제목</span>
+                    }
                     placeholder={`${index + 1}주차 계획의 제목을 적어주세요`}
                     error={guideErrors?.[index]?.title?.message as string | undefined}
                     {...register(`weeklyGuides.${index}.title`)}
+                    className='text-small-02-r md:text-body-02-r lg:text-body-01-r h-[43px] md:h-[58px] lg:h-[72px] lg:px-7 lg:py-5'
                   />
 
                   <WeekDetailInputs
@@ -247,7 +252,13 @@ export function WeeklyPlanForm({ control, register, errors, totalWeeks }: Weekly
               ))}
 
               {canAddNextWeek && (
-                <Button type='button' variant='add-task' size='add-task' className='mb-2.5' onClick={handleAddNextWeek}>
+                <Button
+                  type='button'
+                  variant='add-task'
+                  size='add-task'
+                  className='text-small-02-sb md:text-body-02-sb lg:text-body-01-sb mb-2.5 h-[43px] md:h-[58px] lg:h-[72px]'
+                  onClick={handleAddNextWeek}
+                >
                   + 다음 주차 추가
                 </Button>
               )}

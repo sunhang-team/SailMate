@@ -16,6 +16,7 @@ interface DatePickerProps {
   placeholder?: string;
   error?: string;
   disabled?: boolean;
+  className?: string;
 }
 
 const WEEKDAY_LABELS = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
@@ -37,6 +38,7 @@ export function DatePicker({
   placeholder = '날짜를 선택해주세요',
   error,
   disabled,
+  className,
 }: DatePickerProps) {
   // input + popover를 포함하는 커스텀 date picker 상태
   const [isOpen, setIsOpen] = useState(false);
@@ -91,6 +93,7 @@ export function DatePicker({
             fieldControlVariants({ state: 'error' }),
             'flex cursor-pointer items-center justify-between text-left',
             disabled && 'cursor-not-allowed opacity-60',
+            className,
           )}
           disabled={disabled}
         >
@@ -113,6 +116,7 @@ export function DatePicker({
               fieldControlVariants({ state: 'default' }),
               'flex cursor-pointer items-center justify-between text-left',
               disabled && 'cursor-not-allowed opacity-60',
+              className,
             )}
             disabled={disabled}
           >

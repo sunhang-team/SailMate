@@ -45,7 +45,7 @@ const CategoryTriggerBorder = ({ children }: { children: ReactNode }) => {
   return (
     <div
       className={cn(
-        'flex w-full cursor-pointer items-center justify-between rounded-lg bg-white px-4 py-3 transition-colors duration-200',
+        'flex h-[43px] w-full cursor-pointer items-center justify-between rounded-lg bg-white px-4 py-3 transition-colors duration-200 md:h-[58px] lg:h-[72px] lg:px-7 lg:py-5',
         isOpen ? 'border-gradient-primary' : 'border border-gray-200',
       )}
     >
@@ -156,7 +156,7 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-8'>
+    <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-10 md:gap-14 lg:gap-20'>
       {/* 모임 유형 */}
       <section className='flex flex-col gap-3'>
         <p className='text-small-01-sb md:text-body-01-sb lg:text-h5-b text-gray-800'>
@@ -231,7 +231,7 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
               placeholder='제목을 입력하세요'
               error={errors.title?.message}
               {...register('title')}
-              className='text-small-02-r md:text-body-02-r lg:text-body-01-r'
+              className='text-small-02-r md:text-body-02-r lg:text-body-01-r h-[43px] md:h-[58px] lg:h-[72px] lg:px-7 lg:py-5'
             />
             <p className='text-small-02-r self-end text-gray-400'>{titleValue.length}/30</p>
           </div>
@@ -302,10 +302,8 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
             }}
           />
         </div>
-      </section>
 
-      {/* 한 줄 소개 */}
-      <div className='flex flex-col gap-1'>
+        {/* 한 줄 소개 */}
         <div className='flex flex-1 flex-col gap-1'>
           <Input
             label={
@@ -315,54 +313,54 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
             placeholder='소개를 적어주세요'
             error={errors.shortDescription?.message}
             {...register('shortDescription')}
-            className='text-small-02-r md:text-body-02-r lg:text-body-01-r'
+            className='text-small-02-r md:text-body-02-r lg:text-body-01-r h-[43px] md:h-[58px] lg:h-[72px] lg:px-7 lg:py-5'
           />
           <p className='text-small-02-r self-end text-gray-400'>{shortDescValue.length}/50</p>
         </div>
-      </div>
 
-      {/* 상세 설명 */}
-      <div className='flex flex-col gap-1'>
-        <p className='text-small-02-m md:text-body-02-m lg:text-body-01-m text-gray-800'>상세 설명</p>
-        <Textarea
-          maxLength={1000}
-          rows={8}
-          placeholder='모임을 설명을 상세히 적어주세요'
-          error={errors.description?.message}
-          {...register('description')}
-          className='text-small-02-r md:text-body-02-r lg:text-body-01-r px-4 py-3'
-        />
-        <p className='text-small-02-r self-end text-gray-400'>{descValue.length}/1000</p>
-      </div>
+        {/* 상세 설명 */}
+        <div className='flex flex-col gap-1'>
+          <p className='text-small-02-m md:text-body-02-m lg:text-body-01-m text-gray-800'>상세 설명</p>
+          <Textarea
+            maxLength={1000}
+            rows={8}
+            placeholder='모임을 설명을 상세히 적어주세요'
+            error={errors.description?.message}
+            {...register('description')}
+            className='text-small-02-r md:text-body-02-r lg:text-body-01-r px-4 py-3 lg:px-7 lg:py-5'
+          />
+          <p className='text-small-02-r self-end text-gray-400'>{descValue.length}/1000</p>
+        </div>
 
-      {/* 태그 */}
-      <div className='flex flex-col gap-1'>
-        <p className='text-small-02-m md:text-body-02-m lg:text-body-01-m text-gray-800'>태그</p>
-        <Controller
-          name='tags'
-          control={control}
-          render={({ field }) => (
-            <TagInput
-              value={field.value ?? []}
-              onChange={field.onChange}
-              onBlur={field.onBlur}
-              error={errors.tags?.root?.message ?? errors.tags?.message}
-            />
-          )}
-        />
-      </div>
+        {/* 태그 */}
+        <div className='flex flex-col gap-1'>
+          <p className='text-small-02-m md:text-body-02-m lg:text-body-01-m text-gray-800'>태그</p>
+          <Controller
+            name='tags'
+            control={control}
+            render={({ field }) => (
+              <TagInput
+                value={field.value ?? []}
+                onChange={field.onChange}
+                onBlur={field.onBlur}
+                error={errors.tags?.root?.message ?? errors.tags?.message}
+              />
+            )}
+          />
+        </div>
 
-      {/* 이미지 */}
-      <div className='flex flex-col gap-1'>
-        <p className='text-small-02-m md:text-body-02-m lg:text-body-01-m text-gray-800'>이미지</p>
-        <Controller
-          name='images'
-          control={control}
-          render={({ field }) => (
-            <ImageUpload value={field.value ?? []} onChange={field.onChange} error={errors.images?.message} />
-          )}
-        />
-      </div>
+        {/* 이미지 */}
+        <div className='flex flex-col gap-1'>
+          <p className='text-small-02-m md:text-body-02-m lg:text-body-01-m text-gray-800'>이미지</p>
+          <Controller
+            name='images'
+            control={control}
+            render={({ field }) => (
+              <ImageUpload value={field.value ?? []} onChange={field.onChange} error={errors.images?.message} />
+            )}
+          />
+        </div>
+      </section>
 
       {/* 모임 최종 목표 */}
       <div className='flex flex-col gap-1'>
@@ -376,7 +374,7 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
           placeholder='모임의 최종 목표를 적어주세요'
           error={errors.goal?.message}
           {...register('goal')}
-          className='text-small-02-r md:text-body-02-r lg:text-body-01-r'
+          className='text-small-02-r md:text-body-02-r lg:text-body-01-r h-[43px] md:h-[58px] lg:h-[72px] lg:px-7 lg:py-5'
         />
         <p className='text-small-02-r self-end text-gray-400'>{goalValue.length}/200</p>
       </div>
@@ -399,7 +397,7 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
               placeholder='모집 인원을 적어주세요'
               error={errors.maxMembers?.message}
               {...register('maxMembers', { valueAsNumber: true })}
-              className='text-small-02-r md:text-body-02-r lg:text-body-01-r'
+              className='text-small-02-r md:text-body-02-r lg:text-body-01-r h-[43px] md:h-[58px] lg:h-[72px] lg:px-7 lg:py-5'
             />
           </div>
 
@@ -419,6 +417,7 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
                   onBlur={field.onBlur}
                   placeholder='모집 마감 일정을 선택해주세요'
                   error={errors.recruitDeadline?.message}
+                  className='h-[43px] md:h-[58px] lg:h-[72px] lg:px-7 lg:py-5'
                 />
               </div>
             )}
@@ -449,6 +448,7 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
                   onBlur={field.onBlur}
                   placeholder='모임 시작일을 선택해주세요'
                   error={errors.startDate?.message}
+                  className='h-[43px] md:h-[58px] lg:h-[72px] lg:px-7 lg:py-5'
                 />
               </div>
             )}
@@ -470,15 +470,16 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
                   onBlur={field.onBlur}
                   placeholder='모임 종료일을 선택해주세요'
                   error={errors.endDate?.message}
+                  className='h-[43px] md:h-[58px] lg:h-[72px] lg:px-7 lg:py-5'
                 />
               </div>
             )}
           />
         </div>
 
-        <div className='mt-8 flex h-12 items-center justify-between rounded-lg bg-gray-100 px-7 py-5'>
-          <p className='text-small-01-sb md:text-body-02-sb text-gray-800'>모임 기간</p>
-          <p className='text-small-01-sb md:text-body-02-sb text-gray-800'>
+        <div className='mt-8 flex h-[43px] items-center justify-between rounded-lg bg-gray-100 px-7 py-5 md:h-[58px] lg:h-[72px]'>
+          <p className='text-small-02-sb md:text-body-02-sb lg:text-body-01-sb text-gray-800'>모임 기간</p>
+          <p className='text-small-02-sb md:text-body-02-sb lg:text-body-01-sb text-gray-800'>
             <span className='text-blue-400'>{totalWeeks}</span> 주
           </p>
         </div>
