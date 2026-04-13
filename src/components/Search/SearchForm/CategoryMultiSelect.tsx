@@ -77,11 +77,11 @@ export function CategoryMultiSelect({ icon, placeholder, selectedValues, items, 
           <RotatingArrow />
         </div>
       </Dropdown.Trigger>
-      <Dropdown.Menu className='w-full min-w-[160px] overflow-hidden p-2'>
+      <Dropdown.Menu className='flex w-full min-w-[160px] flex-col gap-1 overflow-hidden p-2'>
         <Dropdown.Item
           onClick={handleReset}
           className={cn(
-            'cursor-pointer rounded-lg px-4 py-3 hover:bg-blue-100 hover:text-blue-400',
+            'lg:text-body-02-r cursor-pointer rounded-lg px-4 py-3 hover:bg-blue-100 hover:text-blue-400',
             selectedValues.length === 0 && 'bg-blue-100 text-blue-400',
           )}
         >
@@ -100,7 +100,7 @@ export function CategoryMultiSelect({ icon, placeholder, selectedValues, items, 
                 if (!isDisabled) handleSelect(item.value);
               }}
               className={cn(
-                'flex cursor-pointer items-center justify-between rounded-lg px-4 py-3 hover:bg-blue-100 hover:text-blue-400',
+                'lg:text-body-02-r flex cursor-pointer items-center justify-between rounded-lg px-4 py-3 hover:bg-blue-100 hover:text-blue-400',
                 isSelected && 'bg-blue-100 text-blue-400',
                 isDisabled && 'cursor-not-allowed opacity-40 hover:bg-transparent hover:text-inherit',
               )}

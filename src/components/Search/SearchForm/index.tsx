@@ -17,8 +17,10 @@ const TYPE_ITEMS = [{ label: '전체', value: null }, ...GATHERING_TYPES.map((t)
 const CATEGORY_ITEMS = DEFAULT_CATEGORIES.map((c) => ({ label: c.name, value: c.id }));
 
 export function SearchForm() {
-  const { type, categoryIds, setParams } = useGatheringSearchParams();
+  const { type, categoryIds, query, setParams } = useGatheringSearchParams();
   const [inputValue, setInputValue] = useState('');
+  const hasActiveFilter = !!type || categoryIds.length > 0 || !!query;
+  const searchVariant = hasActiveFilter ? 'search-gradient' : 'search';
 
   const handleSearch = () => {
     const trimmed = inputValue.trim();
@@ -75,7 +77,7 @@ export function SearchForm() {
           />
         </div>
 
-        <Button variant='search-gradient' size='search' onClick={handleSearch} className='hidden xl:block'>
+        <Button variant={searchVariant} size='search' onClick={handleSearch} className='relative z-1 hidden xl:block'>
           검색
         </Button>
       </div>
@@ -83,7 +85,7 @@ export function SearchForm() {
       <ActiveFilters />
 
       <Button
-        variant='search-gradient'
+        variant={searchVariant}
         onClick={handleSearch}
         className='text-body-02-sb md:text-body-01-sb h-[58px] w-full rounded-lg md:h-18 xl:hidden'
       >
