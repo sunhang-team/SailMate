@@ -51,14 +51,14 @@ export function MemberTodoAccordion({ member, todos }: MemberTodoAccordionProps)
         </div>
         <div className='flex items-center gap-2 md:gap-4'>
           {isWarning ? (
-            <span className='text-small-02-sb inline-flex items-center gap-1 rounded-[4px] bg-orange-50 px-2 py-0.5 text-orange-400'>
+            <span className='text-small-02-sb inline-flex items-center gap-1 rounded-[4px] px-2 py-0.5 text-orange-400'>
               <Tag variant='info' state='bad'>
                 <StateIcon variant='warning' size={14} />
                 주의
               </Tag>
             </span>
           ) : (
-            <span className='text-small-02-sb inline-flex items-center gap-1 rounded-[4px] bg-blue-50 px-2 py-0.5 text-blue-400'>
+            <span className='text-small-02-sb inline-flex items-center gap-1 rounded-[4px] px-2 py-0.5 text-blue-400'>
               <Tag variant='info' state='good'>
                 <StateIcon variant='active' size={14} />
                 {dDay}일

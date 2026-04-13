@@ -73,7 +73,7 @@ export function MemberCard({
         </div>
       </div>
 
-      <div className='border-gray-150 mt-3 flex rounded-lg border md:mt-4'>
+      <div className='border-gray-150 mt-3 flex rounded-lg border bg-gray-100 md:mt-4'>
         <div className='flex flex-1 items-center justify-center gap-2 py-2.5'>
           <span className='text-small-02-m md:text-body-01-m text-gray-500'>전체 달성률</span>
           <span className='text-small-02-sb md:text-body-01-sb text-blue-300'>{member.overallAchievementRate}%</span>
