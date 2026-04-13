@@ -20,7 +20,7 @@ export function TagInput({ value, onChange, onBlur, error }: TagInputProps) {
   const hasError = !!error;
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key !== 'Enter') return;
+    if (e.key !== 'Enter' || e.nativeEvent.isComposing) return;
     e.preventDefault();
 
     const trimmed = inputValue.trim();

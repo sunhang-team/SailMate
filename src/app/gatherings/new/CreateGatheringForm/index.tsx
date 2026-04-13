@@ -2,7 +2,7 @@
 
 import { type ReactNode, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
-import { differenceInWeeks, isValid, parseISO } from 'date-fns';
+import { differenceInDays, isValid, parseISO } from 'date-fns';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -54,6 +54,8 @@ const CategoryTriggerBorder = ({ children }: { children: ReactNode }) => {
   );
 };
 
+const DATE_FIELDS = ['recruitDeadline', 'startDate', 'endDate'] as const;
+
 const TYPE_META = {
   스터디: { label: '스터디', subtitle: '함께 학습하고 성장해요', Icon: StudyIcon },
   프로젝트: { label: '프로젝트', subtitle: '함께 만들고 완성해요', Icon: ProjectIcon },
@@ -80,7 +82,8 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
     handleSubmit,
     control,
     watch,
-    formState: { errors },
+    trigger,
+    formState: { errors, touchedFields },
   } = useForm<GatheringForm>({
     resolver: zodResolver(gatheringFormSchema),
     mode: 'onBlur',
@@ -108,7 +111,6 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
   const startDateValue = watch('startDate');
   const endDateValue = watch('endDate');
   const weeklyGuidesValue = watch('weeklyGuides') ?? [];
-
   const totalWeeks = useMemo(() => {
     if (!startDateValue || !endDateValue) return 0;
 
@@ -117,7 +119,7 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
     const isDateRangeInvalid = !isValid(startDate) || !isValid(endDate);
     if (isDateRangeInvalid) return 0;
 
-    return Math.max(1, differenceInWeeks(endDate, startDate));
+    return Math.max(1, Math.ceil(differenceInDays(endDate, startDate) / 7));
   }, [endDateValue, startDateValue]);
 
   const isWeeklyGuidesComplete =
@@ -133,7 +135,7 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
     tagsValue.length > 0 &&
     typeof maxMembersValue === 'number' &&
     maxMembersValue >= 2 &&
-    maxMembersValue <= 20 &&
+    maxMembersValue <= 10 &&
     !!recruitDeadlineValue &&
     !!startDateValue &&
     !!endDateValue &&
@@ -390,7 +392,7 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
             <Input
               type='number'
               min={2}
-              max={20}
+              max={10}
               label={
                 <span className='text-small-02-m md:text-body-02-m lg:text-body-01-m text-gray-800'>모집 인원</span>
               }
@@ -409,7 +411,11 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
                 <p className='text-small-02-m md:text-body-02-m lg:text-body-01-m text-gray-800'>모집 마감 일정</p>
                 <DatePicker
                   value={field.value}
-                  onChange={field.onChange}
+                  onChange={(value) => {
+                    field.onChange(value);
+                    const fieldsToTrigger = DATE_FIELDS.filter((f) => f === field.name || touchedFields[f]);
+                    trigger(fieldsToTrigger);
+                  }}
                   onBlur={field.onBlur}
                   placeholder='모집 마감 일정을 선택해주세요'
                   error={errors.recruitDeadline?.message}
@@ -435,7 +441,11 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
                 <p className='text-small-02-m md:text-body-02-m lg:text-body-01-m text-gray-800'>모임 시작일</p>
                 <DatePicker
                   value={field.value}
-                  onChange={field.onChange}
+                  onChange={(value) => {
+                    field.onChange(value);
+                    const fieldsToTrigger = DATE_FIELDS.filter((f) => f === field.name || touchedFields[f]);
+                    trigger(fieldsToTrigger);
+                  }}
                   onBlur={field.onBlur}
                   placeholder='모임 시작일을 선택해주세요'
                   error={errors.startDate?.message}
@@ -452,7 +462,11 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
                 <p className='text-small-02-m md:text-body-02-m lg:text-body-01-m text-gray-800'>모임 종료일</p>
                 <DatePicker
                   value={field.value}
-                  onChange={field.onChange}
+                  onChange={(value) => {
+                    field.onChange(value);
+                    const fieldsToTrigger = DATE_FIELDS.filter((f) => f === field.name || touchedFields[f]);
+                    trigger(fieldsToTrigger);
+                  }}
                   onBlur={field.onBlur}
                   placeholder='모임 종료일을 선택해주세요'
                   error={errors.endDate?.message}
