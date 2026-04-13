@@ -71,7 +71,7 @@ export function GatheringInfoAside({ gatheringId }: GatheringInfoAsideProps) {
   const { displayLabel, tagState, isJoinable, isFull, isDeadlinePassed, isFinished } = getGatheringDisplayStatus(data);
 
   return (
-    <div className='sticky top-[-20px]'>
+    <div>
       {/* 모집 상태 바 - 항상 노출 */}
       {tagState === 'recruiting' && (
         <div className='border-focus-100 mb-4 flex justify-between rounded-[8px] border bg-blue-100 px-8 py-2.5'>
