@@ -37,31 +37,33 @@ export function MemberTodoSection({ gatheringId }: MemberTodoSectionProps) {
   const paginatedMembers = membersData.members.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
 
   return (
-    <section className='flex flex-col gap-2 md:gap-4'>
-      <div className='flex items-center justify-between'>
+    <section className='bg-gray-0 shadow-01 border-gray-150 w-full rounded-2xl border'>
+      <header className='flex items-center justify-between px-7 py-6'>
         <h2 className='text-small-01-sb md:text-body-01-sb lg:text-h5-sb text-gray-900'>멤버 할 일 👀</h2>
-      </div>
+      </header>
 
-      <div className='flex flex-col gap-4'>
-        {paginatedMembers.map((member) => (
-          <MemberTodoAccordion
-            key={member.userId}
-            member={member}
-            todos={todoData.todos.filter((t) => t.userId === member.userId)}
-          />
-        ))}
-      </div>
-
-      {totalPages > 1 && (
-        <div className='mt-6 flex justify-center border-t border-gray-50 pt-8'>
-          <Pagination
-            variant='numbered'
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-          />
+      <div className='flex flex-col gap-4 px-7 pb-8'>
+        <div className='flex flex-col gap-4'>
+          {paginatedMembers.map((member) => (
+            <MemberTodoAccordion
+              key={member.userId}
+              member={member}
+              todos={todoData.todos.filter((t) => t.userId === member.userId)}
+            />
+          ))}
         </div>
-      )}
+
+        {totalPages > 1 && (
+          <div className='mt-6 flex justify-center border-t border-gray-50 pt-8'>
+            <Pagination
+              variant='numbered'
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+            />
+          </div>
+        )}
+      </div>
     </section>
   );
 }

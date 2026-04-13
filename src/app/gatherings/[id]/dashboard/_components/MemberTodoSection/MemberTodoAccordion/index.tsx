@@ -76,7 +76,7 @@ export function MemberTodoAccordion({ member, todos }: MemberTodoAccordionProps)
             size={24}
             className={cn(
               'h-6 w-6 text-gray-400 transition-transform duration-300 md:size-7 md:h-8 md:w-8',
-              isOpen ? 'rotate-90 text-blue-500' : '-rotate-90',
+              isOpen ? '-rotate-90 text-blue-500' : 'rotate-90',
             )}
           />
         </div>
