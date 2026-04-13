@@ -95,9 +95,9 @@ export function ImageUpload({ value, onChange, error }: ImageUploadProps) {
         /* ── 0장: 큰 드롭존 ── */
         <div
           className={cn(
-            'flex w-full cursor-pointer flex-col items-center justify-center gap-4 rounded-lg border border-dashed border-gray-300 bg-gray-100',
-            'h-[343px] md:h-[688px] lg:h-[448px]',
-            isDragging && 'border-gradient-primary',
+            'flex w-full cursor-pointer flex-col items-center justify-center gap-4 bg-gray-100',
+            'h-[343px] md:h-[688px] lg:h-[408px]',
+            isDragging ? 'rounded-lg border border-blue-300' : 'dashed-border-gray',
           )}
           onClick={openFilePicker}
           onDragOver={handleDragOver}
@@ -128,8 +128,9 @@ export function ImageUpload({ value, onChange, error }: ImageUploadProps) {
         /* ── 1장 이상: 썸네일 + 빈 슬롯 ── */
         <div
           className={cn(
-            'flex flex-row gap-2 overflow-x-auto rounded-lg border border-dashed border-gray-300 bg-gray-100 px-1 py-3 md:flex-wrap md:overflow-x-visible',
-            isDragging && 'border-blue-300',
+            'flex flex-row gap-2 overflow-x-auto bg-gray-100 px-1 py-3 md:flex-wrap md:overflow-x-visible md:overflow-y-auto',
+            'h-[343px] md:h-[688px] lg:h-[408px]',
+            isDragging ? 'rounded-lg border border-blue-300' : 'dashed-border-gray',
           )}
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
