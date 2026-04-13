@@ -1,3 +1,4 @@
+import { format } from 'date-fns';
 import { z } from 'zod';
 
 /** 날짜 문자열 스키마 (YYYY-MM-DD) */
@@ -59,7 +60,7 @@ const dateRefinementSchema = z
     endDate: z.string().optional(),
   })
   .superRefine((data, ctx) => {
-    const today = new Date().toISOString().slice(0, 10);
+    const today = format(new Date(), 'yyyy-MM-dd');
 
     if (data.recruitDeadline && data.recruitDeadline < today) {
       ctx.addIssue({ code: 'custom', message: '모집 마감일은 오늘 이후여야 합니다.', path: ['recruitDeadline'] });
