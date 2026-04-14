@@ -147,6 +147,8 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
         showToast({ variant: 'success', title: isEditMode ? '모임이 수정되었습니다.' : '모임이 생성되었습니다.' });
         if (isEditMode && gatheringId) {
           router.push(`/gatherings/${gatheringId}`);
+        } else {
+          router.push('/main');
         }
       },
       onError: () => {
