@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
 import { useSuspenseQuery } from '@tanstack/react-query';
 
 import { PaginationIcon } from '@/components/ui/Icon';
@@ -13,6 +13,8 @@ const NOTIFICATIONS_LIMIT = 5;
 // 드롭다운 메뉴 내부에 렌더링될 실제 목록 (불필요한 첫 페치 방지를 위해 분리)
 export function NotificationList() {
   const [page, setPage] = useState(1);
+  const [, startTransition] = useTransition();
+
   const { data } = useSuspenseQuery({
     queryKey: notificationKeys.list({ page, limit: NOTIFICATIONS_LIMIT }),
     queryFn: () => getNotifications({ page, limit: NOTIFICATIONS_LIMIT }),
@@ -21,11 +23,15 @@ export function NotificationList() {
   const { mutate: readAll, isPending: isReadAllPending } = useReadAllNotifications();
 
   const handlePrevPage = () => {
-    setPage((prev) => Math.max(1, prev - 1));
+    startTransition(() => {
+      setPage((prev) => Math.max(1, prev - 1));
+    });
   };
 
   const handleNextPage = () => {
-    setPage((prev) => prev + 1);
+    startTransition(() => {
+      setPage((prev) => prev + 1);
+    });
   };
 
   const notifications = data?.notifications ?? [];
