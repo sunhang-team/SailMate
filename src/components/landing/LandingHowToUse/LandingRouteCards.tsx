@@ -55,9 +55,9 @@ const ROUTE_IMAGE_PADDING_XL: Record<RouteLabel, string> = {
   'Route 4': 'xl:pt-[60px] xl:pb-[60px] xl:pl-[100px] xl:pr-0',
 };
 
-/** Route N-PC.png 실제 픽셀 (Next/Image 종횡비·CLS) */
-const ROUTE_STEP_IMAGE_WIDTH = 2400;
-const ROUTE_STEP_IMAGE_HEIGHT = 1464;
+/** 시안 기준 800×488 (Next/Image 종횡비·CLS). 고해상도 PNG는 동일 비율이면 이 값 그대로 사용 가능 */
+const ROUTE_STEP_IMAGE_WIDTH = 800;
+const ROUTE_STEP_IMAGE_HEIGHT = 488;
 
 const ROUTE_META: Record<RouteLabel, readonly [RouteMetaItem, RouteMetaItem]> = {
   'Route 1': [
@@ -106,14 +106,14 @@ function RouteStepCard({
   const textBlock = (
     <div
       className={cn(
-        'flex flex-1 flex-col items-center justify-center bg-gray-100 px-4 pt-8 pb-10 text-center md:px-29 md:py-15 xl:w-[52%] xl:flex-none xl:items-start xl:text-left',
+        'flex flex-1 flex-col items-center justify-center bg-gray-100 px-4 pt-8 pb-10 text-center md:px-29 md:py-15 xl:min-w-0 xl:flex-1 xl:items-start xl:text-left',
         ROUTE_TEXT_PADDING_XL[routeLabel],
       )}
     >
       <Tag variant='route'>{routeLabel}</Tag>
-      <h3 className='text-body-01-b md:text-h4-b lg:text-h3-b mb-2 break-keep text-gray-900 xl:mt-6'>{title}</h3>
+      <h3 className='text-body-01-b md:text-h4-b lg:text-h3-b mt-6 mb-2 break-keep text-gray-900'>{title}</h3>
       <p className='text-small-02-r md:text-body-02-r lg:text-body-01-r break-keep text-gray-800'>{description}</p>
-      <div className='mt-6 flex flex-wrap items-center justify-center gap-8 md:mt-10 xl:mt-25 xl:justify-start'>
+      <div className='mt-10 flex flex-wrap items-center justify-center gap-8 md:mt-15 xl:mt-25 xl:justify-start'>
         {meta.map((item) => {
           const Icon = item.icon;
           return (
@@ -130,12 +130,12 @@ function RouteStepCard({
   const imageBlock = (
     <div
       className={cn(
-        'flex flex-1 items-center justify-center bg-gray-100 p-4 md:p-7 xl:w-[48%] xl:flex-none',
-        /** 시안: 상·하 60px, 좌·우 100px (`padding: 60px 100px 60px`). xl에서 md:p-7 덮어씀 */
+        /** xl: 800×488 이미지 + 시안 한쪽 100px 패딩 = 열 너비 900px (48%면 좁은 화면에서 800 미만으로 줄어듦) */
+        'flex flex-1 items-center justify-center bg-gray-100 p-4 md:p-7 xl:w-[900px] xl:max-w-none xl:flex-none',
         ROUTE_IMAGE_PADDING_XL[routeLabel],
       )}
     >
-      <div className='aspect-800/488 w-full max-w-[800px] xl:w-[800px] xl:max-w-none'>
+      <div className='aspect-[800/488] w-full max-w-[800px] xl:h-[488px] xl:w-[800px] xl:max-w-none xl:shrink-0'>
         <Image
           src={imageSrc}
           alt={imageAlt}

@@ -72,16 +72,16 @@ export function LandingHero() {
       <div className='pointer-events-none absolute inset-0 md:hidden' aria-hidden>
         <div
           className={cn(
-            'absolute bottom-[-17px] -left-24 h-[220px] w-[250px] blur-[1px]',
+            'absolute bottom-[-68px] left-1/2 aspect-square w-[min(420px,88vw)] -translate-x-[70%] rounded-full blur-xl',
             BLUE_BLOB_GRADIENT,
-            'opacity-20',
+            'opacity-30',
           )}
         />
         <div
           className={cn(
-            'absolute -right-24 bottom-[-17px] h-[220px] w-[250px] blur-[1px]',
+            'absolute bottom-[-68px] left-1/2 aspect-square w-[min(420px,88vw)] -translate-x-[15%] rounded-full blur-xl',
             CYAN_BLOB_GRADIENT,
-            'opacity-18',
+            'opacity-20',
           )}
         />
       </div>
