@@ -1,8 +1,9 @@
+'use client';
+
 import Link from 'next/link';
 import { formatDistanceToNow } from 'date-fns';
 import { ko } from 'date-fns/locale';
 
-import type { NotificationItem as INotificationItem } from '@/api/notifications/types';
 import { useReadNotification } from '@/api/notifications/queries';
 import { cn } from '@/lib/cn';
 import {
@@ -16,6 +17,8 @@ import {
   HandIcon,
   EmailIcon,
 } from '@/components/ui/Icon';
+
+import type { NotificationItem as INotificationItem } from '@/api/notifications/types';
 
 interface NotificationItemProps {
   notification: INotificationItem;
@@ -44,7 +47,7 @@ const getIconForType = (type: INotificationItem['type']) => {
   }
 };
 
-export const NotificationItem = ({ notification }: NotificationItemProps) => {
+export function NotificationItem({ notification }: NotificationItemProps) {
   const { id, type, content, isRead, targetUrl, createdAt } = notification;
   const { mutate: readNotification } = useReadNotification();
 
@@ -76,4 +79,4 @@ export const NotificationItem = ({ notification }: NotificationItemProps) => {
       {!isRead && <div className='mt-2 h-2 w-2 shrink-0 rounded-full bg-blue-500' />}
     </Link>
   );
-};
+}

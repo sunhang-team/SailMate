@@ -1,6 +1,6 @@
 const NOTIFICATIONS_LIMIT = 5;
 
-export const NotificationListSkeleton = () => {
+export function NotificationListSkeleton() {
   return (
     <div className='flex max-h-[80vh] w-[320px] flex-col bg-white text-left'>
       <div className='border-gray-150 flex items-center justify-between border-b p-4'>
@@ -26,4 +26,4 @@ export const NotificationListSkeleton = () => {
       </div>
     </div>
   );
-};
+}
