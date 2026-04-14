@@ -43,7 +43,7 @@ export function Header() {
     <>
       <header className='border-gray-150 bg-gray-0 h-[88px] border-b max-md:h-[48px] max-md:px-4 md:px-7 xl:px-30'>
         <div className='flex h-full w-full items-center justify-between'>
-          <div className='flex items-center gap-20'>
+          <div className='flex items-center gap-11 lg:gap-20'>
             <Link href='/'>
               <Image
                 src='/images/logo.svg'
@@ -55,7 +55,7 @@ export function Header() {
             </Link>
 
             <nav aria-label='주요 네비게이션' className='max-md:hidden'>
-              <ul className='flex h-[88px] items-center gap-11'>
+              <ul className='flex h-[88px] items-center gap-7 lg:gap-11'>
                 {NAVIGATION_ITEMS.map((item) => {
                   const isActive = item.href === pathname || (item.href === '/' && pathname === '/main');
                   return (
