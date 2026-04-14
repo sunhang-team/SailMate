@@ -16,6 +16,7 @@ interface DatePickerProps {
   placeholder?: string;
   error?: string;
   disabled?: boolean;
+  className?: string;
 }
 
 const WEEKDAY_LABELS = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
@@ -37,6 +38,7 @@ export function DatePicker({
   placeholder = '날짜를 선택해주세요',
   error,
   disabled,
+  className,
 }: DatePickerProps) {
   // input + popover를 포함하는 커스텀 date picker 상태
   const [isOpen, setIsOpen] = useState(false);
@@ -91,6 +93,7 @@ export function DatePicker({
             fieldControlVariants({ state: 'error' }),
             'flex cursor-pointer items-center justify-between text-left',
             disabled && 'cursor-not-allowed opacity-60',
+            className,
           )}
           disabled={disabled}
         >
@@ -102,7 +105,7 @@ export function DatePicker({
           >
             {displayValue || placeholder}
           </span>
-          <CalendarIcon className='text-gray-800 sm:size-4 lg:size-6' />
+          <CalendarIcon className='size-4 text-gray-800 md:size-5' />
         </button>
       ) : (
         <div className={fieldGradientFocusWrapperClass}>
@@ -113,6 +116,7 @@ export function DatePicker({
               fieldControlVariants({ state: 'default' }),
               'flex cursor-pointer items-center justify-between text-left',
               disabled && 'cursor-not-allowed opacity-60',
+              className,
             )}
             disabled={disabled}
           >
@@ -157,15 +161,15 @@ export function DatePicker({
             </button>
           </div>
 
-          <div className='mb-2 grid grid-cols-7 gap-y-2'>
+          <div className='mb-2 grid grid-cols-7 gap-y-1'>
             {WEEKDAY_LABELS.map((label, index) => (
-              <span key={`${label}-${index}`} className='text-center text-xs text-gray-500'>
+              <span key={`${label}-${index}`} className='text-body-02-r text-center text-gray-500'>
                 {label}
               </span>
             ))}
           </div>
 
-          <div className='grid grid-cols-7 gap-y-2'>
+          <div className='grid grid-cols-7 gap-y-1'>
             {days.map((day) => {
               const isSelected = value === format(day.date, ISO_DATE_FORMAT);
               return (
@@ -174,7 +178,7 @@ export function DatePicker({
                   key={day.date.toISOString()}
                   onClick={() => handleSelectDate(day.date)}
                   className={cn(
-                    'mx-auto flex size-7 items-center justify-center rounded-full text-xs',
+                    'text-body-02-r mx-auto flex size-[34px] items-center justify-center rounded-full',
                     day.isCurrentMonth ? 'text-gray-800' : 'text-gray-300',
                     day.isToday && !isSelected && 'font-bold text-blue-400',
                     isSelected && 'bg-blue-300 text-white',

@@ -7,10 +7,11 @@ import { cn } from '@/lib/cn';
 type InputProps = ComponentPropsWithoutRef<'input'> & {
   label?: React.ReactNode;
   error?: string;
+  hideErrorMessage?: boolean;
 };
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
-  { label, error, className, type, id: idProp, ...props },
+  { label, error, hideErrorMessage, className, type, id: idProp, ...props },
   ref,
 ) {
   const uid = useId();
@@ -36,7 +37,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
         </label>
       )}
       <div className={cn(hasError ? 'w-full' : fieldGradientFocusWrapperClass)}>{control}</div>
-      {error && (
+      {error && !hideErrorMessage && (
         <p className='text-xs text-red-200' role='alert'>
           {error}
         </p>

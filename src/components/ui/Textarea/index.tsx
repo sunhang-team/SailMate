@@ -11,11 +11,12 @@ const sizeClassName = {
 type TextareaProps = ComponentPropsWithoutRef<'textarea'> & {
   label?: string;
   error?: string;
+  hideErrorMessage?: boolean;
   size?: keyof typeof sizeClassName;
 };
 
 export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(function Textarea(
-  { label, error, className, id: idProp, size = 'lg', rows, ...props },
+  { label, error, hideErrorMessage, className, id: idProp, size = 'lg', rows, ...props },
   ref,
 ) {
   const uid = useId();
@@ -46,7 +47,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(function 
         </label>
       )}
       <div className={cn(hasError ? 'w-full' : fieldGradientFocusWrapperClass)}>{control}</div>
-      {error && (
+      {error && !hideErrorMessage && (
         <p className='text-xs text-red-200' role='alert'>
           {error}
         </p>
