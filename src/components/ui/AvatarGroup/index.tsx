@@ -1,8 +1,10 @@
+'use client';
+
 import { cva } from 'class-variance-authority';
 import Image from 'next/image';
 
 import { cn } from '@/lib/cn';
-import { DEFAULT_PROFILE_IMAGE, normalizeImageUrl } from '@/constants/image';
+import { useFallbackImage } from '@/hooks/useFallbackImage';
 
 const avatarSizeVariants = cva('relative bg-gray-300 flex items-center justify-center overflow-hidden', {
   variants: {
@@ -82,18 +84,16 @@ export function AvatarGroup({
     <div className={cn('flex items-center -space-x-2', className)}>
       {displayAvatars.map((avatar, index) => (
         <div key={avatar.id ?? index} className={avatarSizeVariants({ size, shape, hasBorder })}>
-          <Image
-            src={normalizeImageUrl(avatar.imageUrl)}
-            alt={`멤버 ${index + 1}`}
-            fill
-            className='object-cover'
-            onError={(e) => {
-              (e.target as HTMLImageElement).src = DEFAULT_PROFILE_IMAGE;
-            }}
-          />
+          <AvatarImage imageUrl={avatar.imageUrl} alt={`멤버 ${index + 1}`} />
         </div>
       ))}
       {overflowCount > 0 && <div className={overflowSizeVariants({ size, shape })}>+{overflowCount}</div>}
     </div>
   );
+}
+
+function AvatarImage({ imageUrl, alt }: { imageUrl?: string | null; alt: string }) {
+  const { imgSrc, onError } = useFallbackImage(imageUrl);
+
+  return <Image src={imgSrc} alt={alt} fill className='object-cover' onError={onError} />;
 }

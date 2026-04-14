@@ -12,7 +12,6 @@ import { HeartIcon } from '@/components/ui/Icon';
 import { AuthModal } from '@/components/AuthModal';
 import { useAuth } from '@/hooks/useAuth';
 import { useOverlay } from '@/hooks/useOverlay';
-
 import { useToastStore } from '@/components/ui/Toast/useToastStore';
 
 import { GatheringApplyBottomSheet } from './GatheringApplyBottomSheet';

@@ -1,7 +1,8 @@
-import { useState } from 'react';
+'use client';
+
 import Image from 'next/image';
 
-import { DEFAULT_PROFILE_IMAGE, normalizeImageUrl } from '@/constants/image';
+import { useFallbackImage } from '@/hooks/useFallbackImage';
 
 interface SidebarAvatarProps {
   imageUrl: string;
@@ -10,20 +11,14 @@ interface SidebarAvatarProps {
 }
 
 export function SidebarAvatar({ imageUrl, nickname, size = 200 }: SidebarAvatarProps) {
+  const { imgSrc, onError } = useFallbackImage(imageUrl);
+
   return (
     <span
       className='border-gray-150 relative inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full border bg-gray-100'
       style={{ width: size, height: size }}
     >
-      <Image
-        src={normalizeImageUrl(imageUrl)}
-        alt={`${nickname} 프로필 이미지`}
-        fill
-        className='object-cover'
-        onError={(e) => {
-          (e.target as HTMLImageElement).src = DEFAULT_PROFILE_IMAGE;
-        }}
-      />
+      <Image src={imgSrc} alt={`${nickname} 프로필 이미지`} fill className='object-cover' onError={onError} />
     </span>
   );
 }

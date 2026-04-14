@@ -1,10 +1,12 @@
+'use client';
+
 import Image from 'next/image';
 
 import { Button } from '@/components/ui/Button';
 import { HandIcon, StateIcon } from '@/components/ui/Icon';
 import { ProgressBar } from '@/components/ui/Progress';
 import { Tag } from '@/components/ui/Tag';
-import { DEFAULT_PROFILE_IMAGE, normalizeImageUrl } from '@/constants/image';
+import { useFallbackImage } from '@/hooks/useFallbackImage';
 
 import { RankBadge } from '../RankBadge';
 
@@ -18,6 +20,7 @@ interface RankingItemProps {
 const WARNING_THRESHOLD = 50;
 
 export function RankingItem({ item, isMe }: RankingItemProps) {
+  const { imgSrc, onError } = useFallbackImage(item.profileImage);
   const isWarning = item.overallRate < WARNING_THRESHOLD;
 
   return (
@@ -27,16 +30,7 @@ export function RankingItem({ item, isMe }: RankingItemProps) {
       <RankBadge rank={item.rank} />
 
       <div className='relative h-8 w-8 shrink-0 overflow-hidden rounded-lg md:h-12 md:w-12'>
-        <Image
-          src={normalizeImageUrl(item.profileImage)}
-          alt={`${item.nickname} 프로필 이미지`}
-          fill
-          className='object-cover'
-          onError={(e) => {
-            // next/image의 onError는 브라우저 네이티브 이벤트 객체를 전달합니다.
-            (e.target as HTMLImageElement).src = DEFAULT_PROFILE_IMAGE;
-          }}
-        />
+        <Image src={imgSrc} alt={`${item.nickname} 프로필 이미지`} fill className='object-cover' onError={onError} />
       </div>
 
       <div className='min-w-0 flex-1'>

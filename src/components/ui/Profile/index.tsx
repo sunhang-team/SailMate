@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { cva, type VariantProps } from 'class-variance-authority';
 
 import { cn } from '@/lib/cn';
-import { DEFAULT_PROFILE_IMAGE, normalizeImageUrl } from '@/constants/image';
+import { useFallbackImage } from '@/hooks/useFallbackImage';
 
 const profileVariants = cva('relative inline-flex items-center justify-center overflow-hidden bg-gray-100 shrink-0', {
   variants: {
@@ -35,17 +35,11 @@ interface ProfileProps extends VariantProps<typeof profileVariants> {
 }
 
 export function Profile({ imageUrl, size, shape, hasBorder, className }: ProfileProps) {
+  const { imgSrc, onError } = useFallbackImage(imageUrl);
+
   return (
     <div className={cn(profileVariants({ size, shape, hasBorder }), className)}>
-      <Image
-        src={normalizeImageUrl(imageUrl)}
-        alt='프로필 이미지'
-        fill
-        className='object-cover'
-        onError={(e) => {
-          (e.target as HTMLImageElement).src = DEFAULT_PROFILE_IMAGE;
-        }}
-      />
+      <Image src={imgSrc} alt='프로필 이미지' fill className='object-cover' onError={onError} />
     </div>
   );
 }
