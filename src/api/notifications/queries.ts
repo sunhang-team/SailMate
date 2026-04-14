@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { getNotifications, readAllNotifications, readNotification } from './index';
-import type { GetNotificationsParams, GetNotificationsResponse } from './types';
+import type { GetNotificationsParams } from './types';
 
 export const notificationKeys = {
   all: ['notifications'] as const,
@@ -21,7 +21,7 @@ export const useReadNotification = () => {
 
   return useMutation({
     mutationFn: (notificationId: number) => readNotification(notificationId),
-    onMutate: async (notificationId) => {
+    onMutate: async () => {
       // 진행 중인 모든 알림 조회 쿼리를 취소하여 낙관적 업데이트가 덮어씌워지지 않도록 함
       await queryClient.cancelQueries({ queryKey: notificationKeys.lists() });
 
