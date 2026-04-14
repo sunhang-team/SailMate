@@ -55,7 +55,7 @@ export function GatheringDetailContent({ gatheringId }: GatheringDetailContentPr
         </section>
       )}
 
-      <section id='recruit-period' className='mt-15 scroll-mt-10 xl:scroll-mt-12'>
+      <section id='recruit-period' className='mt-10 scroll-mt-10 md:mt-15 lg:mt-25 xl:scroll-mt-12'>
         <InfoCard title='모집 기간 📌'>
           <span className='text-body-02-m xl:text-body-01-m text-gray-800'>
             ~ {formatDateDot(data.recruitDeadline)} ({formatDday(data.recruitDeadline)})
@@ -63,7 +63,7 @@ export function GatheringDetailContent({ gatheringId }: GatheringDetailContentPr
         </InfoCard>
       </section>
 
-      <section id='activity-period' className='mt-15 scroll-mt-10 xl:scroll-mt-12'>
+      <section id='activity-period' className='mt-10 scroll-mt-10 md:mt-15 lg:mt-25 xl:scroll-mt-12'>
         <InfoCard title='활동 기간 🗓️'>
           <span className='text-body-02-m xl:text-body-01-m text-gray-800'>
             {formatDateDot(data.startDate)} ~ {formatDateDot(data.endDate)} ({data.totalWeeks}주)
@@ -71,14 +71,14 @@ export function GatheringDetailContent({ gatheringId }: GatheringDetailContentPr
         </InfoCard>
       </section>
 
-      <section id='goal' className='mt-15 scroll-mt-10 xl:scroll-mt-12'>
+      <section id='goal' className='mt-10 scroll-mt-10 md:mt-15 lg:mt-25 xl:scroll-mt-12'>
         <InfoCard title='모임 최종 목표 🔥'>
           <span className='text-body-02-m xl:text-body-01-m text-gray-800'>{data.goal}</span>
         </InfoCard>
       </section>
 
       {data.weeklyPlans.length > 0 && (
-        <section id='weekly-plans' className='mt-15 scroll-mt-10 xl:scroll-mt-12'>
+        <section id='weekly-plans' className='mt-10 scroll-mt-10 md:mt-15 lg:mt-25 xl:scroll-mt-12'>
           <div className='flex flex-col gap-4 xl:gap-6'>
             <h2 className='text-body-01-sb xl:text-h5-sb text-gray-900'>주차별 계획 ✅</h2>
             <WeeklyPlanAccordion weeklyPlans={data.weeklyPlans} />
@@ -86,7 +86,7 @@ export function GatheringDetailContent({ gatheringId }: GatheringDetailContentPr
         </section>
       )}
 
-      <section id='members' className='mt-15 scroll-mt-10 xl:scroll-mt-12'>
+      <section id='members' className='mt-10 scroll-mt-10 md:mt-15 lg:mt-25 xl:scroll-mt-12'>
         <div className='flex flex-col gap-6'>
           <h2 className='text-body-01-sb xl:text-h5-sb text-gray-900'>모집 인원 현황 👀</h2>
           <MembersStatus currentMembers={data.currentMembers} maxMembers={data.maxMembers} />

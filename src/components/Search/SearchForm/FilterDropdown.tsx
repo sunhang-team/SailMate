@@ -51,7 +51,7 @@ export function FilterDropdown({ icon, placeholder, selectedValue, items, onSele
           <RotatingArrow />
         </div>
       </Dropdown.Trigger>
-      <Dropdown.Menu className='w-full min-w-[160px] overflow-hidden p-2'>
+      <Dropdown.Menu className='flex w-full min-w-[160px] flex-col gap-1 overflow-hidden p-2'>
         {items.map((item) => {
           const isSelected = selectedValue === item.value;
           return (
@@ -59,7 +59,7 @@ export function FilterDropdown({ icon, placeholder, selectedValue, items, onSele
               key={item.label}
               onClick={() => onSelect(item.value)}
               className={cn(
-                'cursor-pointer rounded-lg px-4 py-3 hover:bg-blue-100 hover:text-blue-400',
+                'lg:text-body-02-r cursor-pointer rounded-lg px-4 py-3 hover:bg-blue-100 hover:text-blue-400',
                 isSelected && 'bg-blue-100 text-blue-400',
               )}
             >

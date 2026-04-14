@@ -20,8 +20,8 @@ const buildTabHref = (key: MyPageTab, pendingSort: PendingGatheringSort) => {
 
 export function MyPageTabs({ activeTab, pendingSort }: MyPageTabsProps) {
   return (
-    <nav>
-      <ul className='scrollbar-none flex flex-nowrap gap-2 overflow-x-auto'>
+    <nav className='after:bg-gray-150 relative after:absolute after:inset-x-0 after:bottom-0 after:h-[2px]'>
+      <ul className='scrollbar-none relative z-1 flex flex-nowrap gap-2 overflow-x-auto'>
         {MY_PAGE_TAB_ITEMS.map(({ key, label }) => {
           const isActive = activeTab === key;
 

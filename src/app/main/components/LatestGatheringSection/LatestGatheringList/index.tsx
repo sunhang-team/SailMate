@@ -24,9 +24,7 @@ export function LatestGatheringList() {
           <Link href='/gatherings' className='text-body-02-b text-gray-500'>
             더보기
           </Link>
-          {totalPages > 1 && (
-            <Pagination variant='simple' currentPage={page} totalPages={totalPages} onPageChange={setPage} />
-          )}
+          <Pagination variant='simple' currentPage={page} totalPages={totalPages} onPageChange={setPage} />
         </div>
       </div>
       <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-6'>

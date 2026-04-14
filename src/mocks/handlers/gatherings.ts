@@ -1,6 +1,7 @@
 import { http, HttpResponse, delay } from 'msw';
 
-import { gatheringFormSchema, gatheringUpdateFormSchema } from '@/api/gatherings/schemas';
+import { gatheringFormBaseSchema, gatheringUpdateFormSchema } from '@/api/gatherings/schemas';
+import { getTotalWeeks } from '@/lib/formatGatheringDate';
 import { createApiResponse } from '../utils';
 
 import type {
@@ -36,7 +37,7 @@ import type { GatheringType } from '@/api/gatherings/types';
 
 // API 함수에서 type이 한글 → 영어(STUDY/PROJECT)로 변환된 후 전송되므로
 // MSW 스키마에서도 영어 enum을 허용
-const createBodySchema = gatheringFormSchema
+const createBodySchema = gatheringFormBaseSchema
   .omit({ images: true })
   .extend({ type: z.enum(['STUDY', 'PROJECT', '스터디', '프로젝트']) });
 const updateBodySchema = gatheringUpdateFormSchema
@@ -545,7 +546,7 @@ export const gatheringsHandlers = [
       ...newGathering,
       description: body.description,
       goal: body.goal,
-      totalWeeks: body.weeklyGuides.length,
+      totalWeeks: getTotalWeeks(body.startDate, body.endDate),
       images: [],
       weeklyPlans: [],
       members: [{ userId: 1, nickname: '김코딩', profileImage: null, role: 'LEADER' }],

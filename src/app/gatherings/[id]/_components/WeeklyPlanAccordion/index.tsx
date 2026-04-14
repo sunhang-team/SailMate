@@ -46,7 +46,7 @@ export function WeeklyPlanAccordion({ weeklyPlans }: WeeklyPlanAccordionProps) {
                 size={28}
                 className={cn(
                   'text-gray-800 transition-transform duration-200 xl:h-8! xl:w-8!',
-                  isExpanded ? 'rotate-90' : '-rotate-90',
+                  isExpanded ? 'rotate-270' : 'rotate-90',
                 )}
                 viewBox='0 0 16 16'
               />

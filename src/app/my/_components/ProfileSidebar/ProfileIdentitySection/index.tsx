@@ -1,6 +1,6 @@
 'use client';
 
-import type { FieldErrors, UseFormHandleSubmit, UseFormRegister } from 'react-hook-form';
+import type { Control, FieldErrors, UseFormHandleSubmit, UseFormRegister } from 'react-hook-form';
 
 import type { UpdateProfileForm, User } from '@/api/users/types';
 import { Button } from '@/components/ui/Button';
@@ -16,6 +16,7 @@ interface ProfileIdentitySectionProps {
   user: Pick<User, 'nickname' | 'email' | 'provider' | 'profileImage'>;
   previewImageUrl: string;
   previewNickname: string;
+  control: Control<UpdateProfileForm>;
   register: UseFormRegister<UpdateProfileForm>;
   handleSubmit: UseFormHandleSubmit<UpdateProfileForm>;
   errors: FieldErrors<UpdateProfileForm>;
@@ -31,6 +32,7 @@ export function ProfileIdentitySection({
   user,
   previewImageUrl,
   previewNickname,
+  control,
   register,
   handleSubmit,
   errors,
@@ -42,6 +44,7 @@ export function ProfileIdentitySection({
   if (isEditing) {
     return (
       <ProfileEditForm
+        control={control}
         register={register}
         handleSubmit={handleSubmit}
         errors={errors}

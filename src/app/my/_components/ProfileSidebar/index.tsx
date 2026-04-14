@@ -15,6 +15,7 @@ import { cn } from '@/lib/cn';
 
 import { ActivityEnergySection } from './ActivityEnergySection';
 import { ActivityStatsSection } from './ActivityStatsSection';
+import { ProfileEditForm } from './ProfileEditForm';
 import { ProfileIdentitySection } from './ProfileIdentitySection';
 import { SidebarAvatar } from './SidebarAvatar';
 
@@ -26,7 +27,7 @@ export function ProfileSidebarSkeleton({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        'border-gray-150 bg-gray-0 w-full max-w-[450px] animate-pulse rounded-2xl border px-7 py-12 shadow-(--shadow-02)',
+        'border-gray-150 bg-gray-0 w-full animate-pulse rounded-2xl border px-7 py-12 shadow-(--shadow-02) lg:w-[35%] lg:min-w-[300px] lg:shrink-0',
         className,
       )}
     >
@@ -55,6 +56,7 @@ export function ProfileSidebar({ className }: ProfileSidebarProps) {
   const showToast = useToastStore((s) => s.showToast);
 
   const {
+    control,
     register,
     handleSubmit,
     reset,
@@ -130,6 +132,7 @@ export function ProfileSidebar({ className }: ProfileSidebarProps) {
     user,
     previewImageUrl,
     previewNickname,
+    control,
     register,
     handleSubmit,
     errors,
@@ -142,44 +145,58 @@ export function ProfileSidebar({ className }: ProfileSidebarProps) {
   return (
     <aside
       className={cn(
-        'border-gray-150 bg-gray-0 w-full rounded-2xl border px-6 py-6 shadow-(--shadow-02) md:max-h-[688px] md:px-7 md:py-8 lg:max-h-[915px] lg:max-w-[450px] lg:px-7 lg:py-12',
+        'border-gray-150 bg-gray-0 w-full rounded-2xl border px-6 py-6 shadow-(--shadow-02) md:max-h-[688px] md:px-7 md:py-8 lg:max-h-[915px] lg:w-[35%] lg:min-w-[300px] lg:shrink-0 lg:px-7 lg:py-12',
         className,
       )}
     >
-      <div className='md:hidden'>
-        <ProfileIdentitySection layout='mobile' {...identityProps} />
-      </div>
-
-      <div className='hidden p-8 md:flex md:w-full lg:hidden'>
-        <div className='md:border-gray-150 flex flex-col items-center md:shrink-0 md:border-r md:pr-8'>
-          <div className='flex flex-col items-center'>
-            <SidebarAvatar imageUrl={previewImageUrl} nickname={previewNickname} size={140} />
-          </div>
-          <ProfileIdentitySection layout='tablet' {...identityProps} />
-        </div>
-
-        <div className='flex flex-col md:w-full md:flex-1 md:pl-8'>
-          <ActivityEnergySection
-            variant='tablet'
-            reputationScore={user.reputationScore}
-            reputationLabel={user.reputationLabel}
-          />
-          <ActivityStatsSection variant='tablet' rows={statRows} />
-        </div>
-      </div>
-
-      <div className='hidden w-full flex-col items-center lg:flex'>
-        <ProfileIdentitySection layout='desktop' {...identityProps} />
-      </div>
-
-      <div className='md:hidden lg:block'>
-        <ActivityEnergySection
-          variant='wide'
-          reputationScore={user.reputationScore}
-          reputationLabel={user.reputationLabel}
+      {isEditing ? (
+        <ProfileEditForm
+          control={control}
+          register={register}
+          handleSubmit={handleSubmit}
+          errors={errors}
+          isPending={isPending}
+          onSubmit={onSubmit}
+          onCancel={handleCancelEdit}
         />
-        <ActivityStatsSection variant='wide' rows={statRows} />
-      </div>
+      ) : (
+        <>
+          <div className='md:hidden'>
+            <ProfileIdentitySection layout='mobile' {...identityProps} />
+          </div>
+
+          <div className='hidden p-8 md:flex md:w-full lg:hidden'>
+            <div className='md:border-gray-150 flex flex-col items-center md:shrink-0 md:border-r md:pr-8'>
+              <div className='flex flex-col items-center'>
+                <SidebarAvatar imageUrl={previewImageUrl} nickname={previewNickname} size={140} />
+              </div>
+              <ProfileIdentitySection layout='tablet' {...identityProps} />
+            </div>
+
+            <div className='flex flex-col md:w-full md:flex-1 md:pl-8'>
+              <ActivityEnergySection
+                variant='tablet'
+                reputationScore={user.reputationScore}
+                reputationLabel={user.reputationLabel}
+              />
+              <ActivityStatsSection variant='tablet' rows={statRows} />
+            </div>
+          </div>
+
+          <div className='hidden w-full flex-col items-center lg:flex'>
+            <ProfileIdentitySection layout='desktop' {...identityProps} />
+          </div>
+
+          <div className='md:hidden lg:block'>
+            <ActivityEnergySection
+              variant='wide'
+              reputationScore={user.reputationScore}
+              reputationLabel={user.reputationLabel}
+            />
+            <ActivityStatsSection variant='wide' rows={statRows} />
+          </div>
+        </>
+      )}
     </aside>
   );
 }

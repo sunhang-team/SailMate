@@ -140,7 +140,7 @@ export function LikedGatheringsList() {
                 <RotatingArrow />
               </div>
             </Dropdown.Trigger>
-            <Dropdown.Menu className='flex flex-col gap-3 overflow-hidden px-3 py-2 whitespace-nowrap'>
+            <Dropdown.Menu className='flex flex-col gap-3 overflow-hidden p-2 whitespace-nowrap md:p-3'>
               {STATUS_OPTIONS.map((option) => {
                 const isSelected = status === option.value;
                 return (
@@ -148,8 +148,8 @@ export function LikedGatheringsList() {
                     key={option.value}
                     onClick={() => handleFilterChange({ status: option.value })}
                     className={cn(
-                      'text-small-02-m md:text-body-02-r cursor-pointer rounded-lg px-4 py-2 text-gray-500 hover:bg-blue-100 hover:text-blue-400',
-                      isSelected && 'text-small-02-m md:text-body-02-m bg-blue-100 text-gray-900',
+                      'text-small-02-m md:text-body-02-r cursor-pointer rounded-lg pr-4 text-gray-500 hover:text-gray-900',
+                      isSelected && 'text-small-02-m md:text-body-02-m text-gray-900',
                     )}
                   >
                     {option.label}
