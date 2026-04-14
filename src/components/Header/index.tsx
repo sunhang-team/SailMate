@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 
 import { AuthSection } from './AuthSection';
 import { useAuth } from '@/hooks/useAuth';
@@ -19,6 +19,7 @@ const NAVIGATION_ITEMS = [
 export function Header() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const router = useRouter();
+  const pathname = usePathname();
   const { isLoggedIn, isLoading } = useAuth();
 
   useEffect(() => {
@@ -55,16 +56,19 @@ export function Header() {
 
             <nav aria-label='주요 네비게이션' className='max-lg:hidden'>
               <ul className='flex h-[88px] items-center gap-11'>
-                {NAVIGATION_ITEMS.map((item) => (
-                  <li key={item.href}>
-                    <Link
-                      href={item.href}
-                      className='text-body-01-m text-gray-700 transition-colors hover:text-blue-400'
-                    >
-                      {item.label}
-                    </Link>
-                  </li>
-                ))}
+                {NAVIGATION_ITEMS.map((item) => {
+                  const isActive = item.href === pathname || (item.href === '/' && pathname === '/main');
+                  return (
+                    <li key={item.href}>
+                      <Link
+                        href={item.href}
+                        className={`transition-colors hover:text-blue-400 ${isActive ? 'text-body-01-b text-gray-900' : 'text-body-01-m text-gray-700'}`}
+                      >
+                        {item.label}
+                      </Link>
+                    </li>
+                  );
+                })}
               </ul>
             </nav>
           </div>
