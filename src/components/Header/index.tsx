@@ -20,6 +20,7 @@ export function Header() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
+  const isNavActive = (href: string) => pathname === href || (href === '/' && pathname === '/main');
   const { isLoggedIn, isLoading } = useAuth();
 
   useEffect(() => {
@@ -57,7 +58,7 @@ export function Header() {
             <nav aria-label='주요 네비게이션' className='max-md:hidden'>
               <ul className='flex h-[88px] items-center gap-7 lg:gap-11'>
                 {NAVIGATION_ITEMS.map((item) => {
-                  const isActive = item.href === pathname || (item.href === '/' && pathname === '/main');
+                  const isActive = isNavActive(item.href);
                   return (
                     <li key={item.href}>
                       <Link
@@ -113,46 +114,49 @@ export function Header() {
             onClick={() => setIsSidebarOpen(false)}
             className='inline-flex h-8 w-8 items-center justify-center text-gray-600'
           >
-            <CloseIcon size={24} />
+            <CloseIcon size={32} />
           </button>
         </div>
 
         <nav aria-label='모바일 네비게이션' className='mt-5'>
           <ul className='flex flex-col'>
-            {NAVIGATION_ITEMS.map((item) => (
-              <li key={item.href}>
-                <button
-                  type='button'
-                  onClick={() => handleNavigate(item.href)}
-                  className='text-body-02-m flex w-full items-center justify-between py-5 text-left text-gray-700'
-                >
-                  {item.label}
-                  <ArrowIcon size={24} direction='right' className='text-gray-300' aria-hidden />
-                </button>
-              </li>
-            ))}
+            {NAVIGATION_ITEMS.map((item) => {
+              const isActive = isNavActive(item.href);
+              const label = isLoggedIn && item.href === '/my' ? '마이페이지' : item.label;
+              return (
+                <li key={item.href}>
+                  <button
+                    type='button'
+                    onClick={() => handleNavigate(item.href)}
+                    className={`text-body-02-m flex w-full items-center justify-between py-5 text-left ${
+                      isActive ? 'text-blue-300' : 'text-gray-700'
+                    }`}
+                  >
+                    {label}
+                    <ArrowIcon
+                      size={24}
+                      direction='right'
+                      className={isActive ? 'text-blue-300' : 'text-gray-300'}
+                      aria-hidden
+                    />
+                  </button>
+                </li>
+              );
+            })}
           </ul>
         </nav>
 
-        <div className='text-body-02-m absolute right-7 bottom-7 flex items-center gap-3 text-gray-400'>
-          {isLoading || !isLoggedIn ? (
-            <>
-              <button type='button' onClick={() => handleNavigate('/login')}>
-                로그인
-              </button>
-              <span>|</span>
-              <button type='button' onClick={() => handleNavigate('/register')}>
-                회원가입
-              </button>
-            </>
-          ) : (
-            <>
-              <button type='button' onClick={() => handleNavigate('/my')}>
-                마이페이지
-              </button>
-            </>
-          )}
-        </div>
+        {(isLoading || !isLoggedIn) && (
+          <div className='text-body-02-m absolute right-7 bottom-7 flex items-center gap-3 text-gray-400'>
+            <button type='button' onClick={() => handleNavigate('/login')}>
+              로그인
+            </button>
+            <span>|</span>
+            <button type='button' onClick={() => handleNavigate('/register')}>
+              회원가입
+            </button>
+          </div>
+        )}
       </aside>
     </>
   );
