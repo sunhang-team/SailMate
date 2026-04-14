@@ -2,13 +2,12 @@
  * 카카오 기본 프로필 이미지
  * - 프로필 이미지가 없거나 로드 실패 시 사용
  */
-export const DEFAULT_PROFILE_IMAGE =
-  'https://img1.kakaocdn.net/thumb/R640x640.q70/?fname=https://t1.kakaocdn.net/account_images/default_profile.jpeg';
+export const DEFAULT_PROFILE_IMAGE = process.env.NEXT_PUBLIC_DEFAULT_PROFILE_IMAGE || '';
 
 /**
  * 백엔드 이미지 베이스 URL
  */
-const BACKEND_IMG_BASE = 'https://chukjibeob.store';
+const BACKEND_IMG_BASE = process.env.NEXT_PUBLIC_BACKEND_IMG_BASE || '';
 
 /**
  * 이미지 URL 정규화
