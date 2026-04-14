@@ -10,7 +10,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { CloseIcon, ArrowIcon } from '@/components/ui/Icon';
 
 const NAVIGATION_ITEMS = [
-  { href: '/', label: '홈' },
+  { href: '/main', label: '홈' },
   { href: '/gatherings', label: '모임 탐색' },
   { href: '/gatherings/new', label: '모임 만들기' },
   { href: '/my', label: '내 모임' },
@@ -113,24 +113,34 @@ export function Header() {
             onClick={() => setIsSidebarOpen(false)}
             className='inline-flex h-8 w-8 items-center justify-center text-gray-600'
           >
-            <CloseIcon size={24} />
+            <CloseIcon size={32} />
           </button>
         </div>
 
         <nav aria-label='모바일 네비게이션' className='mt-5'>
           <ul className='flex flex-col'>
-            {NAVIGATION_ITEMS.map((item) => (
-              <li key={item.href}>
-                <button
-                  type='button'
-                  onClick={() => handleNavigate(item.href)}
-                  className='text-body-02-m flex w-full items-center justify-between py-5 text-left text-gray-700'
-                >
-                  {item.label}
-                  <ArrowIcon size={24} direction='right' className='text-gray-300' aria-hidden />
-                </button>
-              </li>
-            ))}
+            {NAVIGATION_ITEMS.map((item) => {
+              const isActive = pathname === item.href;
+              return (
+                <li key={item.href}>
+                  <button
+                    type='button'
+                    onClick={() => handleNavigate(item.href)}
+                    className={`text-body-02-m flex w-full items-center justify-between py-5 text-left ${
+                      isActive ? 'text-blue-300' : 'text-gray-700'
+                    }`}
+                  >
+                    {item.label}
+                    <ArrowIcon
+                      size={24}
+                      direction='right'
+                      className={isActive ? 'text-blue-300' : 'text-gray-300'}
+                      aria-hidden
+                    />
+                  </button>
+                </li>
+              );
+            })}
           </ul>
         </nav>
 
