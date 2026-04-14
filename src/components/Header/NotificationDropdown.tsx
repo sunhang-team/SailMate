@@ -90,8 +90,7 @@ export function NotificationDropdown() {
   return (
     <Dropdown>
       <Dropdown.Trigger>
-        <button
-          type='button'
+        <div
           aria-label='알림'
           className='relative inline-flex h-9 w-9 cursor-pointer items-center justify-center rounded-full text-gray-500 transition-colors hover:bg-gray-100'
         >
@@ -101,7 +100,7 @@ export function NotificationDropdown() {
               {unreadCount > 99 ? '99+' : unreadCount}
             </span>
           )}
-        </button>
+        </div>
       </Dropdown.Trigger>
       <Dropdown.Menu className='border-gray-150 shadow-01 absolute top-[calc(100%+8px)] right-0 z-10 w-auto overflow-hidden rounded-xl border bg-white p-0'>
         <NotificationList />
