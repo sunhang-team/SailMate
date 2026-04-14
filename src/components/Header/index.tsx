@@ -10,7 +10,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { CloseIcon, ArrowIcon } from '@/components/ui/Icon';
 
 const NAVIGATION_ITEMS = [
-  { href: '/main', label: '홈' },
+  { href: '/', label: '홈' },
   { href: '/gatherings', label: '모임 탐색' },
   { href: '/gatherings/new', label: '모임 만들기' },
   { href: '/my', label: '내 모임' },
@@ -120,7 +120,8 @@ export function Header() {
         <nav aria-label='모바일 네비게이션' className='mt-5'>
           <ul className='flex flex-col'>
             {NAVIGATION_ITEMS.map((item) => {
-              const isActive = pathname === item.href;
+              const isHomeItem = item.href === '/';
+              const isActive = isHomeItem ? pathname === '/' || pathname === '/main' : pathname === item.href;
               return (
                 <li key={item.href}>
                   <button
