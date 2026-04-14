@@ -40,12 +40,12 @@ export function WeeklyTrendChart({ gatheringId }: WeeklyTrendChartProps) {
           </Dropdown.Trigger>
           <Dropdown.Menu className='flex w-[89px] flex-col items-center justify-center p-2 md:w-[112px] lg:w-[131px]'>
             <Dropdown.Item onClick={() => setFilterType('me')}>
-              <div className='text-small-02-m md:text-body-02-m lg:text-body-01-m hover:font-bold hover:text-gray-900'>
+              <div className='text-small-02-m md:text-small-01-r lg:text-body-01-r cursor-pointer text-gray-700 hover:text-gray-900'>
                 내 달성률
               </div>
             </Dropdown.Item>
             <Dropdown.Item onClick={() => setFilterType('team')}>
-              <div className='text-small-02-m md:text-body-02-m lg:text-body-01-m hover:font-bold hover:text-gray-900'>
+              <div className='text-small-02-m md:text-small-01-r lg:text-body-01-r cursor-pointer text-gray-700 hover:text-gray-900'>
                 팀 달성률
               </div>
             </Dropdown.Item>

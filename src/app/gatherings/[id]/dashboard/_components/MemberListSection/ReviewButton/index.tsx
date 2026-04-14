@@ -11,7 +11,7 @@ export function ReviewButton({ hasReviewed, onClick }: ReviewButtonProps) {
     return (
       <span
         className={cn(
-          'inline-flex items-center justify-center rounded-lg bg-blue-100',
+          'inline-flex items-center justify-center rounded-lg bg-blue-50',
           'text-small-02-sb md:text-small-01-sb h-[32px] w-[85px] text-blue-300 md:h-[48px] md:w-[124px]',
         )}
       >
@@ -27,11 +27,11 @@ export function ReviewButton({ hasReviewed, onClick }: ReviewButtonProps) {
       className={cn(
         'inline-flex cursor-pointer items-center justify-center gap-1 rounded-lg',
         'text-small-02-sb md:text-small-01-sb h-[32px] w-[85px] text-white md:h-[48px] md:w-[124px]',
-        'bg-gradient-primary transition-opacity hover:opacity-90',
+        'bg-blue-300 transition-opacity hover:opacity-90',
       )}
     >
       <ReviewIcon className='size-[12px] md:size-[16px]' />
-      <div className='text-small-02-sb md:text-small-01-sb'>리뷰 쓰기</div>
+      리뷰 쓰기
     </button>
   );
 }

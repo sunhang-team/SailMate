@@ -1,32 +1,45 @@
 'use client';
 
-import { useState } from 'react';
+import Image from 'next/image';
+import { cva, type VariantProps } from 'class-variance-authority';
 
 import { cn } from '@/lib/cn';
-import { ProfilePlaceholderIcon } from '@/components/ui/Icon';
+import { useFallbackImage } from '@/hooks/useFallbackImage';
 
-interface ProfileProps {
+const profileVariants = cva('relative inline-flex items-center justify-center overflow-hidden bg-gray-100 shrink-0', {
+  variants: {
+    size: {
+      sm: 'h-6 w-6',
+      md: 'h-[42px] w-[42px]',
+      lg: 'h-12 w-12',
+    },
+    shape: {
+      full: 'rounded-full',
+      lg: 'rounded-lg',
+    },
+    hasBorder: {
+      true: 'border border-gray-150',
+      false: 'border-0',
+    },
+  },
+  defaultVariants: {
+    size: 'md',
+    shape: 'full',
+    hasBorder: true,
+  },
+});
+
+interface ProfileProps extends VariantProps<typeof profileVariants> {
   imageUrl?: string | null;
   className?: string;
 }
 
-export function Profile({ imageUrl, className }: ProfileProps) {
-  const [failedImageUrl, setFailedImageUrl] = useState<string | null>(null);
+export function Profile({ imageUrl, size, shape, hasBorder, className }: ProfileProps) {
+  const { imgSrc, onError } = useFallbackImage(imageUrl);
 
-  const hasImage = !!imageUrl && failedImageUrl !== imageUrl;
-
-  if (hasImage) {
-    return (
-      <span
-        className={cn(
-          'border-gray-150 inline-flex h-[42px] w-[42px] items-center justify-center overflow-hidden rounded-full border bg-gray-100',
-          className,
-        )}
-      >
-        <img src={imageUrl} className='h-full w-full object-cover' onError={() => setFailedImageUrl(imageUrl)} />
-      </span>
-    );
-  }
-
-  return <ProfilePlaceholderIcon size={42} className={cn('rounded-full', className)} aria-label='기본 프로필 아이콘' />;
+  return (
+    <div className={cn(profileVariants({ size, shape, hasBorder }), className)}>
+      <Image src={imgSrc} alt='프로필 이미지' fill className='object-cover' onError={onError} />
+    </div>
+  );
 }

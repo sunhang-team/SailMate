@@ -1,4 +1,8 @@
-import { ProfilePlaceholderIcon } from '@/components/ui/Icon';
+'use client';
+
+import Image from 'next/image';
+
+import { useFallbackImage } from '@/hooks/useFallbackImage';
 import { formatReviewDate } from '../../utils/dateUtils';
 import type { Review } from '@/api/reviews/types';
 
@@ -8,22 +12,19 @@ interface ReviewItemProps {
 }
 
 export function ReviewItem({ review, profileImg }: ReviewItemProps) {
+  const { imgSrc, onError } = useFallbackImage(profileImg);
+
   return (
     <li className='border-gray-150 flex flex-col gap-2 rounded-xl border bg-gray-100 p-4 shadow-sm md:gap-4 md:p-6'>
       <div className='flex items-start gap-2'>
-        <div className='h-6 w-6 shrink-0 overflow-hidden rounded-full bg-gray-200 md:h-12 md:w-12'>
-          {profileImg ? (
-            <img
-              src={profileImg}
-              alt={`${review.reviewer.nickname} 프로필`}
-              className='h-full w-full object-cover'
-              onError={(e) => {
-                (e.target as HTMLImageElement).style.display = 'none';
-              }}
-            />
-          ) : (
-            <ProfilePlaceholderIcon className='h-full w-full' />
-          )}
+        <div className='relative h-6 w-6 shrink-0 overflow-hidden rounded-lg bg-gray-200 md:h-12 md:w-12'>
+          <Image
+            src={imgSrc}
+            alt={`${review.reviewer?.nickname || '익명'} 프로필`}
+            fill
+            className='object-cover'
+            onError={onError}
+          />
         </div>
         <div className='flex flex-1 justify-between'>
           <div className='flex flex-col text-left'>

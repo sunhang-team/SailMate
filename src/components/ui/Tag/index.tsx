@@ -44,7 +44,7 @@ const tagVariants = cva('inline-flex w-fit items-center justify-center rounded-l
   },
   compoundVariants: [
     { variant: 'deadline', state: 'goal', class: 'bg-blue-100 text-blue-300' },
-    { variant: 'deadline', state: 'warning', class: 'bg-red-100 text-red-200' },
+    { variant: 'deadline', state: 'warning', class: 'bg-orange-100 text-orange-200' },
     { variant: 'day', state: 'short', class: 'bg-gray-0 text-red-200' },
     { variant: 'day', state: 'relax', class: 'bg-gray-0 text-blue-300' },
     { variant: 'info', state: 'good', class: 'bg-blue-100 text-blue-300' },

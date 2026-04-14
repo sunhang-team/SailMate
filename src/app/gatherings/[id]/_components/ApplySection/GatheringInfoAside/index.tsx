@@ -36,7 +36,7 @@ interface GatheringInfoAsideProps {
 }
 
 export function GatheringInfoAside({ gatheringId }: GatheringInfoAsideProps) {
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, user } = useAuth();
   const { data } = useSuspenseQuery(gatheringQueries.detail(gatheringId));
   const { data: myApplications } = useQuery({
     ...applicationQueries.myList(),
@@ -45,6 +45,8 @@ export function GatheringInfoAside({ gatheringId }: GatheringInfoAsideProps) {
 
   const hasPendingApplication =
     myApplications?.applications.some((app) => app.gathering.id === gatheringId && app.status === 'PENDING') ?? false;
+  const isLeader = isLoggedIn && user?.id === data.leader.id;
+
   const { isLiked, isPending: isLikePending, toggleLike } = useLikeToggle(gatheringId);
   const overlay = useOverlay();
   const { showToast } = useToastStore();
@@ -155,9 +157,14 @@ export function GatheringInfoAside({ gatheringId }: GatheringInfoAsideProps) {
 
             <Button
               variant='action'
-              className='text-body-01-sb h-13.5 w-full md:h-18 lg:h-20'
-              disabled={!isJoinable || hasPendingApplication}
+              className={`text-body-01-sb h-13.5 flex-1 md:h-18 ${!isJoinable && !isLeader && !hasPendingApplication ? 'bg-gray-300' : ''}`}
+              disabled={(!isJoinable && !isLeader) || hasPendingApplication}
               onClick={async () => {
+                if (isLeader) {
+                  await navigator.clipboard.writeText(window.location.href);
+                  showToast({ variant: 'success', title: '링크가 복사되었습니다.' });
+                  return;
+                }
                 if (!isLoggedIn) {
                   const isLoginSuccessful = await overlay.open(({ isOpen, close }) => (
                     <AuthModal isOpen={isOpen} onClose={() => close(false)} onSuccess={() => close(true)} />
@@ -167,13 +174,15 @@ export function GatheringInfoAside({ gatheringId }: GatheringInfoAsideProps) {
                 setStep('APPLY');
               }}
             >
-              {getJoinButtonText({
-                isFinished,
-                isDeadlinePassed,
-                isFull,
-                hasPendingApplication,
-                status: data.status,
-              })}
+              {isLeader
+                ? '공유하기'
+                : getJoinButtonText({
+                    isFinished,
+                    isDeadlinePassed,
+                    isFull,
+                    hasPendingApplication,
+                    status: data.status,
+                  })}
             </Button>
           </div>
         </Step>

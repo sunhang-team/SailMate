@@ -43,14 +43,14 @@ export function MemberRankingSection({ gatheringId }: MemberRankingSectionProps)
     <div className='border-gray-150 bg-gray-0 shadow-02 rounded-2xl border p-6'>
       <h2 className='text-small-01-sb md:text-body-01-sb lg:text-h5-sb mb-4 text-gray-900'>멤버 달성률 랭킹 🏆</h2>
 
-      <div className='grid grid-cols-1 gap-3 lg:grid-cols-2'>
-        <div className='flex flex-col gap-3'>
+      <div className='grid grid-cols-1 gap-4 lg:grid-cols-2'>
+        <div className='flex flex-col gap-4'>
           {leftItems.map((item) => (
             <RankingItem key={item.userId} item={item} isMe={user?.id === item.userId} />
           ))}
         </div>
         {rightItems.length > 0 && (
-          <div className='flex flex-col gap-3'>
+          <div className='flex flex-col gap-4'>
             {rightItems.map((item) => (
               <RankingItem key={item.userId} item={item} isMe={user?.id === item.userId} />
             ))}

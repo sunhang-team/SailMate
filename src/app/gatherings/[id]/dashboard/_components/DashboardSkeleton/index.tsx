@@ -35,7 +35,7 @@ export function DashboardSkeleton() {
         </div>
 
         {/* 통계 카드 — PC: 4열 그리드 */}
-        <div className='mt-8 hidden lg:grid lg:grid-cols-4 lg:gap-4'>
+        <div className='mt-10 hidden lg:grid lg:grid-cols-4 lg:gap-4'>
           {Array.from({ length: 4 }).map((_, i) => (
             <StatCardSkeleton key={i} />
           ))}

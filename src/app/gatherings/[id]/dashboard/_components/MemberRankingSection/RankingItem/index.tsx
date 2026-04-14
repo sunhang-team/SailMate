@@ -1,7 +1,12 @@
+'use client';
+
+import Image from 'next/image';
+
 import { Button } from '@/components/ui/Button';
 import { HandIcon, StateIcon } from '@/components/ui/Icon';
 import { ProgressBar } from '@/components/ui/Progress';
 import { Tag } from '@/components/ui/Tag';
+import { useFallbackImage } from '@/hooks/useFallbackImage';
 
 import { RankBadge } from '../RankBadge';
 
@@ -14,27 +19,18 @@ interface RankingItemProps {
 
 const WARNING_THRESHOLD = 50;
 
-// 프로필 이미지 로드 실패 시 보여줄 회색 빈 SVG (base64 인코딩)
-const FALLBACK_IMAGE =
-  'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiNFMkU4RjAiLz48L3N2Zz4=';
-
 export function RankingItem({ item, isMe }: RankingItemProps) {
+  const { imgSrc, onError } = useFallbackImage(item.profileImage);
   const isWarning = item.overallRate < WARNING_THRESHOLD;
 
   return (
-    <div className={`flex items-center gap-3 rounded-2xl bg-gray-100 p-3 ${isMe ? 'border border-blue-300' : ''}`}>
+    <div
+      className={`flex items-center gap-3 rounded-2xl bg-gray-100 px-7 py-5 ${isMe ? 'border border-blue-300' : ''}`}
+    >
       <RankBadge rank={item.rank} />
 
-      <div className='h-8 w-8 shrink-0 overflow-hidden rounded-full bg-gray-200 md:h-12 md:w-12'>
-        {/* next/image는 onError를 안정적으로 지원하지 않아 <img> 사용 */}
-        <img
-          src={item.profileImage}
-          alt={`${item.nickname} 프로필 이미지`}
-          className='h-full w-full object-cover'
-          onError={(e) => {
-            (e.target as HTMLImageElement).src = FALLBACK_IMAGE;
-          }}
-        />
+      <div className='relative h-8 w-8 shrink-0 overflow-hidden rounded-lg md:h-12 md:w-12'>
+        <Image src={imgSrc} alt={`${item.nickname} 프로필 이미지`} fill className='object-cover' onError={onError} />
       </div>
 
       <div className='min-w-0 flex-1'>
