@@ -1,8 +1,10 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 
 import { Pagination } from '@/components/ui/Pagination';
+import { normalizeImageUrl } from '@/constants/image';
 
 import type { GatheringImage } from '@/api/gatherings/types';
 
@@ -38,12 +40,18 @@ export function ImageCarousel({ images }: ImageCarouselProps) {
           {Array.from({ length: totalPages }).map((_, pageIdx) => (
             <div key={pageIdx} className='grid w-full shrink-0 grid-cols-3' style={{ gap: 'var(--gap)' }}>
               {sortedImages.slice(pageIdx * VISIBLE_COUNT, (pageIdx + 1) * VISIBLE_COUNT).map((image) => (
-                <img
+                <div
                   key={image.displayOrder}
-                  src={image.url}
-                  alt={`모임 이미지 ${image.displayOrder + 1}`}
-                  className='aspect-4/5 w-full rounded-lg object-cover xl:rounded-2xl'
-                />
+                  className='relative aspect-4/5 w-full overflow-hidden rounded-lg xl:rounded-2xl'
+                >
+                  <Image
+                    src={normalizeImageUrl(image.url)}
+                    alt={`모임 이미지 ${image.displayOrder + 1}`}
+                    fill
+                    className='object-cover'
+                    sizes='(max-width: 1280px) 30vw, 400px'
+                  />
+                </div>
               ))}
             </div>
           ))}
