@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 
 import { AuthSection } from './AuthSection';
 import { useAuth } from '@/hooks/useAuth';
@@ -19,6 +19,7 @@ const NAVIGATION_ITEMS = [
 export function Header() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const router = useRouter();
+  const pathname = usePathname();
   const { isLoggedIn, isLoading } = useAuth();
 
   useEffect(() => {
@@ -40,36 +41,39 @@ export function Header() {
 
   return (
     <>
-      <header className='border-gray-150 bg-gray-0 h-[88px] border-b max-lg:h-[56px] max-lg:px-4 md:px-7 xl:px-30'>
+      <header className='border-gray-150 bg-gray-0 h-[88px] border-b max-md:h-[48px] max-md:px-4 md:px-7 xl:px-30'>
         <div className='flex h-full w-full items-center justify-between'>
-          <div className='flex items-center gap-20'>
+          <div className='flex items-center gap-11 lg:gap-20'>
             <Link href='/'>
               <Image
                 src='/images/logo.svg'
                 alt='logo'
                 width={136}
                 height={28}
-                className='max-lg:h-[24px] max-lg:w-auto'
+                className='h-[16px] w-[82px] md:h-[22px] md:w-[110px] lg:h-[28px] lg:w-[136px]'
               />
             </Link>
 
-            <nav aria-label='주요 네비게이션' className='max-lg:hidden'>
-              <ul className='flex h-[88px] items-center gap-11'>
-                {NAVIGATION_ITEMS.map((item) => (
-                  <li key={item.href}>
-                    <Link
-                      href={item.href}
-                      className='text-body-01-m text-gray-700 transition-colors hover:text-blue-400'
-                    >
-                      {item.label}
-                    </Link>
-                  </li>
-                ))}
+            <nav aria-label='주요 네비게이션' className='max-md:hidden'>
+              <ul className='flex h-[88px] items-center gap-7 lg:gap-11'>
+                {NAVIGATION_ITEMS.map((item) => {
+                  const isActive = item.href === pathname || (item.href === '/' && pathname === '/main');
+                  return (
+                    <li key={item.href}>
+                      <Link
+                        href={item.href}
+                        className={`transition-colors hover:text-blue-400 ${isActive ? 'text-body-02-b lg:text-body-01-b text-gray-900' : 'text-body-02-m lg:text-body-01-m text-gray-700'}`}
+                      >
+                        {item.label}
+                      </Link>
+                    </li>
+                  );
+                })}
               </ul>
             </nav>
           </div>
 
-          <div className='max-lg:hidden'>
+          <div className='max-md:hidden'>
             <AuthSection />
           </div>
 
@@ -77,7 +81,7 @@ export function Header() {
             type='button'
             aria-label='메뉴 열기'
             onClick={() => setIsSidebarOpen(true)}
-            className='hidden h-8 w-8 items-center justify-center text-blue-500 max-lg:inline-flex'
+            className='hidden h-8 w-8 items-center justify-center text-blue-500 max-md:inline-flex'
           >
             <span className='relative block h-[14px] w-[18px]'>
               <span className='absolute top-0 block h-[2px] w-full rounded-full bg-gray-700' />
@@ -89,7 +93,7 @@ export function Header() {
       </header>
 
       <div
-        className={`fixed inset-0 z-50 bg-black/35 transition-opacity duration-200 lg:hidden ${
+        className={`fixed inset-0 z-50 bg-black/35 transition-opacity duration-200 md:hidden ${
           isSidebarOpen ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'
         }`}
         onClick={() => setIsSidebarOpen(false)}
@@ -97,7 +101,7 @@ export function Header() {
       />
 
       <aside
-        className={`bg-gray-0 fixed top-0 right-0 z-60 h-dvh w-[74%] max-w-[320px] rounded-l-2xl px-6 py-5 transition-transform duration-300 ease-out lg:hidden ${
+        className={`bg-gray-0 fixed top-0 right-0 z-60 h-dvh w-[74%] max-w-[320px] rounded-l-2xl px-6 py-5 transition-transform duration-300 ease-out md:hidden ${
           isSidebarOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
         aria-hidden={!isSidebarOpen}
