@@ -20,6 +20,7 @@ export function Header() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
+  const isNavActive = (href: string) => pathname === href || (href === '/' && pathname === '/main');
   const { isLoggedIn, isLoading } = useAuth();
 
   useEffect(() => {
@@ -57,7 +58,7 @@ export function Header() {
             <nav aria-label='주요 네비게이션' className='max-md:hidden'>
               <ul className='flex h-[88px] items-center gap-7 lg:gap-11'>
                 {NAVIGATION_ITEMS.map((item) => {
-                  const isActive = item.href === pathname || (item.href === '/' && pathname === '/main');
+                  const isActive = isNavActive(item.href);
                   return (
                     <li key={item.href}>
                       <Link
@@ -120,8 +121,8 @@ export function Header() {
         <nav aria-label='모바일 네비게이션' className='mt-5'>
           <ul className='flex flex-col'>
             {NAVIGATION_ITEMS.map((item) => {
-              const isHomeItem = item.href === '/';
-              const isActive = isHomeItem ? pathname === '/' || pathname === '/main' : pathname === item.href;
+              const isActive = isNavActive(item.href);
+              const label = isLoggedIn && item.href === '/my' ? '마이페이지' : item.label;
               return (
                 <li key={item.href}>
                   <button
@@ -131,7 +132,7 @@ export function Header() {
                       isActive ? 'text-blue-300' : 'text-gray-700'
                     }`}
                   >
-                    {item.label}
+                    {label}
                     <ArrowIcon
                       size={24}
                       direction='right'
@@ -145,25 +146,17 @@ export function Header() {
           </ul>
         </nav>
 
-        <div className='text-body-02-m absolute right-7 bottom-7 flex items-center gap-3 text-gray-400'>
-          {isLoading || !isLoggedIn ? (
-            <>
-              <button type='button' onClick={() => handleNavigate('/login')}>
-                로그인
-              </button>
-              <span>|</span>
-              <button type='button' onClick={() => handleNavigate('/register')}>
-                회원가입
-              </button>
-            </>
-          ) : (
-            <>
-              <button type='button' onClick={() => handleNavigate('/my')}>
-                마이페이지
-              </button>
-            </>
-          )}
-        </div>
+        {(isLoading || !isLoggedIn) && (
+          <div className='text-body-02-m absolute right-7 bottom-7 flex items-center gap-3 text-gray-400'>
+            <button type='button' onClick={() => handleNavigate('/login')}>
+              로그인
+            </button>
+            <span>|</span>
+            <button type='button' onClick={() => handleNavigate('/register')}>
+              회원가입
+            </button>
+          </div>
+        )}
       </aside>
     </>
   );
