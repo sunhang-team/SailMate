@@ -6,7 +6,7 @@ import { useLogout } from '@/api/auth/queries';
 import { useAuth } from '@/hooks/useAuth';
 import { cn } from '@/lib/cn';
 import { Dropdown } from '@/components/ui/Dropdown';
-import { NotificationsIcon } from '@/components/ui/Icon';
+import { NotificationDropdown } from './NotificationDropdown';
 import { Profile } from '@/components/ui/Profile';
 import { Button } from '@/components/ui/Button';
 
@@ -41,13 +41,7 @@ export function AuthSection() {
   }
   return (
     <div className='flex items-center gap-2 lg:gap-4'>
-      <button
-        type='button'
-        aria-label='알림'
-        className='inline-flex h-9 w-9 items-center justify-center rounded-full text-gray-500 transition-colors hover:bg-gray-100'
-      >
-        <NotificationsIcon size={36} />
-      </button>
+      <NotificationDropdown />
       <Dropdown className='flex items-center'>
         <Dropdown.Trigger>
           <Profile imageUrl={user?.profileImage} className='h-[42px] w-[42px]' />
