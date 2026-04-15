@@ -18,7 +18,7 @@ import { MyGatheringsCard } from '../MyGatheringsCard';
 import type { GatheringStatusFilter } from '@/api/memberships/types';
 
 type SortOrder = 'latest' | 'oldest';
-type MyStatusFilter = Extract<GatheringStatusFilter, 'all' | 'in_progress' | 'completed'>;
+type MyStatusFilter = Extract<GatheringStatusFilter, 'all' | 'recruiting' | 'in_progress' | 'completed'>;
 
 const SORT_OPTIONS: { label: string; value: SortOrder }[] = [
   { label: '최신순', value: 'latest' },
@@ -27,6 +27,7 @@ const SORT_OPTIONS: { label: string; value: SortOrder }[] = [
 
 const STATUS_OPTIONS: { label: string; value: MyStatusFilter }[] = [
   { label: '전체', value: 'all' },
+  { label: '모집중', value: 'recruiting' },
   { label: '진행중', value: 'in_progress' },
   { label: '진행완료', value: 'completed' },
 ];
@@ -53,16 +54,14 @@ export function MyGatheringsList() {
   const [page, setPage] = useState(1);
   const [isPending, startTransition] = useTransition();
 
-  // status=all: API가 RECRUITING 포함 반환 → 서버 totalPages 신뢰 불가
-  // → 전체를 한 번에 받아(limit=999) 클라이언트에서 필터/페이지네이션
-  // status=in_progress|completed: 서버 필터 정확 → 서버 페이지네이션 그대로 사용
+  // status=all: 전체 정렬 정확도를 위해 limit=999로 전체 조회 후 클라이언트에서 정렬/페이지네이션
+  // status=recruiting|in_progress|completed: 서버 필터 정확 → 서버 페이지네이션 그대로 사용
   const isAll = status === 'all';
   const { data } = useSuspenseQuery(
     membershipQueries.my({ status, page: isAll ? 1 : page, limit: isAll ? 999 : limit }),
   );
 
-  const filtered = isAll ? data.gatherings.filter((g) => g.status !== 'RECRUITING') : data.gatherings;
-  const sorted = [...filtered].sort((a, b) => {
+  const sorted = [...data.gatherings].sort((a, b) => {
     const diff = new Date(a.startDate).getTime() - new Date(b.startDate).getTime();
     return sort === 'latest' ? -diff : diff;
   });

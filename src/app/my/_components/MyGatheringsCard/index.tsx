@@ -81,6 +81,17 @@ export function MyGatheringsCard({ gathering }: MyGatheringsCardProps) {
           </div>
         </GatheringCard.Body>
         <GatheringCard.Footer>
+          {gathering.status === 'RECRUITING' && (
+            <div className='border-gray-150 flex h-[54px] w-full items-center rounded-[8px] border bg-gray-100 md:h-[72px]'>
+              <div className='flex flex-1 items-center justify-center gap-1.5'>
+                <span className='text-small-01-m md:text-body-01-m text-gray-600'>모집 인원</span>
+                <span className='flex items-center'>
+                  <span className='text-small-01-sb md:text-body-01-sb text-blue-300'>{gathering.currentMembers}</span>
+                  <span className='text-small-01-sb md:text-body-01-sb text-gray-700'>/{gathering.maxMembers}</span>
+                </span>
+              </div>
+            </div>
+          )}
           {gathering.status === 'IN_PROGRESS' && (
             <div className='border-gray-150 flex h-[54px] w-full items-center rounded-[8px] border bg-gray-100 md:h-[72px]'>
               <div className='flex flex-1 items-center justify-center gap-1.5'>
