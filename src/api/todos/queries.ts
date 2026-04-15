@@ -4,6 +4,8 @@ import { getTodoList, getMyTodoList, createTodo, updateTodo, deleteTodo } from '
 
 import type { UseMutationOptions } from '@tanstack/react-query';
 import type { CreateTodoForm, CreateTodoResponse, UpdateTodoForm, UpdateTodoResponse, TodoListParams } from './types';
+import { membershipQueries } from '../memberships/queries';
+import { achievementKeys, achievementQueries } from '../achievements/queries';
 
 export const todoKeys = {
   all: (gatheringId: number) => ['todos', gatheringId] as const,
@@ -38,6 +40,8 @@ export const useCreateTodo = (
     ...options,
     onSuccess: (data, variables, onMutateResult, context) => {
       queryClient.invalidateQueries({ queryKey: todoKeys.all(gatheringId) });
+      queryClient.invalidateQueries({ queryKey: membershipQueries.members(gatheringId).queryKey });
+      queryClient.invalidateQueries({ queryKey: achievementKeys.all(gatheringId) });
       options?.onSuccess?.(data, variables, onMutateResult, context);
     },
   });
@@ -55,6 +59,8 @@ export const useUpdateTodo = (
     ...options,
     onSuccess: (data, variables, onMutateResult, context) => {
       queryClient.invalidateQueries({ queryKey: todoKeys.all(gatheringId) });
+      queryClient.invalidateQueries({ queryKey: membershipQueries.members(gatheringId).queryKey });
+      queryClient.invalidateQueries({ queryKey: achievementKeys.all(gatheringId) });
       options?.onSuccess?.(data, variables, onMutateResult, context);
     },
   });
@@ -69,6 +75,8 @@ export const useDeleteTodo = (gatheringId: number, options?: UseMutationOptions<
     ...options,
     onSuccess: (data, variables, onMutateResult, context) => {
       queryClient.invalidateQueries({ queryKey: todoKeys.all(gatheringId) });
+      queryClient.invalidateQueries({ queryKey: membershipQueries.members(gatheringId).queryKey });
+      queryClient.invalidateQueries({ queryKey: achievementKeys.all(gatheringId) });
       options?.onSuccess?.(data, variables, onMutateResult, context);
     },
   });
