@@ -9,11 +9,10 @@ import { AuthSection } from './AuthSection';
 import { useAuth } from '@/hooks/useAuth';
 import { CloseIcon, ArrowIcon } from '@/components/ui/Icon';
 
-const NAVIGATION_ITEMS = [
+const BASE_NAV_ITEMS = [
   { href: '/', label: '홈', protected: false },
   { href: '/gatherings', label: '모임 탐색', protected: false },
   { href: '/gatherings/new', label: '모임 만들기', protected: true },
-  { href: '/my', label: '내 모임', protected: true },
 ] as const;
 
 export function Header() {
@@ -23,6 +22,7 @@ export function Header() {
   const isNavActive = (href: string) => pathname === href || (href === '/' && pathname === '/main');
   const { isLoggedIn, isLoading } = useAuth();
   const hasSession = typeof document !== 'undefined' && document.cookie.includes('has-session=');
+  const mobileNavItems = isLoggedIn ? [...BASE_NAV_ITEMS, { href: '/my', label: '마이페이지' }] : BASE_NAV_ITEMS;
 
   useEffect(() => {
     if (!isSidebarOpen) {
@@ -58,7 +58,7 @@ export function Header() {
 
             <nav aria-label='주요 네비게이션' className='max-md:hidden'>
               <ul className='flex h-[88px] items-center gap-7 lg:gap-11'>
-                {NAVIGATION_ITEMS.map((item) => {
+                {BASE_NAV_ITEMS.map((item) => {
                   const isActive = isNavActive(item.href);
                   return (
                     <li key={item.href}>
@@ -122,9 +122,8 @@ export function Header() {
 
         <nav aria-label='모바일 네비게이션' className='mt-5'>
           <ul className='flex flex-col'>
-            {NAVIGATION_ITEMS.map((item) => {
+            {mobileNavItems.map((item) => {
               const isActive = isNavActive(item.href);
-              const label = isLoggedIn && item.href === '/my' ? '마이페이지' : item.label;
               return (
                 <li key={item.href}>
                   <button
@@ -134,7 +133,7 @@ export function Header() {
                       isActive ? 'text-blue-300' : 'text-gray-700'
                     }`}
                   >
-                    {label}
+                    {item.label}
                     <ArrowIcon
                       size={24}
                       direction='right'
