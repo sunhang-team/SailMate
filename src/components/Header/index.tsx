@@ -10,10 +10,10 @@ import { useAuth } from '@/hooks/useAuth';
 import { CloseIcon, ArrowIcon } from '@/components/ui/Icon';
 
 const NAVIGATION_ITEMS = [
-  { href: '/', label: '홈' },
-  { href: '/gatherings', label: '모임 탐색' },
-  { href: '/gatherings/new', label: '모임 만들기' },
-  { href: '/my', label: '내 모임' },
+  { href: '/', label: '홈', protected: false },
+  { href: '/gatherings', label: '모임 탐색', protected: false },
+  { href: '/gatherings/new', label: '모임 만들기', protected: true },
+  { href: '/my', label: '내 모임', protected: true },
 ] as const;
 
 export function Header() {
@@ -22,6 +22,7 @@ export function Header() {
   const pathname = usePathname();
   const isNavActive = (href: string) => pathname === href || (href === '/' && pathname === '/main');
   const { isLoggedIn, isLoading } = useAuth();
+  const hasSession = typeof document !== 'undefined' && document.cookie.includes('has-session=');
 
   useEffect(() => {
     if (!isSidebarOpen) {
@@ -64,6 +65,7 @@ export function Header() {
                       <Link
                         href={item.href}
                         className={`transition-colors hover:text-blue-400 ${isActive ? 'text-body-02-b lg:text-body-01-b text-gray-900' : 'text-body-02-m lg:text-body-01-m text-gray-700'}`}
+                        prefetch={item.protected && !hasSession ? false : undefined}
                       >
                         {item.label}
                       </Link>
