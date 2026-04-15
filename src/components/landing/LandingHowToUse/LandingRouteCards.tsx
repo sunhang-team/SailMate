@@ -1,7 +1,6 @@
 'use client';
 
 import Image from 'next/image';
-import { forwardRef, useRef, useEffect } from 'react';
 import { motion, useTransform, useReducedMotion, type MotionValue } from 'motion/react';
 
 import { LANDING_ROUTE_STEPS, type RouteLabel } from '@/components/landing/landingConstants';
