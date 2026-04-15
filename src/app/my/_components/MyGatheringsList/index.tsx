@@ -26,6 +26,8 @@ const SORT_OPTIONS: { label: string; value: SortOrder }[] = [
   { label: '과거순', value: 'oldest' },
 ];
 
+const FETCH_ALL_LIMIT = 999;
+
 const STATUS_OPTIONS: { label: string; value: MyStatusFilter }[] = [
   { label: '전체', value: 'all' },
   { label: '모집중', value: 'recruiting' },
@@ -56,7 +58,7 @@ export function MyGatheringsList() {
   const [isPending, startTransition] = useTransition();
 
   // 항상 전체 조회 후 tagState 기준으로 클라이언트 필터링 → 태그 표시와 드롭다운 필터 일치 보장
-  const { data } = useSuspenseQuery(membershipQueries.my({ status: 'all', page: 1, limit: 999 }));
+  const { data } = useSuspenseQuery(membershipQueries.my({ status: 'all', page: 1, limit: FETCH_ALL_LIMIT }));
 
   const filtered = data.gatherings.filter((g) => {
     if (status === 'all') return true;
