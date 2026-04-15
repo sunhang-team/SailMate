@@ -28,6 +28,7 @@ export function MyPageContent({ activeTab, pendingSort }: MyPageContentProps) {
   if (activeTab === 'my-gatherings')
     return (
       <SuspenseBoundary
+        key={activeTab}
         pendingFallback={<div className='flex h-40 items-center justify-center text-gray-400'>불러오는 중...</div>}
         errorFallback={
           <p className='flex h-40 items-center justify-center text-gray-500'>모임을 불러올 수 없습니다.</p>
@@ -39,6 +40,7 @@ export function MyPageContent({ activeTab, pendingSort }: MyPageContentProps) {
   if (activeTab === 'created-gatherings')
     return (
       <SuspenseBoundary
+        key={activeTab}
         pendingFallback={<div className='flex h-40 items-center justify-center text-gray-400'>불러오는 중...</div>}
         errorFallback={
           <p className='flex h-40 items-center justify-center text-gray-500'>모임을 불러올 수 없습니다.</p>
@@ -50,6 +52,7 @@ export function MyPageContent({ activeTab, pendingSort }: MyPageContentProps) {
   if (activeTab === 'pending-gatherings') {
     return (
       <SuspenseBoundary
+        key={activeTab}
         pendingFallback={<PendingGatheringsSkeleton />}
         errorFallback={
           <p className='text-body-02-r mt-6 py-10 text-center text-gray-500'>
@@ -64,6 +67,7 @@ export function MyPageContent({ activeTab, pendingSort }: MyPageContentProps) {
   if (activeTab === 'received-reviews') {
     return (
       <SuspenseBoundary
+        key={activeTab}
         pendingFallback={<div className='flex h-40 items-center justify-center text-gray-400'>불러오는 중...</div>}
         errorFallback={
           <p className='flex h-40 items-center justify-center text-gray-500'>리뷰를 불러올 수 없습니다.</p>
@@ -76,6 +80,7 @@ export function MyPageContent({ activeTab, pendingSort }: MyPageContentProps) {
   if (activeTab === 'liked-gatherings') {
     return (
       <SuspenseBoundary
+        key={activeTab}
         pendingFallback={<div className='flex h-40 items-center justify-center text-gray-400'>불러오는 중...</div>}
         errorFallback={
           <p className='flex h-40 items-center justify-center text-gray-500'>찜한 모임을 불러올 수 없습니다.</p>

@@ -1,7 +1,10 @@
+import axios from 'axios';
+
 import { axiosClient } from '@/lib/axiosClient';
 
 import { unwrapResponse } from '../common/utils';
-import { ApiResponse } from '../common/types';
+
+import type { ApiResponse } from '../common/types';
 
 import {
   ApplicationListResponse,
@@ -52,6 +55,20 @@ export const deleteApplication = async (gatheringId: number, applicationId: numb
 
 /** GET v1/users/me/applications — 내 신청 목록 조회(신청자) */
 export const getMyApplicationList = async (): Promise<MyApplicationListResponse> => {
-  const { data } = await axiosClient.get<ApiResponse<MyApplicationListResponse>>(`/v1/users/me/applications`);
-  return unwrapResponse(data);
+  try {
+    const { data } = await axiosClient.get<ApiResponse<MyApplicationListResponse>>(`/v1/users/me/applications`);
+
+    // 백엔드가 신청 없을 때 success: false로 반환하는 이슈 방어
+    if (!data.success && data.data === null) {
+      return { applications: [] };
+    }
+
+    return unwrapResponse(data);
+  } catch (error) {
+    // 백엔드가 신청 없을 때 404 GATHERING_NOT_FOUND를 반환하는 이슈 방어
+    if (axios.isAxiosError(error) && error.response?.status === 404) {
+      return { applications: [] };
+    }
+    throw error;
+  }
 };
