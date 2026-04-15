@@ -17,8 +17,8 @@ export function LandingSectionHeading({ eyebrow, title, className, align = 'cent
         className,
       )}
     >
-      <p className='text-small-02-sb md:text-body-02-sb lg:text-body-01-sb text-blue-300'>{eyebrow}</p>
-      <h2 className='text-body-01-b md:text-h3-b lg:text-h2-b text-blue-500'>{title}</h2>
+      <p className='text-small-02-sb md:text-body-02-sb xl:text-body-01-sb text-blue-300'>{eyebrow}</p>
+      <h2 className='text-body-01-b md:text-h3-b xl:text-h2-b text-blue-500'>{title}</h2>
     </div>
   );
 }

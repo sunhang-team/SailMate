@@ -68,7 +68,25 @@ const HERO_BLOBS: readonly HeroBlob[] = [
 export function LandingHero() {
   return (
     <section className='relative h-[512px] w-full overflow-hidden bg-[linear-gradient(180deg,#F1F8FF_0%,#DFEFFF_100%)] sm:h-[640px] md:h-[738px] lg:h-[992px]'>
-      <div className='pointer-events-none absolute' style={HERO_BLOB_LAYER} aria-hidden>
+      {/* Mobile: 하단 코너에만 은은한 blob (상단은 깨끗하게 유지) */}
+      <div className='pointer-events-none absolute inset-0 md:hidden' aria-hidden>
+        <div
+          className={cn(
+            'absolute bottom-[-68px] left-1/2 aspect-square w-[min(420px,88vw)] -translate-x-[70%] rounded-full blur-xl',
+            BLUE_BLOB_GRADIENT,
+            'opacity-30',
+          )}
+        />
+        <div
+          className={cn(
+            'absolute bottom-[-68px] left-1/2 aspect-square w-[min(420px,88vw)] -translate-x-[15%] rounded-full blur-xl',
+            CYAN_BLOB_GRADIENT,
+            'opacity-20',
+          )}
+        />
+      </div>
+
+      <div className='pointer-events-none absolute hidden md:block' style={HERO_BLOB_LAYER} aria-hidden>
         {HERO_BLOBS.map((blob, index) => (
           <div
             key={index}
@@ -93,7 +111,7 @@ export function LandingHero() {
         />
       </div>
 
-      <div className='relative mx-auto w-full px-10 pt-[80px] md:px-36 md:pt-16 md:pb-20 lg:pt-20 lg:pb-24'>
+      <div className='relative mx-auto w-full px-10 pt-[80px] md:px-36 md:pt-16 md:pb-20 lg:px-20 lg:pt-30 lg:pb-20'>
         <div className='flex flex-col items-center text-center'>
           <h1 className='text-h4-b md:text-h2-b lg:text-h1-b text-gradient-primary'>더 높은 완성도를 향한 항해</h1>
           <p className='text-small-02-r md:text-body-02-r lg:text-body-01-r mt-6 break-keep text-gray-800 md:max-w-[456px] lg:max-w-[569px]'>
@@ -105,15 +123,25 @@ export function LandingHero() {
           <div className='mt-12 flex w-full items-center justify-center gap-3'>
             <Link
               href={LANDING_LINKS.start}
-              className={cn(buttonVariants({ variant: 'landing-start', size: 'landing-hero' }))}
+              className={cn('group', buttonVariants({ variant: 'landing-start', size: 'landing-hero' }))}
             >
-              시작하기
+              <span className='relative inline-flex items-center justify-center whitespace-nowrap'>
+                <span className='text-gray-0 transition-opacity group-hover:opacity-0'>시작하기</span>
+                <span className='text-gradient-primary absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100'>
+                  시작하기
+                </span>
+              </span>
             </Link>
             <Link
               href={LANDING_LINKS.browse}
-              className={cn(buttonVariants({ variant: 'landing-browse', size: 'landing-hero' }))}
+              className={cn('group', buttonVariants({ variant: 'landing-browse', size: 'landing-hero' }))}
             >
-              둘러보기
+              <span className='relative inline-block'>
+                <span className='text-gradient-primary transition-opacity group-hover:opacity-0'>둘러보기</span>
+                <span className='text-gray-0 absolute inset-0 opacity-0 transition-opacity group-hover:opacity-100'>
+                  둘러보기
+                </span>
+              </span>
             </Link>
           </div>
         </div>
