@@ -105,7 +105,6 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
   const shortDescValue = watch('shortDescription') ?? '';
   const descValue = watch('description') ?? '';
   const goalValue = watch('goal') ?? '';
-  const tagsValue = watch('tags') ?? [];
   const maxMembersValue = watch('maxMembers');
   const recruitDeadlineValue = watch('recruitDeadline');
   const startDateValue = watch('startDate');
@@ -132,7 +131,6 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
     !!shortDescValue &&
     !!descValue &&
     !!goalValue &&
-    tagsValue.length > 0 &&
     typeof maxMembersValue === 'number' &&
     maxMembersValue >= 2 &&
     maxMembersValue <= 10 &&
