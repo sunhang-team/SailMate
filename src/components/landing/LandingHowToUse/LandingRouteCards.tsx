@@ -42,7 +42,6 @@ interface RouteMetaItem {
 
 interface LandingRouteCardsProps {
   scrollYProgress: MotionValue<number>;
-  onLastCardVisible?: (visible: boolean) => void;
 }
 /**
  * 1920: 이미지 800×488에 맞춘 시안 패딩.
@@ -91,19 +90,23 @@ const ROUTE_META: Record<RouteLabel, readonly [RouteMetaItem, RouteMetaItem]> = 
   ],
 };
 
-const RouteStepCard = forwardRef<HTMLDivElement, RouteStepCardProps>(function RouteStepCard(
-  { routeLabel, title, description, imageSrc, imageAlt, imageSide, index, totalCards, scrollProgress },
-  ref,
-) {
+function RouteStepCard({
+  routeLabel,
+  title,
+  description,
+  imageSrc,
+  imageAlt,
+  imageSide,
+  index,
+  totalCards,
+  scrollProgress,
+}: RouteStepCardProps) {
   const shouldReduceMotion = useReducedMotion();
   const isFirst = index === 0;
   const isLast = index === totalCards - 1;
 
-  // 다음 카드가 덮으러 올 때 이전 카드에 점진적으로 블러/축소 적용
-  // scrollProgress 기준 (N+1)/totalCards 시점이 카드 N이 완전히 덮이는 시점
   const transitionEnd = (index + 1) / totalCards;
   const transitionStart = transitionEnd - TRANSITION_WINDOW_RATIO;
-
   const scale = useTransform(scrollProgress, [transitionStart, transitionEnd], [1, isLast ? 1 : MIN_SCALE]);
 
   const meta = ROUTE_META[routeLabel];
@@ -156,8 +159,8 @@ const RouteStepCard = forwardRef<HTMLDivElement, RouteStepCardProps>(function Ro
 
   return (
     <div
-      ref={ref}
-      className={cn('sticky top-40', !isFirst && 'mt-[40vh] md:mt-[55vh] xl:mt-[80vh]')}
+      // 💡 3. 타이틀 바로 밑에 쌓이도록 top 위치 지정
+      className={cn('sticky top-60', !isFirst && 'mt-[40vh] md:mt-[55vh] xl:mt-[80vh]')}
       style={{ zIndex: index + 1 }}
     >
       <motion.article
@@ -182,37 +185,20 @@ const RouteStepCard = forwardRef<HTMLDivElement, RouteStepCardProps>(function Ro
       </motion.article>
     </div>
   );
-});
+}
 
-export function LandingRouteCards({ scrollYProgress, onLastCardVisible }: LandingRouteCardsProps) {
-  const lastCardRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!onLastCardVisible) return;
-
-    const observer = new IntersectionObserver(([entry]) => onLastCardVisible(entry.isIntersecting), {
-      threshold: 0,
-      rootMargin: '0px 0px -90% 0px', // 카드가 아래에서 80% 올라왔을 때 감지
-    });
-
-    if (lastCardRef.current) observer.observe(lastCardRef.current);
-    return () => observer.disconnect();
-  }, [onLastCardVisible]);
+export function LandingRouteCards({ scrollYProgress }: LandingRouteCardsProps) {
   return (
     <div className='relative px-4 pt-15 pb-[10vh] md:px-7 md:pt-20 md:pb-[12vh] xl:px-30'>
-      {LANDING_ROUTE_STEPS.map((step, index) => {
-        const isLast = index === LANDING_ROUTE_STEPS.length - 1;
-        return (
-          <RouteStepCard
-            key={step.routeLabel}
-            ref={isLast ? lastCardRef : undefined}
-            {...step}
-            index={index}
-            totalCards={LANDING_ROUTE_STEPS.length}
-            scrollProgress={scrollYProgress}
-          />
-        );
-      })}
+      {LANDING_ROUTE_STEPS.map((step, index) => (
+        <RouteStepCard
+          key={step.routeLabel}
+          {...step}
+          index={index}
+          totalCards={LANDING_ROUTE_STEPS.length}
+          scrollProgress={scrollYProgress}
+        />
+      ))}
     </div>
   );
 }
