@@ -5,7 +5,7 @@ import { getTodoList, getMyTodoList, createTodo, updateTodo, deleteTodo } from '
 import type { UseMutationOptions } from '@tanstack/react-query';
 import type { CreateTodoForm, CreateTodoResponse, UpdateTodoForm, UpdateTodoResponse, TodoListParams } from './types';
 import { membershipQueries } from '../memberships/queries';
-import { achievementKeys, achievementQueries } from '../achievements/queries';
+import { achievementKeys } from '../achievements/queries';
 
 export const todoKeys = {
   all: (gatheringId: number) => ['todos', gatheringId] as const,
