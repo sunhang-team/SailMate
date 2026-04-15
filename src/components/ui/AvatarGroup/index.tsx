@@ -1,21 +1,30 @@
+'use client';
+
 import { cva } from 'class-variance-authority';
+import Image from 'next/image';
 
 import { cn } from '@/lib/cn';
+import { useFallbackImage } from '@/hooks/useFallbackImage';
 
-const avatarSizeVariants = cva('bg-gray-300 flex items-center justify-center overflow-hidden', {
+const avatarSizeVariants = cva('relative bg-gray-300 flex items-center justify-center overflow-hidden', {
   variants: {
     size: {
       sm: 'h-5 w-5',
       md: 'h-8 w-8',
     },
     shape: {
-      circle: 'rounded-full border-2 border-gray-0',
-      square: 'rounded',
+      full: 'rounded-full',
+      lg: 'rounded-lg',
+    },
+    hasBorder: {
+      true: 'border-2 border-gray-0',
+      false: 'border-0',
     },
   },
   defaultVariants: {
     size: 'sm',
-    shape: 'circle',
+    shape: 'full',
+    hasBorder: true,
   },
 });
 
@@ -26,13 +35,18 @@ const overflowSizeVariants = cva('bg-gray-200 flex items-center justify-center t
       md: 'h-8 w-8 text-[10px]',
     },
     shape: {
-      circle: 'rounded-full border-2 border-gray-0',
-      square: 'rounded',
+      full: 'rounded-full',
+      lg: 'rounded-lg',
+    },
+    hasBorder: {
+      true: 'border-2 border-gray-0',
+      false: 'border-0',
     },
   },
   defaultVariants: {
     size: 'sm',
-    shape: 'circle',
+    shape: 'full',
+    hasBorder: true,
   },
 });
 
@@ -49,32 +63,37 @@ interface AvatarGroupProps {
   /** 아바타 크기 */
   size?: 'sm' | 'md';
   /** 아바타 모양 */
-  shape?: 'circle' | 'square';
+  shape?: 'full' | 'lg';
+  /** 보더 노출 여부 */
+  hasBorder?: boolean;
   className?: string;
 }
 
-const PLACEHOLDER_COLORS = ['bg-gray-300', 'bg-gray-400', 'bg-gray-500'] as const;
-
-export function AvatarGroup({ avatars, max, size = 'sm', shape = 'circle', className }: AvatarGroupProps) {
+export function AvatarGroup({
+  avatars,
+  max,
+  size = 'sm',
+  shape = 'full',
+  hasBorder = true,
+  className,
+}: AvatarGroupProps) {
   const displayAvatars = max ? avatars.slice(0, max) : avatars;
   const overflowCount = max && avatars.length > max ? avatars.length - max : 0;
 
   return (
     <div className={cn('flex items-center -space-x-2', className)}>
       {displayAvatars.map((avatar, index) => (
-        <div
-          key={avatar.id ?? index}
-          className={cn(
-            avatarSizeVariants({ size, shape }),
-            !avatar.imageUrl && PLACEHOLDER_COLORS[index % PLACEHOLDER_COLORS.length],
-          )}
-        >
-          {avatar.imageUrl && (
-            <img src={avatar.imageUrl} alt={`멤버 ${index + 1}`} className='h-full w-full object-cover' />
-          )}
+        <div key={avatar.id ?? index} className={avatarSizeVariants({ size, shape, hasBorder })}>
+          <AvatarImage imageUrl={avatar.imageUrl} alt={`멤버 ${index + 1}`} />
         </div>
       ))}
       {overflowCount > 0 && <div className={overflowSizeVariants({ size, shape })}>+{overflowCount}</div>}
     </div>
   );
+}
+
+function AvatarImage({ imageUrl, alt }: { imageUrl?: string | null; alt: string }) {
+  const { imgSrc, onError } = useFallbackImage(imageUrl);
+
+  return <Image src={imgSrc} alt={alt} fill className='object-cover' onError={onError} />;
 }

@@ -38,10 +38,10 @@ export const buttonVariants = cva('cursor-pointer transition-colors disabled:cur
       'social-icon-email': 'rounded-lg flex items-center justify-center border border-blue-100 text-blue-300',
       /** 랜딩 Hero — 시작하기: 기본 그라데이션, hover 시 아웃라인 */
       'landing-start':
-        'inline-flex items-center justify-center bg-gradient-primary text-gray-0 shadow-02 transition-colors hover:bg-gray-0 hover:text-gradient-primary hover:border-gradient-primary hover:shadow-03',
+        'inline-flex items-center justify-center bg-gradient-primary text-gray-0 shadow-02 transition-colors hover:[background:var(--color-gray-0)] hover:border-gradient-primary hover:shadow-03',
       /** 랜딩 Hero — 둘러보기: 기본 아웃라인, hover 시 그라데이션 채움 */
       'landing-browse':
-        'inline-flex items-center justify-center bg-gray-0 text-gradient-primary border-gradient-primary shadow-01 transition-colors hover:bg-gradient-primary hover:text-gray-0 hover:[-webkit-background-clip:border-box] hover:[background-clip:border-box] hover:[-webkit-text-fill-color:var(--color-gray-0)] hover:shadow-03',
+        'inline-flex items-center justify-center bg-gray-0 border-gradient-primary shadow-01 transition-colors hover:bg-gradient-primary hover:shadow-03',
       approve:
         'rounded-lg flex items-center justify-center gap-1 text-body-01-sb text-blue-300 bg-blue-100 disabled:opacity-50',
       reject:

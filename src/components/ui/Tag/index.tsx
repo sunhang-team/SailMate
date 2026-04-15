@@ -28,7 +28,7 @@ const tagVariants = cva('inline-flex w-fit items-center justify-center rounded-l
       coreFeature: 'bg-blue-100 text-blue-300 px-3 py-1 gap-1 text-small-01-sb',
       coreFeatureSmall: 'bg-blue-100 text-blue-300 px-3 py-1 gap-1 text-small-02-sb',
       route:
-        'h-[27px] w-[65px] rounded-xl bg-blue-100 text-small-01-sb text-blue-300 md:h-[34px] md:w-[78px] md:text-body-02-sb lg:h-[40px] lg:w-[91px] lg:text-body-01-sb',
+        'h-[27px] w-[65px] rounded-xl bg-blue-150 text-small-01-m text-blue-300 md:h-[34px] md:w-[78px] md:text-body-02-m lg:h-[40px] lg:w-[91px] lg:text-body-01-m',
     },
     state: {
       goal: '',
@@ -44,7 +44,7 @@ const tagVariants = cva('inline-flex w-fit items-center justify-center rounded-l
   },
   compoundVariants: [
     { variant: 'deadline', state: 'goal', class: 'bg-blue-100 text-blue-300' },
-    { variant: 'deadline', state: 'warning', class: 'bg-red-100 text-red-200' },
+    { variant: 'deadline', state: 'warning', class: 'bg-orange-100 text-orange-200' },
     { variant: 'day', state: 'short', class: 'bg-gray-0 text-red-200' },
     { variant: 'day', state: 'relax', class: 'bg-gray-0 text-blue-300' },
     { variant: 'info', state: 'good', class: 'bg-blue-100 text-blue-300' },

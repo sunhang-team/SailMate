@@ -81,7 +81,18 @@ export function MyGatheringsCard({ gathering }: MyGatheringsCardProps) {
           </div>
         </GatheringCard.Body>
         <GatheringCard.Footer>
-          {gathering.status === 'IN_PROGRESS' && (
+          {tagState === 'recruiting' && (
+            <div className='border-gray-150 flex h-[54px] w-full items-center rounded-[8px] border bg-gray-100 md:h-[72px]'>
+              <div className='flex flex-1 items-center justify-center gap-1.5'>
+                <span className='text-small-01-m md:text-body-01-m text-gray-600'>모집 인원</span>
+                <span className='flex items-center'>
+                  <span className='text-small-01-sb md:text-body-01-sb text-blue-300'>{gathering.currentMembers}</span>
+                  <span className='text-small-01-sb md:text-body-01-sb text-gray-700'>/{gathering.maxMembers}</span>
+                </span>
+              </div>
+            </div>
+          )}
+          {tagState === 'progressing' && (
             <div className='border-gray-150 flex h-[54px] w-full items-center rounded-[8px] border bg-gray-100 md:h-[72px]'>
               <div className='flex flex-1 items-center justify-center gap-1.5'>
                 <span className='text-small-01-m md:text-body-01-m text-gray-600'>총</span>
@@ -96,7 +107,7 @@ export function MyGatheringsCard({ gathering }: MyGatheringsCardProps) {
               </div>
             </div>
           )}
-          {gathering.status === 'COMPLETED' && !hasReviewed && (
+          {isFinished && !hasReviewed && (
             <div className='flex h-[54px] w-full items-center justify-center rounded-[8px] bg-blue-50 md:h-[72px]'>
               <div className='flex items-center gap-2'>
                 <ReviewIcon size={16} className='text-blue-300 md:size-6' />
@@ -104,7 +115,7 @@ export function MyGatheringsCard({ gathering }: MyGatheringsCardProps) {
               </div>
             </div>
           )}
-          {gathering.status === 'COMPLETED' && hasReviewed && (
+          {isFinished && hasReviewed && (
             <div className='flex h-[54px] w-full items-center justify-center rounded-[8px] bg-blue-50 md:h-[72px]'>
               <span className='text-small-01-sb md:text-body-01-sb text-gray-600'>리뷰 작성완료</span>
             </div>

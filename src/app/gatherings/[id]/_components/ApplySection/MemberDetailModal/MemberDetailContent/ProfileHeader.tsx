@@ -1,7 +1,11 @@
-import { Modal } from '@/components/ui/Modal';
+'use client';
+
+import Image from 'next/image';
+
 import { ProgressBar } from '@/components/ui/Progress';
 import { Tag } from '@/components/ui/Tag';
 import { IllustrationIcon } from '@/components/ui/Icon';
+import { useFallbackImage } from '@/hooks/useFallbackImage';
 import type { UserPublicProfile } from '@/api/users/types';
 
 interface ProfileHeaderProps {
@@ -9,20 +13,12 @@ interface ProfileHeaderProps {
 }
 
 export function ProfileHeader({ profile }: ProfileHeaderProps) {
+  const { imgSrc, onError } = useFallbackImage(profile.profileImage);
+
   return (
     <>
-      <div className='h-19.75 w-19.75 shrink-0 overflow-hidden rounded-2xl bg-gray-100 shadow-sm md:h-32.75 md:w-32.75'>
-        {profile.profileImage && (
-          <img
-            src={profile.profileImage}
-            alt={`${profile.nickname} 프로필 이미지`}
-            className='h-full w-full object-cover'
-            onError={(e) => {
-              (e.target as HTMLImageElement).src =
-                'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiNFMkU4RjAiLz48L3N2Zz4=';
-            }}
-          />
-        )}
+      <div className='relative h-19.75 w-19.75 shrink-0 overflow-hidden rounded-2xl bg-gray-100 shadow-sm md:h-32.75 md:w-32.75'>
+        <Image src={imgSrc} alt={`${profile.nickname} 프로필 이미지`} fill className='object-cover' onError={onError} />
       </div>
 
       <div className='flex flex-1 flex-col justify-center'>

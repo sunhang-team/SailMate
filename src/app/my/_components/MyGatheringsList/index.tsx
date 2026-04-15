@@ -5,6 +5,7 @@ import { useState, useTransition } from 'react';
 import { useSuspenseQuery } from '@tanstack/react-query';
 
 import { cn } from '@/lib/cn';
+import { getGatheringDisplayStatus } from '@/lib/gatheringStatus';
 import { Dropdown } from '@/components/ui/Dropdown';
 import { useDropdown } from '@/components/ui/Dropdown/context';
 import { ArrowIcon } from '@/components/ui/Icon/ArrowIcon';
@@ -18,15 +19,18 @@ import { MyGatheringsCard } from '../MyGatheringsCard';
 import type { GatheringStatusFilter } from '@/api/memberships/types';
 
 type SortOrder = 'latest' | 'oldest';
-type MyStatusFilter = Extract<GatheringStatusFilter, 'all' | 'in_progress' | 'completed'>;
+type MyStatusFilter = Extract<GatheringStatusFilter, 'all' | 'recruiting' | 'in_progress' | 'completed'>;
 
 const SORT_OPTIONS: { label: string; value: SortOrder }[] = [
   { label: '최신순', value: 'latest' },
   { label: '과거순', value: 'oldest' },
 ];
 
+const FETCH_ALL_LIMIT = 999;
+
 const STATUS_OPTIONS: { label: string; value: MyStatusFilter }[] = [
   { label: '전체', value: 'all' },
+  { label: '모집중', value: 'recruiting' },
   { label: '진행중', value: 'in_progress' },
   { label: '진행완료', value: 'completed' },
 ];
@@ -53,21 +57,23 @@ export function MyGatheringsList() {
   const [page, setPage] = useState(1);
   const [isPending, startTransition] = useTransition();
 
-  // status=all: API가 RECRUITING 포함 반환 → 서버 totalPages 신뢰 불가
-  // → 전체를 한 번에 받아(limit=999) 클라이언트에서 필터/페이지네이션
-  // status=in_progress|completed: 서버 필터 정확 → 서버 페이지네이션 그대로 사용
-  const isAll = status === 'all';
-  const { data } = useSuspenseQuery(
-    membershipQueries.my({ status, page: isAll ? 1 : page, limit: isAll ? 999 : limit }),
-  );
+  // 항상 전체 조회 후 tagState 기준으로 클라이언트 필터링 → 태그 표시와 드롭다운 필터 일치 보장
+  const { data } = useSuspenseQuery(membershipQueries.my({ status: 'all', page: 1, limit: FETCH_ALL_LIMIT }));
 
-  const filtered = isAll ? data.gatherings.filter((g) => g.status !== 'RECRUITING') : data.gatherings;
+  const filtered = data.gatherings.filter((g) => {
+    if (status === 'all') return true;
+    const { tagState, isFinished } = getGatheringDisplayStatus(g);
+    if (status === 'recruiting') return tagState === 'recruiting';
+    if (status === 'in_progress') return tagState === 'progressing';
+    if (status === 'completed') return isFinished;
+    return true;
+  });
   const sorted = [...filtered].sort((a, b) => {
     const diff = new Date(a.startDate).getTime() - new Date(b.startDate).getTime();
     return sort === 'latest' ? -diff : diff;
   });
-  const totalPages = isAll ? Math.max(1, Math.ceil(sorted.length / limit)) : data.totalPages;
-  const paged = isAll ? sorted.slice((page - 1) * limit, page * limit) : sorted;
+  const totalPages = Math.max(1, Math.ceil(sorted.length / limit));
+  const paged = sorted.slice((page - 1) * limit, page * limit);
 
   const handleFilterChange = (next: Partial<{ status: MyStatusFilter; sort: SortOrder }>) => {
     if (next.sort !== undefined) {

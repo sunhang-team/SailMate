@@ -26,8 +26,10 @@ export function DashboardTabNav({ activeTab, gatheringId }: DashboardTabNavProps
                   replace
                   scroll={false}
                   className={cn(
-                    'text-small-02-m md:text-body-02-m flex h-[39px] shrink-0 items-center px-2.5 transition-colors md:h-12',
-                    isActive ? 'border-b-2 border-gray-800 text-gray-800' : 'text-gray-300',
+                    'text-small-01-m md:text-body-01-m flex h-[39px] shrink-0 items-center px-2.5 transition-colors md:h-12',
+                    isActive
+                      ? 'text-small-01-sb md:text-body-01-sb border-gray-800 text-gray-800 md:border-b-2'
+                      : 'text-gray-300',
                   )}
                 >
                   {label}

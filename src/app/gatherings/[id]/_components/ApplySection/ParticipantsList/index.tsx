@@ -28,6 +28,7 @@ export function ParticipantsList({ members, maxMembers, className }: Participant
               avatars={members.map((member) => ({ id: member.userId, imageUrl: member.profileImage }))}
               max={maxMembers}
               size='md'
+              shape='full'
             />
           </div>
         </Dropdown.Trigger>
@@ -46,7 +47,8 @@ export function ParticipantsList({ members, maxMembers, className }: Participant
                 <AvatarGroup
                   avatars={[{ id: member.userId, imageUrl: member.profileImage }]}
                   size='md'
-                  shape='square'
+                  shape='lg'
+                  hasBorder={false}
                 />
                 <span className='text-sm font-medium'>{member.nickname}</span>
               </div>

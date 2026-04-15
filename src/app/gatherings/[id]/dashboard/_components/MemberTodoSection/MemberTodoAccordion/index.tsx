@@ -39,7 +39,11 @@ export function MemberTodoAccordion({ member, todos }: MemberTodoAccordionProps)
         aria-expanded={isOpen}
       >
         <div className='flex items-center gap-3 md:gap-5'>
-          <Profile imageUrl={member.profileImage} className='size-8 rounded-lg shadow-sm md:size-12' />
+          <Profile
+            imageUrl={member.profileImage}
+            className='size-8 rounded-lg shadow-sm md:size-12'
+            hasBorder={false}
+          />
 
           <div className='flex items-center gap-1 md:flex-row md:items-center md:gap-4'>
             <span className='text-small-01-m md:text-body-01-m text-gray-900'>{member.nickname}</span>
@@ -47,14 +51,14 @@ export function MemberTodoAccordion({ member, todos }: MemberTodoAccordionProps)
         </div>
         <div className='flex items-center gap-2 md:gap-4'>
           {isWarning ? (
-            <span className='text-small-02-sb inline-flex items-center gap-1 rounded-[4px] bg-orange-50 px-2 py-0.5 text-orange-400'>
+            <span className='text-small-02-sb inline-flex items-center gap-1 rounded-[4px] px-2 py-0.5 text-orange-400'>
               <Tag variant='info' state='bad'>
                 <StateIcon variant='warning' size={14} />
                 주의
               </Tag>
             </span>
           ) : (
-            <span className='text-small-02-sb inline-flex items-center gap-1 rounded-[4px] bg-blue-50 px-2 py-0.5 text-blue-400'>
+            <span className='text-small-02-sb inline-flex items-center gap-1 rounded-[4px] px-2 py-0.5 text-blue-400'>
               <Tag variant='info' state='good'>
                 <StateIcon variant='active' size={14} />
                 {dDay}일
@@ -72,7 +76,7 @@ export function MemberTodoAccordion({ member, todos }: MemberTodoAccordionProps)
             size={24}
             className={cn(
               'h-6 w-6 text-gray-400 transition-transform duration-300 md:size-7 md:h-8 md:w-8',
-              isOpen ? 'rotate-90 text-blue-500' : '-rotate-90',
+              isOpen ? '-rotate-90 text-blue-500' : 'rotate-90',
             )}
           />
         </div>
