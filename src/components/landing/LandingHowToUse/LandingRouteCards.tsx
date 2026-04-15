@@ -1,8 +1,8 @@
 'use client';
 
-import { useRef } from 'react';
 import Image from 'next/image';
-import { motion, useScroll, useTransform, useReducedMotion, type MotionValue } from 'motion/react';
+import { forwardRef, useRef, useEffect } from 'react';
+import { motion, useTransform, useReducedMotion, type MotionValue } from 'motion/react';
 
 import { LANDING_ROUTE_STEPS, type RouteLabel } from '@/components/landing/landingConstants';
 import { Tag } from '@/components/ui/Tag';
@@ -40,6 +40,10 @@ interface RouteMetaItem {
   label: string;
 }
 
+interface LandingRouteCardsProps {
+  scrollYProgress: MotionValue<number>;
+  onLastCardVisible?: (visible: boolean) => void;
+}
 /**
  * 1920: 이미지 800×488에 맞춘 시안 패딩.
  * xl(1280)~1920 구간: 이미지가 줄어드는 만큼 패딩도 같이 줄어들어 "찌그러짐" 방지.
@@ -87,17 +91,10 @@ const ROUTE_META: Record<RouteLabel, readonly [RouteMetaItem, RouteMetaItem]> = 
   ],
 };
 
-function RouteStepCard({
-  routeLabel,
-  title,
-  description,
-  imageSrc,
-  imageAlt,
-  imageSide,
-  index,
-  totalCards,
-  scrollProgress,
-}: RouteStepCardProps) {
+const RouteStepCard = forwardRef<HTMLDivElement, RouteStepCardProps>(function RouteStepCard(
+  { routeLabel, title, description, imageSrc, imageAlt, imageSide, index, totalCards, scrollProgress },
+  ref,
+) {
   const shouldReduceMotion = useReducedMotion();
   const isFirst = index === 0;
   const isLast = index === totalCards - 1;
@@ -159,7 +156,8 @@ function RouteStepCard({
 
   return (
     <div
-      className={cn('sticky top-20', !isFirst && 'mt-[40vh] md:mt-[55vh] xl:mt-[50vh]')}
+      ref={ref}
+      className={cn('sticky top-40', !isFirst && 'mt-[40vh] md:mt-[55vh] xl:mt-[80vh]')}
       style={{ zIndex: index + 1 }}
     >
       <motion.article
@@ -184,31 +182,37 @@ function RouteStepCard({
       </motion.article>
     </div>
   );
-}
+});
 
-export function LandingRouteCards() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ['start start', 'end end'],
-  });
+export function LandingRouteCards({ scrollYProgress, onLastCardVisible }: LandingRouteCardsProps) {
+  const lastCardRef = useRef<HTMLDivElement>(null);
 
+  useEffect(() => {
+    if (!onLastCardVisible) return;
+
+    const observer = new IntersectionObserver(([entry]) => onLastCardVisible(entry.isIntersecting), {
+      threshold: 0,
+      rootMargin: '0px 0px -90% 0px', // 카드가 아래에서 80% 올라왔을 때 감지
+    });
+
+    if (lastCardRef.current) observer.observe(lastCardRef.current);
+    return () => observer.disconnect();
+  }, [onLastCardVisible]);
   return (
-    <div ref={containerRef} className='relative px-4 pt-15 pb-[10vh] md:px-7 md:pt-20 md:pb-[12vh] xl:px-30'>
-      {LANDING_ROUTE_STEPS.map((step, index) => (
-        <RouteStepCard
-          key={step.routeLabel}
-          routeLabel={step.routeLabel}
-          title={step.title}
-          description={step.description}
-          imageSrc={step.imageSrc}
-          imageAlt={step.imageAlt}
-          imageSide={step.imageSide}
-          index={index}
-          totalCards={LANDING_ROUTE_STEPS.length}
-          scrollProgress={scrollYProgress}
-        />
-      ))}
+    <div className='relative px-4 pt-15 pb-[10vh] md:px-7 md:pt-20 md:pb-[12vh] xl:px-30'>
+      {LANDING_ROUTE_STEPS.map((step, index) => {
+        const isLast = index === LANDING_ROUTE_STEPS.length - 1;
+        return (
+          <RouteStepCard
+            key={step.routeLabel}
+            ref={isLast ? lastCardRef : undefined}
+            {...step}
+            index={index}
+            totalCards={LANDING_ROUTE_STEPS.length}
+            scrollProgress={scrollYProgress}
+          />
+        );
+      })}
     </div>
   );
 }
