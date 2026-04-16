@@ -342,3 +342,13 @@ input[type='password']::-ms-reveal,
 input[type='password']::-ms-clear {
   display: none;
 }
+
+/* 1.  비디오 구도 고정 (사생활 보호 및 일관성) */
+.lk-participant-tile video {
+  object-fit: contain !important;
+  background-color: #000;
+}
+
+.lk-video-container {
+  background-color: #000;
+}
