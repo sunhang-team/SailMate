@@ -81,16 +81,34 @@ export const getApplicationStatus = async (gatheringId: number): Promise<GetAppl
   }
 };
 
-/** GET /v1/gatherings/main — 메인 페이지 모임 목록 (서버/클라이언트 공용) */
+/** GET /v1/gatherings/main — 메인 페이지 모임 목록 (클라이언트 전용) */
+export const getMainGatherings = async (params?: GetMainGatheringsParams): Promise<GetMainGatheringsResponse> => {
+  const { data } = await axiosClient.get<ApiResponse<GetMainGatheringsResponse>>('/v1/gatherings/main', {
+    params,
+    headers: {
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      Pragma: 'no-cache',
+    },
+  });
+
+  const result = unwrapResponse(data);
+  return {
+    popular: normalizeGatheringList(result.popular),
+    deadline: normalizeGatheringList(result.deadline),
+    latest: normalizeGatheringList(result.latest),
+  };
+};
+
+/** GET /v1/gatherings/main — 메인 페이지 모임 목록 (서버 전용) */
 export const fetchMainGatherings = async (params?: GetMainGatheringsParams): Promise<GetMainGatheringsResponse> => {
   const searchParams = new URLSearchParams();
   if (params?.limit !== undefined) searchParams.set('limit', String(params.limit));
   const qs = searchParams.toString();
 
-  const isServer = typeof window === 'undefined';
   const res = await fetch(`${getBaseUrl()}/v1/gatherings/main${qs ? `?${qs}` : ''}`, {
-    ...(isServer && { next: { tags: [GATHERING_TAGS.all, GATHERING_TAGS.main] } }),
+    next: { tags: [GATHERING_TAGS.all, GATHERING_TAGS.main] },
   });
+
   if (!res.ok) throw new Error(`gatherings/main fetch failed: ${res.status}`);
   const json: ApiResponse<GetMainGatheringsResponse> = await res.json();
   const data = unwrapResponse(json);
