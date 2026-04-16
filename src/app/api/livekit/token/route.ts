@@ -14,28 +14,40 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid room format' }, { status: 400 });
   }
 
-  // 1. 보안: 클라이언트 요청 파라미터를 신뢰하지 않고, 서버 단에서 직접 모임 참여자인지 검증
   const gatheringId = parseInt(room.split('-')[1], 10);
-  const memberResponse = await requestBackend({
-    request: req,
-    endpoint: `v1/gatherings/${gatheringId}/members`,
-    overrideSearchParams: new URLSearchParams(),
-  });
+  const [memberResponse, userResponse] = await Promise.all([
+    requestBackend({
+      request: req,
+      endpoint: `v1/gatherings/${gatheringId}/members`,
+      overrideSearchParams: new URLSearchParams(),
+    }),
+    requestBackend({
+      request: req,
+      endpoint: 'v1/users/me',
+      overrideSearchParams: new URLSearchParams(),
+    }),
+  ]);
 
   if (!memberResponse.ok) {
-    return NextResponse.json({ error: 'Unauthorized: You must be a member to join this meeting' }, { status: 403 });
+    return NextResponse.json(
+      {
+        error: 'Unauthorized: You must be a member to join this meeting',
+      },
+      {
+        status: 403,
+      },
+    );
   }
 
-  // user 정보는 users/me 에서 가져오거나 memberResponse에서 찾아서 사용해야 함.
-  // 코드 리뷰에 따라 로그인 정보 검증 로직을 유지하면서, memberResponse 도 확인하도록 수정.
-  const userResponse = await requestBackend({
-    request: req,
-    endpoint: 'v1/users/me',
-    overrideSearchParams: new URLSearchParams(),
-  });
-
   if (!userResponse.ok) {
-    return NextResponse.json({ error: 'Unauthorized: You must be logged in to join a meeting' }, { status: 401 });
+    return NextResponse.json(
+      {
+        error: 'Unauthorized: You must be logged in to join a meeting',
+      },
+      {
+        status: 401,
+      },
+    );
   }
 
   const user = await userResponse.json();
