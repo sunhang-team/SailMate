@@ -29,7 +29,7 @@ export const useMeetingPresence = (
   }, [isJoined]);
 
   useEffect(() => {
-    if (!gatheringId || !userId || !nickname || !supabase) return;
+    if (!gatheringId || !userId || !nickname) return;
 
     const client = ensureSupabase();
 
@@ -79,7 +79,7 @@ export const useMeetingPresence = (
       });
 
     return () => {
-      supabase?.removeChannel(channel);
+      client.removeChannel(channel);
       channelRef.current = null;
     };
   }, [gatheringId, userId, nickname]);
