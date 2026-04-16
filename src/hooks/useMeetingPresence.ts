@@ -109,11 +109,23 @@ export const useMeetingPresence = (
   }, [isJoined, userId, nickname]);
 
   useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') {
+        channelRef?.current?.untrack();
+      }
+    };
+
     const handleBeforeUnload = () => {
       channelRef.current?.untrack();
     };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
     window.addEventListener('beforeunload', handleBeforeUnload);
-    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
   }, []);
 
   return { presentUsers };
