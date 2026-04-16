@@ -68,11 +68,10 @@ export async function GET(req: NextRequest) {
 
   const participantIdentity = `user-${userId}`;
 
-  // 2. 보안: 토큰 유효기간을 10분으로 짧게 설정 (입장 유효 시간)
   const at = new AccessToken(apiKey, apiSecret, {
     identity: participantIdentity,
     name: nickname,
-    ttl: '10m',
+    ttl: '1h',
   });
 
   at.addGrant({ roomJoin: true, room: room });
