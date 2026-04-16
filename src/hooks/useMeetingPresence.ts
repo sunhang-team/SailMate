@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from 'react';
 
-import { ensureSupabase, supabase } from '@/lib/supabase';
+import { ensureSupabase } from '@/lib/supabase';
 
 import type { RealtimeChannel } from '@supabase/supabase-js';
 
@@ -111,7 +111,7 @@ export const useMeetingPresence = (
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'hidden') {
-        channelRef?.current?.untrack();
+        channelRef.current?.untrack();
       }
     };
 
