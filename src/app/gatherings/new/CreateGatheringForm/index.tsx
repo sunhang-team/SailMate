@@ -145,7 +145,6 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
     mutate(data, {
       onSuccess: () => {
         showToast({ variant: 'success', title: isEditMode ? '모임이 수정되었습니다.' : '모임이 생성되었습니다.' });
-        router.refresh();
         if (isEditMode && gatheringId) {
           router.push(`/gatherings/${gatheringId}`);
         } else {

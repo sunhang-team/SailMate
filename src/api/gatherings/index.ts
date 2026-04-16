@@ -85,10 +85,6 @@ export const getApplicationStatus = async (gatheringId: number): Promise<GetAppl
 export const getMainGatherings = async (params?: GetMainGatheringsParams): Promise<GetMainGatheringsResponse> => {
   const { data } = await axiosClient.get<ApiResponse<GetMainGatheringsResponse>>('/v1/gatherings/main', {
     params,
-    headers: {
-      'Cache-Control': 'no-cache, no-store, must-revalidate',
-      Pragma: 'no-cache',
-    },
   });
 
   const result = unwrapResponse(data);

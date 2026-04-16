@@ -34,7 +34,6 @@ export function LeaderActionDropdown({ gatheringId }: LeaderActionDropdownProps)
     deleteGathering(undefined, {
       onSuccess: () => {
         showToast({ variant: 'success', title: '모임이 삭제되었습니다' });
-        router.refresh();
         router.push('/main');
       },
       onError: () => {

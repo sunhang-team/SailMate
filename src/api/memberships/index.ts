@@ -32,10 +32,6 @@ const normalizeMembershipGathering = (item: MembershipGathering): MembershipGath
 export const getMyGatherings = async (params?: MyGatheringsParams): Promise<MyGatheringList> => {
   const { data } = await axiosClient.get<ApiResponse<MyGatheringList>>('/v1/users/me/gatherings', {
     params,
-    headers: {
-      'Cache-Control': 'no-cache, no-store, must-revalidate',
-      Pragma: 'no-cache',
-    },
   });
   const result = unwrapResponse(data);
   return { ...result, gatherings: result.gatherings.map(normalizeMembershipGathering) };
