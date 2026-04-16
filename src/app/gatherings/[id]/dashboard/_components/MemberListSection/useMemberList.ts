@@ -79,7 +79,7 @@ export const useMemberList = (gatheringId: number) => {
 
   const getHasReviewed = (index: number): boolean => {
     const userReviews = memberReviewResults[index]?.data?.reviews || [];
-    return userReviews.some((r) => r.reviewer.id === user?.id);
+    return userReviews.some((r) => r.reviewer?.id === user?.id);
   };
 
   const handlePageChange = (page: number) => {
