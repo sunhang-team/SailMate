@@ -1,4 +1,7 @@
+'use client';
+
 import { useSuspenseQuery } from '@tanstack/react-query';
+
 import { userQueries } from '@/api/users/queries';
 import { useMeetingPresence } from '@/hooks/useMeetingPresence';
 
