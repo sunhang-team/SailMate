@@ -73,3 +73,20 @@ https://github.com/user-attachments/assets/8d48fee0-aecb-4daf-9df6-c5be87090978
 
 ---
 
+## 🛠️ 기술 스택
+
+| 구분 | 기술 스택 |
+| :--- | :--- |
+| **언어 및 프레임워크** | ![Next.js](https://img.shields.io/badge/Next.js%2016-000000?style=flat-square&logo=nextdotjs&logoColor=white) ![React](https://img.shields.io/badge/React%2019-61DAFB?style=flat-square&logo=react&logoColor=black) ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white) |
+| **상태 관리 & 페칭** | ![Zustand](https://img.shields.io/badge/Zustand-20232A?style=flat-square) ![TanStack Query](https://img.shields.io/badge/TanStack%20Query%20v5-FF4154?style=flat-square&logo=reactquery&logoColor=white) ![Axios](https://img.shields.io/badge/Axios-5A29E4?style=flat-square&logo=axios&logoColor=white) ![Fetch](https://img.shields.io/badge/Fetch%20API-0052CC?style=flat-square) |
+| **폼 & 유효성 검증** | ![React Hook Form](https://img.shields.io/badge/React%20Hook%20Form-EC5990?style=flat-square&logo=reacthookform&logoColor=white) ![Zod](https://img.shields.io/badge/Zod-3E67B1?style=flat-square&logo=zod&logoColor=white) |
+| **스타일링** | ![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS%20v4-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white) ![CVA](https://img.shields.io/badge/CVA-232F3E?style=flat-square) ![clsx](https://img.shields.io/badge/clsx-000000?style=flat-square) ![tailwind-merge](https://img.shields.io/badge/tailwind--merge-0052CC?style=flat-square) ![Motion](https://img.shields.io/badge/Motion-000000?style=flat-square&logo=framer&logoColor=white) |
+| **테스트 & 모킹** | ![Storybook](https://img.shields.io/badge/Storybook%2010-FF4785?style=flat-square&logo=storybook&logoColor=white) ![Jest](https://img.shields.io/badge/Jest-C21325?style=flat-square&logo=jest&logoColor=white) ![Vitest](https://img.shields.io/badge/Vitest-6E9F18?style=flat-square&logo=vitest&logoColor=white) ![Playwright](https://img.shields.io/badge/Playwright-2EAD33?style=flat-square&logo=playwright&logoColor=white) ![MSW](https://img.shields.io/badge/MSW-E34F26?style=flat-square&logo=mockserviceworker&logoColor=white) |
+| **외부 SDK** | ![LiveKit](https://img.shields.io/badge/LiveKit-1E1E1E?style=flat-square) ![Supabase Presence](https://img.shields.io/badge/Supabase%20Presence-3ECF8E?style=flat-square&logo=supabase&logoColor=white) ![Sentry](https://img.shields.io/badge/Sentry-362D59?style=flat-square&logo=sentry&logoColor=white) |
+| **배포 & 인프라** | ![Vercel](https://img.shields.io/badge/Vercel-000000?style=flat-square&logo=vercel&logoColor=white) ![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=flat-square&logo=supabase&logoColor=white) |
+| **기타** | ![Date-fns](https://img.shields.io/badge/Date--fns-770C56?style=flat-square) ![Recharts](https://img.shields.io/badge/Recharts-22B5BF?style=flat-square) |
+
+<br/>
+
+> **💡 왜 이 기술들을 선택했을까요?** > 완성도 프론트엔드 팀의 기술적 고민과 도입 배경이 궁금하시다면 아래 링크를 확인해 주세요!  
+  > **[기술 선정 이유 및 상세 아키텍처 보러가기 (Wiki) ➔](https://github.com/sunhang-team/SailMate/wiki/Frontend)**
