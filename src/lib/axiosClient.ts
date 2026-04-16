@@ -37,6 +37,19 @@ export const axiosClient: AxiosInstance = axios.create({
 axiosClient.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
+    if (error.response?.data) {
+      const data = error.response.data;
+      if (typeof data === 'object' && data !== null && 'message' in data) {
+        error.message = String((data as Record<string, unknown>).message);
+      } else if (typeof data === 'string') {
+        try {
+          const parsed = JSON.parse(data);
+          if (parsed.message) error.message = String(parsed.message);
+        } catch {
+          // JSON 파싱 실패 시 기존 error.message 유지
+        }
+      }
+    }
     if (!shouldAttemptRefresh(error)) throw error;
 
     const config = error.config as (AxiosRequestConfig & { _retry?: boolean }) | undefined;

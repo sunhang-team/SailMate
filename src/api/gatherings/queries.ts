@@ -12,6 +12,7 @@ import {
   updateGathering,
   deleteGathering,
   GATHERING_TAGS,
+  getMainGatherings,
 } from './index';
 
 import type { UseMutationOptions } from '@tanstack/react-query';
@@ -46,7 +47,7 @@ export const gatheringQueries = {
   main: (params?: GetMainGatheringsParams) =>
     queryOptions({
       queryKey: gatheringKeys.main(params),
-      queryFn: () => fetchMainGatherings(params),
+      queryFn: () => (isServer ? fetchMainGatherings(params) : getMainGatherings(params)),
     }),
 
   /** GET /gatherings/:gatheringId — 모임 상세 */
@@ -80,9 +81,12 @@ export const useCreateGathering = (
   return useMutation({
     mutationFn: (body: CreateGatheringRequest) => createGathering(body),
     ...options,
-    onSuccess: (data, variables, onMutateResult, context) => {
-      queryClient.invalidateQueries({ queryKey: gatheringKeys.all });
-      invalidateServerCache(GATHERING_TAGS.all);
+    onSuccess: async (data, variables, onMutateResult, context) => {
+      await invalidateServerCache(GATHERING_TAGS.all);
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: gatheringKeys.all }),
+        queryClient.invalidateQueries({ queryKey: ['memberships'] }),
+      ]);
       options?.onSuccess?.(data, variables, onMutateResult, context);
     },
   });
@@ -101,9 +105,12 @@ export const useUpdateGathering = (
       return updateGathering(gatheringId, body);
     },
     ...options,
-    onSuccess: (data, variables, onMutateResult, context) => {
-      queryClient.invalidateQueries({ queryKey: gatheringKeys.all });
-      invalidateServerCache(GATHERING_TAGS.all);
+    onSuccess: async (data, variables, onMutateResult, context) => {
+      await invalidateServerCache(GATHERING_TAGS.all);
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: gatheringKeys.all }),
+        queryClient.invalidateQueries({ queryKey: ['memberships'] }),
+      ]);
       options?.onSuccess?.(data, variables, onMutateResult, context);
     },
   });
@@ -116,9 +123,12 @@ export const useDeleteGathering = (gatheringId: number, options?: UseMutationOpt
   return useMutation({
     mutationFn: () => deleteGathering(gatheringId),
     ...options,
-    onSuccess: (data, variables, onMutateResult, context) => {
-      queryClient.invalidateQueries({ queryKey: gatheringKeys.all });
-      invalidateServerCache(GATHERING_TAGS.all);
+    onSuccess: async (data, variables, onMutateResult, context) => {
+      await invalidateServerCache(GATHERING_TAGS.all);
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: gatheringKeys.all }),
+        queryClient.invalidateQueries({ queryKey: ['memberships'] }),
+      ]);
       options?.onSuccess?.(data, variables, onMutateResult, context);
     },
   });

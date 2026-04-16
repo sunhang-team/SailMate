@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 
 import { useCreateTodo } from '@/api/todos/queries';
 import { Button } from '@/components/ui/Button';
+import { useToastStore } from '@/components/ui/Toast/useToastStore';
 import { cn } from '@/lib/cn';
 
 interface TodoAddFormProps {
@@ -16,29 +17,48 @@ export function TodoAddForm({ gatheringId, week, className }: TodoAddFormProps) 
   const [isAdding, setIsAdding] = useState(false);
   const [value, setValue] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
+  const showToast = useToastStore((state) => state.showToast);
+
+  const closeForm = () => {
+    setValue('');
+    setIsAdding(false);
+  };
 
   const { mutate, isPending } = useCreateTodo(gatheringId, {
     onSuccess: () => {
-      setValue('');
-      setIsAdding(false);
+      closeForm();
+    },
+    onError: (error: Error) => {
+      showToast({
+        variant: 'error',
+        title: '할 일 추가 실패',
+        description: error.message,
+      });
     },
   });
 
   useEffect(() => {
-    if (!isAdding) return;
-    inputRef.current?.focus();
+    if (isAdding) inputRef.current?.focus();
   }, [isAdding]);
 
   const submit = () => {
     const content = value.trim();
-    if (!content) {
-      // 빈 값이면 조용히 종료(입력 UI 닫기) — 피그마/요구사항의 인라인 UX 유지
-      setValue('');
-      setIsAdding(false);
-      return;
-    }
+    if (!content) return closeForm();
     if (isPending) return;
     mutate({ week, content });
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    submit();
+  };
+
+  const handleBlur = () => {
+    if (!value.trim()) closeForm();
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Escape') closeForm();
   };
 
   if (!isAdding) {
@@ -54,26 +74,27 @@ export function TodoAddForm({ gatheringId, week, className }: TodoAddFormProps) 
   }
 
   return (
-    <div className={cn('w-full', className)}>
+    <form onSubmit={handleSubmit} className={cn('flex w-full gap-2', className)}>
       <input
         ref={inputRef}
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        onBlur={submit}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter') {
-            e.preventDefault();
-            submit();
-          }
-          if (e.key === 'Escape') {
-            setValue('');
-            setIsAdding(false);
-          }
-        }}
-        placeholder='할 일을 입력해 주세요'
+        onKeyDown={handleKeyDown}
+        onBlur={handleBlur}
         disabled={isPending}
-        className='border-gray-150 bg-gray-0 text-body-02-r w-full rounded-lg border px-4 py-3 text-gray-900 outline-none placeholder:text-gray-300 focus:border-blue-200'
+        placeholder='할 일을 입력해 주세요'
+        aria-label='할 일을 입력해 주세요'
+        className='border-gray-150 bg-gray-0 text-body-02-r flex-1 rounded-lg border px-4 py-3 text-gray-900 outline-none placeholder:text-gray-300 focus:border-blue-200'
       />
-    </div>
+      <Button
+        type='submit'
+        variant='check'
+        size='check'
+        disabled={isPending || !value.trim()}
+        className='h-auto shrink-0 px-4 py-3'
+      >
+        추가
+      </Button>
+    </form>
   );
 }

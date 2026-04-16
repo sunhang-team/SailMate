@@ -47,9 +47,14 @@ const shouldInjectRefreshToken = (endpoint: string) => {
   return normalized.includes('auth/logout') || normalized.includes('auth/refresh');
 };
 
-export const requestBackend = async (params: { request: NextRequest; endpoint: string }) => {
+export const requestBackend = async (params: {
+  request: NextRequest;
+  endpoint: string;
+  overrideSearchParams?: URLSearchParams;
+}) => {
   const init = await createServerProxyRequestInit(params.request);
-  const url = buildBackendUrl(params.endpoint, params.request.nextUrl.searchParams);
+  const searchParams = params.overrideSearchParams ?? params.request.nextUrl.searchParams;
+  const url = buildBackendUrl(params.endpoint, searchParams);
 
   // auth/logout, auth/refresh 등의 엔드포인트인 경우 본문에 refreshToken 주입
   if (shouldInjectRefreshToken(params.endpoint) && init.method === 'POST') {
@@ -72,6 +77,7 @@ export const requestBackend = async (params: { request: NextRequest; endpoint: s
   }
 
   // DEBUG LOG
+  // TODO: 프로덕션 테스트 완료 후 제거
   console.log(`[BFF -> Backend] ${init.method} ${url}`);
   console.log(`[BFF -> Backend] Content-Type: ${init.headers.get('content-type')}`);
   console.log(`[BFF -> Backend] Body Size: ${init.body?.byteLength ?? 0} bytes`);
