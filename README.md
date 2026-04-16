@@ -42,7 +42,7 @@ https://github.com/user-attachments/assets/053999ce-0a37-46b1-993e-8f217f95df01
 
 
 
-**[ 마이페이지 (대기자 승인) ]**
+**[ 모임 상세(관리자ver.) (대기자 승인) ]**
 * 영철이의 신청 알림이 도착했습니다! 민수는 영철이의 과거 스터디 '활동 에너지'와 평가를 확인한 후, 믿을 만한 팀원이라고 판단하여 승인합니다.
 
 https://github.com/user-attachments/assets/f88329be-5013-46a5-80dc-c8b6aa22e0b6
