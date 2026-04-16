@@ -5,7 +5,6 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 import '@livekit/components-styles';
 
 import { gatheringQueries } from '@/api/gatherings/queries';
-
 import { MeetingGrid } from './MeetingGrid';
 
 interface MeetingRoomProps {
@@ -20,14 +19,18 @@ export function MeetingRoom({ token, gatheringId, onDisconnected }: MeetingRoomP
 
   if (!serverUrl) {
     return (
-      <div className='flex h-full items-center justify-center bg-gray-950 p-6 text-white'>
+      <div className='flex h-full items-center justify-center bg-blue-500 p-6 text-white'>
         <p>LiveKit URL이 설정되지 않았습니다.</p>
       </div>
     );
   }
 
   return (
-    <div className='border-gray-150 h-[700px] overflow-hidden rounded-3xl border bg-gray-950 shadow-2xl'>
+    // 1. 전체 컨테이너를 Midnight Blue 계열로 변경
+    <div
+      className='h-[700px] overflow-hidden rounded-3xl border border-blue-400/20 bg-blue-500 shadow-2xl'
+      style={{ isolation: 'isolate' }}
+    >
       <LiveKitRoom
         audio={false}
         video={false}
@@ -46,62 +49,64 @@ export function MeetingRoom({ token, gatheringId, onDisconnected }: MeetingRoomP
         }}
         onDisconnected={onDisconnected}
         data-lk-theme='default'
-        className='flex h-full flex-col'
+        className='flex h-full flex-col rounded-[inherit] bg-transparent'
       >
-        {/* 상단 헤더: 디스코드 스타일의 어두운 바 */}
-        <div className='flex items-center justify-between border-b border-gray-800 bg-gray-900 px-6 py-4'>
+        {/* 2. 헤더 영역 스타일: 반투명 다크 블루 적용 */}
+        <div className='flex items-center justify-between rounded-t-[inherit] bg-blue-500/50 px-6 py-4 backdrop-blur-md'>
           <div className='flex items-center gap-4'>
             <button
               type='button'
-              className='flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl bg-blue-600 text-white shadow-lg transition-colors hover:bg-blue-700'
+              className='flex h-10 cursor-pointer items-center gap-2 rounded-xl bg-blue-300 px-4 text-white shadow-lg transition-all hover:bg-blue-400 active:scale-95'
               onClick={onDisconnected}
               aria-label='회의실 나가기'
             >
               <svg
                 xmlns='http://www.w3.org/2000/svg'
-                width='20'
-                height='20'
+                width='18'
+                height='18'
                 viewBox='0 0 24 24'
                 fill='none'
                 stroke='currentColor'
-                strokeWidth='2'
+                strokeWidth='2.5'
                 strokeLinecap='round'
                 strokeLinejoin='round'
               >
-                <path d='m15 18-6-6 6-6' />
+                <path d='M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4' />
+                <polyline points='16 17 21 12 16 7' />
+                <line x1='21' y1='12' x2='9' y2='12' />
               </svg>
+              <span className='text-small-01-b'>나가기</span>
             </button>
+
             <div>
               <h3 className='text-body-01-b text-white'>Live Meeting</h3>
-              <p className='text-small-01-r text-gray-500'>모임: {gathering.title}</p>
+              <p className='text-small-01-r text-blue-150/60'>모임: {gathering.title}</p>
             </div>
           </div>
-          <div className='flex items-center gap-2'>
-            <div className='h-2 w-2 animate-pulse rounded-full bg-green-500' />
-            <span className='text-small-01-m text-gray-400'>참여 중</span>
+          <div className='flex items-center gap-2 rounded-full bg-blue-400/20 px-3 py-1.5'>
+            <div className='h-2 w-2 animate-pulse rounded-full bg-green-400 shadow-[0_0_8px_rgba(74,222,128,0.6)]' />
+            <span className='text-small-02-sb text-blue-100'>참여 중</span>
           </div>
         </div>
 
-        {/* 메인 비디오 그리드 영역 */}
-        <div className='relative flex-1 overflow-hidden p-4'>
+        {/* 3. 그리드 영역: 배경색 최적화 */}
+        <div className='relative flex-1 overflow-hidden bg-linear-to-b from-blue-500/30 to-blue-500/10 p-4'>
           <MeetingGrid />
         </div>
 
-        {/* 하단 컨트롤 영역: 디스코드 스타일의 플로팅 느낌 버튼들 */}
-        <div className='flex items-center justify-center gap-4 bg-gray-900/80 px-6 py-6 backdrop-blur-md'>
+        {/* 4. 푸터 영역: Glassmorphism 스타일 컨트롤 바 */}
+        <div className='flex items-center justify-center gap-4 rounded-b-[inherit] border-t border-white/5 bg-blue-500/80 px-6 py-6 backdrop-blur-xl'>
           <ControlBar
             variation='minimal'
             controls={{
               camera: true,
               microphone: true,
               screenShare: true,
-              leave: true,
+              leave: false,
               chat: false,
             }}
           />
         </div>
-
-        {/* 오디오 처리 */}
         <RoomAudioRenderer />
       </LiveKitRoom>
     </div>

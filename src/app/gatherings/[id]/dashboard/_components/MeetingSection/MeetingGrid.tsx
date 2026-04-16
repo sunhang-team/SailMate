@@ -12,7 +12,7 @@ export function MeetingGrid() {
 
   return (
     <GridLayout tracks={tracks} style={{ height: '100%' }}>
-      <ParticipantTile />
+      <ParticipantTile className='overflow-hidden rounded-2xl border border-white/5 shadow-inner' />
     </GridLayout>
   );
 }
