@@ -1,6 +1,6 @@
 import { SuspenseBoundary } from '@/components/SuspenseBoundary';
 
-import { DASHBOARD_TAB_ITEMS, DEFAULT_TAB } from '../../_constants';
+import { MeetingSection } from '../MeetingSection';
 import { MemberListSection } from '../MemberListSection';
 import { MemberRankingSection } from '../MemberRankingSection';
 import { MemberTodoSection } from '../MemberTodoSection';
@@ -37,10 +37,6 @@ const shellWeeklyMembers = 'px-4 py-10 md:py-15 lg:py-20 md:px-7 xl:px-30';
 const innerMax = 'mx-auto max-w-[1680px]';
 
 export function DashboardContent({ activeTab, gatheringId }: DashboardContentProps) {
-  const label =
-    DASHBOARD_TAB_ITEMS.find((item) => item.key === activeTab)?.label ??
-    DASHBOARD_TAB_ITEMS.find((item) => item.key === DEFAULT_TAB)!.label;
-
   if (activeTab === 'summary') {
     return (
       <section className='mb-40 px-4 py-10 md:px-8 md:py-20 xl:px-30'>
@@ -123,11 +119,17 @@ export function DashboardContent({ activeTab, gatheringId }: DashboardContentPro
     );
   }
 
-  return (
-    <section className={shellWeeklyMembers}>
-      <div className={innerMax}>
-        <p className='text-body-02-r text-gray-400'>{label} 콘텐츠가 여기에 표시됩니다.</p>
-      </div>
-    </section>
-  );
+  if (activeTab === 'meeting') {
+    return (
+      <SuspenseBoundary
+        pendingFallback={<div className='h-96 animate-pulse rounded-2xl bg-gray-100' />}
+        errorFallback={<p className='text-body-02-r text-gray-400'>회의 정보를 불러오는데 실패했습니다.</p>}
+        resetKeys={[gatheringId]}
+      >
+        <MeetingSection gatheringId={gatheringId} />
+      </SuspenseBoundary>
+    );
+  }
+
+  return null;
 }
