@@ -1,36 +1,72 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🏝️ 완성도(完成島)
 
-## Getting Started
+### ❗️스터디, 사이드 프로젝트 완성도 있게 만들고 싶은 사람 주목
+> **완성도**는 스터디, 사이드 프로젝트 관리를 완성도 있게 할 수 있는 **플랫폼**입니다.
+> 그동안 열심히 하겠다고 참여하고, 도망갔던 팀원 때문에 짜증 났던 분들! 완성도는 **활동 에너지**를 기반으로 유저의 모임 신청을 선택적으로 관리하여 질 높은 팀을 구축할 수 있습니다!
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🎬 Story: 영철이와 민수의 '완성도' 100% 스터디 만들기
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 1. 스터디를 찾아서 떠나는 영철이 (탐색 및 신청)
+> 의지가 박약한 영철이는 혼자서는 공부에 집중하지 못해 스터디를 구하기로 결심합니다. 완성도에 접속하여 자신에게 딱 맞는 스터디를 찾아 나섭니다.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+**[ 랜딩 및 메인 페이지 ]**
+* 완성도의 핵심 가치를 확인하고, 현재 인기 있는 모임과 마감 임박 모임을 한눈에 둘러봅니다.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+https://github.com/user-attachments/assets/5e77f82e-c8aa-4586-bbbf-8aa053f2e2f2
 
-## Learn More
+https://github.com/user-attachments/assets/5c1f0155-b54a-406b-9cee-6f4ac2bfc46c
 
-To learn more about Next.js, take a look at the following resources:
+**[ 탐색 페이지 (필터링) ]**
+* 영철이는 모임 유형(스터디), 카테고리(개발), React 등 정교한 필터링을 통해 자신이 원하는 조건의 스터디를 빠르게 찾아냅니다.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+https://github.com/user-attachments/assets/4272c837-5f46-4db6-a1df-81c84b2de3e9
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+https://github.com/user-attachments/assets/968c6ddd-f109-4632-aba0-7ea71ac9c9a1
 
-## Deploy on Vercel
+**[ 모임 상세 및 신청 ]**
+* 마음에 드는 모임을 발견한 영철이! 모임의 규칙과 주차별 목표를 확인하고 '참여하기' 버튼을 눌러 모임장에게 신청서를 보냅니다.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+https://github.com/user-attachments/assets/86cfc1ee-7917-44bf-a8e3-c8231c3f2c2a
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+<br/>
+
+### 2. 열정 넘치는 모임장, 깐깐하게 팀원을 고르다 (모임 관리 및 승인)
+> 스터디 모임장 영숙이는 더 이상 '잠수 타는' 팀원을 원하지 않습니다. 완성도의 **활동 에너지** 시스템을 통해 검증된 팀원만 승인합니다.
+
+**[ 모임 만들기 ]**
+* 영숙이는 이미 영철이가 봤던 모임을 아래와 같이 만들었어요!
+
+https://github.com/user-attachments/assets/053999ce-0a37-46b1-993e-8f217f95df01
+
+
+
+**[ 마이페이지 (대기자 승인) ]**
+* 영철이의 신청 알림이 도착했습니다! 민수는 영철이의 과거 스터디 '활동 에너지'와 평가를 확인한 후, 믿을 만한 팀원이라고 판단하여 승인합니다.
+
+https://github.com/user-attachments/assets/f88329be-5013-46a5-80dc-c8b6aa22e0b6
+
+<br/>
+
+### 3. 마침내 시작된 스터디, 그리고 실시간 소통 (대시보드 & 화상 회의)
+> 영철이가 모임에 합류했습니다! 팀원들은 대시보드에서 각자의 할 일을 관리하고, 화상 회의를 통해 밀도 있게 소통합니다.
+
+**[ 모임 대시보드 (투두 및 달성률) ]**
+* 주차별 할 일을 추가하고 체크합니다. 할 일을 완료하는 순간, **서버 캐시가 즉각적으로 동기화**되며 나와 팀의 달성률 차트가 실시간으로 갱신됩니다.
+
+
+**[ 🟢 실시간 화상 회의 (Live Meeting) ]**
+* "채팅만으로는 부족해!" 팀원들은 대시보드 로비에서 현재 접속 중인 멤버(🟢)를 확인하고, 내장된 **WebRTC 기반 화상 회의실**에 입장하여 함께 스터디를 진행합니다.
+
+<br/>
+
+### 4. 여정의 마무리, 함께 성장하는 활동 에너지 (리뷰)
+> 4주간의 스터디가 성공적으로 끝났습니다. 영철이는 더 이상 의지박약이 아닙니다!
+
+**[ 종료 모임 리뷰 및 마이페이지 ]**
+* 스터디가 종료된 후, 함께한 팀원들에게 상호 리뷰를 남깁니다.
+* 좋은 평가를 받은 영철이는 마이페이지에서 자신의 **활동 에너지가 상승**한 것을 확인하며 큰 성취감을 느낍니다. 다음 스터디에서는 더 좋은 팀에 들어갈 수 있겠죠!
+
+---
+
