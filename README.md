@@ -42,7 +42,7 @@ https://github.com/user-attachments/assets/053999ce-0a37-46b1-993e-8f217f95df01
 
 
 
-**[ 모임 상세(관리자ver.) (대기자 승인) ]**
+**[ 모임 상세(관리자ver.) 대기자 승인 ]**
 * 영철이의 신청 알림이 도착했습니다! 민수는 영철이의 과거 스터디 '활동 에너지'와 평가를 확인한 후, 믿을 만한 팀원이라고 판단하여 승인합니다.
 
 https://github.com/user-attachments/assets/f88329be-5013-46a5-80dc-c8b6aa22e0b6
@@ -54,6 +54,7 @@ https://github.com/user-attachments/assets/f88329be-5013-46a5-80dc-c8b6aa22e0b6
 
 **[ 모임 대시보드 (투두 및 달성률) ]**
 * 주차별 할 일을 추가하고 체크합니다. 할 일을 완료하는 순간, **서버 캐시가 즉각적으로 동기화**되며 나와 팀의 달성률 차트가 실시간으로 갱신됩니다.
+
 https://github.com/user-attachments/assets/9017fb92-c7ae-4fa4-97c2-6c189ae3862f
 
 https://github.com/user-attachments/assets/8d48fee0-aecb-4daf-9df6-c5be87090978
