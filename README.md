@@ -54,7 +54,9 @@ https://github.com/user-attachments/assets/f88329be-5013-46a5-80dc-c8b6aa22e0b6
 
 **[ 모임 대시보드 (투두 및 달성률) ]**
 * 주차별 할 일을 추가하고 체크합니다. 할 일을 완료하는 순간, **서버 캐시가 즉각적으로 동기화**되며 나와 팀의 달성률 차트가 실시간으로 갱신됩니다.
+https://github.com/user-attachments/assets/9017fb92-c7ae-4fa4-97c2-6c189ae3862f
 
+https://github.com/user-attachments/assets/8d48fee0-aecb-4daf-9df6-c5be87090978
 
 **[ 🟢 실시간 화상 회의 (Live Meeting) ]**
 * "채팅만으로는 부족해!" 팀원들은 대시보드 로비에서 현재 접속 중인 멤버(🟢)를 확인하고, 내장된 **WebRTC 기반 화상 회의실**에 입장하여 함께 스터디를 진행합니다.
@@ -67,6 +69,7 @@ https://github.com/user-attachments/assets/f88329be-5013-46a5-80dc-c8b6aa22e0b6
 **[ 종료 모임 리뷰 및 마이페이지 ]**
 * 스터디가 종료된 후, 함께한 팀원들에게 상호 리뷰를 남깁니다.
 * 좋은 평가를 받은 영철이는 마이페이지에서 자신의 **활동 에너지가 상승**한 것을 확인하며 큰 성취감을 느낍니다. 다음 스터디에서는 더 좋은 팀에 들어갈 수 있겠죠!
+
 
 ---
 
