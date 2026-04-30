@@ -2,10 +2,11 @@ import { NextResponse, type NextRequest } from 'next/server';
 
 import { clearAuthCookies, setAuthCookies } from '@/lib/authCookies';
 import { isJsonResponse, extractTokens } from '@/lib/tokenUtils';
+import { withBffErrorHandling } from '@/lib/withBffErrorHandling';
 
 const REFRESH_TOKEN_COOKIE = 'refreshToken';
 
-export async function POST(request: NextRequest) {
+export const POST = withBffErrorHandling(async (request: NextRequest) => {
   const refreshToken = request.cookies.get(REFRESH_TOKEN_COOKIE)?.value ?? null;
   if (!refreshToken) {
     const response = NextResponse.json(
@@ -52,4 +53,4 @@ export async function POST(request: NextRequest) {
   // 새로 발급받은 토큰은 프론트엔드에 주는 대신, Next.js 서버가 다시 httpOnly 쿠키로 브라우저에 심어줍니다.
 
   return response;
-}
+}, 'POST /api/auth/refresh');

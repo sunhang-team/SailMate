@@ -1,8 +1,9 @@
 import { AccessToken } from 'livekit-server-sdk';
 import { NextRequest, NextResponse } from 'next/server';
 import { requestBackend } from '@/lib/serverFetch';
+import { withBffErrorHandling } from '@/lib/withBffErrorHandling';
 
-export async function GET(req: NextRequest) {
+export const GET = withBffErrorHandling(async (req: NextRequest) => {
   const room = req.nextUrl.searchParams.get('room');
 
   if (!room) {
@@ -77,4 +78,4 @@ export async function GET(req: NextRequest) {
   at.addGrant({ roomJoin: true, room: room });
 
   return NextResponse.json({ token: await at.toJwt() });
-}
+}, 'GET /api/livekit/token');
