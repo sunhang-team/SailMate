@@ -2,14 +2,17 @@ import { differenceInDays, startOfDay } from 'date-fns';
 
 import { formatDateDot, getCurrentWeek } from '@/lib/formatGatheringDate';
 
+import Link from 'next/link';
+
 import { GatheringCard } from '@/components/ui/GatheringCard';
-import { CalendarIcon, ProjectIcon, ReviewIcon, StudyIcon } from '@/components/ui/Icon';
+import { CalendarIcon, ProjectIcon, StudyIcon } from '@/components/ui/Icon';
 import { ProgressBar } from '@/components/ui/Progress';
 import { Tag } from '@/components/ui/Tag';
 import { getGatheringDisplayStatus } from '@/lib/gatheringStatus';
 
+import { ReviewWriteButton } from './ReviewWriteButton';
+
 import type { MembershipGathering } from '@/api/memberships/types';
-import Link from 'next/link';
 
 interface MyGatheringsCardProps {
   gathering: MembershipGathering;
@@ -107,14 +110,7 @@ export function MyGatheringsCard({ gathering }: MyGatheringsCardProps) {
               </div>
             </div>
           )}
-          {isFinished && !hasReviewed && (
-            <div className='flex h-[54px] w-full items-center justify-center rounded-[8px] bg-blue-50 md:h-[72px]'>
-              <div className='flex items-center gap-2'>
-                <ReviewIcon size={16} className='text-blue-300 md:size-6' />
-                <span className='text-small-01-sb md:text-body-01-sb text-blue-300'>리뷰 쓰기</span>
-              </div>
-            </div>
-          )}
+          {isFinished && !hasReviewed && <ReviewWriteButton gatheringId={gathering.id} />}
           {isFinished && hasReviewed && (
             <div className='flex h-[54px] w-full items-center justify-center rounded-[8px] bg-blue-50 md:h-[72px]'>
               <span className='text-small-01-sb md:text-body-01-sb text-gray-600'>리뷰 작성완료</span>
