@@ -1,13 +1,12 @@
-import { differenceInDays, startOfDay } from 'date-fns';
-
-import { formatDateDot, getCurrentWeek } from '@/lib/formatGatheringDate';
-
 import Link from 'next/link';
+
+import { differenceInDays, startOfDay } from 'date-fns';
 
 import { GatheringCard } from '@/components/ui/GatheringCard';
 import { CalendarIcon, ProjectIcon, StudyIcon } from '@/components/ui/Icon';
 import { ProgressBar } from '@/components/ui/Progress';
 import { Tag } from '@/components/ui/Tag';
+import { formatDateDot, getCurrentWeek } from '@/lib/formatGatheringDate';
 import { getGatheringDisplayStatus } from '@/lib/gatheringStatus';
 
 import { ReviewWriteButton } from './ReviewWriteButton';
