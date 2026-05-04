@@ -27,8 +27,8 @@ export interface MembershipGathering {
   endDate: string;
   status: GatheringStatus;
   myRole: MemberRole;
-  /** 리뷰 작성 여부 — 백엔드 연동 전까지 응답에 포함되지 않으므로 optional. undefined는 미작성(false)으로 처리 */
-  hasReviewed?: boolean;
+  /** 리뷰 작성 여부 — 최소 1명 이상 리뷰 작성 시 true */
+  hasReviewed: boolean;
   pendingApplicationCount: number;
 }
 
