@@ -11,7 +11,13 @@ import { DashboardSkeleton } from './_components/DashboardSkeleton';
 import { DashboardTabNav } from './_components/DashboardTabNav';
 import { DEFAULT_TAB } from './_constants';
 
+import type { Metadata } from 'next';
 import type { DashboardTab } from './_constants';
+
+export const metadata: Metadata = {
+  title: '모임 대시보드',
+  robots: { index: false, follow: false, googleBot: { index: false, follow: false } },
+};
 
 interface DashboardPageProps {
   params: Promise<{ id: string }>;

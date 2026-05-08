@@ -1,5 +1,12 @@
 import { CreateGatheringForm } from './CreateGatheringForm';
 
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: '모임 만들기',
+  robots: { index: false, follow: false, googleBot: { index: false, follow: false } },
+};
+
 export default function CreateGatheringPage() {
   return (
     <main className='mx-auto max-w-[1680px] px-5 pt-20 pb-40'>

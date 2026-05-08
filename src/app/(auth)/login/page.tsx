@@ -3,6 +3,13 @@ import { AuthDivider } from '../components/AuthDivider';
 import { SocialLoginButtons } from '../components/SocialLoginButtons';
 import { EmailLoginForm } from './EmailLoginForm';
 
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: '로그인',
+  robots: { index: false, follow: false, googleBot: { index: false, follow: false } },
+};
+
 export default function LoginPage() {
   return (
     <main className='flex justify-center px-4 py-20 md:py-25'>
