@@ -18,8 +18,21 @@ export const SITE_KEYWORDS = [
   '팀원 찾기',
 ];
 export const SITE_LOCALE = 'ko_KR';
-export const OG_IMAGE_PATH = '/og-image.png';
 export const SITE_LOGO_PATH = '/images/logo.svg';
+
+/**
+ * OG 이미지 다중 선언.
+ * - 1200×630: Facebook/Slack/Discord/Twitter 표준
+ * - 800×400: KakaoTalk 권장 2:1 비율
+ * 크롤러는 dimension 메타를 보고 자신에게 적합한 것을 선택한다.
+ */
+export const OG_IMAGES = [
+  { url: '/og/og-default.png', width: 1200, height: 630, alt: SITE_NAME },
+  { url: '/og/og-kakao.png', width: 800, height: 400, alt: SITE_NAME },
+] as const;
+
+/** Twitter Card는 단일 이미지만 지원 → 1200×630 기본을 사용. */
+export const TWITTER_IMAGE_PATH = '/og/og-default.png';
 
 export const getSiteUrl = (): string => {
   const explicit = process.env.NEXT_PUBLIC_APP_URL;

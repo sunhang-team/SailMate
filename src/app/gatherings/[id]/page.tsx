@@ -3,7 +3,7 @@ import { Suspense } from 'react';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { fetchGatheringDetail } from '@/api/gatherings';
 import { JsonLd } from '@/components/seo/JsonLd';
-import { OG_IMAGE_PATH, SITE_DESCRIPTION, SITE_NAME, buildGatheringEventJsonLd } from '@/lib/seo';
+import { OG_IMAGES, SITE_DESCRIPTION, SITE_NAME, TWITTER_IMAGE_PATH, buildGatheringEventJsonLd } from '@/lib/seo';
 import { GatheringHero } from './_components/GatheringHero';
 import { GatheringDetailContainer } from './_components/GatheringDetailContainer';
 import { GatheringDetailSkeleton } from './_components/GatheringDetailSkeleton';
@@ -33,7 +33,7 @@ export const generateMetadata = async ({ params }: GatheringDetailPageProps): Pr
   try {
     const detail = await fetchGatheringDetail(gatheringId);
     const description = truncateDescription(detail.shortDescription || detail.description || SITE_DESCRIPTION);
-    const heroImage = detail.images?.[0]?.url ?? OG_IMAGE_PATH;
+    const heroImage = detail.images?.[0]?.url;
     const canonical = `/gatherings/${gatheringId}`;
     const ogTitle = `${detail.title} | ${SITE_NAME}`;
 
@@ -46,13 +46,13 @@ export const generateMetadata = async ({ params }: GatheringDetailPageProps): Pr
         url: canonical,
         title: ogTitle,
         description,
-        images: [{ url: heroImage }],
+        images: heroImage ? [{ url: heroImage }] : OG_IMAGES.map((img) => ({ ...img })),
       },
       twitter: {
         card: 'summary_large_image',
         title: ogTitle,
         description,
-        images: [heroImage],
+        images: [heroImage ?? TWITTER_IMAGE_PATH],
       },
     };
   } catch {
