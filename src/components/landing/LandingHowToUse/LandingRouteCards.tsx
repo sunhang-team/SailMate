@@ -142,7 +142,7 @@ function RouteStepCard({ routeLabel, title, description, imageSrc, imageAlt, ima
   return (
     <div
       // 💡 3. 타이틀 바로 밑에 쌓이도록 top 위치 지정
-      className={cn('sticky top-[228px]', !isFirst && 'mt-[40vh] md:mt-[55vh] xl:mt-[80vh]')}
+      className={cn('sticky top-60', !isFirst && 'mt-[40vh] md:mt-[55vh] xl:mt-[80vh]')}
       style={{ zIndex: index + 1 }}
     >
       <motion.article
@@ -170,7 +170,7 @@ function RouteStepCard({ routeLabel, title, description, imageSrc, imageAlt, ima
 
 export function LandingRouteCards({ scrollYProgress }: LandingRouteCardsProps) {
   return (
-    <div className='relative px-4 pt-9 pb-[10vh] md:px-7 md:pt-20 md:pb-[12vh] xl:px-30'>
+    <div className='relative px-4 pb-[10vh] md:px-7 md:pt-20 md:pb-[12vh] xl:px-30'>
       {LANDING_ROUTE_STEPS.map((step, index) => (
         <RouteStepCard
           key={step.routeLabel}
