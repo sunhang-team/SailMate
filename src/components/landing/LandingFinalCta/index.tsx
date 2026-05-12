@@ -7,9 +7,15 @@ import { cn } from '@/lib/cn';
 
 export function LandingFinalCta() {
   return (
-    <section className='relative overflow-hidden py-16 md:py-20 lg:py-30'>
-      <div className='pointer-events-none absolute inset-0' aria-hidden>
-        <Image src={LANDING_IMAGES.bottomImage} alt='' fill className='object-cover' sizes='100vw' />
+    <section className='relative overflow-hidden bg-sky-100 py-16 md:py-20 lg:py-30'>
+      <div className='pointer-events-none absolute -inset-20 -top-100' aria-hidden>
+        <Image
+          src={LANDING_IMAGES.bottomGlow}
+          alt=''
+          fill
+          className='object-cover opacity-60 saturate-[0.7]'
+          sizes='100vw'
+        />
       </div>
       <div className='relative mx-auto flex w-full max-w-[720px] flex-col items-center px-6 text-center'>
         <p className='text-small-01-b md:text-h5-b lg:text-h4-b text-blue-500'>

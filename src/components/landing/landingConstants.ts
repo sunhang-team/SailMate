@@ -14,7 +14,7 @@ export const LANDING_IMAGES = {
   route2: encodePublicImage('Route', 'Route 2-PC.png'),
   route3: encodePublicImage('Route', 'Route 3-PC.png'),
   route4: encodePublicImage('Route', 'Route 4-PC.png'),
-  bottomImage: encodePublicImage('bottom', 'bottom-CTA-mobile.png'),
+  bottomGlow: encodePublicImage('bottom', 'bottomCTA2.png'),
   featureTeam: '/icons/landing/team-building.svg',
   featureGoal: '/icons/landing/goal-management.svg',
   featureAchievement: '/icons/landing/achievement-tracking.svg',
