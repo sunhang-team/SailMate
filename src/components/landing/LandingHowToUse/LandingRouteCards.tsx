@@ -120,7 +120,9 @@ function RouteStepCard({
     >
       <Tag variant='route'>{routeLabel}</Tag>
       <h3 className='text-body-01-b md:text-h4-b xl:text-h3-b mt-6 mb-2 break-keep text-gray-900'>{title}</h3>
-      <p className='text-small-02-r md:text-body-02-r xl:text-body-01-r break-keep text-gray-800'>{description}</p>
+      <p className='text-small-02-r md:text-body-02-r xl:text-body-01-r break-keep whitespace-pre-line text-gray-800'>
+        {description}
+      </p>
       <div className='mt-10 flex flex-wrap items-center justify-center gap-8 md:mt-15 xl:mt-25 xl:justify-start'>
         {meta.map((item) => {
           const Icon = item.icon;
