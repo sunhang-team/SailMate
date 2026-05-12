@@ -15,11 +15,11 @@ export function LandingHowToUse() {
   });
 
   return (
-    <section className='bg-gray-0 relative pt-16 md:pt-20 xl:pt-40'>
+    <section className='bg-gray-0 relative pt-20 md:pt-20 xl:pt-40'>
       <div ref={containerRef} className='mx-auto w-full'>
         <div className='pointer-events-none sticky top-0 z-10'>
           {/* 1. 실제 눈에 보이는 타이틀 본체 */}
-          <div className='bg-gray-0/90 pointer-events-auto py-6 backdrop-blur-md'>
+          <div className='bg-gray-0/90 pointer-events-auto backdrop-blur-md'>
             <LandingSectionHeading eyebrow='How to use' title='완성도를 향해 항해하는 법' align='center' />
             <p className='text-small-02-r md:text-body-02-r xl:text-body-01-r mt-2 text-center text-gray-800'>
               스터디, 프로젝트 목표 달성을 위해 최적화된 4가지의 루트

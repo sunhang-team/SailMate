@@ -118,7 +118,9 @@ function RouteStepCard({
         ROUTE_TEXT_PADDING_XL[routeLabel],
       )}
     >
-      <Tag variant='route'>{routeLabel}</Tag>
+      <Tag variant='route' className='rounded-lg'>
+        {routeLabel}
+      </Tag>
       <h3 className='text-body-01-b md:text-h4-b xl:text-h3-b mt-6 mb-2 break-keep text-gray-900'>{title}</h3>
       <p className='text-small-02-r md:text-body-02-r xl:text-body-01-r break-keep whitespace-pre-line text-gray-800'>
         {description}
@@ -128,7 +130,7 @@ function RouteStepCard({
           const Icon = item.icon;
           return (
             <div key={item.label} className='flex items-center gap-3 text-gray-700'>
-              <Icon size={44} className='shrink-0' />
+              <Icon size={44} className='size-7 shrink-0 md:size-11' />
               <span className='text-small-02-sb md:text-body-02-sb xl:text-body-01-sb'>{item.label}</span>
             </div>
           );
