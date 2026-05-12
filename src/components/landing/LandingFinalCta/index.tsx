@@ -27,9 +27,9 @@ export function LandingFinalCta() {
         </h2>
         <Link
           href={LANDING_LINKS.start}
-          className={cn(buttonVariants({ variant: 'landing-start', size: 'landing-hero' }))}
+          className={cn(buttonVariants({ variant: 'landing-start', size: 'landing-hero' }), 'group')}
         >
-          시작하기
+          <span className='group-hover:text-gradient-primary'>시작하기</span>
         </Link>
       </div>
     </section>
