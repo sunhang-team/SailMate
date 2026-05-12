@@ -7,7 +7,7 @@ import { cn } from '@/lib/cn';
 
 export function LandingFinalCta() {
   return (
-    <section className='relative overflow-hidden bg-sky-100 py-16 md:py-20 lg:py-30'>
+    <section className='relative overflow-hidden bg-sky-100 py-[50px] md:py-20 lg:py-30'>
       <div className='pointer-events-none absolute -inset-20 -top-100' aria-hidden>
         <Image
           src={LANDING_IMAGES.bottomGlow}
@@ -21,7 +21,7 @@ export function LandingFinalCta() {
         <p className='text-small-01-b md:text-h5-b lg:text-h4-b text-blue-500'>
           더 나은 완성도를 위한 가장 확실한 선택
         </p>
-        <h2 className='text-body-01-b md:text-h3-b lg:text-h2-b mt-1 mb-7 text-blue-500'>
+        <h2 className='text-body-01-b md:text-h3-b lg:text-h2-b mt-px mb-6 text-blue-500'>
           지금 <span className='text-gradient-primary'>완성도</span>에서{' '}
           <span className='text-gradient-primary'>항해</span>를 시작하세요.
         </h2>
