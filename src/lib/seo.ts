@@ -34,6 +34,21 @@ export const OG_IMAGES = [
 /** Twitter Card는 단일 이미지만 지원 → 1200×630 기본을 사용. */
 export const TWITTER_IMAGE_PATH = '/og/og-default.png';
 
+/**
+ * 기본 openGraph 객체. Next.js Metadata API는 openGraph를 객체 단위로 통째
+ * 교체하므로(shallow merge가 아님), 페이지별로 openGraph를 override할 때
+ * 반드시 이 헬퍼를 spread해서 누락된 필드를 채워야 한다.
+ * 함수로 둔 이유: 호출마다 새 객체를 반환해 mutable share를 피하기 위함.
+ */
+export const getDefaultOpenGraph = () => ({
+  type: 'website' as const,
+  locale: SITE_LOCALE,
+  siteName: SITE_NAME,
+  title: SITE_TITLE_DEFAULT,
+  description: SITE_DESCRIPTION,
+  images: OG_IMAGES.map((img) => ({ ...img })),
+});
+
 export const getSiteUrl = (): string => {
   const explicit = process.env.NEXT_PUBLIC_APP_URL;
   if (explicit) return explicit.replace(/\/+$/, '');

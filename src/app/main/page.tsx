@@ -2,6 +2,7 @@ import { HeroSection } from './components/HeroSection';
 import { MyGatheringSection } from './components/MyGatheringSection';
 import { MainGatheringContainer } from './components/MainGatheringContainer';
 import { MainGatheringStreaming } from './components/MainGatheringStreaming';
+import { getDefaultOpenGraph } from '@/lib/seo';
 
 import type { Metadata } from 'next';
 
@@ -10,7 +11,11 @@ export const metadata: Metadata = {
   description:
     '인기·마감임박·최신 스터디와 프로젝트 모임을 한눈에. 완성도에서 관심사 맞는 팀원을 찾아 함께 완주하세요.',
   alternates: { canonical: '/main' },
-  openGraph: { url: '/main', title: '추천 모임 | 완성도' },
+  openGraph: {
+    ...getDefaultOpenGraph(),
+    url: '/main',
+    title: '추천 모임 | 완성도',
+  },
 };
 
 export const revalidate = 3600;
