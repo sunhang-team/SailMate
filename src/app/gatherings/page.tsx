@@ -4,6 +4,16 @@ import { SearchForm } from '@/components/Search/SearchForm';
 import { SearchHero } from '@/components/Search/SearchHero';
 import { SuspenseBoundary } from '@/components/SuspenseBoundary';
 
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: '모임 검색',
+  description:
+    '카테고리·키워드로 스터디와 프로젝트 모임을 찾아보세요. 완성도에서 함께할 팀원을 만나 끝까지 완주하세요.',
+  alternates: { canonical: '/gatherings' },
+  openGraph: { url: '/gatherings', title: '모임 검색 | 완성도' },
+};
+
 export default function GatheringsPage() {
   return (
     <main className='min-h-screen'>

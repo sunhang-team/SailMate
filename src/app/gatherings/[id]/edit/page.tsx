@@ -4,6 +4,13 @@ import { SuspenseBoundary } from '@/components/SuspenseBoundary';
 
 import { EditGatheringContent } from './_components/EditGatheringContent';
 
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: '모임 수정',
+  robots: { index: false, follow: false, googleBot: { index: false, follow: false } },
+};
+
 interface EditGatheringPageProps {
   params: Promise<{ id: string }>;
 }
