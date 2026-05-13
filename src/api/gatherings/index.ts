@@ -47,8 +47,11 @@ const normalizeDetail = (detail: GatheringDetail): GatheringDetail => normalizeG
 export const GATHERING_TAGS = {
   all: 'gatherings',
   main: 'gatherings-main',
+  categories: 'gatherings-categories',
   detail: (gatheringId: number) => `gatherings-detail-${gatheringId}`,
 } as const;
+
+const CATEGORIES_REVALIDATE_SECONDS = 3600;
 
 const getBaseUrl = () => {
   if (typeof window !== 'undefined') {
@@ -59,10 +62,24 @@ const getBaseUrl = () => {
   return baseUrl.replace(/\/+$/, '');
 };
 
-/** GET /v1/gatherings/categories — 카테고리 목록 조회 */
+/** GET /v1/gatherings/categories — 카테고리 목록 조회 (클라이언트 전용) */
 export const getCategories = async (): Promise<GetCategoriesResponse> => {
   const { data } = await axiosClient.get<ApiResponse<GetCategoriesResponse>>('/v1/gatherings/categories');
   return unwrapResponse(data);
+};
+
+/** GET /v1/gatherings/categories — 카테고리 목록 조회 (서버 전용, ISR 캐싱) */
+export const fetchCategories = async (): Promise<GetCategoriesResponse> => {
+  const res = await fetch(`${getBaseUrl()}/v1/gatherings/categories`, {
+    next: {
+      tags: [GATHERING_TAGS.all, GATHERING_TAGS.categories],
+      revalidate: CATEGORIES_REVALIDATE_SECONDS,
+    },
+  });
+
+  if (!res.ok) throw new Error(`gatherings/categories fetch failed: ${res.status}`);
+  const json: ApiResponse<GetCategoriesResponse> = await res.json();
+  return unwrapResponse(json);
 };
 
 /**

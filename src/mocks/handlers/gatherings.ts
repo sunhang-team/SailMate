@@ -5,8 +5,10 @@ import { getTotalWeeks } from '@/lib/formatGatheringDate';
 import { createApiResponse } from '../utils';
 
 import type {
+  Category,
   GatheringListItem,
   GatheringDetail,
+  GetCategoriesResponse,
   GetGatheringsResponse,
   GetMainGatheringsResponse,
   CreateGatheringResponse,
@@ -52,6 +54,15 @@ const PARAM_TO_TYPE: Record<string, GatheringType> = {
 };
 
 // ─── 목 데이터 ────────────────────────────────────────────────────────────────
+
+// 카테고리 목록 (GET /api/v1/gatherings/categories 응답)
+const MOCK_CATEGORIES: Category[] = [
+  { id: 7, name: '개발' },
+  { id: 8, name: '어학' },
+  { id: 9, name: '독서' },
+  { id: 10, name: '자격증' },
+  { id: 11, name: '디자인' },
+];
 
 // 카테고리: DEVELOPMENT, LANGUAGE, BOOK, CERTIFICATE / 유형: STUDY, PROJECT
 export const BASE_GATHERINGS: GatheringListItem[] = [
@@ -443,6 +454,12 @@ const paginate = (list: GatheringListItem[], url: URL) => {
 const BASE = '/api/v1/gatherings';
 
 export const gatheringsHandlers = [
+  /** GET /api/v1/gatherings/categories — 카테고리 목록 */
+  http.get(`${BASE}/categories`, async () => {
+    await delay(200);
+    return HttpResponse.json(createApiResponse<GetCategoriesResponse>({ categories: MOCK_CATEGORIES }));
+  }),
+
   /** GET /api/v1/gatherings/:gatheringId/application-status — 모임 신청 상태 */
   http.get(`${BASE}/:gatheringId/application-status`, async () => {
     await delay(200);
