@@ -13,11 +13,3 @@ export const GATHERING_STATUS_LABEL = {
   IN_PROGRESS: '진행중',
   COMPLETED: '진행완료',
 } as const;
-
-export const DEFAULT_CATEGORIES = [
-  { id: 7, name: '개발' },
-  { id: 8, name: '어학' },
-  { id: 9, name: '독서' },
-  { id: 10, name: '자격증' },
-  { id: 11, name: '디자인' },
-] as const;
