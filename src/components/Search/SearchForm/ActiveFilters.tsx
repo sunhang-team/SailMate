@@ -1,14 +1,23 @@
 'use client';
 
-import { startTransition } from 'react';
+import { startTransition, useMemo } from 'react';
 
+import { useQuery } from '@tanstack/react-query';
+
+import { gatheringQueries } from '@/api/gatherings/queries';
 import { ReplayIcon } from '@/components/ui/Icon/ReplayIcon';
 import { Tag } from '@/components/ui/Tag';
-import { DEFAULT_CATEGORIES } from '@/constants/gathering';
 import { useGatheringSearchParams } from '@/hooks/useGatheringSearchParams';
 
 export function ActiveFilters() {
   const { query, type, categoryIds, setParams } = useGatheringSearchParams();
+  const { data } = useQuery(gatheringQueries.categories());
+
+  const categoryNameById = useMemo<Map<number, string>>(() => {
+    const map = new Map<number, string>();
+    data?.categories.forEach((c) => map.set(c.id, c.name));
+    return map;
+  }, [data]);
 
   const hasActiveFilters = query !== '' || type !== null || categoryIds.length > 0;
   if (!hasActiveFilters) return null;
@@ -51,7 +60,7 @@ export function ActiveFilters() {
       )}
       {categoryIds.map((id) => (
         <Tag key={id} variant='filter' onRemove={() => handleRemoveCategory(id)}>
-          {DEFAULT_CATEGORIES.find((c) => c.id === id)?.name ?? id}
+          {categoryNameById.get(id) ?? id}
         </Tag>
       ))}
       <button
