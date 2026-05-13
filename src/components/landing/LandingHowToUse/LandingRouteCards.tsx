@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { motion, useTransform, useReducedMotion, type MotionValue } from 'motion/react';
+import { motion, useReducedMotion, type MotionValue } from 'motion/react';
 
 import { LANDING_ROUTE_STEPS, type RouteLabel } from '@/components/landing/landingConstants';
 import { Tag } from '@/components/ui/Tag';
@@ -16,11 +16,6 @@ import {
   LandingHeartIcon,
 } from '@/components/ui/Icon';
 import { cn } from '@/lib/cn';
-
-/** scroll progress 기준, 다음 카드가 덮으러 올 때 이전 카드 transition이 시작되는 구간 비율 */
-const TRANSITION_WINDOW_RATIO = 0.12;
-/** 이전 카드 최소 scale (덮일 때 살짝 축소되는 깊이감) */
-const MIN_SCALE = 0.98;
 
 interface RouteStepCardProps {
   routeLabel: RouteLabel;
@@ -89,27 +84,11 @@ const ROUTE_META: Record<RouteLabel, readonly [RouteMetaItem, RouteMetaItem]> = 
   ],
 };
 
-function RouteStepCard({
-  routeLabel,
-  title,
-  description,
-  imageSrc,
-  imageAlt,
-  imageSide,
-  index,
-  totalCards,
-  scrollProgress,
-}: RouteStepCardProps) {
+function RouteStepCard({ routeLabel, title, description, imageSrc, imageAlt, imageSide, index }: RouteStepCardProps) {
   const shouldReduceMotion = useReducedMotion();
   const isFirst = index === 0;
-  const isLast = index === totalCards - 1;
-
-  const transitionEnd = (index + 1) / totalCards;
-  const transitionStart = transitionEnd - TRANSITION_WINDOW_RATIO;
-  const scale = useTransform(scrollProgress, [transitionStart, transitionEnd], [1, isLast ? 1 : MIN_SCALE]);
 
   const meta = ROUTE_META[routeLabel];
-  const enableScrollEffects = !shouldReduceMotion;
 
   const textBlock = (
     <div
@@ -118,15 +97,19 @@ function RouteStepCard({
         ROUTE_TEXT_PADDING_XL[routeLabel],
       )}
     >
-      <Tag variant='route'>{routeLabel}</Tag>
+      <Tag variant='route' className='rounded-lg'>
+        {routeLabel}
+      </Tag>
       <h3 className='text-body-01-b md:text-h4-b xl:text-h3-b mt-6 mb-2 break-keep text-gray-900'>{title}</h3>
-      <p className='text-small-02-r md:text-body-02-r xl:text-body-01-r break-keep text-gray-800'>{description}</p>
+      <p className='text-small-02-r md:text-body-02-r xl:text-body-01-r break-keep whitespace-pre-line text-gray-800'>
+        {description}
+      </p>
       <div className='mt-10 flex flex-wrap items-center justify-center gap-8 md:mt-15 xl:mt-25 xl:justify-start'>
         {meta.map((item) => {
           const Icon = item.icon;
           return (
             <div key={item.label} className='flex items-center gap-3 text-gray-700'>
-              <Icon size={44} className='shrink-0' />
+              <Icon size={44} className='size-7 shrink-0 md:size-11' />
               <span className='text-small-02-sb md:text-body-02-sb xl:text-body-01-sb'>{item.label}</span>
             </div>
           );
@@ -167,8 +150,7 @@ function RouteStepCard({
         whileInView={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.25 }}
         transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-        style={enableScrollEffects ? { scale } : undefined}
-        className='shadow-02 flex flex-col overflow-hidden rounded-2xl md:items-stretch xl:flex-row'
+        className='flex flex-col overflow-hidden rounded-2xl md:items-stretch xl:h-[608px] xl:flex-row'
       >
         {imageSide === 'left' ? (
           <>
@@ -188,7 +170,7 @@ function RouteStepCard({
 
 export function LandingRouteCards({ scrollYProgress }: LandingRouteCardsProps) {
   return (
-    <div className='relative px-4 pt-15 pb-[10vh] md:px-7 md:pt-20 md:pb-[12vh] xl:px-30'>
+    <div className='relative px-4 pb-[10vh] md:px-7 md:pt-20 md:pb-[12vh] xl:px-30'>
       {LANDING_ROUTE_STEPS.map((step, index) => (
         <RouteStepCard
           key={step.routeLabel}
