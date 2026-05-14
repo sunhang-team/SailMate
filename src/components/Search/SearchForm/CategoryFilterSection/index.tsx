@@ -1,14 +1,15 @@
 'use client';
 
 import { useMemo } from 'react';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 
 import { gatheringKeys, gatheringQueries } from '@/api/gatherings/queries';
-import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { ErrorFallback } from '@/components/ErrorFallback';
+import { SuspenseBoundary } from '@/components/SuspenseBoundary';
 import { CategoryIcon } from '@/components/ui/Icon/CategoryIcon';
 
 import { CategoryMultiSelect } from '../CategoryMultiSelect';
+import { CategoryDropdownSkeleton } from './Skeleton';
 
 interface CategoryFilterSectionProps {
   selectedValues: number[];
@@ -16,12 +17,9 @@ interface CategoryFilterSectionProps {
 }
 
 function CategoryMultiSelectContainer({ selectedValues, onChange }: CategoryFilterSectionProps) {
-  const { data, error } = useQuery(gatheringQueries.categories());
+  const { data } = useSuspenseQuery(gatheringQueries.categories());
 
-  const categoryItems = useMemo(() => data?.categories.map((c) => ({ label: c.name, value: c.id })) ?? [], [data]);
-
-  if (error) throw error;
-  if (!data) throw new Error('카테고리 목록을 불러올 수 없습니다.');
+  const categoryItems = useMemo(() => data.categories.map((c) => ({ label: c.name, value: c.id })), [data]);
 
   return (
     <CategoryMultiSelect
@@ -43,11 +41,12 @@ export function CategoryFilterSection({ selectedValues, onChange }: CategoryFilt
   };
 
   return (
-    <ErrorBoundary
+    <SuspenseBoundary
       onReset={handleReset}
-      fallback={(_, reset) => <ErrorFallback message='카테고리를 불러올 수 없습니다.' onRetry={reset} />}
+      pendingFallback={<CategoryDropdownSkeleton />}
+      errorFallback={(_, reset) => <ErrorFallback message='카테고리를 불러올 수 없습니다.' onRetry={reset} />}
     >
       <CategoryMultiSelectContainer selectedValues={selectedValues} onChange={onChange} />
-    </ErrorBoundary>
+    </SuspenseBoundary>
   );
 }
