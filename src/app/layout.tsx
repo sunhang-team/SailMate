@@ -13,11 +13,10 @@ import {
   SITE_TITLE_DEFAULT,
   SITE_DESCRIPTION,
   SITE_KEYWORDS,
-  SITE_LOCALE,
-  OG_IMAGES,
   TWITTER_IMAGE_PATH,
   buildOrganizationJsonLd,
   buildWebSiteJsonLd,
+  getDefaultOpenGraph,
   getSiteUrl,
 } from '@/lib/seo';
 
@@ -38,13 +37,8 @@ export const generateMetadata = async (): Promise<Metadata> => {
       canonical: '/',
     },
     openGraph: {
-      type: 'website',
-      locale: SITE_LOCALE,
-      siteName: SITE_NAME,
+      ...getDefaultOpenGraph(),
       url: '/',
-      title: SITE_TITLE_DEFAULT,
-      description: SITE_DESCRIPTION,
-      images: OG_IMAGES.map((img) => ({ ...img })),
     },
     twitter: {
       card: 'summary_large_image',

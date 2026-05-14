@@ -3,7 +3,14 @@ import { Suspense } from 'react';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { fetchGatheringDetail } from '@/api/gatherings';
 import { JsonLd } from '@/components/seo/JsonLd';
-import { OG_IMAGES, SITE_DESCRIPTION, SITE_NAME, TWITTER_IMAGE_PATH, buildGatheringEventJsonLd } from '@/lib/seo';
+import {
+  OG_IMAGES,
+  SITE_DESCRIPTION,
+  SITE_NAME,
+  TWITTER_IMAGE_PATH,
+  buildGatheringEventJsonLd,
+  getDefaultOpenGraph,
+} from '@/lib/seo';
 import { GatheringHero } from './_components/GatheringHero';
 import { GatheringDetailContainer } from './_components/GatheringDetailContainer';
 import { GatheringDetailSkeleton } from './_components/GatheringDetailSkeleton';
@@ -42,6 +49,7 @@ export const generateMetadata = async ({ params }: GatheringDetailPageProps): Pr
       description,
       alternates: { canonical },
       openGraph: {
+        ...getDefaultOpenGraph(),
         type: 'article',
         url: canonical,
         title: ogTitle,
