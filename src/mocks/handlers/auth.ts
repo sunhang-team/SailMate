@@ -66,6 +66,11 @@ export const authHandlers = [
     return new HttpResponse(null, { status: 200 });
   }),
 
+  /** POST /api/auth/refresh — 토큰 재발급 (axiosClient 인터셉터가 401/500 시 자동 호출) */
+  http.post('/api/auth/refresh', () =>
+    HttpResponse.json(createApiError('Unauthorized', 'UNAUTHORIZED'), { status: 401 }),
+  ),
+
   /** GET /api/v1/auth/check/email — 이메일 중복 확인 */
   http.get(`${BASE}/check/email`, async ({ request }) => {
     await delay(300);
