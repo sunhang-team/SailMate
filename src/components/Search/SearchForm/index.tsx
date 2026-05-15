@@ -55,37 +55,39 @@ export function SearchForm() {
   };
 
   return (
-    <div className='flex w-full flex-col gap-6'>
-      <div className='border-gradient-primary relative flex flex-col rounded-lg bg-white xl:flex-row'>
-        <SearchInput value={inputValue} onChange={setInputValue} onKeyDown={handleKeyDown} />
+    <div className='flex w-full flex-col'>
+      <div className='flex flex-col gap-2'>
+        <div className='border-gradient-primary relative flex flex-col rounded-lg bg-white xl:flex-row'>
+          <SearchInput value={inputValue} onChange={setInputValue} onKeyDown={handleKeyDown} />
 
-        <div className='mx-5 border-t border-gray-200 md:mx-7 xl:mx-0 xl:my-2 xl:border-t-0 xl:border-l' />
+          <div className='mx-5 border-t border-gray-200 md:mx-7 xl:mx-0 xl:my-2 xl:border-t-0 xl:border-l' />
 
-        <div className='flex flex-col md:flex-row xl:flex-2'>
-          <FilterDropdown
-            icon={<TypeIcon size={20} className='shrink-0 text-gray-800 md:size-7' />}
-            placeholder='모임 유형을 선택해주세요'
-            selectedValue={type}
-            items={TYPE_ITEMS}
-            onSelect={handleTypeSelect}
-          />
+          <div className='flex flex-col md:flex-row xl:flex-2'>
+            <FilterDropdown
+              icon={<TypeIcon size={20} className='shrink-0 text-gray-800 md:size-7' />}
+              placeholder='모임 유형을 선택해주세요'
+              selectedValue={type}
+              items={TYPE_ITEMS}
+              onSelect={handleTypeSelect}
+            />
 
-          <div className='mx-5 border-t border-gray-200 md:mx-0 md:my-2 md:border-t-0 md:border-l' />
+            <div className='mx-5 border-t border-gray-200 md:mx-0 md:my-2 md:border-t-0 md:border-l' />
 
-          <CategoryFilterSection selectedValues={categoryIds} onChange={handleCategoryChange} />
+            <CategoryFilterSection selectedValues={categoryIds} onChange={handleCategoryChange} />
+          </div>
+
+          <Button variant={searchVariant} size='search' onClick={handleSearch} className='relative z-1 hidden xl:block'>
+            검색
+          </Button>
         </div>
 
-        <Button variant={searchVariant} size='search' onClick={handleSearch} className='relative z-1 hidden xl:block'>
-          검색
-        </Button>
+        <ActiveFilters />
       </div>
-
-      <ActiveFilters />
 
       <Button
         variant={searchVariant}
         onClick={handleSearch}
-        className='text-body-02-sb md:text-body-01-sb h-[58px] w-full rounded-lg md:h-18 xl:hidden'
+        className='text-body-02-sb md:text-body-01-sb mt-[78px] h-[58px] w-full rounded-lg md:mt-6 md:h-18 xl:hidden'
       >
         검색
       </Button>
