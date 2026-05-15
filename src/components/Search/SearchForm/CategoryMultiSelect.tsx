@@ -81,8 +81,8 @@ export function CategoryMultiSelect({ icon, placeholder, selectedValues, items, 
         <Dropdown.Item
           onClick={handleReset}
           className={cn(
-            'lg:text-body-02-r cursor-pointer rounded-lg px-4 py-3 hover:bg-blue-100 hover:text-blue-400',
-            selectedValues.length === 0 && 'bg-blue-100 text-blue-400',
+            'text-small-01-r lg:text-body-02-r cursor-pointer rounded-lg px-4 py-3 hover:bg-blue-100 hover:text-blue-400',
+            selectedValues.length === 0 && 'text-small-01-sb lg:text-body-02-sb bg-blue-100 text-blue-400',
           )}
         >
           전체
@@ -100,8 +100,8 @@ export function CategoryMultiSelect({ icon, placeholder, selectedValues, items, 
                 if (!isDisabled) handleSelect(item.value);
               }}
               className={cn(
-                'lg:text-body-02-r flex cursor-pointer items-center justify-between rounded-lg px-4 py-3 hover:bg-blue-100 hover:text-blue-400',
-                isSelected && 'bg-blue-100 text-blue-400',
+                'text-small-01-r lg:text-body-02-r flex cursor-pointer items-center justify-between rounded-lg px-4 py-3 hover:bg-blue-100 hover:text-blue-400',
+                isSelected && 'text-small-01-sb lg:text-body-02-sb bg-blue-100 text-blue-400',
                 isDisabled && 'cursor-not-allowed opacity-40 hover:bg-transparent hover:text-inherit',
               )}
             >

@@ -59,8 +59,8 @@ export function FilterDropdown({ icon, placeholder, selectedValue, items, onSele
               key={item.label}
               onClick={() => onSelect(item.value)}
               className={cn(
-                'lg:text-body-02-r cursor-pointer rounded-lg px-4 py-3 hover:bg-blue-100 hover:text-blue-400',
-                isSelected && 'bg-blue-100 text-blue-400',
+                'text-small-01-r lg:text-body-02-r cursor-pointer rounded-lg px-4 py-3 hover:bg-blue-100 hover:text-blue-400',
+                isSelected && 'text-small-01-sb lg:text-body-02-sb bg-blue-100 text-blue-400',
               )}
             >
               {item.label}
