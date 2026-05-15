@@ -7,13 +7,9 @@ const refreshClient = axios.create({
   withCredentials: true,
 });
 
-// TODO: 백엔드에서 인증 없는 요청에 401 통일 후 500 조건 제거
 const shouldAttemptRefresh = (error: unknown) => {
   if (!axios.isAxiosError(error)) return false;
-  const status = error.response?.status;
-  if (status === 401) return true;
-  if (status === 500 && !error.config?.headers?.Authorization) return true;
-  return false;
+  return error.response?.status === 401;
 };
 
 let refreshPromise: Promise<unknown> | null = null;
