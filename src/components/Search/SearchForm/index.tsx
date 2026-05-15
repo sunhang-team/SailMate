@@ -12,7 +12,12 @@ import { CategoryFilterSection } from './CategoryFilterSection';
 import { FilterDropdown } from './FilterDropdown';
 import { SearchInput } from './SearchInput';
 
-const TYPE_ITEMS = [{ label: '전체', value: null }, ...GATHERING_TYPES.map((t) => ({ label: t, value: t }))] as const;
+const ALL_TYPE_VALUE = 'ALL';
+
+const TYPE_ITEMS = [
+  { label: '전체', value: ALL_TYPE_VALUE },
+  ...GATHERING_TYPES.map((t) => ({ label: t, value: t })),
+] as const;
 
 export function SearchForm() {
   const { type, categoryIds, query, setParams } = useGatheringSearchParams();
@@ -37,8 +42,9 @@ export function SearchForm() {
   };
 
   const handleTypeSelect = (value: string | null) => {
+    const resolved = value === ALL_TYPE_VALUE ? null : value;
     startTransition(() => {
-      setParams({ type: value as (typeof GATHERING_TYPES)[number] | null, page: 1 }, { history: 'push' });
+      setParams({ type: resolved as (typeof GATHERING_TYPES)[number] | null, page: 1 }, { history: 'push' });
     });
   };
 
