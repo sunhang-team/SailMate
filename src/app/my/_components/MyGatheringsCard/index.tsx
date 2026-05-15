@@ -33,7 +33,7 @@ export function MyGatheringsCard({ gathering }: MyGatheringsCardProps) {
   const progressRate = totalDays > 0 ? Math.min(100, Math.max(0, Math.floor((passedDays / totalDays) * 100))) : 0;
 
   const Icon = TYPE_ICON[gathering.type as keyof typeof TYPE_ICON] ?? ProjectIcon;
-  const hasReviewed = !!gathering.hasReviewed;
+  const allReviewed = gathering.reviewedMembersCount === gathering.currentMembers;
 
   const { displayLabel, tagState, isFinished } = getGatheringDisplayStatus(gathering);
 
@@ -109,10 +109,16 @@ export function MyGatheringsCard({ gathering }: MyGatheringsCardProps) {
               </div>
             </div>
           )}
-          {isFinished && !hasReviewed && <ReviewWriteButton gatheringId={gathering.id} />}
-          {isFinished && hasReviewed && (
+          {isFinished && !allReviewed && (
+            <ReviewWriteButton
+              gatheringId={gathering.id}
+              reviewedCount={gathering.reviewedMembersCount}
+              totalCount={gathering.currentMembers}
+            />
+          )}
+          {isFinished && allReviewed && (
             <div className='flex h-[54px] w-full items-center justify-center rounded-[8px] bg-blue-50 md:h-[72px]'>
-              <span className='text-small-01-sb md:text-body-01-sb text-gray-600'>리뷰 작성완료</span>
+              <span className='text-small-01-sb md:text-body-01-sb text-gray-600'>리뷰 작성 완료</span>
             </div>
           )}
         </GatheringCard.Footer>

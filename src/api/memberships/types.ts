@@ -29,6 +29,8 @@ export interface MembershipGathering {
   myRole: MemberRole;
   /** 리뷰 작성 여부 — 최소 1명 이상 리뷰 작성 시 true */
   hasReviewed: boolean;
+  /** 현재 유저가 리뷰한 멤버 수 */
+  reviewedMembersCount: number;
   pendingApplicationCount: number;
 }
 
