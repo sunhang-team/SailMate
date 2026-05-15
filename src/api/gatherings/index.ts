@@ -5,6 +5,7 @@ import type { ApiResponse } from '@/api/common/types';
 import type {
   GatheringListItem,
   GatheringDetail,
+  GatheringStatus,
   GetApplicationStatusResponse,
   GetCategoriesResponse,
   GetGatheringsParams,
@@ -46,8 +47,11 @@ const normalizeDetail = (detail: GatheringDetail): GatheringDetail => normalizeG
 export const GATHERING_TAGS = {
   all: 'gatherings',
   main: 'gatherings-main',
+  categories: 'gatherings-categories',
   detail: (gatheringId: number) => `gatherings-detail-${gatheringId}`,
 } as const;
+
+const CATEGORIES_REVALIDATE_SECONDS = 3600;
 
 const getBaseUrl = () => {
   if (typeof window !== 'undefined') {
@@ -58,10 +62,24 @@ const getBaseUrl = () => {
   return baseUrl.replace(/\/+$/, '');
 };
 
-/** GET /v1/gatherings/categories — 카테고리 목록 조회 */
+/** GET /v1/gatherings/categories — 카테고리 목록 조회 (클라이언트 전용) */
 export const getCategories = async (): Promise<GetCategoriesResponse> => {
   const { data } = await axiosClient.get<ApiResponse<GetCategoriesResponse>>('/v1/gatherings/categories');
   return unwrapResponse(data);
+};
+
+/** GET /v1/gatherings/categories — 카테고리 목록 조회 (서버 전용, ISR 캐싱) */
+export const fetchCategories = async (): Promise<GetCategoriesResponse> => {
+  const res = await fetch(`${getBaseUrl()}/v1/gatherings/categories`, {
+    next: {
+      tags: [GATHERING_TAGS.all, GATHERING_TAGS.categories],
+      revalidate: CATEGORIES_REVALIDATE_SECONDS,
+    },
+  });
+
+  if (!res.ok) throw new Error(`gatherings/categories fetch failed: ${res.status}`);
+  const json: ApiResponse<GetCategoriesResponse> = await res.json();
+  return unwrapResponse(json);
 };
 
 /**
@@ -188,4 +206,34 @@ export const updateGathering = async (
 /** DELETE /v1/gatherings/:gatheringId — 모임 삭제 */
 export const deleteGathering = async (gatheringId: number): Promise<void> => {
   await axiosClient.delete(`/v1/gatherings/${gatheringId}`);
+};
+
+/**
+ * GET /v1/gatherings (서버 전용) — sitemap용 RECRUITING + IN_PROGRESS 모임 ID 수집.
+ * 백엔드 status 콤마 다중값 미지원에 대비해 두 상태를 병렬 fetch 후 concat.
+ * 환경변수 누락 / 네트워크 실패 시 빌드를 막지 않기 위해 빈 배열 fallback.
+ */
+export const fetchGatheringsForSitemap = async (): Promise<Array<{ id: number }>> => {
+  let baseUrl: string;
+  try {
+    baseUrl = getBaseUrl();
+  } catch {
+    return [];
+  }
+
+  const fetchByStatus = async (status: GatheringStatus): Promise<GatheringListItem[]> => {
+    try {
+      const res = await fetch(`${baseUrl}/v1/gatherings?status=${status}&limit=1000`, {
+        next: { tags: [GATHERING_TAGS.all] },
+      });
+      if (!res.ok) return [];
+      const json: ApiResponse<GetGatheringsResponse> = await res.json();
+      return unwrapResponse(json).gatherings;
+    } catch {
+      return [];
+    }
+  };
+
+  const [recruiting, inProgress] = await Promise.all([fetchByStatus('RECRUITING'), fetchByStatus('IN_PROGRESS')]);
+  return [...recruiting, ...inProgress].map((g) => ({ id: g.id }));
 };

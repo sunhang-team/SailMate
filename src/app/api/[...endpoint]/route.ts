@@ -3,6 +3,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { deleteAuthCookies, setAuthCookies } from '@/lib/authCookies';
 import { requestBackend } from '@/lib/serverFetch';
 import { isJsonResponse, extractTokens } from '@/lib/tokenUtils';
+import { withBffErrorHandling } from '@/lib/withBffErrorHandling';
 
 const isAuthEndpoint = (endpoint: string) => {
   const normalized = endpoint.replace(/^\/+/, '');
@@ -77,46 +78,13 @@ async function proxy(request: NextRequest, params: { endpoint: string[] }) {
   return response;
 }
 
-export async function GET(request: NextRequest, { params }: { params: Promise<{ endpoint: string[] }> }) {
-  try {
-    return await proxy(request, await params);
-  } catch (error) {
-    console.error('[BFF ERROR] GET:', error);
-    return NextResponse.json({ success: false, message: 'Internal Server Error' }, { status: 500 });
-  }
-}
-export async function POST(request: NextRequest, { params }: { params: Promise<{ endpoint: string[] }> }) {
-  try {
-    return await proxy(request, await params);
-  } catch (error) {
-    console.error('[BFF ERROR] POST:', error);
-    return NextResponse.json({ success: false, message: 'Internal Server Error' }, { status: 500 });
-  }
-}
+type RouteContext = { params: Promise<{ endpoint: string[] }> };
 
-export async function PUT(request: NextRequest, { params }: { params: Promise<{ endpoint: string[] }> }) {
-  try {
-    return await proxy(request, await params);
-  } catch (error) {
-    console.error('[BFF ERROR] PUT:', error);
-    return NextResponse.json({ success: false, message: 'Internal Server Error' }, { status: 500 });
-  }
-}
+const createMethodHandler = (method: string) =>
+  withBffErrorHandling(async (request: NextRequest, { params }: RouteContext) => proxy(request, await params), method);
 
-export async function PATCH(request: NextRequest, { params }: { params: Promise<{ endpoint: string[] }> }) {
-  try {
-    return await proxy(request, await params);
-  } catch (error) {
-    console.error('[BFF ERROR] PATCH:', error);
-    return NextResponse.json({ success: false, message: 'Internal Server Error' }, { status: 500 });
-  }
-}
-
-export async function DELETE(request: NextRequest, { params }: { params: Promise<{ endpoint: string[] }> }) {
-  try {
-    return await proxy(request, await params);
-  } catch (error) {
-    console.error('[BFF ERROR] DELETE:', error);
-    return NextResponse.json({ success: false, message: 'Internal Server Error' }, { status: 500 });
-  }
-}
+export const GET = createMethodHandler('GET');
+export const POST = createMethodHandler('POST');
+export const PUT = createMethodHandler('PUT');
+export const PATCH = createMethodHandler('PATCH');
+export const DELETE = createMethodHandler('DELETE');

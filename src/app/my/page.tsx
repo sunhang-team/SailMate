@@ -4,7 +4,13 @@ import { ProfileSidebar, ProfileSidebarSkeleton } from './_components/ProfileSid
 import { DEFAULT_TAB, parsePendingGatheringSort } from './_constants';
 import { SuspenseBoundary } from '@/components/SuspenseBoundary';
 
+import type { Metadata } from 'next';
 import type { MyPageTab, PendingGatheringSort } from './_constants';
+
+export const metadata: Metadata = {
+  title: '마이 페이지',
+  robots: { index: false, follow: false, googleBot: { index: false, follow: false } },
+};
 
 interface MyPageProps {
   searchParams: Promise<{ tab?: MyPageTab; pendingSort?: string }>;

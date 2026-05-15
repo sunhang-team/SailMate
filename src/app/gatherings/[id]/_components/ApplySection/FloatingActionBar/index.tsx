@@ -1,11 +1,10 @@
 'use client';
 
-import { useState } from 'react';
-
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 
 import { gatheringQueries } from '@/api/gatherings/queries';
 import { applicationQueries } from '@/api/applications/queries';
+import { useLikeToggle } from '@/api/likes/hooks';
 import { getGatheringDisplayStatus, getJoinButtonText } from '@/lib/gatheringStatus';
 import { Button } from '@/components/ui/Button';
 import { HeartIcon } from '@/components/ui/Icon';
@@ -32,7 +31,7 @@ export function FloatingActionBar({ gatheringId }: FloatingActionBarProps) {
   const hasPendingApplication =
     myApplications?.applications.some((app) => app.gathering.id === gatheringId && app.status === 'PENDING') ?? false;
   const isLeader = isLoggedIn && user?.id === data.leader.id;
-  const [isFavorite, setIsFavorite] = useState(false);
+  const { isLiked, isPending: isLikePending, toggleLike } = useLikeToggle(gatheringId);
   const overlay = useOverlay();
 
   const { isJoinable, isFinished, isFull, isDeadlinePassed } = getGatheringDisplayStatus(data);
@@ -46,21 +45,14 @@ export function FloatingActionBar({ gatheringId }: FloatingActionBarProps) {
           <Button
             variant='bookmark'
             size='bookmark-lg'
-            data-selected={isFavorite}
+            data-selected={isLiked}
             aria-label='찜하기'
-            aria-pressed={isFavorite}
-            onClick={async () => {
-              if (!isLoggedIn) {
-                const isLoginSuccessful = await overlay.open(({ isOpen, close }) => {
-                  return <AuthModal isOpen={isOpen} onClose={() => close(false)} onSuccess={() => close(true)} />;
-                });
-                if (!isLoginSuccessful) return;
-              }
-              setIsFavorite((prev) => !prev);
-            }}
+            aria-pressed={isLiked}
+            onClick={toggleLike}
+            disabled={isLikePending}
             className='h-13.5 md:h-18'
           >
-            <HeartIcon size={24} variant={isFavorite ? 'filled' : 'outline'} />
+            <HeartIcon size={24} variant={isLiked ? 'filled' : 'outline'} />
           </Button>
           <Button
             variant='action'

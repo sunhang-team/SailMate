@@ -2,6 +2,7 @@
 
 import { type ReactNode, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { differenceInDays, isValid, parseISO } from 'date-fns';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -16,9 +17,9 @@ import { useDropdown } from '@/components/ui/Dropdown/context';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import { useToastStore } from '@/components/ui/Toast/useToastStore';
-import { useCreateGathering, useUpdateGathering } from '@/api/gatherings/queries';
+import { gatheringQueries, useCreateGathering, useUpdateGathering } from '@/api/gatherings/queries';
 import { gatheringFormSchema } from '@/api/gatherings/schemas';
-import { DEFAULT_CATEGORIES, GATHERING_TYPES } from '@/constants/gathering';
+import { GATHERING_TYPES } from '@/constants/gathering';
 import { cn } from '@/lib/cn';
 
 import { ImageUpload } from './ImageUpload';
@@ -61,11 +62,6 @@ const TYPE_META = {
   프로젝트: { label: '프로젝트', subtitle: '함께 만들고 완성해요', Icon: ProjectIcon },
 } as const;
 
-const CATEGORY_META = Object.fromEntries(DEFAULT_CATEGORIES.map((c) => [c.id, { label: c.name }])) as Record<
-  number,
-  { label: string }
->;
-
 interface CreateGatheringFormProps {
   mode?: 'create' | 'edit';
   gatheringId?: number;
@@ -76,6 +72,13 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
   const router = useRouter();
   const showToast = useToastStore((state) => state.showToast);
   const isEditMode = mode === 'edit';
+
+  const { data: categoriesData } = useSuspenseQuery(gatheringQueries.categories());
+  const categories = categoriesData.categories;
+  const categoryMeta = useMemo(
+    () => Object.fromEntries(categories.map((c) => [c.id, { label: c.name }])) as Record<number, { label: string }>,
+    [categories],
+  );
 
   const {
     register,
@@ -251,7 +254,7 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
             render={({ field }) => {
               const selected = field.value ?? [];
               const selectedLabel =
-                selected.length > 0 ? selected.map((id) => CATEGORY_META[id]?.label).join(', ') : null;
+                selected.length > 0 ? selected.map((id) => categoryMeta[id]?.label).join(', ') : null;
 
               const MAX_CATEGORIES = 3;
 
@@ -278,7 +281,7 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
                                 카테고리({selected.length})
                               </span>
                               <span className='text-small-02-m md:text-body-02-m lg:text-body-01-m text-gray-900'>
-                                {selected.map((id) => CATEGORY_META[id]?.label).join(', ')}
+                                {selected.map((id) => categoryMeta[id]?.label).join(', ')}
                               </span>
                             </div>
                           ) : (
@@ -294,11 +297,11 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
                       containerClassName='w-full'
                       className='custom-scrollbar max-h-[240px] w-full overflow-y-auto rounded-lg border border-blue-100 bg-white p-2'
                     >
-                      {DEFAULT_CATEGORIES.map((cat) => (
+                      {categories.map((cat) => (
                         <Dropdown.Item
                           key={cat.id}
                           closeOnSelect={false}
-                          disabled={selected.length >= 3 && !selected.includes(cat.id)}
+                          disabled={selected.length >= MAX_CATEGORIES && !selected.includes(cat.id)}
                           onClick={() => toggleCategory(cat.id)}
                           className={cn(
                             'text-small-02-m md:text-body-02-m lg:text-body-01-m flex cursor-pointer items-center justify-between rounded-lg px-4 py-3 text-gray-700 hover:bg-blue-100 hover:text-blue-400',

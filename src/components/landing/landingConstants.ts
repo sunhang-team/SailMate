@@ -14,7 +14,7 @@ export const LANDING_IMAGES = {
   route2: encodePublicImage('Route', 'Route 2-PC.png'),
   route3: encodePublicImage('Route', 'Route 3-PC.png'),
   route4: encodePublicImage('Route', 'Route 4-PC.png'),
-  bottomImage: encodePublicImage('bottom', 'bottom-CTA-mobile.png'),
+  bottomGlow: encodePublicImage('bottom', 'bottomCTA2.png'),
   featureTeam: '/icons/landing/team-building.svg',
   featureGoal: '/icons/landing/goal-management.svg',
   featureAchievement: '/icons/landing/achievement-tracking.svg',
@@ -70,7 +70,7 @@ export const LANDING_ROUTE_STEPS: LandingRouteStep[] = [
   {
     routeLabel: 'Route 1',
     title: '나만의 모임을 시작하거나 참여해요',
-    description: '내 관심사에 딱 맞는 주제의 스터디나 프로젝트를 만들거나 찾아 함께할 팀원들을 만날 수 있어요.',
+    description: '내 관심사에 딱 맞는 주제의 스터디나 프로젝트를 만들거나\n찾아 함께할 팀원들을 만날 수 있어요.',
     imageSrc: LANDING_IMAGES.route1,
     imageAlt: '모임 탐색 및 참여 화면 미리보기',
     imageSide: 'right',
@@ -78,7 +78,7 @@ export const LANDING_ROUTE_STEPS: LandingRouteStep[] = [
   {
     routeLabel: 'Route 2',
     title: '주차별 목표와 할 일을 세워요',
-    description: '팀 공동의 목표를 세우고 매주 실천할 개인 할 일을 작성하며 우리만의 항로를 만들어요.',
+    description: '팀 공동의 목표를 세우고 매주 실천할 개인 할 일을\n작성하며 우리만의 항로를 만들어요.',
     imageSrc: LANDING_IMAGES.route2,
     imageAlt: '주차별 목표 및 할 일 관리 화면 미리보기',
     imageSide: 'left',
@@ -86,7 +86,7 @@ export const LANDING_ROUTE_STEPS: LandingRouteStep[] = [
   {
     routeLabel: 'Route 3',
     title: '목표를 달성하면 완성도에 가까워져요',
-    description: '목표 달성시 팀 달성률이 실시간으로 반영되며 완성도라는 섬에 점점 더 가까워져요.',
+    description: '목표 달성시 팀 달성률이 실시간으로 반영되며\n완성도라는 섬에 점점 더 가까워져요.',
     imageSrc: LANDING_IMAGES.route3,
     imageAlt: '완성도 진행 화면 미리보기',
     imageSide: 'right',
@@ -94,7 +94,7 @@ export const LANDING_ROUTE_STEPS: LandingRouteStep[] = [
   {
     routeLabel: 'Route 4',
     title: '함께 목표를 완성하고 리뷰를 남겨요',
-    description: '완성도에 도착한 후 팀원들과 상호 리뷰를 나누며 프로젝트를 완벽하게 마무리할 수 있어요.',
+    description: '완성도에 도착한 후 팀원들과 상호 리뷰를 나누며\n프로젝트를 완벽하게 마무리할 수 있어요.',
     imageSrc: LANDING_IMAGES.route4,
     imageAlt: '리뷰 작성 화면 미리보기',
     imageSide: 'left',

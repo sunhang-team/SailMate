@@ -7,6 +7,59 @@ import { QueryProvider } from '@/providers/QueryProvider';
 import { OverlayProvider } from '@/providers/OverlayProvider';
 import { FooterWrapper } from '@/components/Footer/FooterWrapper';
 import { ToastProvider } from '@/components/ui/Toast/ToastProvider';
+import { JsonLd } from '@/components/seo/JsonLd';
+import {
+  SITE_NAME,
+  SITE_TITLE_DEFAULT,
+  SITE_DESCRIPTION,
+  SITE_KEYWORDS,
+  TWITTER_IMAGE_PATH,
+  buildOrganizationJsonLd,
+  buildWebSiteJsonLd,
+  getDefaultOpenGraph,
+  getSiteUrl,
+} from '@/lib/seo';
+
+import type { Metadata } from 'next';
+
+export const generateMetadata = async (): Promise<Metadata> => {
+  const siteUrl = getSiteUrl();
+  return {
+    metadataBase: new URL(siteUrl),
+    title: {
+      default: SITE_TITLE_DEFAULT,
+      template: `%s | ${SITE_NAME}`,
+    },
+    description: SITE_DESCRIPTION,
+    keywords: SITE_KEYWORDS,
+    applicationName: SITE_NAME,
+    alternates: {
+      canonical: '/',
+    },
+    openGraph: {
+      ...getDefaultOpenGraph(),
+      url: '/',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: SITE_TITLE_DEFAULT,
+      description: SITE_DESCRIPTION,
+      images: [TWITTER_IMAGE_PATH],
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
+    },
+    // verification: { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION },
+    // verification: { other: { 'naver-site-verification': process.env.NEXT_PUBLIC_NAVER_SITE_VERIFICATION ?? '' } },
+  };
+};
 
 export default function RootLayout({
   children,
@@ -29,6 +82,8 @@ export default function RootLayout({
             </QueryParamsProvider>
           </QueryProvider>
         </MSWProvider>
+        <JsonLd data={buildOrganizationJsonLd()} />
+        <JsonLd data={buildWebSiteJsonLd()} />
       </body>
     </html>
   );

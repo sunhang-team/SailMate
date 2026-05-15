@@ -3,6 +3,7 @@ import { queryOptions, useMutation, useQueryClient, isServer } from '@tanstack/r
 import { invalidateServerCache } from '@/lib/invalidateServerCache';
 import {
   getCategories,
+  fetchCategories,
   getApplicationStatus,
   fetchMainGatherings,
   fetchGatheringDetail,
@@ -39,7 +40,7 @@ export const gatheringQueries = {
   categories: () =>
     queryOptions({
       queryKey: gatheringKeys.categories(),
-      queryFn: () => getCategories(),
+      queryFn: () => (isServer ? fetchCategories() : getCategories()),
       staleTime: Infinity,
     }),
 

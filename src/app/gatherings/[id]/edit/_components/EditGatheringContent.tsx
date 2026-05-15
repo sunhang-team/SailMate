@@ -1,18 +1,16 @@
 'use client';
 
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useMemo } from 'react';
+import { useSuspenseQueries } from '@tanstack/react-query';
 
 import { gatheringQueries } from '@/api/gatherings/queries';
-import { DEFAULT_CATEGORIES } from '@/constants/gathering';
 import { CreateGatheringForm } from '@/app/gatherings/new/CreateGatheringForm';
 
-import type { GatheringDetail, GatheringForm } from '@/api/gatherings/types';
+import type { Category, GatheringDetail, GatheringForm } from '@/api/gatherings/types';
 
-const CATEGORY_NAME_TO_ID = Object.fromEntries(DEFAULT_CATEGORIES.map((c) => [c.name, c.id])) as Record<string, number>;
-
-const toFormValues = (detail: GatheringDetail): Partial<GatheringForm> => ({
+export const toFormValues = (detail: GatheringDetail, nameToId: Record<string, number>): Partial<GatheringForm> => ({
   type: detail.type,
-  categoryIds: detail.categories.map((name) => CATEGORY_NAME_TO_ID[name]).filter(Boolean),
+  categoryIds: detail.categories.map((name) => nameToId[name]).filter((id): id is number => typeof id === 'number'),
   title: detail.title,
   shortDescription: detail.shortDescription,
   description: detail.description,
@@ -34,7 +32,16 @@ interface EditGatheringContentProps {
 }
 
 export function EditGatheringContent({ gatheringId }: EditGatheringContentProps) {
-  const { data } = useSuspenseQuery(gatheringQueries.detail(gatheringId));
+  const [{ data: detail }, { data: categoriesData }] = useSuspenseQueries({
+    queries: [gatheringQueries.detail(gatheringId), gatheringQueries.categories()],
+  });
 
-  return <CreateGatheringForm mode='edit' gatheringId={gatheringId} initialValues={toFormValues(data)} />;
+  const nameToId = useMemo(
+    () => Object.fromEntries(categoriesData.categories.map((c: Category) => [c.name, c.id])) as Record<string, number>,
+    [categoriesData.categories],
+  );
+
+  const initialValues = useMemo(() => toFormValues(detail, nameToId), [detail, nameToId]);
+
+  return <CreateGatheringForm mode='edit' gatheringId={gatheringId} initialValues={initialValues} />;
 }
