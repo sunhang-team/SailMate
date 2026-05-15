@@ -6,8 +6,8 @@ import { ArrowIcon } from '@/components/ui/Icon/ArrowIcon';
 import { cn } from '@/lib/cn';
 
 const STATUS_OPTIONS = [
-  { label: '모집중', value: 'RECRUITING' },
   { label: '전체', value: 'ALL' },
+  { label: '모집중', value: 'RECRUITING' },
 ] as const;
 
 function RotatingArrow() {
@@ -34,14 +34,14 @@ export function StatusFilter({ value, onChange }: StatusFilterProps) {
   const selectedLabel = STATUS_OPTIONS.find((o) => o.value === value)?.label ?? '모집중';
 
   return (
-    <Dropdown className='**:[[role=listbox]]:right-0'>
+    <Dropdown className='**:[[role=listbox]]:-left-3'>
       <Dropdown.Trigger>
         <div className='flex items-center gap-2'>
           <span className='text-small-02-m md:text-body-02-m text-gray-800'>{selectedLabel}</span>
           <RotatingArrow />
         </div>
       </Dropdown.Trigger>
-      <Dropdown.Menu className='flex min-w-[100px] flex-col gap-2 overflow-hidden p-2'>
+      <Dropdown.Menu className='flex min-w-[100px] flex-col gap-2 overflow-hidden py-2 pr-9 pl-3'>
         {STATUS_OPTIONS.map((option) => {
           const isSelected = value === option.value;
           return (
@@ -49,7 +49,7 @@ export function StatusFilter({ value, onChange }: StatusFilterProps) {
               key={option.value}
               onClick={() => onChange(option.value)}
               className={cn(
-                'text-body-02-r cursor-pointer rounded-lg px-4 py-2 text-gray-500 hover:text-gray-900',
+                'text-body-02-r cursor-pointer rounded-lg text-left text-gray-500 hover:text-gray-900',
                 isSelected && 'text-body-02-m text-gray-900',
               )}
             >
