@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient, useSuspenseInfiniteQuery } from '@tanstack/react-query';
 import { getNotifications, readAllNotifications, readNotification } from './index';
 import type { GetNotificationsParams } from './types';
 
@@ -6,13 +6,27 @@ export const notificationKeys = {
   all: ['notifications'] as const,
   lists: () => [...notificationKeys.all, 'list'] as const,
   list: (params: GetNotificationsParams) => [...notificationKeys.lists(), params] as const,
+  infinite: () => [...notificationKeys.all, 'infinite'] as const,
 };
 
 export const useGetNotifications = (params: GetNotificationsParams) => {
   return useQuery({
     queryKey: notificationKeys.list(params),
     queryFn: () => getNotifications(params),
-    staleTime: 60 * 1000, // 1분
+    staleTime: 60 * 1000,
+  });
+};
+
+export const useInfiniteNotifications = (limit: number) => {
+  return useSuspenseInfiniteQuery({
+    queryKey: notificationKeys.infinite(),
+    queryFn: ({ pageParam }) => getNotifications({ page: pageParam, limit }),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage, _, lastPageParam) => {
+      if (lastPage.notifications.length < limit) return undefined;
+      return lastPageParam + 1;
+    },
+    staleTime: 60 * 1000,
   });
 };
 
@@ -30,8 +44,7 @@ export const useReadNotification = () => {
       // 여기서는 빠른 UI 반영을 위해 리렌더링만 트리거 하거나 invalidateQueries를 onSettled에서 호출
     },
     onSettled: () => {
-      // 어떠한 쿼리(페이지)에 속한 알림이든 전체 업데이트를 위해 lists 키 무효화
-      queryClient.invalidateQueries({ queryKey: notificationKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: notificationKeys.all });
     },
   });
 };
@@ -42,7 +55,7 @@ export const useReadAllNotifications = () => {
   return useMutation({
     mutationFn: () => readAllNotifications(),
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: notificationKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: notificationKeys.all });
     },
   });
 };

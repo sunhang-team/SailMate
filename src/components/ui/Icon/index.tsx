@@ -1,4 +1,5 @@
 export { AlarmIcon } from './AlarmIcon';
+export { AlarmOnIcon } from './AlarmOnIcon';
 export { ArrowIcon } from './ArrowIcon';
 export { BackupIcon } from './BackupIcon';
 export { CalendarIcon } from './CalendarIcon';

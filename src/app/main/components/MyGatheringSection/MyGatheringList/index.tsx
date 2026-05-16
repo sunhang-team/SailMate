@@ -19,7 +19,7 @@ export function MyGatheringList() {
   return (
     <div>
       <div className='mb-4 flex items-center justify-between'>
-        <h2 className='text-body-01-b md:text-h4-b lg:text-h3-b text-gray-900'>내 모임</h2>
+        <h2 className='text-body-01-b md:text-h4-b lg:text-h3-b text-gray-900'>내 모임💡</h2>
         <div className='flex items-center gap-3 md:gap-6'>
           <Link href='/gatherings' className='text-body-02-b text-gray-500'>
             더보기
