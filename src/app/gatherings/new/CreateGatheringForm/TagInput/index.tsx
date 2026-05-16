@@ -7,6 +7,7 @@ import { Tag } from '@/components/ui/Tag';
 import { cn } from '@/lib/cn';
 
 const MAX_TAGS = 5;
+const MAX_TAG_LENGTH = 15;
 
 interface TagInputProps {
   value: string[];
@@ -20,7 +21,8 @@ export function TagInput({ value, onChange, onBlur, error }: TagInputProps) {
   const hasError = !!error;
 
   const trimmedInput = inputValue.trim();
-  const isButtonDisabled = !trimmedInput || value.length >= MAX_TAGS || value.includes(trimmedInput);
+  const isButtonDisabled =
+    !trimmedInput || trimmedInput.length > MAX_TAG_LENGTH || value.length >= MAX_TAGS || value.includes(trimmedInput);
 
   const handleAdd = () => {
     if (isButtonDisabled) return;
@@ -68,6 +70,7 @@ export function TagInput({ value, onChange, onBlur, error }: TagInputProps) {
               onChange={(e) => setInputValue(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder={value.length === 0 ? '태그를 입력해주세요 (최대 5개)' : ''}
+              maxLength={MAX_TAG_LENGTH}
               disabled={value.length >= MAX_TAGS}
               onBlur={onBlur}
               className='text-small-02-r md:text-body-02-r lg:text-body-01-r min-w-0 flex-1 bg-transparent outline-none placeholder:text-gray-400'
