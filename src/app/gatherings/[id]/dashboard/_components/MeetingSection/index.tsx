@@ -4,6 +4,7 @@ import { Suspense, useState } from 'react';
 
 import { useToastStore } from '@/components/ui/Toast/useToastStore';
 
+import { getTokenErrorMessage } from './getTokenErrorMessage';
 import { MeetingContent } from './MeetingContent';
 import { MeetingLobby } from './MeetingLobby';
 
@@ -29,7 +30,7 @@ export function MeetingSection({ gatheringId }: MeetingSectionProps) {
 
       if (!resp.ok) {
         const errorData = await resp.json().catch(() => ({}));
-        showToast({ variant: 'error', title: errorData.error || '회의 토큰을 가져오는데 실패했습니다.' });
+        showToast({ variant: 'error', title: getTokenErrorMessage(errorData?.errorCode) });
         setStatus('error');
         return;
       }
