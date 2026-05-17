@@ -72,6 +72,8 @@ export function PendingApplications({ gatheringId, gatheringStatus }: PendingApp
         )}
       </div>
 
+      {!isRecruiting && <p className='text-body-02-r text-gray-500'>모집이 마감되어 신청을 처리할 수 없습니다</p>}
+
       {/* 카드 목록 */}
       <div className='flex flex-col gap-2 md:gap-4'>
         {currentItems.map((application) => (
