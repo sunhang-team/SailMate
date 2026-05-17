@@ -29,13 +29,18 @@ const SECTIONS = [
     content:
       '서비스는 개인정보 보유 기간이 경과하거나 처리 목적이 달성된 경우 지체 없이 해당 개인정보를 파기합니다.\n\n• 전자적 파일 형태: 복구 불가능한 방법으로 영구 삭제\n• 종이 문서: 분쇄 또는 소각',
   },
+  {
+    title: '6. 쿠키 및 웹사이트 분석 도구',
+    content:
+      '서비스는 회원의 서비스 이용 패턴을 분석하고 서비스 품질을 개선하기 위해 Google LLC가 제공하는 Google Analytics 4를 사용합니다.\n\n• 수집 항목: 쿠키(_ga, _ga_* 등), IP 주소(익명화 처리), 디바이스 및 브라우저 정보, 페이지 이동·클릭 등 이용 행동 데이터, 회원이 발생시키는 주요 행동 이벤트(회원가입, 로그인, 모임 조회, 모임 참여 등)\n• 이용 목적: 서비스 이용 패턴 분석 및 서비스 개선\n• 처리 위탁: Google LLC (미국)\n• 보유 기간: 수집일로부터 14개월\n• 거부 방법:\n  - 브라우저 설정에서 쿠키 차단 (서비스 일부 기능이 제한될 수 있음)\n  - Google Analytics 옵트아웃 부가기능 설치: https://tools.google.com/dlpage/gaoptout\n\n서비스는 이름·이메일·전화번호 등 개인을 직접 식별할 수 있는 정보를 Google Analytics로 전송하지 않습니다.',
+  },
 ];
 
 export default function PrivacyPage() {
   return (
     <div>
       <h1 className='text-h5-b md:text-h4-b mb-2 text-gray-900'>개인정보 처리방침</h1>
-      <p className='text-small-01-r md:text-body-02-r mb-8 text-gray-400 md:mb-12'>최종 업데이트: 2026년 5월 8일</p>
+      <p className='text-small-01-r md:text-body-02-r mb-8 text-gray-400 md:mb-12'>최종 업데이트: 2026년 5월 17일</p>
       <div className='flex flex-col gap-6 md:gap-8'>
         {SECTIONS.map(({ title, content }) => (
           <section key={title}>
