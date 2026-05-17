@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 
+import { Button } from '@/components/ui/Button';
 import { fieldGradientFocusWrapperClass } from '@/components/ui/fieldControlVariants';
 import { Tag } from '@/components/ui/Tag';
 import { cn } from '@/lib/cn';
@@ -59,7 +60,7 @@ export function TagInput({ value, onChange, onBlur, error }: TagInputProps) {
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder='태그를 입력해주세요 (최대 5개)'
+              placeholder={value.length >= MAX_TAGS ? '최대 5개까지 입력했어요' : '태그를 입력해주세요 (최대 5개)'}
               maxLength={MAX_TAG_LENGTH}
               disabled={value.length >= MAX_TAGS}
               onBlur={onBlur}
@@ -67,17 +68,16 @@ export function TagInput({ value, onChange, onBlur, error }: TagInputProps) {
             />
           </div>
         </div>
-        <button
+        <Button
           type='button'
+          variant='primary'
+          size={null}
           onClick={handleAdd}
           disabled={isButtonDisabled}
-          className={cn(
-            'text-small-01-sb md:text-body-01-sb lg:text-h5-sb text-gray-0 w-[80px] shrink-0 rounded-lg transition-colors md:w-[140px] lg:w-[200px]',
-            isButtonDisabled ? 'bg-gray-300' : 'bg-gradient-primary',
-          )}
+          className='text-small-01-sb md:text-body-01-sb lg:text-h5-sb w-[80px] shrink-0 md:w-[140px] lg:w-[200px]'
         >
           추가
-        </button>
+        </Button>
       </div>
       {value.length > 0 && (
         <div className='flex flex-wrap gap-2'>
