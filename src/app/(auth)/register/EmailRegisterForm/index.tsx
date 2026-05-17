@@ -1,10 +1,12 @@
 'use client';
 
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
+import { cn } from '@/lib/cn';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
-import { VisibilityIcon } from '@/components/ui/Icon';
+import { CheckIcon, VisibilityIcon } from '@/components/ui/Icon';
 import { useToastStore } from '@/components/ui/Toast/useToastStore';
 
 import { useEmailRegister } from './useEmailRegister';
@@ -142,6 +144,68 @@ export function EmailRegisterForm() {
         >
           <VisibilityIcon variant={state.showPasswordConfirm ? 'on' : 'off'} size={20} />
         </button>
+      </div>
+
+      <div className='flex flex-col gap-3'>
+        <label className='flex cursor-pointer items-center gap-2'>
+          <input
+            type='checkbox'
+            className='peer sr-only'
+            checked={!!form.isAllAgreed}
+            onChange={handlers.handleToggleAll}
+          />
+          <CheckIcon className={cn('size-5 transition-colors', form.isAllAgreed ? 'text-blue-300' : 'text-gray-500')} />
+          <span
+            className={cn(
+              'text-small-01-m md:text-body-02-m transition-colors',
+              form.isAllAgreed ? 'text-blue-300' : 'text-gray-500',
+            )}
+          >
+            전체 동의
+          </span>
+        </label>
+
+        <div className='border-t border-gray-200' />
+
+        <div className='flex items-center justify-between'>
+          <label className='flex cursor-pointer items-center gap-2'>
+            <input type='checkbox' className='peer sr-only' {...form.agreementTermsProps} />
+            <CheckIcon
+              className={cn('size-5 transition-colors', form.agreementTerms ? 'text-blue-300' : 'text-gray-500')}
+            />
+            <span
+              className={cn(
+                'text-small-01-r md:text-body-02-r transition-colors',
+                form.agreementTerms ? 'text-blue-300' : 'text-gray-500',
+              )}
+            >
+              (필수) 이용약관 동의
+            </span>
+          </label>
+          <Link href='/terms' target='_blank' className='text-small-02-r text-gray-400 underline'>
+            내용 보기
+          </Link>
+        </div>
+
+        <div className='flex items-center justify-between'>
+          <label className='flex cursor-pointer items-center gap-2'>
+            <input type='checkbox' className='peer sr-only' {...form.agreementPrivacyProps} />
+            <CheckIcon
+              className={cn('size-5 transition-colors', form.agreementPrivacy ? 'text-blue-300' : 'text-gray-500')}
+            />
+            <span
+              className={cn(
+                'text-small-01-r md:text-body-02-r transition-colors',
+                form.agreementPrivacy ? 'text-blue-300' : 'text-gray-500',
+              )}
+            >
+              (필수) 개인정보처리방침 동의
+            </span>
+          </label>
+          <Link href='/privacy' target='_blank' className='text-small-02-r text-gray-400 underline'>
+            내용 보기
+          </Link>
+        </div>
       </div>
 
       <Button
