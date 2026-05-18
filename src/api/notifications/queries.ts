@@ -5,8 +5,8 @@ import type { GetNotificationsParams } from './types';
 export const notificationKeys = {
   all: ['notifications'] as const,
   lists: () => [...notificationKeys.all, 'list'] as const,
-  list: (params: GetNotificationsParams) => [...notificationKeys.lists(), params] as const,
-  infinite: () => [...notificationKeys.all, 'infinite'] as const,
+  list: (params: GetNotificationsParams) => [...notificationKeys.lists(), 'paginated', params] as const,
+  infinite: () => [...notificationKeys.lists(), 'infinite'] as const,
 };
 
 export const useGetNotifications = (params: GetNotificationsParams) => {
