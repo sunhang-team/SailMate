@@ -1,5 +1,6 @@
 import './globals.css';
 import { pretendard } from './fonts';
+import { AnalyticsScripts } from '@/components/analytics/AnalyticsScripts';
 import { Header } from '@/components/Header';
 import { MSWProvider } from '@/providers/MSWProvider';
 import { QueryParamsProvider } from '@/providers/QueryParamsProvider';
@@ -84,6 +85,7 @@ export default function RootLayout({
         </MSWProvider>
         <JsonLd data={buildOrganizationJsonLd()} />
         <JsonLd data={buildWebSiteJsonLd()} />
+        <AnalyticsScripts />
       </body>
     </html>
   );
