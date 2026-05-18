@@ -75,14 +75,14 @@ export function MainGatheringCard({
           label={gathering.type}
           sublabel={gathering.categories.join(', ')}
         />
-        <div className='text-small-01-sb flex items-center gap-1'>
-          <PersonIcon size={16} className='text-blue-400' />
+        <div className='text-small-01-sb flex items-center'>
+          <PersonIcon size={16} className='mr-2 text-blue-400' />
           <span className='text-blue-400'>{gathering.currentMembers}</span>
           <span className='text-gray-600'>/</span>
           <span className='text-gray-600'>{gathering.maxMembers}</span>
         </div>
       </GatheringCard.Header>
-      <GatheringCard.Body className='mb-6 flex-1 gap-3'>
+      <GatheringCard.Body className='mb-4 flex-1 gap-3'>
         <div className='flex flex-col gap-0.5'>
           <div className='flex flex-wrap gap-1'>
             {gathering.tags.map((tag) => (

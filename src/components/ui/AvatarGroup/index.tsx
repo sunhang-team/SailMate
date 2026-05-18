@@ -9,7 +9,7 @@ import { useFallbackImage } from '@/hooks/useFallbackImage';
 const avatarSizeVariants = cva('relative bg-gray-300 flex items-center justify-center overflow-hidden', {
   variants: {
     size: {
-      sm: 'h-5 w-5',
+      sm: 'h-6 w-6',
       md: 'h-8 w-8',
     },
     shape: {
@@ -31,7 +31,7 @@ const avatarSizeVariants = cva('relative bg-gray-300 flex items-center justify-c
 const overflowSizeVariants = cva('bg-gray-200 flex items-center justify-center text-gray-500 font-medium', {
   variants: {
     size: {
-      sm: 'h-5 w-5 text-[8px]',
+      sm: 'h-6 w-6 text-[8px]',
       md: 'h-8 w-8 text-[10px]',
     },
     shape: {
