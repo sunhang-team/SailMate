@@ -51,6 +51,10 @@ export function GatheringList() {
   const lastSearchedRef = useRef<string | null>(null);
   useEffect(() => {
     if (!query) return;
+    // 카테고리 필터가 적용된 검색인데 카테고리 데이터가 아직 도착 안 했다면 대기.
+    // 필터 없는 검색은 매핑 자체가 불필요하므로 곧장 발사.
+    if (categoryIds.length > 0 && !categoriesData) return;
+
     const signature = `${query}|${categoryIds.join(',')}`;
     if (lastSearchedRef.current === signature) return;
     lastSearchedRef.current = signature;
