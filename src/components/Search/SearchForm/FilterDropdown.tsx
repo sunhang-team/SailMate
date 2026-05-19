@@ -23,6 +23,7 @@ function RotatingArrow() {
 interface FilterDropdownItem {
   label: string;
   value: string | null;
+  count?: number;
 }
 
 interface FilterDropdownProps {
@@ -59,11 +60,18 @@ export function FilterDropdown({ icon, placeholder, selectedValue, items, onSele
               key={item.label}
               onClick={() => onSelect(item.value)}
               className={cn(
-                'text-small-01-r lg:text-body-02-r cursor-pointer rounded-lg px-4 py-3 hover:bg-blue-100 hover:text-blue-400',
-                isSelected && 'text-small-01-sb lg:text-body-02-sb bg-blue-100 text-blue-400',
+                'text-small-01-r lg:text-body-02-r flex cursor-pointer items-center justify-between rounded-lg px-4 py-3 hover:bg-blue-100 hover:text-blue-400',
+                isSelected && 'text-small-01-sb lg:text-body-02-sb bg-blue-100 text-blue-300',
               )}
             >
-              {item.label}
+              <span>{item.label}</span>
+              {item.count !== undefined && (
+                <span
+                  className={cn('text-small-02-r lg:text-body-02-r', isSelected ? 'text-blue-300' : 'text-gray-400')}
+                >
+                  {item.count}
+                </span>
+              )}
             </Dropdown.Item>
           );
         })}
