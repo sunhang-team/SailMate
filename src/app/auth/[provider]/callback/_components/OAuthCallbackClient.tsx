@@ -2,13 +2,24 @@
 
 import { useEffect, useRef } from 'react';
 import { useRouter, useParams, useSearchParams } from 'next/navigation';
+import { useQueryClient } from '@tanstack/react-query';
 import { useSocialLoginCallback } from '@/api/auth/queries';
+import { userQueries } from '@/api/users/queries';
 import { useToastStore } from '@/components/ui/Toast/useToastStore';
+import { trackAuthLogin, trackAuthSignUp } from '@/lib/analytics/auth';
+
+import type { AuthMethod } from '@/lib/analytics/events';
+
+const toAuthMethod = (provider: string): AuthMethod | null => {
+  if (provider === 'kakao' || provider === 'google') return provider;
+  return null;
+};
 
 export function OAuthCallbackClient() {
   const router = useRouter();
   const params = useParams();
   const searchParams = useSearchParams();
+  const queryClient = useQueryClient();
   const provider = params.provider as string;
   const code = searchParams.get('code');
   const { showToast } = useToastStore();
@@ -16,6 +27,22 @@ export function OAuthCallbackClient() {
   const { mutate: loginCallback, isPending } = useSocialLoginCallback({
     onSuccess: (data) => {
       console.log('[OAuth 성공 응답 데이터]:', data);
+      // OAuth 응답에는 user.id가 없어 /users/me 를 보강 호출해 GA identifyUser 에 전달.
+      // GA 발사 실패가 로그인 흐름을 막지 않도록 fire-and-forget.
+      const method = toAuthMethod(provider);
+      if (method) {
+        queryClient
+          .fetchQuery(userQueries.me())
+          .then((me) => {
+            const userId = String(me.id);
+            if (data.newUser) trackAuthSignUp({ userId, method });
+            else trackAuthLogin({ userId, method });
+          })
+          .catch((error) => {
+            console.warn('[GA] OAuth tracking 실패 (로그인은 정상 진행):', error);
+          });
+      }
+
       // 신규 유저인 경우 무조건 메인으로 이동
       if (data.newUser) {
         router.replace('/main');

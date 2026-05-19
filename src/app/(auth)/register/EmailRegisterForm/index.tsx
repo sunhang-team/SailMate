@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { CheckIcon, VisibilityIcon } from '@/components/ui/Icon';
 import { useToastStore } from '@/components/ui/Toast/useToastStore';
+import { trackAuthSignUp } from '@/lib/analytics/auth';
 
 import { useEmailRegister } from './useEmailRegister';
 
@@ -25,7 +26,8 @@ export function EmailRegisterForm() {
     }
 
     handlers.registerMutate(data, {
-      onSuccess: () => {
+      onSuccess: (response) => {
+        trackAuthSignUp({ userId: String(response.userId), method: 'email' });
         showToast({ title: '회원가입이 완료되었습니다.', variant: 'success' });
         router.push('/main');
       },

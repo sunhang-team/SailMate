@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/Button';
 import { VisibilityIcon } from '@/components/ui/Icon';
 import { useLogin } from '@/api/auth/queries';
 import { loginFormSchema } from '@/api/auth/schemas';
+import { trackAuthLogin } from '@/lib/analytics/auth';
 
 import type { LoginForm } from '@/api/auth/types';
 
@@ -25,7 +26,10 @@ export function LoginStep({ email, onSuccess, onBack }: { email: string; onSucce
   });
 
   const { mutate: loginMutate, isPending } = useLogin({
-    onSuccess,
+    onSuccess: (data) => {
+      trackAuthLogin({ userId: String(data.user.id), method: 'email' });
+      onSuccess();
+    },
     onError: () => setError('root', { message: '이메일 또는 비밀번호가 올바르지 않습니다.' }),
   });
 

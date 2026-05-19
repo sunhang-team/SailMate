@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { VisibilityIcon } from '@/components/ui/Icon';
 import { useLogin } from '@/api/auth/queries';
+import { trackAuthLogin } from '@/lib/analytics/auth';
 
 import type { LoginForm } from '@/api/auth/types';
 
@@ -29,7 +30,10 @@ export function EmailLoginForm() {
   });
 
   const { mutate: loginMutate, isPending } = useLogin({
-    onSuccess: () => router.push('/main'),
+    onSuccess: (data) => {
+      trackAuthLogin({ userId: String(data.user.id), method: 'email' });
+      router.push('/main');
+    },
     onError: () => setError('root', { message: '이메일 또는 비밀번호가 올바르지 않습니다.' }),
   });
 
