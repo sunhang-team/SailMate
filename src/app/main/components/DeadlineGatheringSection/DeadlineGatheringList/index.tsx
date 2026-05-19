@@ -13,7 +13,7 @@ export function DeadlineGatheringList() {
   const { page, setPage, totalPages, visibleGatherings } = useDeadlineGatherings();
 
   const handleJoin = (id: number) => {
-    router.push(`/gatherings/${id}`);
+    router.push(`/gatherings/${id}?source=recommendation`);
   };
 
   return (

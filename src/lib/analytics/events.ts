@@ -10,7 +10,15 @@ export type AuthMethod = 'kakao' | 'google' | 'email';
  * - profile: 마이페이지·다른 유저 프로필에서 진입
  * - shared_link: UTM 또는 source 쿼리가 붙은 공유 링크에서 진입
  *
- * 라우트별 판정 규칙 구현은 후속 PR(탐색/상세)에서.
+ * 판정 규칙 (src/lib/analytics/gathering.ts `resolveGatheringEntrySource`):
+ * 1. URL 쿼리 `?source=`가 'search' | 'recommendation' | 'profile' 중 하나면 그대로 사용
+ * 2. 그 외 + `utm_*` 파라미터 존재 → 'shared_link'
+ * 3. 둘 다 아님 → 'direct'
+ *
+ * 박는 지점 (?source=...):
+ * - 검색 결과(Search/GatheringList) → ?source=search
+ * - 메인 추천 섹션(Popular/Deadline/Latest) → ?source=recommendation
+ * - 마이페이지 카드(LikedGathering, MyCreatedGathering) → ?source=profile
  */
 export type GatheringEntrySource = 'search' | 'recommendation' | 'direct' | 'profile' | 'shared_link';
 

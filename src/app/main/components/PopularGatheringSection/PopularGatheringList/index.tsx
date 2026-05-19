@@ -13,7 +13,7 @@ export function PopularGatheringList() {
   const { page, setPage, totalPages, visibleGatherings } = usePopularGatherings();
 
   const handleJoin = (id: number) => {
-    router.push(`/gatherings/${id}`);
+    router.push(`/gatherings/${id}?source=recommendation`);
   };
 
   return (

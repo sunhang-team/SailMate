@@ -14,6 +14,7 @@ import {
 import { GatheringHero } from './_components/GatheringHero';
 import { GatheringDetailContainer } from './_components/GatheringDetailContainer';
 import { GatheringDetailSkeleton } from './_components/GatheringDetailSkeleton';
+import { GatheringDetailTracker } from './_components/GatheringDetailTracker';
 import { MainGatheringStreaming } from './_components/GatheringStreaming';
 
 import type { Metadata } from 'next';
@@ -84,6 +85,7 @@ export default async function GatheringDetailPage({ params }: GatheringDetailPag
   return (
     <main className='mb-20 min-h-screen'>
       {detail && <JsonLd data={buildGatheringEventJsonLd(detail)} />}
+      {!Number.isNaN(gatheringId) && <GatheringDetailTracker gatheringId={gatheringId} />}
       <MainGatheringStreaming>
         <GatheringDetailContainer gatheringId={gatheringId} />
       </MainGatheringStreaming>

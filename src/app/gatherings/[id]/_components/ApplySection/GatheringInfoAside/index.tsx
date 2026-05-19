@@ -161,7 +161,10 @@ export function GatheringInfoAside({ gatheringId }: GatheringInfoAsideProps) {
               disabled={(!isJoinable && !isLeader) || hasPendingApplication}
               onClick={async () => {
                 if (isLeader) {
-                  await navigator.clipboard.writeText(window.location.href);
+                  // 추적용 쿼리(?source=, utm_*)가 묻어 나가면 받은 사람의 view_gathering 이
+                  // 잘못된 source 로 분류되므로 origin + path 로 재구성해 깔끔한 URL 만 공유한다.
+                  const shareUrl = `${window.location.origin}/gatherings/${gatheringId}`;
+                  await navigator.clipboard.writeText(shareUrl);
                   showToast({ variant: 'success', title: '링크가 복사되었습니다.' });
                   return;
                 }

@@ -130,7 +130,7 @@ export function LikedGatheringCard({
           size='participation'
           className='w-full min-w-0 flex-1'
           disabled={!display.isJoinable}
-          onClick={() => router.push(`/gatherings/${gathering.id}`)}
+          onClick={() => router.push(`/gatherings/${gathering.id}?source=profile`)}
         >
           참여하기
         </Button>
