@@ -31,7 +31,7 @@ export function MyCreatedGatheringCard({ gathering, className }: MyCreatedGather
   const { displayLabel, tagState } = getGatheringDisplayStatus(gathering);
 
   return (
-    <Link href={`/gatherings/${gathering.id}`}>
+    <Link href={`/gatherings/${gathering.id}?source=profile`}>
       <GatheringCard className={cn('w-full transition-transform hover:-translate-y-1', className)}>
         <GatheringCard.Header className='mb-6 items-center'>
           <div className='flex gap-1'>
