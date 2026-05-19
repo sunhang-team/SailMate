@@ -1,5 +1,12 @@
 import { trackEvent } from './index';
-import { resolveGatheringEntrySource, trackGatheringSearch, trackGatheringView } from './gathering';
+import {
+  resolveGatheringEntrySource,
+  trackGatheringCreateStart,
+  trackGatheringCreateSubmit,
+  trackGatheringJoin,
+  trackGatheringSearch,
+  trackGatheringView,
+} from './gathering';
 
 jest.mock('./index', () => ({
   trackEvent: jest.fn(),
@@ -44,6 +51,36 @@ describe('lib/analytics/gathering', () => {
         gathering_id: '42',
         category: '스터디',
         source: 'search',
+      });
+    });
+  });
+
+  describe('trackGatheringCreateStart', () => {
+    it('파라미터 없이 create_gathering_start 이벤트를 발사한다', () => {
+      trackGatheringCreateStart();
+
+      expect(trackEventMock).toHaveBeenCalledWith('create_gathering_start', {});
+    });
+  });
+
+  describe('trackGatheringCreateSubmit', () => {
+    it('category / member_count 와 함께 create_gathering_submit 이벤트를 발사한다', () => {
+      trackGatheringCreateSubmit({ category: '프로그래밍', memberCount: 5 });
+
+      expect(trackEventMock).toHaveBeenCalledWith('create_gathering_submit', {
+        category: '프로그래밍',
+        member_count: 5,
+      });
+    });
+  });
+
+  describe('trackGatheringJoin', () => {
+    it('gathering_id / category 와 함께 join_gathering 이벤트를 발사한다', () => {
+      trackGatheringJoin({ gatheringId: '42', category: '스터디' });
+
+      expect(trackEventMock).toHaveBeenCalledWith('join_gathering', {
+        gathering_id: '42',
+        category: '스터디',
       });
     });
   });

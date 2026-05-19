@@ -22,6 +22,28 @@ export const trackGatheringView = ({ gatheringId, category, source }: TrackGathe
   trackEvent('view_gathering', { gathering_id: gatheringId, category, source });
 };
 
+export const trackGatheringCreateStart = () => {
+  trackEvent('create_gathering_start', {});
+};
+
+interface TrackGatheringCreateSubmitParams {
+  category: string;
+  memberCount: number;
+}
+
+export const trackGatheringCreateSubmit = ({ category, memberCount }: TrackGatheringCreateSubmitParams) => {
+  trackEvent('create_gathering_submit', { category, member_count: memberCount });
+};
+
+interface TrackGatheringJoinParams {
+  gatheringId: string;
+  category: string;
+}
+
+export const trackGatheringJoin = ({ gatheringId, category }: TrackGatheringJoinParams) => {
+  trackEvent('join_gathering', { gathering_id: gatheringId, category });
+};
+
 /**
  * URL searchParams 에서 모임 상세 진입 경로를 판정한다.
  * 판정 규칙은 events.ts 의 GatheringEntrySource JSDoc 참고.
