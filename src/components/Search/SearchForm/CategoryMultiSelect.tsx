@@ -7,8 +7,6 @@ import { useDropdown } from '@/components/ui/Dropdown/context';
 import { ArrowIcon } from '@/components/ui/Icon/ArrowIcon';
 import { cn } from '@/lib/cn';
 
-const MAX_CATEGORIES = 3;
-
 function RotatingArrow() {
   const { isOpen } = useDropdown();
   return (
@@ -25,6 +23,7 @@ function RotatingArrow() {
 interface CategoryItem {
   label: string;
   value: number;
+  count?: number;
 }
 
 interface CategoryMultiSelectProps {
@@ -36,18 +35,13 @@ interface CategoryMultiSelectProps {
 }
 
 export function CategoryMultiSelect({ icon, placeholder, selectedValues, items, onChange }: CategoryMultiSelectProps) {
+  const selectedNames = items.filter((item) => selectedValues.includes(item.value)).map((item) => item.label);
+
   const displayLabel =
-    selectedValues.length === 0
-      ? null
-      : items
-          .filter((item) => selectedValues.includes(item.value))
-          .map((item) => item.label)
-          .join(', ');
+    selectedNames.length === 0 ? null : `카테고리(${selectedNames.length}) ${selectedNames.join(', ')}`;
 
   const handleSelect = (value: number) => {
-    if (selectedValues.length < MAX_CATEGORIES) {
-      onChange([...selectedValues, value]);
-    }
+    onChange([...selectedValues, value]);
   };
 
   const handleRemove = (e: React.MouseEvent, value: number) => {
@@ -81,15 +75,14 @@ export function CategoryMultiSelect({ icon, placeholder, selectedValues, items, 
         <Dropdown.Item
           onClick={handleReset}
           className={cn(
-            'lg:text-body-02-r cursor-pointer rounded-lg px-4 py-3 hover:bg-blue-100 hover:text-blue-400',
-            selectedValues.length === 0 && 'bg-blue-100 text-blue-400',
+            'text-small-01-r lg:text-body-02-r cursor-pointer rounded-lg px-4 py-3 hover:bg-blue-100 hover:text-blue-400',
+            selectedValues.length === 0 && 'text-small-01-sb lg:text-body-02-sb bg-blue-100 text-blue-300',
           )}
         >
           전체
         </Dropdown.Item>
         {items.map((item) => {
           const isSelected = selectedValues.includes(item.value);
-          const isDisabled = !isSelected && selectedValues.length >= MAX_CATEGORIES;
 
           return (
             <Dropdown.Item
@@ -97,24 +90,35 @@ export function CategoryMultiSelect({ icon, placeholder, selectedValues, items, 
               closeOnSelect={false}
               onClick={() => {
                 if (isSelected) return;
-                if (!isDisabled) handleSelect(item.value);
+                handleSelect(item.value);
               }}
               className={cn(
-                'lg:text-body-02-r flex cursor-pointer items-center justify-between rounded-lg px-4 py-3 hover:bg-blue-100 hover:text-blue-400',
-                isSelected && 'bg-blue-100 text-blue-400',
-                isDisabled && 'cursor-not-allowed opacity-40 hover:bg-transparent hover:text-inherit',
+                'text-small-01-r lg:text-body-02-r flex cursor-pointer items-center justify-between rounded-lg px-4 py-3 hover:bg-blue-100 hover:text-blue-400',
+                isSelected && 'text-small-01-sb lg:text-body-02-sb bg-blue-100 text-blue-300',
               )}
             >
-              {item.label}
-              {isSelected && (
-                <button
-                  type='button'
-                  onClick={(e) => handleRemove(e, item.value)}
-                  className='text-blue-400 hover:text-blue-600'
-                >
-                  &times;
-                </button>
-              )}
+              <span>{item.label}</span>
+              <div className='flex items-center gap-3'>
+                {item.count !== undefined && (
+                  <span
+                    className={cn(
+                      'text-small-02-r lg:text-body-02-r',
+                      isSelected ? 'hidden text-blue-300 lg:inline' : 'text-gray-400',
+                    )}
+                  >
+                    {item.count}
+                  </span>
+                )}
+                {isSelected && (
+                  <button
+                    type='button'
+                    onClick={(e) => handleRemove(e, item.value)}
+                    className='cursor-pointer text-sm font-light text-blue-300 transition-transform hover:scale-110 hover:text-blue-400'
+                  >
+                    &#x2715;
+                  </button>
+                )}
+              </div>
             </Dropdown.Item>
           );
         })}
