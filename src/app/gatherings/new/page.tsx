@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function CreateGatheringPage() {
   return (
-    <main className='mx-auto max-w-[1680px] px-5 pt-20 pb-40'>
+    <main className='mx-auto max-w-[1720px] px-5 pt-20 pb-40'>
       <h1 className='text-body-01-b md:text-h4-b lg:text-h3-b mb-8 text-gray-900'>모임 만들기</h1>
       <SuspenseBoundary
         pendingFallback={
