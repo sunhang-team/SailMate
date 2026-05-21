@@ -96,7 +96,7 @@ export function ImageUpload({ value, onChange, error }: ImageUploadProps) {
         <div
           className={cn(
             'flex w-full cursor-pointer flex-col items-center justify-center gap-4 bg-gray-100',
-            'h-[343px] md:h-[688px] lg:h-[408px]',
+            'h-[188px] md:h-[604px] lg:h-[408px]',
             isDragging ? 'rounded-lg border border-blue-300' : 'dashed-border-gray',
           )}
           onClick={openFilePicker}
@@ -129,7 +129,7 @@ export function ImageUpload({ value, onChange, error }: ImageUploadProps) {
         <div
           className={cn(
             'flex flex-row items-center gap-2.5 overflow-x-auto bg-gray-100 px-2 py-3 md:flex-wrap md:justify-center md:overflow-x-visible md:overflow-y-auto',
-            'h-[343px] md:h-[688px] lg:h-[408px]',
+            'h-[188px] md:h-[604px] lg:h-[408px]',
             isDragging ? 'rounded-lg border border-blue-300' : 'dashed-border-gray',
           )}
           onDragOver={handleDragOver}
@@ -143,7 +143,7 @@ export function ImageUpload({ value, onChange, error }: ImageUploadProps) {
             return (
               <div
                 key={index}
-                className='relative aspect-3/4 w-[200px] shrink-0 overflow-hidden rounded-lg md:w-[calc((100%-1rem)/3)] lg:w-[264px]'
+                className='relative aspect-3/4 w-[111px] shrink-0 overflow-hidden rounded-lg md:w-[208px] lg:w-[264px]'
               >
                 {isPdf ? (
                   <div className='flex h-full w-full flex-col items-center justify-center gap-2 bg-gray-100'>
@@ -159,9 +159,10 @@ export function ImageUpload({ value, onChange, error }: ImageUploadProps) {
                 <button
                   type='button'
                   onClick={() => handleRemove(index)}
-                  className='absolute top-1.5 right-1.5 flex h-7 w-7 items-center justify-center rounded-full bg-white/[0.28] transition-colors hover:bg-white/50'
+                  className='absolute top-1.5 right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-white/[0.28] transition-colors hover:bg-white/50 md:h-7 md:w-7'
                 >
-                  <CloseIcon size={20} className='text-white' />
+                  <CloseIcon size={14} className='text-white md:hidden' />
+                  <CloseIcon size={20} className='hidden text-white md:block' />
                 </button>
               </div>
             );
@@ -173,7 +174,7 @@ export function ImageUpload({ value, onChange, error }: ImageUploadProps) {
               key={`empty-${i}`}
               type='button'
               onClick={openFilePicker}
-              className='bg-gray-150 dashed-border-gray flex aspect-3/4 w-[200px] shrink-0 cursor-pointer flex-col items-center justify-center gap-1 md:w-[calc((100%-1rem)/3)] md:flex-row lg:w-[264px]'
+              className='bg-gray-150 dashed-border-gray flex aspect-3/4 w-[111px] shrink-0 cursor-pointer flex-col items-center justify-center gap-1 md:w-[208px] md:flex-row lg:w-[264px]'
             >
               <span className='text-small-02-m md:text-body-02-m lg:text-body-01-m text-gray-600'>+</span>
               <span className='text-small-02-m md:text-body-02-m lg:text-body-01-m text-gray-600'>이미지 추가</span>
