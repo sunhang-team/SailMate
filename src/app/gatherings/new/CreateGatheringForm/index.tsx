@@ -46,7 +46,7 @@ const CategoryTriggerBorder = ({ children }: { children: ReactNode }) => {
   return (
     <div
       className={cn(
-        'flex h-[43px] w-full cursor-pointer items-center justify-between rounded-lg bg-white px-4 py-3 transition-colors duration-200 md:h-[58px] lg:h-[72px] lg:px-7 lg:py-5',
+        'flex h-[47px] w-full cursor-pointer items-center justify-between rounded-lg bg-white px-4 py-3 transition-colors duration-200 md:h-[62px] lg:h-[76px] lg:px-7 lg:py-5',
         isOpen ? 'border-gradient-primary' : 'border border-gray-200',
       )}
     >
@@ -236,7 +236,10 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
                 error={errors.title?.message}
                 hideErrorMessage
                 {...register('title')}
-                className='text-small-02-r md:text-body-02-r lg:text-body-01-r bg-gray-0 h-[43px] pr-12 md:h-[58px] lg:h-[72px] lg:px-7 lg:py-5 lg:pr-20'
+                className={cn(
+                  'text-small-02-r md:text-body-02-r lg:text-body-01-r bg-gray-0 pr-12 lg:px-7 lg:py-5 lg:pr-20',
+                  errors.title?.message ? 'h-[47px] md:h-[62px] lg:h-[76px]' : 'h-[43px] md:h-[58px] lg:h-[72px]',
+                )}
               />
               <span className='md:text-small-02-r pointer-events-none absolute right-3 bottom-1 text-[8px] text-gray-400 lg:right-5 lg:bottom-4'>
                 {titleValue.length}/30
@@ -268,7 +271,7 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
               };
 
               return (
-                <div className='flex w-full flex-col gap-1 lg:flex-1'>
+                <div className='flex w-full flex-col gap-1.5 lg:flex-1'>
                   <p className='text-small-02-m md:text-body-02-m lg:text-body-01-m text-gray-800'>카테고리</p>
                   <Dropdown className='flex w-full flex-col'>
                     <Dropdown.Trigger>
