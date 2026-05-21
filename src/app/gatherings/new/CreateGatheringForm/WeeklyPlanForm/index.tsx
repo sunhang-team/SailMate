@@ -192,7 +192,7 @@ export function WeeklyPlanForm({ control, register, errors, totalWeeks }: Weekly
   };
 
   return (
-    <section className='mt-8 flex flex-col'>
+    <section className='mt-2 flex flex-col md:mt-4'>
       <button
         type='button'
         onClick={() => setIsOpenOverride((prev) => !(prev ?? totalWeeks > 0))}

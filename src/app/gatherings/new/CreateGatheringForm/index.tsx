@@ -177,7 +177,7 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
                   <Card
                     key={type}
                     className={cn(
-                      'flex h-40 cursor-pointer items-center gap-6 rounded-lg px-8 shadow-none',
+                      'flex h-40 cursor-pointer items-center gap-6 rounded-lg px-8 shadow-none hover:shadow-none',
                       'h-[85px]',
                       'md:h-40 md:w-auto md:flex-1 md:gap-6 md:px-8',
                       isSelected ? 'border-focus-100 bg-blue-50' : 'border-gray-300 bg-gray-100',
@@ -220,7 +220,7 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
       </section>
 
       {/* 기본 정보 */}
-      <section className='flex flex-col gap-6'>
+      <section className='flex flex-col gap-6 md:gap-8'>
         <p className='text-small-01-sb md:text-body-01-sb lg:text-h5-b text-gray-800'>
           기본 정보 <span className='text-blue-400'>*</span>
         </p>
@@ -535,7 +535,7 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
           />
         </div>
 
-        <div className='mt-8 flex h-[43px] items-center justify-between rounded-lg bg-gray-100 px-7 py-5 md:h-[58px] lg:h-[72px]'>
+        <div className='mt-2 flex h-[43px] items-center justify-between rounded-lg bg-gray-100 px-7 py-5 md:mt-4 md:h-[58px] lg:h-[72px]'>
           <p className='text-small-02-sb md:text-body-02-sb lg:text-body-01-sb text-gray-800'>모임 기간</p>
           <p className='text-small-02-sb md:text-body-02-sb lg:text-body-01-sb text-gray-800'>
             <span className='text-blue-400'>{totalWeeks}</span> 주
