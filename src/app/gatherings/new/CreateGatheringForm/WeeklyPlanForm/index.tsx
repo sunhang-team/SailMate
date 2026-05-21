@@ -92,37 +92,37 @@ function WeekDetailInputs({ control, index, error }: WeekDetailInputsProps) {
                 <CloseIcon className='size-4 md:size-5 lg:size-5' />
               </button>
             </div>
-            {canAddDetail && (
-              <Button
-                type='button'
-                variant='add-detail'
-                size='add-detail'
-                className='text-small-02-m md:text-body-02-m lg:text-body-01-m hidden h-[43px] w-full md:h-[58px] lg:block lg:h-[72px] lg:w-1/2'
-                onClick={handleAddDetail}
-              >
-                + 세부 계획 추가
-              </Button>
+            {details.length > 1 ? (
+              <div className='relative w-full lg:w-1/2'>
+                <Input
+                  placeholder='세부 계획을 적어주세요'
+                  value={details[1] ?? ''}
+                  onBlur={field.onBlur}
+                  onChange={(event) => updateDetail(1, event.target.value)}
+                  className='text-small-02-r md:text-body-02-r lg:text-body-01-r bg-gray-0 h-[43px] pr-10 md:h-[58px] lg:h-[72px] lg:px-7 lg:py-5 lg:pr-10'
+                />
+                <button
+                  type='button'
+                  onClick={() => handleRemoveDetail(1)}
+                  className='absolute top-1/2 right-3 -translate-y-1/2 text-gray-400 hover:text-gray-600'
+                >
+                  <CloseIcon className='size-4 md:size-5 lg:size-5' />
+                </button>
+              </div>
+            ) : (
+              canAddDetail && (
+                <Button
+                  type='button'
+                  variant='add-detail'
+                  size='add-detail'
+                  className='text-small-02-m md:text-body-02-m lg:text-body-01-m hidden h-[43px] w-full md:h-[58px] lg:block lg:h-[72px] lg:w-1/2'
+                  onClick={handleAddDetail}
+                >
+                  + 세부 계획 추가
+                </Button>
+              )
             )}
           </div>
-
-          {details.length > 1 && (
-            <div className='relative w-full lg:w-1/2'>
-              <Input
-                placeholder='세부 계획을 적어주세요'
-                value={details[1] ?? ''}
-                onBlur={field.onBlur}
-                onChange={(event) => updateDetail(1, event.target.value)}
-                className='text-small-02-r md:text-body-02-r lg:text-body-01-r bg-gray-0 h-[43px] pr-10 md:h-[58px] lg:h-[72px] lg:px-7 lg:py-5 lg:pr-10'
-              />
-              <button
-                type='button'
-                onClick={() => handleRemoveDetail(1)}
-                className='absolute top-1/2 right-3 -translate-y-1/2 text-gray-400 hover:text-gray-600'
-              >
-                <CloseIcon className='size-4 md:size-5 lg:size-5' />
-              </button>
-            </div>
-          )}
 
           {canAddDetail && (
             <Button
@@ -204,7 +204,12 @@ export function WeeklyPlanForm({ control, register, errors, totalWeeks }: Weekly
         <span className='text-small-02-sb md:text-body-02-sb lg:text-body-01-sb text-gray-800'>
           주차별 계획 <span className='text-blue-400'>*</span>
         </span>
-        <ArrowIcon className={cn('size-4 rotate-90 text-gray-800 transition-transform', isOpen && '-rotate-90')} />
+        <ArrowIcon
+          className={cn(
+            'size-4 rotate-90 text-gray-800 transition-transform md:size-5 lg:size-6',
+            isOpen && '-rotate-90',
+          )}
+        />
       </button>
 
       <AnimatePresence>
@@ -229,7 +234,7 @@ export function WeeklyPlanForm({ control, register, errors, totalWeeks }: Weekly
               {fields.map((field, index) => (
                 <div
                   key={field.id}
-                  className='border-gray-150 flex flex-col gap-3 border-b pb-5 last:border-b-0 last:pb-0'
+                  className='border-gray-150 flex flex-col gap-6 border-b pb-5 last:border-b-0 last:pb-0'
                 >
                   <p className='text-small-02-sb md:text-body-02-sb lg:text-body-01-sb text-gray-800'>
                     {index + 1}주차
