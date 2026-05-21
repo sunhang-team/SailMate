@@ -46,7 +46,7 @@ const CategoryTriggerBorder = ({ children }: { children: ReactNode }) => {
   return (
     <div
       className={cn(
-        'flex h-[43px] w-full cursor-pointer items-center justify-between rounded-lg bg-white px-4 py-3 transition-colors duration-200 md:h-[58px] lg:h-[72px] lg:px-7 lg:py-5',
+        'flex h-[47px] w-full cursor-pointer items-center justify-between rounded-lg bg-white px-4 py-3 transition-colors duration-200 md:h-[62px] lg:h-[76px] lg:px-7 lg:py-5',
         isOpen ? 'border-gradient-primary' : 'border border-gray-200',
       )}
     >
@@ -177,7 +177,7 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
                   <Card
                     key={type}
                     className={cn(
-                      'flex h-40 cursor-pointer items-center gap-6 rounded-lg px-8 shadow-none',
+                      'flex h-40 cursor-pointer items-center gap-6 rounded-lg px-8 shadow-none hover:shadow-none',
                       'h-[85px]',
                       'md:h-40 md:w-auto md:flex-1 md:gap-6 md:px-8',
                       isSelected ? 'border-focus-100 bg-blue-50' : 'border-gray-300 bg-gray-100',
@@ -220,7 +220,7 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
       </section>
 
       {/* 기본 정보 */}
-      <section className='flex flex-col gap-6'>
+      <section className='flex flex-col gap-6 md:gap-8'>
         <p className='text-small-01-sb md:text-body-01-sb lg:text-h5-b text-gray-800'>
           기본 정보 <span className='text-blue-400'>*</span>
         </p>
@@ -236,7 +236,10 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
                 error={errors.title?.message}
                 hideErrorMessage
                 {...register('title')}
-                className='text-small-02-r md:text-body-02-r lg:text-body-01-r bg-gray-0 h-[43px] pr-12 md:h-[58px] lg:h-[72px] lg:px-7 lg:py-5 lg:pr-20'
+                className={cn(
+                  'text-small-02-r md:text-body-02-r lg:text-body-01-r bg-gray-0 pr-12 lg:px-7 lg:py-5 lg:pr-20',
+                  errors.title?.message ? 'h-[47px] md:h-[62px] lg:h-[76px]' : 'h-[43px] md:h-[58px] lg:h-[72px]',
+                )}
               />
               <span className='md:text-small-02-r pointer-events-none absolute right-3 bottom-1 text-[8px] text-gray-400 lg:right-5 lg:bottom-4'>
                 {titleValue.length}/30
@@ -268,7 +271,7 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
               };
 
               return (
-                <div className='flex w-full flex-col gap-1 lg:flex-1'>
+                <div className='flex w-full flex-col gap-1.5 lg:flex-1'>
                   <p className='text-small-02-m md:text-body-02-m lg:text-body-01-m text-gray-800'>카테고리</p>
                   <Dropdown className='flex w-full flex-col'>
                     <Dropdown.Trigger>
@@ -304,7 +307,7 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
                           disabled={selected.length >= MAX_CATEGORIES && !selected.includes(cat.id)}
                           onClick={() => toggleCategory(cat.id)}
                           className={cn(
-                            'text-small-02-m md:text-body-02-m lg:text-body-01-m flex cursor-pointer items-center justify-between rounded-lg px-4 py-3 text-gray-700 hover:bg-blue-100 hover:text-blue-400',
+                            'text-small-02-m md:text-body-02-m lg:text-body-01-m mb-[2px] flex cursor-pointer items-center justify-between rounded-lg px-4 py-3 text-gray-700 hover:bg-blue-100 hover:text-blue-400',
                             selected.includes(cat.id) && 'bg-blue-100 text-blue-400',
                           )}
                         >
@@ -535,7 +538,7 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
           />
         </div>
 
-        <div className='mt-8 flex h-[43px] items-center justify-between rounded-lg bg-gray-100 px-7 py-5 md:h-[58px] lg:h-[72px]'>
+        <div className='mt-2 flex h-[43px] items-center justify-between rounded-lg bg-gray-100 px-7 py-5 md:mt-4 md:h-[58px] lg:h-[72px]'>
           <p className='text-small-02-sb md:text-body-02-sb lg:text-body-01-sb text-gray-800'>모임 기간</p>
           <p className='text-small-02-sb md:text-body-02-sb lg:text-body-01-sb text-gray-800'>
             <span className='text-blue-400'>{totalWeeks}</span> 주
