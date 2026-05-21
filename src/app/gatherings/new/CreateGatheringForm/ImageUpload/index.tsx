@@ -128,7 +128,7 @@ export function ImageUpload({ value, onChange, error }: ImageUploadProps) {
         /* ── 1장 이상: 썸네일 + 빈 슬롯 ── */
         <div
           className={cn(
-            'flex flex-row gap-2 overflow-x-auto bg-gray-100 px-1 py-3 md:flex-wrap md:overflow-x-visible md:overflow-y-auto',
+            'flex flex-row items-center gap-2.5 overflow-x-auto bg-gray-100 px-2 py-3 md:flex-wrap md:justify-center md:overflow-x-visible md:overflow-y-auto',
             'h-[343px] md:h-[688px] lg:h-[408px]',
             isDragging ? 'rounded-lg border border-blue-300' : 'dashed-border-gray',
           )}
@@ -173,7 +173,7 @@ export function ImageUpload({ value, onChange, error }: ImageUploadProps) {
               key={`empty-${i}`}
               type='button'
               onClick={openFilePicker}
-              className='bg-gray-150 flex aspect-3/4 w-[200px] shrink-0 cursor-pointer flex-col items-center justify-center gap-1 rounded-lg border border-dashed border-gray-300 md:w-[calc((100%-1rem)/3)] md:flex-row lg:w-[264px]'
+              className='bg-gray-150 dashed-border-gray flex aspect-3/4 w-[200px] shrink-0 cursor-pointer flex-col items-center justify-center gap-1 md:w-[calc((100%-1rem)/3)] md:flex-row lg:w-[264px]'
             >
               <span className='text-small-02-m md:text-body-02-m lg:text-body-01-m text-gray-600'>+</span>
               <span className='text-small-02-m md:text-body-02-m lg:text-body-01-m text-gray-600'>이미지 추가</span>
