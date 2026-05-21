@@ -304,7 +304,7 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
                           disabled={selected.length >= MAX_CATEGORIES && !selected.includes(cat.id)}
                           onClick={() => toggleCategory(cat.id)}
                           className={cn(
-                            'text-small-02-m md:text-body-02-m lg:text-body-01-m flex cursor-pointer items-center justify-between rounded-lg px-4 py-3 text-gray-700 hover:bg-blue-100 hover:text-blue-400',
+                            'text-small-02-m md:text-body-02-m lg:text-body-01-m mb-[2px] flex cursor-pointer items-center justify-between rounded-lg px-4 py-3 text-gray-700 hover:bg-blue-100 hover:text-blue-400',
                             selected.includes(cat.id) && 'bg-blue-100 text-blue-400',
                           )}
                         >
