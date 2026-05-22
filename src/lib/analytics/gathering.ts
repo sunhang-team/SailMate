@@ -1,3 +1,4 @@
+import { extractFailureReason } from './extractFailureReason';
 import { trackEvent } from './index';
 
 import type { GatheringEntrySource } from './events';
@@ -42,6 +43,29 @@ interface TrackGatheringJoinParams {
 
 export const trackGatheringJoin = ({ gatheringId, category }: TrackGatheringJoinParams) => {
   trackEvent('join_gathering', { gathering_id: gatheringId, category });
+};
+
+interface TrackGatheringCreateFailedParams {
+  category: string;
+  error: unknown;
+}
+
+export const trackGatheringCreateFailed = ({ category, error }: TrackGatheringCreateFailedParams) => {
+  trackEvent('create_gathering_failed', { category, reason: extractFailureReason(error) });
+};
+
+interface TrackGatheringJoinFailedParams {
+  gatheringId: string;
+  category: string;
+  error: unknown;
+}
+
+export const trackGatheringJoinFailed = ({ gatheringId, category, error }: TrackGatheringJoinFailedParams) => {
+  trackEvent('join_gathering_failed', {
+    gathering_id: gatheringId,
+    category,
+    reason: extractFailureReason(error),
+  });
 };
 
 /**

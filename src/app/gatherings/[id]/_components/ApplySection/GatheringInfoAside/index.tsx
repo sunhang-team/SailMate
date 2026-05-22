@@ -23,7 +23,7 @@ import { GatheringApplyForm } from '../GatheringApplyForm';
 import { GatheringApplySuccess } from '../GatheringApplySuccess';
 
 import { getGatheringDisplayStatus, getJoinButtonText } from '@/lib/gatheringStatus';
-import { trackGatheringJoin } from '@/lib/analytics/gathering';
+import { trackGatheringJoin, trackGatheringJoinFailed } from '@/lib/analytics/gathering';
 
 import type { GatheringType } from '@/api/gatherings/types';
 
@@ -59,6 +59,11 @@ export function GatheringInfoAside({ gatheringId }: GatheringInfoAsideProps) {
       setStep('SUCCESS');
     },
     onError: (error) => {
+      trackGatheringJoinFailed({
+        gatheringId: String(gatheringId),
+        category: data.categories[0] ?? 'unknown',
+        error,
+      });
       if (axios.isAxiosError(error) && error.response?.data?.message) {
         showToast({ variant: 'error', title: error.response.data.message });
         return;

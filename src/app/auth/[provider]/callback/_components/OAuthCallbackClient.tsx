@@ -6,7 +6,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useSocialLoginCallback } from '@/api/auth/queries';
 import { userQueries } from '@/api/users/queries';
 import { useToastStore } from '@/components/ui/Toast/useToastStore';
-import { trackAuthLogin, trackAuthSignUp } from '@/lib/analytics/auth';
+import { trackAuthLogin, trackAuthLoginFailed, trackAuthSignUp } from '@/lib/analytics/auth';
 
 import type { AuthMethod } from '@/lib/analytics/events';
 
@@ -24,54 +24,22 @@ export function OAuthCallbackClient() {
   const code = searchParams.get('code');
   const { showToast } = useToastStore();
 
-  const { mutate: loginCallback, isPending } = useSocialLoginCallback({
-    onSuccess: (data) => {
-      console.log('[OAuth 성공 응답 데이터]:', data);
-      // OAuth 응답에는 user.id가 없어 /users/me 를 보강 호출해 GA identifyUser 에 전달.
-      // GA 발사 실패가 로그인 흐름을 막지 않도록 fire-and-forget.
-      const method = toAuthMethod(provider);
-      if (method) {
-        queryClient
-          .fetchQuery(userQueries.me())
-          .then((me) => {
-            const userId = String(me.id);
-            if (data.newUser) trackAuthSignUp({ userId, method });
-            else trackAuthLogin({ userId, method });
-          })
-          .catch((error) => {
-            console.warn('[GA] OAuth tracking 실패 (로그인은 정상 진행):', error);
-          });
-      }
-
-      // 신규 유저인 경우 무조건 메인으로 이동
-      if (data.newUser) {
-        router.replace('/main');
-      } else {
-        // 기존 유저인 경우 이전 페이지(returnTo)가 있다면 해당 페이지로, 없다면 메인으로 이동
-        const returnTo = sessionStorage.getItem('returnTo');
-        if (returnTo) {
-          router.replace(returnTo);
-          sessionStorage.removeItem('returnTo');
-        } else {
-          router.replace('/main');
-        }
-      }
-    },
-    onError: (error) => {
-      console.error('[OAuth 실패 에러]:', error);
-      showToast({
-        variant: 'error',
-        title: '로그인에 실패했습니다.',
-        description: '다시 시도해 주세요.',
-      });
-      router.replace('/login');
-    },
-  });
+  const { mutate: loginCallback, isPending } = useSocialLoginCallback();
 
   const hasCalled = useRef(false);
+  const hasFiredCancelRef = useRef(false);
 
   useEffect(() => {
-    if (!code || !provider || hasCalled.current) return;
+    if (!provider || hasCalled.current) return;
+
+    // 인가 코드 누락 = provider 화면에서 사용자가 "취소" 한 케이스. 깔때기 누락으로 기록한다.
+    if (!code) {
+      if (hasFiredCancelRef.current) return;
+      hasFiredCancelRef.current = true;
+      const method = toAuthMethod(provider);
+      if (method) trackAuthLoginFailed({ method, error: 'OAUTH_CANCELLED' });
+      return;
+    }
 
     // React 18 StrictMode의 더블 마운트로 인한 중복 호출 방지를 위해 sessionStorage 사용
     const processedCodeKey = `processed_code_${code}`;
@@ -82,8 +50,56 @@ export function OAuthCallbackClient() {
 
     const redirectUri = `${window.location.origin}${window.location.pathname}`;
 
-    loginCallback({ provider, code, redirectUri });
-  }, [code, provider, loginCallback]);
+    loginCallback(
+      { provider, code, redirectUri },
+      {
+        onSuccess: (data) => {
+          console.log('[OAuth 성공 응답 데이터]:', data);
+          // OAuth 응답에는 user.id가 없어 /users/me 를 보강 호출해 GA identifyUser 에 전달.
+          // GA 발사 실패가 로그인 흐름을 막지 않도록 fire-and-forget.
+          const method = toAuthMethod(provider);
+          if (method) {
+            queryClient
+              .fetchQuery(userQueries.me())
+              .then((me) => {
+                const userId = String(me.id);
+                if (data.newUser) trackAuthSignUp({ userId, method });
+                else trackAuthLogin({ userId, method });
+              })
+              .catch((error) => {
+                console.warn('[GA] OAuth tracking 실패 (로그인은 정상 진행):', error);
+              });
+          }
+
+          // 신규 유저인 경우 무조건 메인으로 이동
+          if (data.newUser) {
+            router.replace('/main');
+          } else {
+            // 기존 유저인 경우 이전 페이지(returnTo)가 있다면 해당 페이지로, 없다면 메인으로 이동
+            const returnTo = sessionStorage.getItem('returnTo');
+            if (returnTo) {
+              router.replace(returnTo);
+              sessionStorage.removeItem('returnTo');
+            } else {
+              router.replace('/main');
+            }
+          }
+        },
+        onError: (error) => {
+          console.error('[OAuth 실패 에러]:', error);
+          const method = toAuthMethod(provider);
+          // 신규/기존 유저 구분이 불가능한 시점이라 sign_up_failed 분기 없이 login_failed 로 통합한다.
+          if (method) trackAuthLoginFailed({ method, error });
+          showToast({
+            variant: 'error',
+            title: '로그인에 실패했습니다.',
+            description: '다시 시도해 주세요.',
+          });
+          router.replace('/login');
+        },
+      },
+    );
+  }, [code, provider, loginCallback, queryClient, router, showToast]);
 
   return (
     <div className='flex min-h-screen flex-col items-center justify-center p-4 text-center'>
