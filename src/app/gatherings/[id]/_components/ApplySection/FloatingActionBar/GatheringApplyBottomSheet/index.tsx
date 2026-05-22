@@ -5,6 +5,7 @@ import { useCreateApplication } from '@/api/applications/queries';
 import { BottomSheet } from '@/components/ui/BottomSheet';
 import { useToastStore } from '@/components/ui/Toast/useToastStore';
 import { useFunnel } from '@/hooks/useFunnel';
+import { trackGatheringJoin } from '@/lib/analytics/gathering';
 import { GatheringApplyForm } from '../../GatheringApplyForm';
 import { GatheringApplySuccess } from '../../GatheringApplySuccess';
 
@@ -13,6 +14,7 @@ interface GatheringApplyBottomSheetProps {
   onClose: () => void;
   gatheringId: number;
   gatheringTitle: string;
+  category: string;
 }
 
 export function GatheringApplyBottomSheet({
@@ -20,12 +22,16 @@ export function GatheringApplyBottomSheet({
   onClose,
   gatheringId,
   gatheringTitle,
+  category,
 }: GatheringApplyBottomSheetProps) {
   const { Funnel, Step, setStep, currentStep } = useFunnel<'APPLY' | 'SUCCESS'>('APPLY');
   const { showToast } = useToastStore();
 
   const { mutate, isPending } = useCreateApplication(gatheringId, {
-    onSuccess: () => setStep('SUCCESS'),
+    onSuccess: () => {
+      trackGatheringJoin({ gatheringId: String(gatheringId), category });
+      setStep('SUCCESS');
+    },
     onError: (error) => {
       if (axios.isAxiosError(error) && error.response?.data?.message) {
         showToast({ variant: 'error', title: error.response.data.message });

@@ -77,6 +77,7 @@ export function FloatingActionBar({ gatheringId }: FloatingActionBarProps) {
                 <GatheringApplyBottomSheet
                   gatheringId={gatheringId}
                   gatheringTitle={data.title}
+                  category={data.categories[0] ?? 'unknown'}
                   isOpen={isOpen}
                   onClose={() => close(false)}
                 />

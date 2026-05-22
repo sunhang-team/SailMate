@@ -1,6 +1,6 @@
 'use client';
 
-import { type ReactNode, useMemo } from 'react';
+import { type ReactNode, useEffect, useMemo, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { differenceInDays, isValid, parseISO } from 'date-fns';
@@ -21,6 +21,7 @@ import { gatheringQueries, useCreateGathering, useUpdateGathering } from '@/api/
 import { gatheringFormSchema } from '@/api/gatherings/schemas';
 import { GATHERING_TYPES } from '@/constants/gathering';
 import { cn } from '@/lib/cn';
+import { trackGatheringCreateStart, trackGatheringCreateSubmit } from '@/lib/analytics/gathering';
 
 import { ImageUpload } from './ImageUpload';
 import { TagInput } from './TagInput';
@@ -86,7 +87,7 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
     control,
     watch,
     trigger,
-    formState: { errors, touchedFields },
+    formState: { errors, touchedFields, isDirty },
   } = useForm<GatheringForm>({
     resolver: zodResolver(gatheringFormSchema),
     mode: 'onBlur',
@@ -101,6 +102,16 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
   const { mutate: updateMutate, isPending: isUpdatePending } = useUpdateGathering(gatheringId ?? 0);
   const mutate = isEditMode ? updateMutate : createMutate;
   const isPending = isEditMode ? isUpdatePending : isCreatePending;
+
+  // 단순 페이지 진입(헤더 호기심 클릭 등)은 page_view 자동 측정으로 잡히므로 제외.
+  // isDirty 가 true 가 되는 순간 = 사용자가 어느 필드든 처음으로 값을 변경한 시점 =
+  // 실제 "모임 만들기를 시작했다"는 의도. 그 시점에 1회 발사.
+  const hasFiredStartRef = useRef(false);
+  useEffect(() => {
+    if (isEditMode || !isDirty || hasFiredStartRef.current) return;
+    hasFiredStartRef.current = true;
+    trackGatheringCreateStart();
+  }, [isDirty, isEditMode]);
 
   const typeValue = watch('type');
   const categoryIdsValue = watch('categoryIds') ?? [];
@@ -145,6 +156,10 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
   const onSubmit = (data: GatheringForm) => {
     mutate(data, {
       onSuccess: () => {
+        if (!isEditMode) {
+          const category = categories.find((c) => c.id === data.categoryIds[0])?.name ?? 'unknown';
+          trackGatheringCreateSubmit({ category, memberCount: data.maxMembers });
+        }
         showToast({ variant: 'success', title: isEditMode ? '모임이 수정되었습니다.' : '모임이 생성되었습니다.' });
         if (isEditMode && gatheringId) {
           router.push(`/gatherings/${gatheringId}`);
