@@ -3,6 +3,7 @@
 import { Suspense, useState } from 'react';
 
 import { useToastStore } from '@/components/ui/Toast/useToastStore';
+import { trackMeetingEnter } from '@/lib/analytics/meeting';
 
 import { getTokenErrorMessage } from './getTokenErrorMessage';
 import { MeetingContent } from './MeetingContent';
@@ -37,6 +38,7 @@ export function MeetingSection({ gatheringId }: MeetingSectionProps) {
 
       const data = await resp.json();
       if (data.token) {
+        trackMeetingEnter({ gatheringId: String(gatheringId) });
         setToken(data.token);
         setStatus('joined');
       } else {

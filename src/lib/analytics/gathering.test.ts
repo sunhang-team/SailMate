@@ -4,9 +4,11 @@ import {
   trackGatheringCreateFailed,
   trackGatheringCreateStart,
   trackGatheringCreateSubmit,
+  trackGatheringDashboardView,
   trackGatheringJoin,
   trackGatheringJoinFailed,
   trackGatheringSearch,
+  trackGatheringShare,
   trackGatheringView,
 } from './gathering';
 
@@ -110,6 +112,28 @@ describe('lib/analytics/gathering', () => {
         gathering_id: '42',
         category: '스터디',
         reason: 'ALREADY_APPLIED',
+      });
+    });
+  });
+
+  describe('trackGatheringDashboardView', () => {
+    it('gathering_id / tab 과 함께 view_dashboard 이벤트를 발사한다', () => {
+      trackGatheringDashboardView({ gatheringId: '42', tab: 'meeting' });
+
+      expect(trackEventMock).toHaveBeenCalledWith('view_dashboard', {
+        gathering_id: '42',
+        tab: 'meeting',
+      });
+    });
+  });
+
+  describe('trackGatheringShare', () => {
+    it('gathering_id / channel 과 함께 share_gathering 이벤트를 발사한다', () => {
+      trackGatheringShare({ gatheringId: '42', channel: 'link_copy' });
+
+      expect(trackEventMock).toHaveBeenCalledWith('share_gathering', {
+        gathering_id: '42',
+        channel: 'link_copy',
       });
     });
   });
