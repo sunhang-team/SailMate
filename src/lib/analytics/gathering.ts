@@ -1,7 +1,7 @@
 import { extractFailureReason } from './extractFailureReason';
 import { trackEvent } from './index';
 
-import type { GatheringEntrySource } from './events';
+import type { DashboardTab, GatheringEntrySource, ShareChannel } from './events';
 
 interface TrackGatheringSearchParams {
   query: string;
@@ -66,6 +66,24 @@ export const trackGatheringJoinFailed = ({ gatheringId, category, error }: Track
     category,
     reason: extractFailureReason(error),
   });
+};
+
+interface TrackGatheringDashboardViewParams {
+  gatheringId: string;
+  tab: DashboardTab;
+}
+
+export const trackGatheringDashboardView = ({ gatheringId, tab }: TrackGatheringDashboardViewParams) => {
+  trackEvent('view_dashboard', { gathering_id: gatheringId, tab });
+};
+
+interface TrackGatheringShareParams {
+  gatheringId: string;
+  channel: ShareChannel;
+}
+
+export const trackGatheringShare = ({ gatheringId, channel }: TrackGatheringShareParams) => {
+  trackEvent('share_gathering', { gathering_id: gatheringId, channel });
 };
 
 /**

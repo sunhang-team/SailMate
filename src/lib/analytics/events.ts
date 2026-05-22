@@ -3,6 +3,19 @@
 export type AuthMethod = 'kakao' | 'google' | 'email';
 
 /**
+ * 대시보드 탭 식별자.
+ * `app/gatherings/[id]/dashboard/_constants.ts` 의 `DashboardTab` 과 동기화.
+ */
+export type DashboardTab = 'summary' | 'weekly' | 'members' | 'meeting';
+
+/**
+ * 모임 공유 채널.
+ * - link_copy: 클립보드 복사 (현재 구현)
+ * - kakao / twitter: 향후 외부 공유 UI 추가 시 사용
+ */
+export type ShareChannel = 'kakao' | 'link_copy' | 'twitter';
+
+/**
  * 모임 상세 페이지로 진입한 경로.
  * - search: 검색 결과에서 클릭
  * - recommendation: 메인 페이지 추천 섹션에서 클릭
@@ -34,6 +47,9 @@ export interface AnalyticsEventMap {
   login_failed: { method: AuthMethod; reason: string };
   create_gathering_failed: { category: string; reason: string };
   join_gathering_failed: { gathering_id: string; category: string; reason: string };
+  view_dashboard: { gathering_id: string; tab: DashboardTab };
+  enter_meeting: { gathering_id: string };
+  share_gathering: { gathering_id: string; channel: ShareChannel };
 }
 
 export interface UserProperties {

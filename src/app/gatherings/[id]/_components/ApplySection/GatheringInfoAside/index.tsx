@@ -23,7 +23,7 @@ import { GatheringApplyForm } from '../GatheringApplyForm';
 import { GatheringApplySuccess } from '../GatheringApplySuccess';
 
 import { getGatheringDisplayStatus, getJoinButtonText } from '@/lib/gatheringStatus';
-import { trackGatheringJoin, trackGatheringJoinFailed } from '@/lib/analytics/gathering';
+import { trackGatheringJoin, trackGatheringJoinFailed, trackGatheringShare } from '@/lib/analytics/gathering';
 
 import type { GatheringType } from '@/api/gatherings/types';
 
@@ -172,6 +172,8 @@ export function GatheringInfoAside({ gatheringId }: GatheringInfoAsideProps) {
                   // 잘못된 source 로 분류되므로 origin + path 로 재구성해 깔끔한 URL 만 공유한다.
                   const shareUrl = `${window.location.origin}/gatherings/${gatheringId}`;
                   await navigator.clipboard.writeText(shareUrl);
+                  // TODO: 카카오/트위터 공유 UI 추가 시 channel 분기 (현재는 link_copy 만 지원)
+                  trackGatheringShare({ gatheringId: String(gatheringId), channel: 'link_copy' });
                   showToast({ variant: 'success', title: '링크가 복사되었습니다.' });
                   return;
                 }
