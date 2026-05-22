@@ -6,7 +6,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useSocialLoginCallback } from '@/api/auth/queries';
 import { userQueries } from '@/api/users/queries';
 import { useToastStore } from '@/components/ui/Toast/useToastStore';
-import { trackAuthLogin, trackAuthSignUp } from '@/lib/analytics/auth';
+import { trackAuthLogin, trackAuthLoginFailed, trackAuthSignUp } from '@/lib/analytics/auth';
 
 import type { AuthMethod } from '@/lib/analytics/events';
 
@@ -59,6 +59,9 @@ export function OAuthCallbackClient() {
     },
     onError: (error) => {
       console.error('[OAuth 실패 에러]:', error);
+      const method = toAuthMethod(provider);
+      // 신규/기존 유저 구분이 불가능한 시점이라 sign_up_failed 분기 없이 login_failed 로 통합한다.
+      if (method) trackAuthLoginFailed({ method, error });
       showToast({
         variant: 'error',
         title: '로그인에 실패했습니다.',
@@ -69,9 +72,19 @@ export function OAuthCallbackClient() {
   });
 
   const hasCalled = useRef(false);
+  const hasFiredCancelRef = useRef(false);
 
   useEffect(() => {
-    if (!code || !provider || hasCalled.current) return;
+    if (!provider || hasCalled.current) return;
+
+    // 인가 코드 누락 = provider 화면에서 사용자가 "취소" 한 케이스. 깔때기 누락으로 기록한다.
+    if (!code) {
+      if (hasFiredCancelRef.current) return;
+      hasFiredCancelRef.current = true;
+      const method = toAuthMethod(provider);
+      if (method) trackAuthLoginFailed({ method, error: 'OAUTH_CANCELLED' });
+      return;
+    }
 
     // React 18 StrictMode의 더블 마운트로 인한 중복 호출 방지를 위해 sessionStorage 사용
     const processedCodeKey = `processed_code_${code}`;

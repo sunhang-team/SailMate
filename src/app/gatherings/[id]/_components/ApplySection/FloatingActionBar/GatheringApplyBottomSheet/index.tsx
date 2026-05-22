@@ -5,7 +5,7 @@ import { useCreateApplication } from '@/api/applications/queries';
 import { BottomSheet } from '@/components/ui/BottomSheet';
 import { useToastStore } from '@/components/ui/Toast/useToastStore';
 import { useFunnel } from '@/hooks/useFunnel';
-import { trackGatheringJoin } from '@/lib/analytics/gathering';
+import { trackGatheringJoin, trackGatheringJoinFailed } from '@/lib/analytics/gathering';
 import { GatheringApplyForm } from '../../GatheringApplyForm';
 import { GatheringApplySuccess } from '../../GatheringApplySuccess';
 
@@ -33,6 +33,7 @@ export function GatheringApplyBottomSheet({
       setStep('SUCCESS');
     },
     onError: (error) => {
+      trackGatheringJoinFailed({ gatheringId: String(gatheringId), category, error });
       if (axios.isAxiosError(error) && error.response?.data?.message) {
         showToast({ variant: 'error', title: error.response.data.message });
         return;

@@ -21,7 +21,11 @@ import { gatheringQueries, useCreateGathering, useUpdateGathering } from '@/api/
 import { gatheringFormSchema } from '@/api/gatherings/schemas';
 import { GATHERING_TYPES } from '@/constants/gathering';
 import { cn } from '@/lib/cn';
-import { trackGatheringCreateStart, trackGatheringCreateSubmit } from '@/lib/analytics/gathering';
+import {
+  trackGatheringCreateFailed,
+  trackGatheringCreateStart,
+  trackGatheringCreateSubmit,
+} from '@/lib/analytics/gathering';
 
 import { ImageUpload } from './ImageUpload';
 import { TagInput } from './TagInput';
@@ -167,7 +171,11 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
           router.push('/main');
         }
       },
-      onError: () => {
+      onError: (error) => {
+        if (!isEditMode) {
+          const category = categories.find((c) => c.id === data.categoryIds[0])?.name ?? 'unknown';
+          trackGatheringCreateFailed({ category, error });
+        }
         showToast({ variant: 'error', title: isEditMode ? '모임 수정에 실패했습니다.' : '모임 생성에 실패했습니다.' });
       },
     });

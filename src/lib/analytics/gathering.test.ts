@@ -1,9 +1,11 @@
 import { trackEvent } from './index';
 import {
   resolveGatheringEntrySource,
+  trackGatheringCreateFailed,
   trackGatheringCreateStart,
   trackGatheringCreateSubmit,
   trackGatheringJoin,
+  trackGatheringJoinFailed,
   trackGatheringSearch,
   trackGatheringView,
 } from './gathering';
@@ -81,6 +83,33 @@ describe('lib/analytics/gathering', () => {
       expect(trackEventMock).toHaveBeenCalledWith('join_gathering', {
         gathering_id: '42',
         category: '스터디',
+      });
+    });
+  });
+
+  describe('trackGatheringCreateFailed', () => {
+    it('category / reason 과 함께 create_gathering_failed 이벤트를 발사한다', () => {
+      trackGatheringCreateFailed({ category: '프로그래밍', error: new Error('VALIDATION_FAILED') });
+
+      expect(trackEventMock).toHaveBeenCalledWith('create_gathering_failed', {
+        category: '프로그래밍',
+        reason: 'VALIDATION_FAILED',
+      });
+    });
+  });
+
+  describe('trackGatheringJoinFailed', () => {
+    it('gathering_id / category / reason 과 함께 join_gathering_failed 이벤트를 발사한다', () => {
+      trackGatheringJoinFailed({
+        gatheringId: '42',
+        category: '스터디',
+        error: new Error('ALREADY_APPLIED'),
+      });
+
+      expect(trackEventMock).toHaveBeenCalledWith('join_gathering_failed', {
+        gathering_id: '42',
+        category: '스터디',
+        reason: 'ALREADY_APPLIED',
       });
     });
   });

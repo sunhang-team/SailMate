@@ -30,6 +30,10 @@ export interface AnalyticsEventMap {
   create_gathering_start: Record<string, never>;
   create_gathering_submit: { category: string; member_count: number };
   join_gathering: { gathering_id: string; category: string };
+  sign_up_failed: { method: AuthMethod; reason: string };
+  login_failed: { method: AuthMethod; reason: string };
+  create_gathering_failed: { category: string; reason: string };
+  join_gathering_failed: { gathering_id: string; category: string; reason: string };
 }
 
 export interface UserProperties {

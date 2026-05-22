@@ -1,5 +1,5 @@
 import { identifyUser, setUserProperties, trackEvent } from './index';
-import { trackAuthLogin, trackAuthSignUp } from './auth';
+import { trackAuthLogin, trackAuthLoginFailed, trackAuthSignUp, trackAuthSignUpFailed } from './auth';
 
 jest.mock('./index', () => ({
   trackEvent: jest.fn(),
@@ -58,6 +58,44 @@ describe('lib/analytics/auth', () => {
 
       const properties = setUserPropertiesMock.mock.calls[0][0];
       expect(properties.signup_date).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    });
+  });
+
+  describe('trackAuthLoginFailed', () => {
+    it('login_failed 이벤트를 method/reason 과 함께 발사한다', () => {
+      trackAuthLoginFailed({ method: 'email', error: new Error('INVALID_CREDENTIALS') });
+
+      expect(trackEventMock).toHaveBeenCalledWith('login_failed', {
+        method: 'email',
+        reason: 'INVALID_CREDENTIALS',
+      });
+    });
+
+    it('명시 string 사유(OAUTH_CANCELLED) 도 그대로 전달한다', () => {
+      trackAuthLoginFailed({ method: 'kakao', error: 'OAUTH_CANCELLED' });
+
+      expect(trackEventMock).toHaveBeenCalledWith('login_failed', {
+        method: 'kakao',
+        reason: 'OAUTH_CANCELLED',
+      });
+    });
+
+    it('identifyUser / setUserProperties 는 호출하지 않는다 (실패는 식별 안 됨)', () => {
+      trackAuthLoginFailed({ method: 'email', error: new Error('x') });
+
+      expect(identifyUserMock).not.toHaveBeenCalled();
+      expect(setUserPropertiesMock).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('trackAuthSignUpFailed', () => {
+    it('sign_up_failed 이벤트를 method/reason 과 함께 발사한다', () => {
+      trackAuthSignUpFailed({ method: 'email', error: new Error('EMAIL_DUPLICATE') });
+
+      expect(trackEventMock).toHaveBeenCalledWith('sign_up_failed', {
+        method: 'email',
+        reason: 'EMAIL_DUPLICATE',
+      });
     });
   });
 });
