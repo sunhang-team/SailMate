@@ -29,18 +29,19 @@ export function EmailLoginForm() {
     mode: 'onChange',
   });
 
-  const { mutate: loginMutate, isPending } = useLogin({
-    onSuccess: (data) => {
-      trackAuthLogin({ userId: String(data.user.id), method: 'email' });
-      router.push('/main');
-    },
-    onError: (error) => {
-      trackAuthLoginFailed({ method: 'email', error });
-      setError('root', { message: '이메일 또는 비밀번호가 올바르지 않습니다.' });
-    },
-  });
+  const { mutate: loginMutate, isPending } = useLogin();
 
-  const onSubmit = (data: LoginForm) => loginMutate(data);
+  const onSubmit = (data: LoginForm) =>
+    loginMutate(data, {
+      onSuccess: (response) => {
+        trackAuthLogin({ userId: String(response.user.id), method: 'email' });
+        router.push('/main');
+      },
+      onError: (error) => {
+        trackAuthLoginFailed({ method: 'email', error });
+        setError('root', { message: '이메일 또는 비밀번호가 올바르지 않습니다.' });
+      },
+    });
   const showEmailError = !!touchedFields.email || submitCount > 0;
   const showPasswordError = !!touchedFields.password || submitCount > 0;
 

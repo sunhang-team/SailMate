@@ -24,52 +24,7 @@ export function OAuthCallbackClient() {
   const code = searchParams.get('code');
   const { showToast } = useToastStore();
 
-  const { mutate: loginCallback, isPending } = useSocialLoginCallback({
-    onSuccess: (data) => {
-      console.log('[OAuth 성공 응답 데이터]:', data);
-      // OAuth 응답에는 user.id가 없어 /users/me 를 보강 호출해 GA identifyUser 에 전달.
-      // GA 발사 실패가 로그인 흐름을 막지 않도록 fire-and-forget.
-      const method = toAuthMethod(provider);
-      if (method) {
-        queryClient
-          .fetchQuery(userQueries.me())
-          .then((me) => {
-            const userId = String(me.id);
-            if (data.newUser) trackAuthSignUp({ userId, method });
-            else trackAuthLogin({ userId, method });
-          })
-          .catch((error) => {
-            console.warn('[GA] OAuth tracking 실패 (로그인은 정상 진행):', error);
-          });
-      }
-
-      // 신규 유저인 경우 무조건 메인으로 이동
-      if (data.newUser) {
-        router.replace('/main');
-      } else {
-        // 기존 유저인 경우 이전 페이지(returnTo)가 있다면 해당 페이지로, 없다면 메인으로 이동
-        const returnTo = sessionStorage.getItem('returnTo');
-        if (returnTo) {
-          router.replace(returnTo);
-          sessionStorage.removeItem('returnTo');
-        } else {
-          router.replace('/main');
-        }
-      }
-    },
-    onError: (error) => {
-      console.error('[OAuth 실패 에러]:', error);
-      const method = toAuthMethod(provider);
-      // 신규/기존 유저 구분이 불가능한 시점이라 sign_up_failed 분기 없이 login_failed 로 통합한다.
-      if (method) trackAuthLoginFailed({ method, error });
-      showToast({
-        variant: 'error',
-        title: '로그인에 실패했습니다.',
-        description: '다시 시도해 주세요.',
-      });
-      router.replace('/login');
-    },
-  });
+  const { mutate: loginCallback, isPending } = useSocialLoginCallback();
 
   const hasCalled = useRef(false);
   const hasFiredCancelRef = useRef(false);
@@ -95,8 +50,56 @@ export function OAuthCallbackClient() {
 
     const redirectUri = `${window.location.origin}${window.location.pathname}`;
 
-    loginCallback({ provider, code, redirectUri });
-  }, [code, provider, loginCallback]);
+    loginCallback(
+      { provider, code, redirectUri },
+      {
+        onSuccess: (data) => {
+          console.log('[OAuth 성공 응답 데이터]:', data);
+          // OAuth 응답에는 user.id가 없어 /users/me 를 보강 호출해 GA identifyUser 에 전달.
+          // GA 발사 실패가 로그인 흐름을 막지 않도록 fire-and-forget.
+          const method = toAuthMethod(provider);
+          if (method) {
+            queryClient
+              .fetchQuery(userQueries.me())
+              .then((me) => {
+                const userId = String(me.id);
+                if (data.newUser) trackAuthSignUp({ userId, method });
+                else trackAuthLogin({ userId, method });
+              })
+              .catch((error) => {
+                console.warn('[GA] OAuth tracking 실패 (로그인은 정상 진행):', error);
+              });
+          }
+
+          // 신규 유저인 경우 무조건 메인으로 이동
+          if (data.newUser) {
+            router.replace('/main');
+          } else {
+            // 기존 유저인 경우 이전 페이지(returnTo)가 있다면 해당 페이지로, 없다면 메인으로 이동
+            const returnTo = sessionStorage.getItem('returnTo');
+            if (returnTo) {
+              router.replace(returnTo);
+              sessionStorage.removeItem('returnTo');
+            } else {
+              router.replace('/main');
+            }
+          }
+        },
+        onError: (error) => {
+          console.error('[OAuth 실패 에러]:', error);
+          const method = toAuthMethod(provider);
+          // 신규/기존 유저 구분이 불가능한 시점이라 sign_up_failed 분기 없이 login_failed 로 통합한다.
+          if (method) trackAuthLoginFailed({ method, error });
+          showToast({
+            variant: 'error',
+            title: '로그인에 실패했습니다.',
+            description: '다시 시도해 주세요.',
+          });
+          router.replace('/login');
+        },
+      },
+    );
+  }, [code, provider, loginCallback, queryClient, router, showToast]);
 
   return (
     <div className='flex min-h-screen flex-col items-center justify-center p-4 text-center'>
