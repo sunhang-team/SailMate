@@ -15,7 +15,7 @@ interface EmptyStateProps {
 
 export function EmptyState({ emoji, title, description, action, className }: EmptyStateProps) {
   return (
-    <div className={cn('flex flex-col items-center gap-3 px-4 py-16 text-center', className)}>
+    <div className={cn('flex flex-col items-center gap-3 px-4 py-16 text-center break-keep', className)}>
       {emoji && (
         <span aria-hidden='true' className='text-[40px] leading-none'>
           {emoji}
