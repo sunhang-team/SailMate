@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 
+import { EmptyState } from '@/components/EmptyState';
 import { MainGatheringCard } from '@/components/MainGatheringCard';
 import { GatheringFilterBar } from '@/components/Search/GatheringFilterBar';
 import { Pagination } from '@/components/ui/Pagination';
@@ -71,7 +72,11 @@ export function GatheringList() {
     return (
       <>
         <GatheringFilterBar totalCount={0} />
-        <p className='text-body-02-r py-20 text-center text-gray-500'>검색 결과가 없습니다.</p>
+        <EmptyState
+          title='조건에 맞는 모임이 없어요'
+          description='검색 조건을 바꾸거나, 직접 모임을 열어 동료를 모아 보세요'
+          action={{ label: '모임 만들기', href: '/gatherings/new' }}
+        />
       </>
     );
   }

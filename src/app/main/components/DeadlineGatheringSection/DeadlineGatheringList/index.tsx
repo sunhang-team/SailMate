@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
+import { EmptyState } from '@/components/EmptyState';
 import { MainGatheringCard } from '@/components/MainGatheringCard';
 import { Pagination } from '@/components/ui/Pagination';
 
@@ -11,6 +12,7 @@ import { useDeadlineGatherings } from './useDeadlineGatherings';
 export function DeadlineGatheringList() {
   const router = useRouter();
   const { page, setPage, totalPages, visibleGatherings } = useDeadlineGatherings();
+  const isEmpty = visibleGatherings.length === 0;
 
   const handleJoin = (id: number) => {
     router.push(`/gatherings/${id}?source=recommendation`);
@@ -24,23 +26,34 @@ export function DeadlineGatheringList() {
           <Link href='/gatherings?sort=deadline' className='text-body-02-m text-gray-600'>
             더보기
           </Link>
-          <Pagination variant='simple' currentPage={page} totalPages={totalPages} onPageChange={setPage} />
+          {!isEmpty && (
+            <Pagination variant='simple' currentPage={page} totalPages={totalPages} onPageChange={setPage} />
+          )}
         </div>
       </div>
-      <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-6'>
-        {visibleGatherings.map((gathering) => (
-          <MainGatheringCard
-            key={gathering.id}
-            gathering={gathering}
-            joinButtonLabel='참여하기'
-            joinButtonClassName=''
-            isJoinDisabled={false}
-            initialFavorite={false}
-            onJoin={() => handleJoin(gathering.id)}
-            className=''
-          />
-        ))}
-      </div>
+      {isEmpty ? (
+        <EmptyState
+          emoji='⏰'
+          title='마감 임박 모임이 없어요'
+          description='마감까지 같이 갈 동료, 직접 모아 보세요'
+          action={{ label: '모임 만들기', href: '/gatherings/new' }}
+        />
+      ) : (
+        <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-6'>
+          {visibleGatherings.map((gathering) => (
+            <MainGatheringCard
+              key={gathering.id}
+              gathering={gathering}
+              joinButtonLabel='참여하기'
+              joinButtonClassName=''
+              isJoinDisabled={false}
+              initialFavorite={false}
+              onJoin={() => handleJoin(gathering.id)}
+              className=''
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
