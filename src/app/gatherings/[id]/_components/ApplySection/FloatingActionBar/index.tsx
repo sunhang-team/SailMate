@@ -12,6 +12,7 @@ import { AuthModal } from '@/components/AuthModal';
 import { useAuth } from '@/hooks/useAuth';
 import { useOverlay } from '@/hooks/useOverlay';
 import { useToastStore } from '@/components/ui/Toast/useToastStore';
+import { trackGatheringShare } from '@/lib/analytics/gathering';
 
 import { GatheringApplyBottomSheet } from './GatheringApplyBottomSheet';
 
@@ -60,7 +61,12 @@ export function FloatingActionBar({ gatheringId }: FloatingActionBarProps) {
             disabled={!isJoinableStatus}
             onClick={async () => {
               if (isLeader) {
-                await navigator.clipboard.writeText(window.location.href);
+                // 추적용 쿼리(?source=, utm_*)가 묻어 나가면 받은 사람의 view_gathering 이
+                // 잘못된 source 로 분류되므로 origin + path 로 재구성해 깔끔한 URL 만 공유한다.
+                const shareUrl = `${window.location.origin}/gatherings/${gatheringId}`;
+                await navigator.clipboard.writeText(shareUrl);
+                // TODO: 카카오/트위터 공유 UI 추가 시 channel 분기 (현재는 link_copy 만 지원)
+                trackGatheringShare({ gatheringId: String(gatheringId), channel: 'link_copy' });
                 showToast({ variant: 'success', title: '링크가 복사되었습니다.' });
                 return;
               }
@@ -74,6 +80,7 @@ export function FloatingActionBar({ gatheringId }: FloatingActionBarProps) {
                 <GatheringApplyBottomSheet
                   gatheringId={gatheringId}
                   gatheringTitle={data.title}
+                  category={data.categories[0] ?? 'unknown'}
                   isOpen={isOpen}
                   onClose={() => close(false)}
                 />

@@ -35,6 +35,7 @@ const mockGatherings: MembershipGathering[] = [
     status: 'IN_PROGRESS',
     myRole: 'LEADER',
     hasReviewed: false,
+    reviewedMembersCount: 0,
     pendingApplicationCount: 2,
   },
   {
@@ -51,6 +52,7 @@ const mockGatherings: MembershipGathering[] = [
     status: 'RECRUITING',
     myRole: 'MEMBER',
     hasReviewed: false,
+    reviewedMembersCount: 0,
     pendingApplicationCount: 2,
   },
   {
@@ -67,6 +69,7 @@ const mockGatherings: MembershipGathering[] = [
     status: 'COMPLETED',
     myRole: 'MEMBER',
     hasReviewed: false,
+    reviewedMembersCount: 4,
     pendingApplicationCount: 9,
   },
   {
@@ -83,6 +86,7 @@ const mockGatherings: MembershipGathering[] = [
     status: 'RECRUITING',
     myRole: 'MEMBER',
     hasReviewed: false,
+    reviewedMembersCount: 0,
     pendingApplicationCount: 1,
   },
   {
@@ -99,6 +103,7 @@ const mockGatherings: MembershipGathering[] = [
     status: 'RECRUITING',
     myRole: 'MEMBER',
     hasReviewed: false,
+    reviewedMembersCount: 0,
     pendingApplicationCount: 5,
   },
   {
@@ -115,6 +120,7 @@ const mockGatherings: MembershipGathering[] = [
     status: 'RECRUITING',
     myRole: 'MEMBER',
     hasReviewed: false,
+    reviewedMembersCount: 0,
     pendingApplicationCount: 7,
   },
   {
@@ -131,6 +137,7 @@ const mockGatherings: MembershipGathering[] = [
     status: 'RECRUITING',
     myRole: 'MEMBER',
     hasReviewed: false,
+    reviewedMembersCount: 0,
     pendingApplicationCount: 1,
   },
   {
@@ -147,6 +154,7 @@ const mockGatherings: MembershipGathering[] = [
     status: 'RECRUITING',
     myRole: 'MEMBER',
     hasReviewed: true,
+    reviewedMembersCount: 3,
     pendingApplicationCount: 4,
   },
 ];

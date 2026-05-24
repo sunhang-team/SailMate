@@ -17,15 +17,35 @@ export function useEmailRegister() {
     handleSubmit,
     trigger,
     watch,
+    setValue,
     setError,
     formState: { errors, isValid },
   } = useForm<SignupForm>({
     resolver: zodResolver(signupFormSchema),
     mode: 'onBlur',
+    defaultValues: { agreementTerms: false, agreementPrivacy: false },
   });
 
   const emailValue = watch('email');
   const nicknameValue = watch('nickname');
+  const agreementTerms = watch('agreementTerms');
+  const agreementPrivacy = watch('agreementPrivacy');
+
+  const isAllAgreed = agreementTerms && agreementPrivacy;
+
+  const agreementTermsProps = register('agreementTerms', {
+    onChange: () => trigger(['agreementTerms', 'agreementPrivacy']),
+  });
+
+  const agreementPrivacyProps = register('agreementPrivacy', {
+    onChange: () => trigger(['agreementTerms', 'agreementPrivacy']),
+  });
+
+  const handleToggleAll = () => {
+    const nextValue = !isAllAgreed;
+    setValue('agreementTerms', nextValue, { shouldValidate: true });
+    setValue('agreementPrivacy', nextValue, { shouldValidate: true });
+  };
 
   const checkEmailMutation = useCheckEmail();
   const checkNicknameMutation = useCheckNickname();
@@ -86,10 +106,16 @@ export function useEmailRegister() {
       isValid,
       emailValue,
       nicknameValue,
+      agreementTerms,
+      agreementPrivacy,
+      isAllAgreed,
+      agreementTermsProps,
+      agreementPrivacyProps,
     },
     handlers: {
       handleCheckEmail,
       handleCheckNickname,
+      handleToggleAll,
       registerMutate,
     },
   };

@@ -1,18 +1,38 @@
-import { AccessToken } from 'livekit-server-sdk';
 import { NextRequest, NextResponse } from 'next/server';
+
+import * as Sentry from '@sentry/nextjs';
+import { AccessToken } from 'livekit-server-sdk';
+
 import { requestBackend } from '@/lib/serverFetch';
 import { withBffErrorHandling } from '@/lib/withBffErrorHandling';
+
+interface BffErrorParams {
+  errorCode: string;
+  message: string;
+  status: number;
+}
+
+const bffError = ({ errorCode, message, status }: BffErrorParams) =>
+  NextResponse.json({ success: false, data: null, message, errorCode }, { status });
 
 export const GET = withBffErrorHandling(async (req: NextRequest) => {
   const room = req.nextUrl.searchParams.get('room');
 
   if (!room) {
-    return NextResponse.json({ error: 'Missing "room" query parameter' }, { status: 400 });
+    return bffError({
+      errorCode: 'INVALID_ROOM_PARAM',
+      message: 'Missing "room" query parameter',
+      status: 400,
+    });
   }
 
   const roomPattern = /^gathering-\d+$/;
   if (!roomPattern.test(room)) {
-    return NextResponse.json({ error: 'Invalid room format' }, { status: 400 });
+    return bffError({
+      errorCode: 'INVALID_ROOM_FORMAT',
+      message: 'Invalid room format',
+      status: 400,
+    });
   }
 
   const gatheringId = parseInt(room.split('-')[1], 10);
@@ -29,26 +49,51 @@ export const GET = withBffErrorHandling(async (req: NextRequest) => {
     }),
   ]);
 
+  // 멤버 검증 — 확실한 비멤버 신호(403/404)만 MEMBER_REQUIRED 로 처리.
+  // 5xx 등 모호한 상태는 UPSTREAM_ERROR 로 분리해 "비멤버 메시지" 오노출을 방지한다.
   if (!memberResponse.ok) {
-    return NextResponse.json(
-      {
-        error: 'Unauthorized: You must be a member to join this meeting',
-      },
-      {
+    if (memberResponse.status === 401) {
+      return bffError({
+        errorCode: 'LOGIN_REQUIRED',
+        message: 'Auth required for member check',
+        status: 401,
+      });
+    }
+    if (memberResponse.status === 403 || memberResponse.status === 404) {
+      return bffError({
+        errorCode: 'MEMBER_REQUIRED',
+        message: 'Not a gathering member',
         status: 403,
-      },
-    );
+      });
+    }
+    Sentry.captureMessage('livekit token: member check upstream error', {
+      level: 'error',
+      extra: { status: memberResponse.status, gatheringId },
+    });
+    return bffError({
+      errorCode: 'UPSTREAM_ERROR',
+      message: `Member check upstream error: ${memberResponse.status}`,
+      status: 503,
+    });
   }
 
   if (!userResponse.ok) {
-    return NextResponse.json(
-      {
-        error: 'Unauthorized: You must be logged in to join a meeting',
-      },
-      {
+    if (userResponse.status === 401) {
+      return bffError({
+        errorCode: 'LOGIN_REQUIRED',
+        message: 'User not authenticated',
         status: 401,
-      },
-    );
+      });
+    }
+    Sentry.captureMessage('livekit token: user fetch upstream error', {
+      level: 'error',
+      extra: { status: userResponse.status, gatheringId },
+    });
+    return bffError({
+      errorCode: 'UPSTREAM_ERROR',
+      message: `User fetch upstream error: ${userResponse.status}`,
+      status: 503,
+    });
   }
 
   const user = await userResponse.json();
@@ -56,7 +101,11 @@ export const GET = withBffErrorHandling(async (req: NextRequest) => {
   const nickname = user?.data?.nickname;
 
   if (!userId || !nickname) {
-    return NextResponse.json({ error: 'Failed to retrieve valid user info' }, { status: 401 });
+    return bffError({
+      errorCode: 'INVALID_USER_INFO',
+      message: 'Failed to retrieve valid user info',
+      status: 401,
+    });
   }
 
   const apiKey = process.env.LIVEKIT_API_KEY;
@@ -64,7 +113,11 @@ export const GET = withBffErrorHandling(async (req: NextRequest) => {
   const wsUrl = process.env.LIVEKIT_URL;
 
   if (!apiKey || !apiSecret || !wsUrl) {
-    return NextResponse.json({ error: 'Server misconfigured: LiveKit credentials missing' }, { status: 500 });
+    return bffError({
+      errorCode: 'SERVER_MISCONFIG',
+      message: 'LiveKit credentials missing',
+      status: 500,
+    });
   }
 
   const participantIdentity = `user-${userId}`;

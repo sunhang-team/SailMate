@@ -23,6 +23,7 @@ import { GatheringApplyForm } from '../GatheringApplyForm';
 import { GatheringApplySuccess } from '../GatheringApplySuccess';
 
 import { getGatheringDisplayStatus, getJoinButtonText } from '@/lib/gatheringStatus';
+import { trackGatheringJoin, trackGatheringJoinFailed, trackGatheringShare } from '@/lib/analytics/gathering';
 
 import type { GatheringType } from '@/api/gatherings/types';
 
@@ -54,9 +55,15 @@ export function GatheringInfoAside({ gatheringId }: GatheringInfoAsideProps) {
 
   const { mutate, isPending } = useCreateApplication(gatheringId, {
     onSuccess: () => {
+      trackGatheringJoin({ gatheringId: String(gatheringId), category: data.categories[0] ?? 'unknown' });
       setStep('SUCCESS');
     },
     onError: (error) => {
+      trackGatheringJoinFailed({
+        gatheringId: String(gatheringId),
+        category: data.categories[0] ?? 'unknown',
+        error,
+      });
       if (axios.isAxiosError(error) && error.response?.data?.message) {
         showToast({ variant: 'error', title: error.response.data.message });
         return;
@@ -161,7 +168,12 @@ export function GatheringInfoAside({ gatheringId }: GatheringInfoAsideProps) {
               disabled={(!isJoinable && !isLeader) || hasPendingApplication}
               onClick={async () => {
                 if (isLeader) {
-                  await navigator.clipboard.writeText(window.location.href);
+                  // 추적용 쿼리(?source=, utm_*)가 묻어 나가면 받은 사람의 view_gathering 이
+                  // 잘못된 source 로 분류되므로 origin + path 로 재구성해 깔끔한 URL 만 공유한다.
+                  const shareUrl = `${window.location.origin}/gatherings/${gatheringId}`;
+                  await navigator.clipboard.writeText(shareUrl);
+                  // TODO: 카카오/트위터 공유 UI 추가 시 channel 분기 (현재는 link_copy 만 지원)
+                  trackGatheringShare({ gatheringId: String(gatheringId), channel: 'link_copy' });
                   showToast({ variant: 'success', title: '링크가 복사되었습니다.' });
                   return;
                 }

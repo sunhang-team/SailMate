@@ -36,7 +36,7 @@ export default async function GatheringsPage() {
         <SearchHero>
           <SearchForm />
         </SearchHero>
-        <section className='mx-auto flex max-w-[1680px] flex-col gap-12 px-4 py-10 md:px-7 md:py-15 xl:py-20'>
+        <section className='mx-auto flex max-w-[1680px] flex-col gap-12 px-4 py-10 md:px-7 md:py-15 xl:pt-25 xl:pb-40'>
           <SuspenseBoundary
             pendingFallback={<GatheringListSkeleton />}
             errorFallback={

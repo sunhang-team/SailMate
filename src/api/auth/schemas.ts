@@ -27,6 +27,12 @@ export const signupFormSchema = z
         { message: '비밀번호는 숫자, 영문, 특수문자를 포함해야 합니다.' },
       ),
     passwordConfirmation: z.string().min(1, '비밀번호 확인을 입력해 주세요.'),
+    agreementTerms: z.boolean().refine((v) => v === true, {
+      message: '이용약관에 동의해주세요.',
+    }),
+    agreementPrivacy: z.boolean().refine((v) => v === true, {
+      message: '개인정보처리방침에 동의해주세요.',
+    }),
   })
   .refine((data) => data.password === data.passwordConfirmation, {
     message: '비밀번호가 일치하지 않습니다.',

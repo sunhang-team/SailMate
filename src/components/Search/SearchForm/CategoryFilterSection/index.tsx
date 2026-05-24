@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo } from 'react';
-import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
+import { useQueries, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 
 import { gatheringKeys, gatheringQueries } from '@/api/gatherings/queries';
 import { ErrorFallback } from '@/components/ErrorFallback';
@@ -19,7 +19,19 @@ interface CategoryFilterSectionProps {
 function CategoryMultiSelectContainer({ selectedValues, onChange }: CategoryFilterSectionProps) {
   const { data } = useSuspenseQuery(gatheringQueries.categories());
 
-  const categoryItems = useMemo(() => data.categories.map((c) => ({ label: c.name, value: c.id })), [data]);
+  const categoryCountQueries = useQueries({
+    queries: data.categories.map((c) => gatheringQueries.list({ categoryIds: [c.id], limit: 1 })),
+  });
+
+  const categoryItems = useMemo(
+    () =>
+      data.categories.map((c, i) => ({
+        label: c.name,
+        value: c.id,
+        count: categoryCountQueries[i].data?.totalCount,
+      })),
+    [data, categoryCountQueries],
+  );
 
   return (
     <CategoryMultiSelect

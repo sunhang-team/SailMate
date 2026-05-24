@@ -9,15 +9,20 @@ import { Pagination } from '@/components/ui/Pagination';
 
 import { ApplicationCard } from './ApplicationCard';
 
+import type { GatheringStatus } from '@/api/gatherings/types';
+
 const ITEMS_PER_PAGE = 5;
 
 interface PendingApplicationsProps {
   gatheringId: number;
+  gatheringStatus: GatheringStatus;
 }
 
-export function PendingApplications({ gatheringId }: PendingApplicationsProps) {
+export function PendingApplications({ gatheringId, gatheringStatus }: PendingApplicationsProps) {
   const { data } = useSuspenseQuery(applicationQueries.list(gatheringId));
   const [page, setPage] = useState(1);
+
+  const isRecruiting = gatheringStatus === 'RECRUITING';
 
   const pendingApplications = useMemo(
     () => data.applications.filter((app) => app.status === 'PENDING'),
@@ -67,10 +72,17 @@ export function PendingApplications({ gatheringId }: PendingApplicationsProps) {
         )}
       </div>
 
+      {!isRecruiting && <p className='text-body-02-r text-gray-500'>모집이 마감되어 신청을 처리할 수 없습니다</p>}
+
       {/* 카드 목록 */}
       <div className='flex flex-col gap-2 md:gap-4'>
         {currentItems.map((application) => (
-          <ApplicationCard key={application.id} gatheringId={gatheringId} application={application} />
+          <ApplicationCard
+            key={application.id}
+            gatheringId={gatheringId}
+            application={application}
+            isRecruiting={isRecruiting}
+          />
         ))}
       </div>
     </div>

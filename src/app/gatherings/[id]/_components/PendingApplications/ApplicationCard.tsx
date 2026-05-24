@@ -19,9 +19,10 @@ import type { ApplicationDetail } from '@/api/applications/types';
 interface ApplicationCardProps {
   gatheringId: number;
   application: ApplicationDetail;
+  isRecruiting: boolean;
 }
 
-export function ApplicationCard({ gatheringId, application }: ApplicationCardProps) {
+export function ApplicationCard({ gatheringId, application, isRecruiting }: ApplicationCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const { showToast } = useToastStore();
   const overlay = useOverlay();
@@ -112,11 +113,21 @@ export function ApplicationCard({ gatheringId, application }: ApplicationCardPro
 
             {/* 승인/거부 버튼 */}
             <div className='flex items-center gap-2 md:gap-4'>
-              <Button variant='approve' size='approve-reject' onClick={handleApprove} disabled={isPending}>
+              <Button
+                variant='approve'
+                size='approve-reject'
+                onClick={handleApprove}
+                disabled={isPending || !isRecruiting}
+              >
                 <CheckIcon size={32} />
                 승인
               </Button>
-              <Button variant='reject' size='approve-reject' onClick={handleReject} disabled={isPending}>
+              <Button
+                variant='reject'
+                size='approve-reject'
+                onClick={handleReject}
+                disabled={isPending || !isRecruiting}
+              >
                 <CloseIcon size={32} />
                 거부
               </Button>

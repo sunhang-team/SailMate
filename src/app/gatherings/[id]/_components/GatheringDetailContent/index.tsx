@@ -40,7 +40,7 @@ export function GatheringDetailContent({ gatheringId }: GatheringDetailContentPr
               </div>
             }
           >
-            <PendingApplications gatheringId={gatheringId} />
+            <PendingApplications gatheringId={gatheringId} gatheringStatus={data.status} />
           </SuspenseBoundary>
         </section>
       )}

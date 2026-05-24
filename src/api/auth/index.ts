@@ -12,7 +12,12 @@ import type {
 } from './types';
 
 /** POST /v1/auth/register — 이메일 회원가입 */
-export const register = async ({ passwordConfirmation, ...body }: SignupForm): Promise<RegisterResponse> => {
+export const register = async ({
+  passwordConfirmation,
+  agreementTerms,
+  agreementPrivacy,
+  ...body
+}: SignupForm): Promise<RegisterResponse> => {
   const { data } = await axiosClient.post<ApiResponse<RegisterResponse>>('/v1/auth/register', body);
   return unwrapResponse(data);
 };

@@ -36,27 +36,33 @@ export function MemberRankingSection({ gatheringId }: MemberRankingSectionProps)
   const totalPages = Math.ceil(ranking.length / itemsPerPage);
   const currentItems = ranking.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
-  const leftItems = currentItems.slice(0, 5);
-  const rightItems = currentItems.slice(5, 10);
+  const leftItems = currentItems.filter((_, i) => i % 2 === 0);
+  const rightItems = currentItems.filter((_, i) => i % 2 === 1);
 
   return (
     <div className='border-gray-150 bg-gray-0 shadow-02 rounded-2xl border p-6'>
       <h2 className='text-small-01-sb md:text-body-01-sb lg:text-h5-sb mb-4 text-gray-900'>멤버 달성률 랭킹 🏆</h2>
 
-      <div className='grid grid-cols-1 gap-4 lg:grid-cols-2'>
-        <div className='flex flex-col gap-4'>
-          {leftItems.map((item) => (
-            <RankingItem key={item.userId} item={item} isMe={user?.id === item.userId} />
-          ))}
-        </div>
-        {rightItems.length > 0 && (
+      {isDesktop ? (
+        <div className='grid grid-cols-2 gap-4'>
+          <div className='flex flex-col gap-4'>
+            {leftItems.map((item) => (
+              <RankingItem key={item.userId} item={item} isMe={user?.id === item.userId} />
+            ))}
+          </div>
           <div className='flex flex-col gap-4'>
             {rightItems.map((item) => (
               <RankingItem key={item.userId} item={item} isMe={user?.id === item.userId} />
             ))}
           </div>
-        )}
-      </div>
+        </div>
+      ) : (
+        <div className='flex flex-col gap-4'>
+          {currentItems.map((item) => (
+            <RankingItem key={item.userId} item={item} isMe={user?.id === item.userId} />
+          ))}
+        </div>
+      )}
 
       {totalPages > 1 && (
         <div className='mt-6'>

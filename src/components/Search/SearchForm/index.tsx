@@ -1,10 +1,14 @@
 'use client';
 
-import { startTransition, useState } from 'react';
+import { startTransition, useMemo, useState } from 'react';
+
+import { useQueries } from '@tanstack/react-query';
 
 import { Button } from '@/components/ui/Button';
 import { TypeIcon } from '@/components/ui/Icon/TypeIcon';
 import { GATHERING_TYPES } from '@/constants/gathering';
+import { GATHERING_TYPE_TO_PARAM } from '@/api/gatherings/types';
+import { gatheringQueries } from '@/api/gatherings/queries';
 import { useGatheringSearchParams } from '@/hooks/useGatheringSearchParams';
 
 import { ActiveFilters } from './ActiveFilters';
@@ -12,13 +16,29 @@ import { CategoryFilterSection } from './CategoryFilterSection';
 import { FilterDropdown } from './FilterDropdown';
 import { SearchInput } from './SearchInput';
 
-const TYPE_ITEMS = [{ label: '전체', value: null }, ...GATHERING_TYPES.map((t) => ({ label: t, value: t }))] as const;
+const ALL_TYPE_VALUE = 'ALL';
 
 export function SearchForm() {
   const { type, categoryIds, query, setParams } = useGatheringSearchParams();
   const [inputValue, setInputValue] = useState('');
   const hasActiveFilter = !!type || categoryIds.length > 0 || !!query;
   const searchVariant = hasActiveFilter ? 'search-gradient' : 'search';
+
+  const typeCountQueries = useQueries({
+    queries: GATHERING_TYPES.map((t) => gatheringQueries.list({ type: GATHERING_TYPE_TO_PARAM[t], limit: 1 })),
+  });
+
+  const typeItems = useMemo(
+    () => [
+      { label: '전체', value: ALL_TYPE_VALUE },
+      ...GATHERING_TYPES.map((t, i) => ({
+        label: t,
+        value: t,
+        count: typeCountQueries[i].data?.totalCount,
+      })),
+    ],
+    [typeCountQueries],
+  );
 
   const handleSearch = () => {
     const trimmed = inputValue.trim();
@@ -37,8 +57,9 @@ export function SearchForm() {
   };
 
   const handleTypeSelect = (value: string | null) => {
+    const resolved = value === ALL_TYPE_VALUE ? null : value;
     startTransition(() => {
-      setParams({ type: value as (typeof GATHERING_TYPES)[number] | null, page: 1 }, { history: 'push' });
+      setParams({ type: resolved as (typeof GATHERING_TYPES)[number] | null, page: 1 }, { history: 'push' });
     });
   };
 
@@ -49,7 +70,7 @@ export function SearchForm() {
   };
 
   return (
-    <div className='flex w-full flex-col gap-6'>
+    <div className='relative flex w-full flex-col'>
       <div className='border-gradient-primary relative flex flex-col rounded-lg bg-white xl:flex-row'>
         <SearchInput value={inputValue} onChange={setInputValue} onKeyDown={handleKeyDown} />
 
@@ -60,7 +81,7 @@ export function SearchForm() {
             icon={<TypeIcon size={20} className='shrink-0 text-gray-800 md:size-7' />}
             placeholder='모임 유형을 선택해주세요'
             selectedValue={type}
-            items={TYPE_ITEMS}
+            items={typeItems}
             onSelect={handleTypeSelect}
           />
 
@@ -74,12 +95,14 @@ export function SearchForm() {
         </Button>
       </div>
 
-      <ActiveFilters />
+      <div className='absolute top-full left-0 w-full pt-2'>
+        <ActiveFilters />
+      </div>
 
       <Button
         variant={searchVariant}
         onClick={handleSearch}
-        className='text-body-02-sb md:text-body-01-sb h-[58px] w-full rounded-lg md:h-18 xl:hidden'
+        className='text-body-02-sb md:text-body-01-sb mt-[78px] h-[58px] w-full rounded-lg md:mt-6 md:h-18 xl:hidden'
       >
         검색
       </Button>

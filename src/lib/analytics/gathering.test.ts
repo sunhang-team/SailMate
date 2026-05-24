@@ -1,0 +1,177 @@
+import { trackEvent } from './index';
+import {
+  resolveGatheringEntrySource,
+  trackGatheringCreateFailed,
+  trackGatheringCreateStart,
+  trackGatheringCreateSubmit,
+  trackGatheringDashboardView,
+  trackGatheringJoin,
+  trackGatheringJoinFailed,
+  trackGatheringSearch,
+  trackGatheringShare,
+  trackGatheringView,
+} from './gathering';
+
+jest.mock('./index', () => ({
+  trackEvent: jest.fn(),
+}));
+
+describe('lib/analytics/gathering', () => {
+  const trackEventMock = trackEvent as jest.Mock;
+
+  beforeEach(() => {
+    trackEventMock.mockClear();
+  });
+
+  describe('trackGatheringSearch', () => {
+    it('query / result_count 와 함께 search 이벤트를 발사한다', () => {
+      trackGatheringSearch({ query: '리액트', resultCount: 12 });
+
+      expect(trackEventMock).toHaveBeenCalledWith('search', { query: '리액트', result_count: 12 });
+    });
+
+    it('category 가 있으면 같이 전송한다', () => {
+      trackGatheringSearch({ query: '리액트', category: '1,3', resultCount: 5 });
+
+      expect(trackEventMock).toHaveBeenCalledWith('search', {
+        query: '리액트',
+        category: '1,3',
+        result_count: 5,
+      });
+    });
+
+    it('category 가 빈 문자열이면 키를 누락시킨다 (값 없음)', () => {
+      trackGatheringSearch({ query: '리액트', category: '', resultCount: 0 });
+
+      expect(trackEventMock).toHaveBeenCalledWith('search', { query: '리액트', result_count: 0 });
+    });
+  });
+
+  describe('trackGatheringView', () => {
+    it('gathering_id / category / source 와 함께 view_gathering 이벤트를 발사한다', () => {
+      trackGatheringView({ gatheringId: '42', category: '스터디', source: 'search' });
+
+      expect(trackEventMock).toHaveBeenCalledWith('view_gathering', {
+        gathering_id: '42',
+        category: '스터디',
+        source: 'search',
+      });
+    });
+  });
+
+  describe('trackGatheringCreateStart', () => {
+    it('파라미터 없이 create_gathering_start 이벤트를 발사한다', () => {
+      trackGatheringCreateStart();
+
+      expect(trackEventMock).toHaveBeenCalledWith('create_gathering_start', {});
+    });
+  });
+
+  describe('trackGatheringCreateSubmit', () => {
+    it('category / member_count 와 함께 create_gathering_submit 이벤트를 발사한다', () => {
+      trackGatheringCreateSubmit({ category: '프로그래밍', memberCount: 5 });
+
+      expect(trackEventMock).toHaveBeenCalledWith('create_gathering_submit', {
+        category: '프로그래밍',
+        member_count: 5,
+      });
+    });
+  });
+
+  describe('trackGatheringJoin', () => {
+    it('gathering_id / category 와 함께 join_gathering 이벤트를 발사한다', () => {
+      trackGatheringJoin({ gatheringId: '42', category: '스터디' });
+
+      expect(trackEventMock).toHaveBeenCalledWith('join_gathering', {
+        gathering_id: '42',
+        category: '스터디',
+      });
+    });
+  });
+
+  describe('trackGatheringCreateFailed', () => {
+    it('category / reason 과 함께 create_gathering_failed 이벤트를 발사한다', () => {
+      trackGatheringCreateFailed({ category: '프로그래밍', error: new Error('VALIDATION_FAILED') });
+
+      expect(trackEventMock).toHaveBeenCalledWith('create_gathering_failed', {
+        category: '프로그래밍',
+        reason: 'VALIDATION_FAILED',
+      });
+    });
+  });
+
+  describe('trackGatheringJoinFailed', () => {
+    it('gathering_id / category / reason 과 함께 join_gathering_failed 이벤트를 발사한다', () => {
+      trackGatheringJoinFailed({
+        gatheringId: '42',
+        category: '스터디',
+        error: new Error('ALREADY_APPLIED'),
+      });
+
+      expect(trackEventMock).toHaveBeenCalledWith('join_gathering_failed', {
+        gathering_id: '42',
+        category: '스터디',
+        reason: 'ALREADY_APPLIED',
+      });
+    });
+  });
+
+  describe('trackGatheringDashboardView', () => {
+    it('gathering_id / tab 과 함께 view_dashboard 이벤트를 발사한다', () => {
+      trackGatheringDashboardView({ gatheringId: '42', tab: 'meeting' });
+
+      expect(trackEventMock).toHaveBeenCalledWith('view_dashboard', {
+        gathering_id: '42',
+        tab: 'meeting',
+      });
+    });
+  });
+
+  describe('trackGatheringShare', () => {
+    it('gathering_id / channel 과 함께 share_gathering 이벤트를 발사한다', () => {
+      trackGatheringShare({ gatheringId: '42', channel: 'link_copy' });
+
+      expect(trackEventMock).toHaveBeenCalledWith('share_gathering', {
+        gathering_id: '42',
+        channel: 'link_copy',
+      });
+    });
+  });
+
+  describe('resolveGatheringEntrySource', () => {
+    it('명시적 source=search 를 그대로 사용한다', () => {
+      const params = new URLSearchParams('source=search');
+      expect(resolveGatheringEntrySource(params)).toBe('search');
+    });
+
+    it('source=recommendation 을 그대로 사용한다', () => {
+      const params = new URLSearchParams('source=recommendation');
+      expect(resolveGatheringEntrySource(params)).toBe('recommendation');
+    });
+
+    it('source=profile 을 그대로 사용한다', () => {
+      const params = new URLSearchParams('source=profile');
+      expect(resolveGatheringEntrySource(params)).toBe('profile');
+    });
+
+    it('허용되지 않은 source 값은 무시한다 (direct 로 fallback)', () => {
+      const params = new URLSearchParams('source=hacker');
+      expect(resolveGatheringEntrySource(params)).toBe('direct');
+    });
+
+    it('source 미설정 + utm_source 존재 시 shared_link 로 판정한다', () => {
+      const params = new URLSearchParams('utm_source=instagram&utm_medium=social');
+      expect(resolveGatheringEntrySource(params)).toBe('shared_link');
+    });
+
+    it('source 와 utm 모두 없으면 direct 로 판정한다', () => {
+      const params = new URLSearchParams('');
+      expect(resolveGatheringEntrySource(params)).toBe('direct');
+    });
+
+    it('source 가 우선이며, utm 과 함께 박혀 있어도 source 가 이긴다', () => {
+      const params = new URLSearchParams('source=search&utm_source=instagram');
+      expect(resolveGatheringEntrySource(params)).toBe('search');
+    });
+  });
+});

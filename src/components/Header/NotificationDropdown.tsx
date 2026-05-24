@@ -17,17 +17,18 @@ export function NotificationDropdown() {
       <Dropdown.Trigger>
         <div
           aria-label='알림'
-          className='relative inline-flex h-9 w-9 cursor-pointer items-center justify-center rounded-full text-gray-500 transition-colors hover:bg-gray-100'
+          className={`relative inline-flex h-9 w-9 cursor-pointer items-center justify-center rounded-full transition-colors hover:bg-gray-100 ${unreadCount > 0 ? 'text-gray-800' : 'text-gray-500'}`}
         >
           <NotificationsIcon size={36} />
           {unreadCount > 0 && (
-            <span className='absolute top-[2px] right-[2px] flex h-4 min-w-[16px] items-center justify-center rounded-full bg-orange-500 px-[4px] text-[10px] font-bold text-white shadow-[0_0_0_2px_white]'>
-              {unreadCount > 99 ? '99+' : unreadCount}
-            </span>
+            <span className='absolute top-[2px] right-[2px] h-2.5 w-2.5 rounded-full bg-blue-500 shadow-[0_0_0_1.5px_white]' />
           )}
         </div>
       </Dropdown.Trigger>
-      <Dropdown.Menu className='border-gray-150 shadow-01 absolute top-[calc(100%+8px)] right-0 z-10 w-auto overflow-hidden rounded-xl border bg-white p-0'>
+      <Dropdown.Menu
+        containerClassName='right-0'
+        className='border-gray-150 shadow-01 w-auto overflow-hidden rounded-xl border bg-white p-0'
+      >
         <SuspenseBoundary
           pendingFallback={<NotificationListSkeleton />}
           errorFallback={() => (

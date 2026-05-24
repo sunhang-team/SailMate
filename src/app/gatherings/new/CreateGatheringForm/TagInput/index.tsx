@@ -2,11 +2,13 @@
 
 import { useState } from 'react';
 
+import { Button } from '@/components/ui/Button';
 import { fieldGradientFocusWrapperClass } from '@/components/ui/fieldControlVariants';
 import { Tag } from '@/components/ui/Tag';
 import { cn } from '@/lib/cn';
 
 const MAX_TAGS = 5;
+const MAX_TAG_LENGTH = 15;
 
 interface TagInputProps {
   value: string[];
@@ -19,19 +21,20 @@ export function TagInput({ value, onChange, onBlur, error }: TagInputProps) {
   const [inputValue, setInputValue] = useState('');
   const hasError = !!error;
 
+  const trimmedInput = inputValue.trim();
+  const isButtonDisabled =
+    !trimmedInput || trimmedInput.length > MAX_TAG_LENGTH || value.length >= MAX_TAGS || value.includes(trimmedInput);
+
+  const handleAdd = () => {
+    if (isButtonDisabled) return;
+    onChange([...value, trimmedInput]);
+    setInputValue('');
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key !== 'Enter' || e.nativeEvent.isComposing) return;
     e.preventDefault();
-
-    const trimmed = inputValue.trim();
-    const isDuplicate = value.includes(trimmed);
-    const isAtLimit = value.length >= MAX_TAGS;
-
-    // 빈 값, 중복, 최대 개수 초과 시 silently 무시
-    if (!trimmed || isDuplicate || isAtLimit) return;
-
-    onChange([...value, trimmed]);
-    setInputValue('');
+    handleAdd();
   };
 
   const handleRemove = (tag: string) => {
@@ -39,14 +42,45 @@ export function TagInput({ value, onChange, onBlur, error }: TagInputProps) {
   };
 
   return (
-    <div className='flex flex-col gap-1.5'>
-      <div className={hasError ? 'bg-gray-0 rounded-md border border-red-200' : fieldGradientFocusWrapperClass}>
+    <div className='flex flex-col gap-3'>
+      <div className='flex items-stretch gap-3'>
         <div
           className={cn(
-            'flex min-h-[43px] flex-wrap items-center gap-2 px-3 py-2 md:min-h-[58px] lg:min-h-[72px] lg:px-7',
-            !hasError && 'bg-gray-0 rounded-[calc(0.375rem-1px)]',
+            hasError ? 'bg-gray-0 rounded-md border border-red-200' : fieldGradientFocusWrapperClass,
+            'flex-1',
           )}
         >
+          <div
+            className={cn(
+              'flex min-h-[43px] items-center px-3 py-2 md:min-h-[58px] lg:min-h-[72px] lg:px-7',
+              !hasError && 'bg-gray-0 rounded-[calc(0.375rem-1px)]',
+            )}
+          >
+            <input
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder={value.length >= MAX_TAGS ? '최대 5개까지 입력했어요' : '태그를 입력해주세요 (최대 5개)'}
+              maxLength={MAX_TAG_LENGTH}
+              disabled={value.length >= MAX_TAGS}
+              onBlur={onBlur}
+              className='text-small-02-r md:text-body-02-r lg:text-body-01-r min-w-0 flex-1 bg-transparent outline-none placeholder:text-gray-400'
+            />
+          </div>
+        </div>
+        <Button
+          type='button'
+          variant='primary'
+          size={null}
+          onClick={handleAdd}
+          disabled={isButtonDisabled}
+          className='text-small-01-sb md:text-body-01-sb lg:text-h5-sb w-[80px] shrink-0 md:w-[140px] lg:w-[200px]'
+        >
+          추가
+        </Button>
+      </div>
+      {value.length > 0 && (
+        <div className='flex flex-wrap gap-2'>
           {value.map((tag) => (
             <Tag
               key={tag}
@@ -57,17 +91,8 @@ export function TagInput({ value, onChange, onBlur, error }: TagInputProps) {
               #{tag}
             </Tag>
           ))}
-          <input
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder={value.length === 0 ? '태그를 입력해주세요 (최대 5개)' : ''}
-            disabled={value.length >= MAX_TAGS}
-            onBlur={onBlur}
-            className='text-small-02-r md:text-body-02-r lg:text-body-01-r min-w-0 flex-1 bg-transparent outline-none placeholder:text-gray-400'
-          />
         </div>
-      </div>
+      )}
       {error && (
         <p className='text-xs text-red-200' role='alert'>
           {error}

@@ -9,6 +9,7 @@ import { DashboardContent } from './_components/DashboardContent';
 import { DashboardHeader } from './_components/DashboardHeader';
 import { DashboardSkeleton } from './_components/DashboardSkeleton';
 import { DashboardTabNav } from './_components/DashboardTabNav';
+import { DashboardViewTracker } from './_components/DashboardViewTracker';
 import { DEFAULT_TAB } from './_constants';
 
 import type { Metadata } from 'next';
@@ -59,6 +60,7 @@ export default async function DashboardPage({ params, searchParams }: DashboardP
 
       <DashboardTabNav activeTab={activeTab} gatheringId={gatheringId} />
       <DashboardContent activeTab={activeTab} gatheringId={gatheringId} />
+      <DashboardViewTracker gatheringId={gatheringId} tab={activeTab} />
     </main>
   );
 }
