@@ -56,6 +56,16 @@ export const Search: Story = {
   },
 };
 
+export const My: Story = {
+  name: '내 모임 빈 상태',
+  args: {
+    emoji: '💡',
+    title: '아직 참여 중인 모임이 없어요',
+    description: '관심 있는 분야의 모임을 찾아, 동료와 함께 완성해 봐요',
+    action: { label: '모임 탐색하기', href: '/gatherings' },
+  },
+};
+
 export const TitleOnly: Story = {
   name: '제목만 (description/action 없음)',
   args: {
