@@ -11,7 +11,7 @@ export function MemberBadge({ type, label }: MemberBadgeProps) {
 
   return (
     <Tag variant='info' state={isStreak ? 'good' : 'bad'}>
-      <StateIcon variant={isStreak ? 'warning' : 'active'} size={14} />
+      <StateIcon variant={isStreak ? 'active' : 'warning'} size={14} />
       {label}
     </Tag>
   );

@@ -24,9 +24,9 @@ export function AchievementGauge({ label, rate, arcColor }: AchievementGaugeProp
   const markerGradientId = `marker-gradient-${label.replace(/\s/g, '-')}`;
 
   return (
-    <div className='flex flex-1 flex-col rounded-2xl bg-gray-100 p-4 md:p-6'>
-      <p className='text-small-02-sb md:text-h5-sb mb-1 text-gray-400'>{label}</p>
-      <svg viewBox='0 0 400 220' className='max-h-80 w-full' aria-label={`${label} ${rate}%`}>
+    <div className='flex flex-1 flex-col justify-between rounded-2xl bg-gray-100 p-4 md:p-6'>
+      <p className='text-small-02-sb md:text-h5-sb text-gray-400'>{label}</p>
+      <svg viewBox='0 50 400 170' className='max-h-80 w-full' aria-label={`${label} ${rate}%`}>
         <defs>
           {/* 반원 안쪽 배경 그라데이션 (위→아래) */}
           <linearGradient id={bgGradientId} x1='0%' y1='0%' x2='0%' y2='100%'>
@@ -73,8 +73,11 @@ export function AchievementGauge({ label, rate, arcColor }: AchievementGaugeProp
         </text>
 
         {/* 달성률 숫자 (반원 중앙) */}
-        <text x={CX} y={CY - 10} textAnchor='middle' fontSize={48} fontWeight={700} fill='#010937'>
-          {rate}%
+        <text x={CX} y={CY - 10} textAnchor='middle' fontSize={42} fontWeight={700} fill='#010937'>
+          {rate}
+        </text>
+        <text x={CX + 30} y={CY - 15} textAnchor='middle' fontSize={22} fontWeight={700} fill='#010937'>
+          %
         </text>
 
         {/* 0 / 100 라벨 */}

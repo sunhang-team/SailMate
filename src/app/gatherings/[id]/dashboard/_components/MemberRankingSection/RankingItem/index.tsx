@@ -25,7 +25,7 @@ export function RankingItem({ item, isMe }: RankingItemProps) {
 
   return (
     <div
-      className={`flex items-center gap-3 rounded-2xl bg-gray-100 px-7 py-5 ${isMe ? 'border border-blue-300' : ''}`}
+      className={`flex items-center gap-3 rounded-2xl bg-gray-100 px-7 py-5 ${isMe ? 'border-gradient-primary' : ''}`}
     >
       <RankBadge rank={item.rank} />
 
@@ -44,7 +44,8 @@ export function RankingItem({ item, isMe }: RankingItemProps) {
                   state='warning'
                   className='md:text-small-02-m h-[17px] w-[40px] px-1.5 py-0 text-[10px] md:h-[27px] md:w-[66px] md:px-3 md:py-1'
                 >
-                  ⚠ 주의
+                  <StateIcon variant='warning' className='h-3 w-3 md:h-4 md:w-4' />
+                  주의
                 </Tag>
               ) : (
                 <Tag

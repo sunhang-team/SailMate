@@ -29,7 +29,7 @@ export function MemberTodoAccordion({ member, todos }: MemberTodoAccordionProps)
     <div
       className={cn(
         'overflow-hidden rounded-2xl border transition-all duration-300',
-        isOpen ? 'bg-blue-25/10 border-blue-100 shadow-lg' : 'border-gray-50 bg-white hover:border-gray-200',
+        isOpen ? 'bg-blue-25/10 border-gray-200' : 'border-gray-150 bg-gray-0 hover:border-gray-200',
       )}
     >
       <button
