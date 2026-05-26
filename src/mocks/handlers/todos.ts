@@ -320,6 +320,7 @@ export const todosHandlers = [
         todos: filteredTodos,
         weeklyAchievementRate,
         overallAchievementRate,
+        streakDays: 14,
       }),
     );
   }),
