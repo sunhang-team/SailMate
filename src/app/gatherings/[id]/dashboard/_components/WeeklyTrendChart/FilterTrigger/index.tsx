@@ -9,7 +9,7 @@ interface FilterTriggerProps {
 export function FilterTrigger({ filterType }: FilterTriggerProps) {
   const { isOpen } = useDropdown();
   return (
-    <div className='text-small-01-m flex h-7 w-[89px] cursor-pointer items-center justify-between gap-1 rounded-lg bg-blue-50 px-3 py-1 text-blue-300 transition-colors hover:bg-blue-100 md:h-9 md:w-[112px] lg:w-[131px]'>
+    <div className='text-body-01-m flex h-7 w-[89px] cursor-pointer items-center justify-between gap-2 rounded-lg bg-blue-100 px-3 py-1 text-blue-300 transition-colors md:h-9 md:w-[112px] lg:w-[131px]'>
       <div className='text-small-02-m md:text-body-02-m lg:text-body-01-m flex items-center gap-1'>
         {filterType === 'me' ? '내 달성률' : '팀 달성률'}
       </div>

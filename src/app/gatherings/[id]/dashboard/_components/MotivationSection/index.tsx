@@ -29,17 +29,17 @@ export function MotivationSection({ gatheringId }: MotivationSectionProps) {
   const weatherLevel = getWeatherLevel(hp);
 
   return (
-    <div className='flex h-[376px] flex-col gap-4 lg:flex-row'>
+    <div className='flex flex-col gap-4 lg:h-[376px] lg:flex-row'>
       {/* 카드 영역 */}
       <div className='border-gray-150 bg-gray-0 shadow-02 flex-1 rounded-2xl border p-6 lg:p-7'>
-        <div className='flex flex-col gap-4 lg:gap-6'>
+        <div className='flex h-full flex-col justify-between'>
           <DistanceCard distance={distance} progress={distanceProgress} />
           <TeamHPCard hp={hp} />
         </div>
       </div>
 
       {/* 일러스트 영역 */}
-      <div className='border-gray-150 shadow-02 aspect-343/182 flex-1 overflow-hidden rounded-2xl border md:aspect-688/366 lg:aspect-auto'>
+      <div className='border-gray-150 shadow-02 h-full w-full overflow-hidden rounded-2xl border md:h-full md:w-full lg:h-full lg:w-1/2'>
         <MotivationIllustration distance={distance} boatPosition={boatPosition} weatherLevel={weatherLevel} />
       </div>
     </div>

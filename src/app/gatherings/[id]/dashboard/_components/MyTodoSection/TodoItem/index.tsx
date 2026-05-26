@@ -170,7 +170,7 @@ export function TodoItem({ gatheringId, week, todo }: TodoItemProps) {
             <MoreIcon size={32} className='text-gray-700' />
           </span>
         </Dropdown.Trigger>
-        <Dropdown.Menu className='h-[80px] w-[80px] gap-3 px-3 py-2'>
+        <Dropdown.Menu className='flex h-[80px] w-[80px] flex-col gap-3 px-3 py-2'>
           <Dropdown.Item
             onClick={() => {
               setDraft(todo.content);
