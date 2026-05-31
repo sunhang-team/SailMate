@@ -1,41 +1,53 @@
 import { http, HttpResponse, delay } from 'msw';
 
 import { createApiResponse } from '../utils';
+import { CURRENT_USER } from '../_data';
 
 import type { User, UserPublicProfile, UpdateProfileResponseData, UpdatePasswordResponseData } from '@/api/users/types';
 
 const BASE = '/api/v1/users';
 
-// 가짜 유저 데이터를 외부에 선언하여 PATCH 호출 시 상태가 유지되도록 합니다.
+// 가짜 유저 데이터 — auth.ts 로그인 핸들러 응답과 동일한 nickname을 사용.
 const mockUser: User = {
-  id: 1,
+  id: CURRENT_USER.id,
   email: 'user@example.com',
-  nickname: '김코딩',
-  profileImage: 'https://avatars.githubusercontent.com/u/1?v=4',
+  nickname: CURRENT_USER.nickname,
+  profileImage: CURRENT_USER.profileImage,
   provider: 'EMAIL',
   reputationScore: 36.5,
   reputationLabel: '신뢰 메이트',
-  completedGatherings: 5,
-  avgAchievementRate: 82.3,
+  completedGatherings: 1, // GATHERING_MEMBERS[7]만 COMPLETED 상태
+  avgAchievementRate: 90, // todos 9/10 = 90 (achievements.ts와 일치)
   reviewCount: 3,
 };
 
-// 공통으로 사용될 수 있는 유저 이름 목록
+// 공통으로 사용될 수 있는 유저 이름 목록 — 본인(id 1)은 CURRENT_USER와 동기화.
 const MOCK_NICKNAMES: Record<number, string> = {
-  1: '김코딩',
+  1: CURRENT_USER.nickname,
   2: '이개발',
-  3: '박프로',
-  4: '최모바일',
-  5: '일본어마스터',
-  6: '책벌레',
-  7: '합격러',
+  3: '박디자인',
+  4: '최풀스택',
+  5: '박프로',
+  6: '백엔드러',
+  7: '데보옵',
   8: 'DB마스터',
-  10: '김민수',
-  11: '최서연',
-  12: '박수철',
-  13: '이수태',
-  14: '김경아',
-  15: '정수진',
+  9: 'JPA전문가',
+  10: 'Redis왕',
+  11: 'Kafka잘함',
+  12: '백엔드신입',
+  15: '영어왕',
+  16: '회화초보',
+  17: '독서광',
+  18: '책좋아',
+  20: '책리더',
+  21: '박개발',
+  22: '신입주니어',
+  23: '전직백엔드',
+  24: '디자이너지망',
+  30: '일본어마스터',
+  31: '합격러',
+  32: 'DB러버',
+  33: '토익900',
 };
 
 // 다른 유저(Public) 데이터 모의 생성

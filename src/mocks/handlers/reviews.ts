@@ -1,10 +1,30 @@
 import { HttpResponse, http, delay } from 'msw';
 
 import { createApiResponse } from '../utils';
+import { CURRENT_USER } from '../_data';
+import { BASE_GATHERINGS } from './gatherings';
 
-import type { UserReviewListResponse } from '@/api/reviews/types';
+import type { ReviewTag, UserReviewListResponse } from '@/api/reviews/types';
 
 const MOCK_DELAY = 300;
+
+// 현재 user가 POST로 작성한 리뷰들 — 작성 후 GET 응답에 반영되어
+// MemberCard의 "리뷰 작성 완료" 뱃지가 정상 전환되도록 in-memory에 보존.
+interface SubmittedReview {
+  id: number;
+  targetUserId: number;
+  gatheringId: number;
+  gatheringTitle: string;
+  tags: ReviewTag[];
+  comment?: string;
+  createdAt: string;
+}
+
+const submittedReviews: SubmittedReview[] = [];
+let nextSubmittedReviewId = 90000;
+
+const getGatheringTitle = (gatheringId: number): string =>
+  BASE_GATHERINGS.find((g) => g.id === gatheringId)?.title ?? '모임';
 
 const mockUserReviewListResponse: UserReviewListResponse = {
   reviews: [
@@ -45,45 +65,79 @@ const MOCK_TAGS = ['성실해요', '소통이 좋아요', '잘 도와줘요', '�
 const MOCK_MATES_TAGS = ['연기', '불씨', '불꽃', '태양'];
 
 export const reviewsHandlers = [
-  /** POST v1/gatherings/:gatheringId/reviews — 리뷰 작성 */
-  http.post('/api/v1/gatherings/:gatheringId/reviews', async () => {
+  /** POST v1/gatherings/:gatheringId/reviews — 리뷰 작성 (in-memory 저장) */
+  http.post('/api/v1/gatherings/:gatheringId/reviews', async ({ params, request }) => {
     await delay(MOCK_DELAY);
+    const gatheringId = Number(params.gatheringId);
+    const body = (await request.json()) as {
+      reviews: Array<{ targetUserId: number; tags: ReviewTag[]; comment?: string }>;
+    };
+    const gatheringTitle = getGatheringTitle(gatheringId);
+    const now = new Date().toISOString();
+
+    body.reviews?.forEach((r) => {
+      submittedReviews.push({
+        id: nextSubmittedReviewId++,
+        targetUserId: r.targetUserId,
+        gatheringId,
+        gatheringTitle,
+        tags: r.tags,
+        comment: r.comment,
+        createdAt: now,
+      });
+    });
+
     return HttpResponse.json(createApiResponse({ success: true }), { status: 201 });
   }),
 
-  /** GET v1/users/:userId/reviews — 리뷰 목록 조회 */
+  /** GET v1/users/:userId/reviews — 리뷰 목록 조회 (현재 user가 작성한 리뷰는 최상단 prepend) */
   http.get('/api/v1/users/:userId/reviews', async ({ params, request }) => {
     await delay(MOCK_DELAY);
     const userId = Number(params.userId);
     const url = new URL(request.url);
     const page = Number(url.searchParams.get('page') || 1);
-    const limit = Number(url.searchParams.get('limit') || 2); // 기본값 2
+    const limit = Number(url.searchParams.get('limit') || 2);
 
-    // userId에 따라 총 리뷰 수를 다르게 설정 (0~15개)
-    const totalCount = (userId * 7) % 16;
+    // 현재 user가 이 userId를 대상으로 작성한 리뷰들 (최신순)
+    const myReviewsForUser = submittedReviews
+      .filter((r) => r.targetUserId === userId)
+      .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+      .map((r) => ({
+        id: r.id,
+        reviewer: { id: CURRENT_USER.id, nickname: CURRENT_USER.nickname, profileImage: CURRENT_USER.profileImage },
+        gatheringTitle: r.gatheringTitle,
+        tags: r.tags,
+        matesTag: MOCK_MATES_TAGS[0],
+        comment: r.comment,
+        createdAt: r.createdAt,
+      }));
 
-    const reviews = Array.from({ length: totalCount }).map((_, index) => ({
+    // 시드 기반 다른 사용자들의 가짜 리뷰
+    const generatedCount = (userId * 7) % 16;
+    const generatedReviews = Array.from({ length: generatedCount }).map((_, index) => ({
       id: userId * 100 + index,
       reviewer: { id: index + 10, nickname: `닉네임${index + 10}`, profileImage: undefined },
       gatheringTitle: MOCK_TITLES[index % MOCK_TITLES.length],
       tags: [MOCK_TAGS[index % MOCK_TAGS.length], MOCK_TAGS[(index + 1) % MOCK_TAGS.length]],
       matesTag: MOCK_MATES_TAGS[index % MOCK_MATES_TAGS.length],
       comment: MOCK_COMMENTS[index % MOCK_COMMENTS.length],
-      createdAt: new Date(Date.now() - index * 86400000).toISOString(),
+      createdAt: new Date(Date.now() - (index + 1) * 86400000).toISOString(),
     }));
+
+    const allReviews = [...myReviewsForUser, ...generatedReviews];
 
     const matesTagCounts = MOCK_MATES_TAGS.map((tag) => ({
       tag,
-      count: reviews.filter((r) => r.matesTag === tag).length,
+      count: allReviews.filter((r) => r.matesTag === tag).length,
     }));
 
     const startIndex = (page - 1) * limit;
-    const paginatedReviews = reviews.slice(startIndex, startIndex + limit);
+    const paginatedReviews = allReviews.slice(startIndex, startIndex + limit);
 
     return HttpResponse.json(
       createApiResponse({
         reviews: paginatedReviews,
-        totalCount,
+        totalCount: allReviews.length,
         matesTagCounts,
       }),
     );

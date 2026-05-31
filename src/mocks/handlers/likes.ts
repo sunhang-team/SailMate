@@ -1,6 +1,7 @@
 import { HttpResponse, http, delay } from 'msw';
 
 import { createApiResponse } from '../utils';
+import { GATHERING_MEMBERS } from '../_data';
 
 import { BASE_GATHERINGS } from './gatherings';
 
@@ -8,7 +9,11 @@ import type { GetMyLikesResponse } from '@/api/likes/types';
 
 const MOCK_DELAY = 300;
 
-const LIKED_GATHERINGS = BASE_GATHERINGS.slice(0, 9).map((g) => ({ ...g }));
+// 본인이 이미 멤버인 모임은 찜 목록에서 제외 (이미 가입한 모임을 다시 찜할 일 없음).
+const userJoinedIds = new Set(Object.keys(GATHERING_MEMBERS).map(Number));
+const LIKED_GATHERINGS = BASE_GATHERINGS.filter((g) => !userJoinedIds.has(g.id))
+  .slice(0, 6)
+  .map((g) => ({ ...g }));
 
 const mockMyLikesResponse: GetMyLikesResponse = {
   gatherings: LIKED_GATHERINGS,
