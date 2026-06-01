@@ -24,13 +24,13 @@ export function OAuthCallbackClient() {
   const code = searchParams.get('code');
   const { showToast } = useToastStore();
 
-  const { mutate: loginCallback, isPending } = useSocialLoginCallback();
+  const { mutateAsync: loginCallback } = useSocialLoginCallback();
 
-  const hasCalled = useRef(false);
+  const hasCalledRef = useRef(false);
   const hasFiredCancelRef = useRef(false);
 
   useEffect(() => {
-    if (!provider || hasCalled.current) return;
+    if (!provider || hasCalledRef.current) return;
 
     // 인가 코드 누락 = provider 화면에서 사용자가 "취소" 한 케이스. 깔때기 누락으로 기록한다.
     if (!code) {
@@ -41,64 +41,62 @@ export function OAuthCallbackClient() {
       return;
     }
 
-    // React 18 StrictMode의 더블 마운트로 인한 중복 호출 방지를 위해 sessionStorage 사용
+    // StrictMode 더블 마운트로 인한 중복 교환 방지 (인가 코드는 1회용)
     const processedCodeKey = `processed_code_${code}`;
     if (sessionStorage.getItem(processedCodeKey)) return;
 
-    hasCalled.current = true;
+    hasCalledRef.current = true;
     sessionStorage.setItem(processedCodeKey, 'true');
 
+    const method = toAuthMethod(provider);
     const redirectUri = `${window.location.origin}${window.location.pathname}`;
 
-    loginCallback(
-      { provider, code, redirectUri },
-      {
-        onSuccess: (data) => {
-          console.log('[OAuth 성공 응답 데이터]:', data);
-          // OAuth 응답에는 user.id가 없어 /users/me 를 보강 호출해 GA identifyUser 에 전달.
-          // GA 발사 실패가 로그인 흐름을 막지 않도록 fire-and-forget.
-          const method = toAuthMethod(provider);
-          if (method) {
-            queryClient
-              .fetchQuery(userQueries.me())
-              .then((me) => {
-                const userId = String(me.id);
-                if (data.newUser) trackAuthSignUp({ userId, method });
-                else trackAuthLogin({ userId, method });
-              })
-              .catch((error) => {
-                console.warn('[GA] OAuth tracking 실패 (로그인은 정상 진행):', error);
-              });
-          }
+    // mutateAsync가 반환한 Promise는 컴포넌트/옵저버 수명과 무관하게 settle 된다.
+    // mutate() 콜백이나 isSuccess 상태는 StrictMode 더블 마운트로 옵저버가 churn 되면
+    // 유실/미반영되어(교환은 성공해 쿠키만 발급된 채 콜백 화면에 멈춤) 리다이렉트가 누락됐다.
+    // Promise then/catch 에서 처리하면 항상 보장된다.
+    loginCallback({ provider, code, redirectUri })
+      .then((data) => {
+        // OAuth 응답에는 user.id가 없어 /users/me 를 보강 호출해 GA에 전달. 실패해도 로그인은 진행.
+        if (method) {
+          queryClient
+            .fetchQuery(userQueries.me())
+            .then((me) => {
+              const userId = String(me.id);
+              if (data.newUser) trackAuthSignUp({ userId, method });
+              else trackAuthLogin({ userId, method });
+            })
+            .catch((trackingError) => {
+              console.warn('[GA] OAuth tracking 실패 (로그인은 정상 진행):', trackingError);
+            });
+        }
 
-          // 신규 유저인 경우 무조건 메인으로 이동
-          if (data.newUser) {
-            router.replace('/main');
-          } else {
-            // 기존 유저인 경우 이전 페이지(returnTo)가 있다면 해당 페이지로, 없다면 메인으로 이동
-            const returnTo = sessionStorage.getItem('returnTo');
-            if (returnTo) {
-              router.replace(returnTo);
-              sessionStorage.removeItem('returnTo');
-            } else {
-              router.replace('/main');
-            }
-          }
-        },
-        onError: (error) => {
-          console.error('[OAuth 실패 에러]:', error);
-          const method = toAuthMethod(provider);
-          // 신규/기존 유저 구분이 불가능한 시점이라 sign_up_failed 분기 없이 login_failed 로 통합한다.
-          if (method) trackAuthLoginFailed({ method, error });
-          showToast({
-            variant: 'error',
-            title: '로그인에 실패했습니다.',
-            description: '다시 시도해 주세요.',
-          });
-          router.replace('/login');
-        },
-      },
-    );
+        // 신규 유저는 무조건 메인으로, 기존 유저는 returnTo가 있으면 해당 페이지로.
+        if (data.newUser) {
+          router.replace('/main');
+          return;
+        }
+        const returnTo = sessionStorage.getItem('returnTo');
+        if (returnTo) {
+          sessionStorage.removeItem('returnTo');
+          router.replace(returnTo);
+        } else {
+          router.replace('/main');
+        }
+      })
+      .catch((loginError) => {
+        console.error('[OAuth] 콜백 실패:', loginError);
+        // 1회용 인가 코드 재시도를 막던 가드 해제 — 사용자가 다시 로그인할 수 있게.
+        sessionStorage.removeItem(processedCodeKey);
+        // 신규/기존 유저 구분이 불가능한 시점이라 sign_up_failed 분기 없이 login_failed 로 통합한다.
+        if (method) trackAuthLoginFailed({ method, error: loginError });
+        showToast({
+          variant: 'error',
+          title: '로그인에 실패했습니다.',
+          description: '다시 시도해 주세요.',
+        });
+        router.replace('/login');
+      });
   }, [code, provider, loginCallback, queryClient, router, showToast]);
 
   return (
@@ -107,7 +105,7 @@ export function OAuthCallbackClient() {
       <h1 className='text-h4-b mb-2 text-gray-900'>로그인 중입니다</h1>
       <p className='text-body-01-r text-gray-600'>잠시만 기다려 주세요...</p>
 
-      {!isPending && !code && (
+      {!code && (
         <div className='mt-4'>
           <p className='text-red-500'>인가 코드를 찾을 수 없습니다.</p>
           <button onClick={() => router.replace('/login')} className='mt-2 text-blue-500 underline'>
