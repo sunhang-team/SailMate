@@ -37,6 +37,10 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'chukjibeob.store',
       },
+      {
+        protocol: 'https',
+        hostname: 'sailmate.store',
+      },
       // prod에 MSW용 호스트가 섞이지 않도록 NODE_ENV로 이중 가드.
       ...(process.env.NODE_ENV !== 'production' && process.env.NEXT_PUBLIC_MSW_ENABLED === 'true'
         ? [
