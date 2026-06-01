@@ -33,13 +33,13 @@ function WeeklySummarySkeleton() {
   );
 }
 
-const shellWeeklyMembers = 'px-4 py-10 md:py-15 lg:py-20 md:px-7 xl:px-30';
+const shellWeeklyMembers = 'lg:pb-40 px-4 py-10 md:py-15 lg:py-20 md:px-7 xl:px-30';
 const innerMax = 'mx-auto max-w-[1680px]';
 
 export function DashboardContent({ activeTab, gatheringId }: DashboardContentProps) {
   if (activeTab === 'summary') {
     return (
-      <section className='mb-40 px-4 py-10 md:px-8 md:py-20 xl:px-30'>
+      <section className='px-4 py-10 md:px-8 md:py-20 lg:pb-40 xl:px-30'>
         <div className={innerMax}>
           <div className='flex flex-col gap-10'>
             <SuspenseBoundary

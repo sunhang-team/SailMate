@@ -9,17 +9,14 @@ interface SailboatProps {
 export function Sailboat({ boatX }: SailboatProps) {
   return (
     <>
-      {/* LAYER 7: Dashed Path */}
-      <motion.path
-        d='M120 270 C200 200 350 210 420 240 C460 253 490 263 515 267'
+      {/* LAYER 7: Dashed Path — semicircle arc from boat start to island */}
+      <path
+        d='M 120 278 A 210 128 0 0 1 515 273'
         stroke='#010937'
         strokeWidth='1.6'
         strokeDasharray='7 7'
         fill='none'
         strokeOpacity={0.4}
-        initial={{ pathLength: 0 }}
-        animate={{ pathLength: 1 }}
-        transition={{ duration: 2, ease: 'easeInOut' }}
       />
 
       {/* LAYER 8: Sailboat */}

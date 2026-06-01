@@ -57,7 +57,7 @@ export function ProgressBar({
               <span className='text-small-01-sb text-blue-300'>{clampedValue}%</span>
             </div>
           )}
-      <div className={cn('bg-gray-150 h-2 w-full rounded-full', barClassName)}>
+      <div className={cn('h-2 w-full rounded-full bg-blue-100', barClassName)}>
         <div className='bg-gradient-primary h-full rounded-full transition-all' style={{ width: `${clampedValue}%` }} />
       </div>
     </div>

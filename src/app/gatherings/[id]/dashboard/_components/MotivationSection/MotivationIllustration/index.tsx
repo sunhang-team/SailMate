@@ -50,44 +50,36 @@ export function MotivationIllustration({ distance, boatPosition, weatherLevel }:
       <Sailboat boatX={boatX} />
       <WaveLayers colors={colors} boatX={boatX} />
 
-      {/* Speech Bubble (topmost overlay) */}
+      {/* Speech Bubble (topmost overlay) — 일러스트 중앙 고정 */}
       <motion.g
-        animate={{ x: boatX - BOAT_CONFIG.START_X }}
-        transition={{ type: 'spring', stiffness: 50, damping: 20 }}
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.5, duration: 0.6, ease: 'easeOut' }}
       >
-        <motion.g
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5, duration: 0.6, ease: 'easeOut' }}
+        <rect x={275} y={88} width='114' height='88' rx='8' fill='#010937' />
+        <polygon points='325.5,176 332,188 338.5,176' fill='#010937' />
+        <text
+          x={330.5}
+          y={116}
+          textAnchor='middle'
+          fill='white'
+          fontSize='14'
+          fontWeight='medium'
+          fontFamily='Pretendard, sans-serif'
         >
-          <rect x={BOAT_CONFIG.START_X - 50} y={100} width='100' height='40' rx='8' fill='#010937' />
-          <polygon
-            points={`${BOAT_CONFIG.START_X - 5},140 ${BOAT_CONFIG.START_X + 5},150 ${BOAT_CONFIG.START_X + 10},140`}
-            fill='#010937'
-          />
-          <text
-            x={BOAT_CONFIG.START_X}
-            y={116}
-            textAnchor='middle'
-            fill='white'
-            fontSize='11'
-            fontWeight='500'
-            fontFamily='Pretendard, sans-serif'
-          >
-            남은 거리
-          </text>
-          <text
-            x={BOAT_CONFIG.START_X}
-            y={133}
-            textAnchor='middle'
-            fill='white'
-            fontSize='18'
-            fontWeight='600'
-            fontFamily='Pretendard, sans-serif'
-          >
-            {distance}km
-          </text>
-        </motion.g>
+          남은 거리
+        </text>
+        <text
+          x={330.5}
+          y={153}
+          textAnchor='middle'
+          fill='white'
+          fontSize='24'
+          fontWeight='semibold'
+          fontFamily='Pretendard, sans-serif'
+        >
+          {distance}km
+        </text>
       </motion.g>
 
       {/* Navigation Dot */}

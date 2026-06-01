@@ -21,7 +21,7 @@ export function NotificationDropdown() {
         >
           <NotificationsIcon size={36} />
           {unreadCount > 0 && (
-            <span className='absolute top-[2px] right-[2px] h-2.5 w-2.5 rounded-full bg-blue-500 shadow-[0_0_0_1.5px_white]' />
+            <span className='absolute top-[2px] right-[3px] h-2.5 w-2.5 rounded-full bg-blue-300 shadow-[0_0_0_3px_white]' />
           )}
         </div>
       </Dropdown.Trigger>

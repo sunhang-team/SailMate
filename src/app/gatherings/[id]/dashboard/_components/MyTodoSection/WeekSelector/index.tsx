@@ -25,14 +25,14 @@ export function WeekSelector({ week, totalWeeks, onChange, className }: WeekSele
         </span>
       </Dropdown.Trigger>
 
-      <Dropdown.Menu containerClassName='left-0 w-full' className='max-h-64 w-full overflow-auto py-1'>
+      <Dropdown.Menu containerClassName='left-0 w-full' className='max-h-64 w-full gap-3 overflow-auto py-1'>
         {weeks.map((w) => (
           <Dropdown.Item
             key={w}
             onClick={() => onChange(w)}
             className={cn(
-              'text-body-02-r flex cursor-pointer items-center justify-between px-3 py-2 text-gray-900',
-              w === week && 'bg-gray-50',
+              'text-body-02-r flex cursor-pointer items-center justify-between px-3 py-2 text-gray-500',
+              w === week && 'text-gray-900',
             )}
           >
             <span>{w}주차</span>

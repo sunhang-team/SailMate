@@ -1,7 +1,9 @@
 'use client';
 
+import { useState } from 'react';
+
 import { cn } from '@/lib/cn';
-import { CheckIcon } from '@/components/ui/Icon/CheckIcon';
+import { CheckIcon, FireButtonIcon } from '@/components/ui/Icon';
 
 interface MemberTodoItemProps {
   content: string;
@@ -9,10 +11,12 @@ interface MemberTodoItemProps {
 }
 
 export function MemberTodoItem({ content, isCompleted }: MemberTodoItemProps) {
+  const [isFired, setIsFired] = useState(false);
+
   return (
     <div
       className={cn(
-        'flex items-center justify-between rounded-xl border border-gray-50 bg-white p-4 transition-all hover:bg-gray-50/50',
+        'border-gray-150 flex items-center justify-between rounded-xl border bg-gray-100 p-4 transition-all',
         isCompleted && 'bg-gray-25/50 border-gray-100',
       )}
     >
@@ -20,7 +24,7 @@ export function MemberTodoItem({ content, isCompleted }: MemberTodoItemProps) {
         <div
           className={cn(
             'flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border bg-blue-300 transition-colors md:h-12 md:w-12',
-            isCompleted ? 'border-blue-300 bg-blue-300 text-white' : 'border-gray-200 bg-white',
+            isCompleted ? 'text-gray-0 border-blue-300 bg-blue-300' : 'border-gray-150 bg-gray-0',
           )}
         >
           {isCompleted && <CheckIcon className='h-8 w-8 md:h-12 md:w-12' />}
@@ -34,9 +38,13 @@ export function MemberTodoItem({ content, isCompleted }: MemberTodoItemProps) {
           {content}
         </span>
       </div>
-      <div className='flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gray-50 text-xl shadow-inner'>
-        🔥
-      </div>
+      <button
+        type='button'
+        onClick={() => setIsFired((prev) => !prev)}
+        className='flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-lg md:h-12 md:w-12'
+      >
+        <FireButtonIcon variant={isFired ? 'disabled' : 'active'} className='h-8 w-8 md:h-12 md:w-12' />
+      </button>
     </div>
   );
 }
