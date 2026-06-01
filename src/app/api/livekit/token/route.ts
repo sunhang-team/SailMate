@@ -36,69 +36,82 @@ export const GET = withBffErrorHandling(async (req: NextRequest) => {
   }
 
   const gatheringId = parseInt(room.split('-')[1], 10);
-  const [memberResponse, userResponse] = await Promise.all([
-    requestBackend({
-      request: req,
-      endpoint: `v1/gatherings/${gatheringId}/members`,
-      overrideSearchParams: new URLSearchParams(),
-    }),
-    requestBackend({
-      request: req,
-      endpoint: 'v1/users/me',
-      overrideSearchParams: new URLSearchParams(),
-    }),
-  ]);
+  // prod 환경에서 NEXT_PUBLIC_MSW_ENABLED가 실수로 켜져도 auth bypass 되지 않도록 NODE_ENV로 이중 가드.
+  const isMswDev = process.env.NODE_ENV !== 'production' && process.env.NEXT_PUBLIC_MSW_ENABLED === 'true';
 
-  // 멤버 검증 — 확실한 비멤버 신호(403/404)만 MEMBER_REQUIRED 로 처리.
-  // 5xx 등 모호한 상태는 UPSTREAM_ERROR 로 분리해 "비멤버 메시지" 오노출을 방지한다.
-  if (!memberResponse.ok) {
-    if (memberResponse.status === 401) {
+  let userId: number | undefined;
+  let nickname: string | undefined;
+
+  if (isMswDev) {
+    // MSW dev — Next.js 16 + Turbopack에서 msw/node가 서버 fetch를 못 잡아
+    // requestBackend()로 멤버/me 검증이 실패함. CURRENT_USER로 토큰 발급해 회의실 시연 가능하게 함.
+    userId = 1;
+    nickname = '테스터';
+  } else {
+    const [memberResponse, userResponse] = await Promise.all([
+      requestBackend({
+        request: req,
+        endpoint: `v1/gatherings/${gatheringId}/members`,
+        overrideSearchParams: new URLSearchParams(),
+      }),
+      requestBackend({
+        request: req,
+        endpoint: 'v1/users/me',
+        overrideSearchParams: new URLSearchParams(),
+      }),
+    ]);
+
+    // 멤버 검증 — 확실한 비멤버 신호(403/404)만 MEMBER_REQUIRED 로 처리.
+    // 5xx 등 모호한 상태는 UPSTREAM_ERROR 로 분리해 "비멤버 메시지" 오노출을 방지한다.
+    if (!memberResponse.ok) {
+      if (memberResponse.status === 401) {
+        return bffError({
+          errorCode: 'LOGIN_REQUIRED',
+          message: 'Auth required for member check',
+          status: 401,
+        });
+      }
+      if (memberResponse.status === 403 || memberResponse.status === 404) {
+        return bffError({
+          errorCode: 'MEMBER_REQUIRED',
+          message: 'Not a gathering member',
+          status: 403,
+        });
+      }
+      Sentry.captureMessage('livekit token: member check upstream error', {
+        level: 'error',
+        extra: { status: memberResponse.status, gatheringId },
+      });
       return bffError({
-        errorCode: 'LOGIN_REQUIRED',
-        message: 'Auth required for member check',
-        status: 401,
+        errorCode: 'UPSTREAM_ERROR',
+        message: `Member check upstream error: ${memberResponse.status}`,
+        status: 503,
       });
     }
-    if (memberResponse.status === 403 || memberResponse.status === 404) {
+
+    if (!userResponse.ok) {
+      if (userResponse.status === 401) {
+        return bffError({
+          errorCode: 'LOGIN_REQUIRED',
+          message: 'User not authenticated',
+          status: 401,
+        });
+      }
+      Sentry.captureMessage('livekit token: user fetch upstream error', {
+        level: 'error',
+        extra: { status: userResponse.status, gatheringId },
+      });
       return bffError({
-        errorCode: 'MEMBER_REQUIRED',
-        message: 'Not a gathering member',
-        status: 403,
+        errorCode: 'UPSTREAM_ERROR',
+        message: `User fetch upstream error: ${userResponse.status}`,
+        status: 503,
       });
     }
-    Sentry.captureMessage('livekit token: member check upstream error', {
-      level: 'error',
-      extra: { status: memberResponse.status, gatheringId },
-    });
-    return bffError({
-      errorCode: 'UPSTREAM_ERROR',
-      message: `Member check upstream error: ${memberResponse.status}`,
-      status: 503,
-    });
+
+    const user = await userResponse.json();
+    userId = user?.data?.id;
+    nickname = user?.data?.nickname;
   }
-
-  if (!userResponse.ok) {
-    if (userResponse.status === 401) {
-      return bffError({
-        errorCode: 'LOGIN_REQUIRED',
-        message: 'User not authenticated',
-        status: 401,
-      });
-    }
-    Sentry.captureMessage('livekit token: user fetch upstream error', {
-      level: 'error',
-      extra: { status: userResponse.status, gatheringId },
-    });
-    return bffError({
-      errorCode: 'UPSTREAM_ERROR',
-      message: `User fetch upstream error: ${userResponse.status}`,
-      status: 503,
-    });
-  }
-
-  const user = await userResponse.json();
-  const userId = user?.data?.id;
-  const nickname = user?.data?.nickname;
 
   if (!userId || !nickname) {
     return bffError({

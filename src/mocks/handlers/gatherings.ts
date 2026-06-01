@@ -3,6 +3,7 @@ import { http, HttpResponse, delay } from 'msw';
 import { gatheringFormBaseSchema, gatheringUpdateFormSchema } from '@/api/gatherings/schemas';
 import { getTotalWeeks } from '@/lib/formatGatheringDate';
 import { createApiResponse } from '../utils';
+import { CURRENT_USER, GATHERING_MEMBERS } from '../_data';
 
 import type {
   Category,
@@ -76,11 +77,11 @@ export const BASE_GATHERINGS: GatheringListItem[] = [
     tags: ['React', 'Next.js', 'TypeScript'],
     maxMembers: 6,
     currentMembers: 4,
-    recruitDeadline: '2026-02-10',
-    startDate: '2026-02-10',
-    endDate: '2026-04-1',
+    recruitDeadline: '2026-06-15',
+    startDate: '2026-06-20',
+    endDate: '2026-08-15',
     status: 'RECRUITING',
-    leader: { id: 1, nickname: '김코딩', profileImage: 'https://avatars.githubusercontent.com/u/1?v=4' },
+    leader: { id: 1, nickname: '테스터', profileImage: 'https://avatars.githubusercontent.com/u/1?v=4' },
   },
   {
     id: 2,
@@ -90,12 +91,12 @@ export const BASE_GATHERINGS: GatheringListItem[] = [
     shortDescription: '구독형 SaaS 서비스를 함께 기획·개발해요.',
     tags: ['SaaS', 'React', 'Node.js'],
     maxMembers: 5,
-    currentMembers: 2,
-    recruitDeadline: '2026-04-20',
-    startDate: '2026-05-01',
-    endDate: '2026-09-30',
+    currentMembers: 4,
+    recruitDeadline: '2026-06-25',
+    startDate: '2026-07-05',
+    endDate: '2026-11-30',
     status: 'RECRUITING',
-    leader: { id: 2, nickname: '박프로', profileImage: 'https://avatars.githubusercontent.com/u/2?v=4' },
+    leader: { id: 5, nickname: '박프로', profileImage: 'https://avatars.githubusercontent.com/u/5?v=4' },
   },
   {
     id: 3,
@@ -105,10 +106,10 @@ export const BASE_GATHERINGS: GatheringListItem[] = [
     shortDescription: 'JPA, Redis, Kafka를 활용한 실전 백엔드 구축.',
     tags: ['Java', 'Spring', 'JPA'],
     maxMembers: 8,
-    currentMembers: 8,
-    recruitDeadline: '2026-03-30',
-    startDate: '2026-04-05',
-    endDate: '2026-07-05',
+    currentMembers: 7,
+    recruitDeadline: '2026-04-30',
+    startDate: '2026-05-05',
+    endDate: '2026-08-05',
     status: 'IN_PROGRESS',
     leader: { id: 3, nickname: '이개발', profileImage: 'https://avatars.githubusercontent.com/u/3?v=4' },
   },
@@ -121,27 +122,27 @@ export const BASE_GATHERINGS: GatheringListItem[] = [
     shortDescription: '매일 30분씩 영어 프리토킹으로 스피킹 실력을 키워요.',
     tags: ['영어', '회화', '스피킹'],
     maxMembers: 8,
-    currentMembers: 5,
-    recruitDeadline: '2026-04-15',
-    startDate: '2026-04-20',
-    endDate: '2026-07-20',
+    currentMembers: 3,
+    recruitDeadline: '2026-06-10',
+    startDate: '2026-06-15',
+    endDate: '2026-09-15',
     status: 'RECRUITING',
-    leader: { id: 4, nickname: '영어왕', profileImage: 'https://avatars.githubusercontent.com/u/4?v=4' },
+    leader: { id: 1, nickname: '테스터', profileImage: 'https://avatars.githubusercontent.com/u/1?v=4' },
   },
   {
     id: 5,
     type: '스터디',
     categories: ['어학'],
     title: 'JLPT N2 집중 대비반',
-    shortDescription: '7월 시험 목표! 문법·독해·청해를 체계적으로 준비합니다.',
+    shortDescription: '9월 시험 목표! 문법·독해·청해를 체계적으로 준비합니다.',
     tags: ['일본어', 'JLPT', 'N2'],
     maxMembers: 6,
     currentMembers: 3,
-    recruitDeadline: '2026-04-05',
-    startDate: '2026-04-12',
-    endDate: '2026-07-05',
+    recruitDeadline: '2026-06-30',
+    startDate: '2026-07-07',
+    endDate: '2026-09-30',
     status: 'RECRUITING',
-    leader: { id: 5, nickname: '일본어마스터', profileImage: 'https://avatars.githubusercontent.com/u/5?v=4' },
+    leader: { id: 30, nickname: '일본어마스터', profileImage: 'https://avatars.githubusercontent.com/u/30?v=4' },
   },
   // ── BOOK ──
   {
@@ -153,11 +154,11 @@ export const BASE_GATHERINGS: GatheringListItem[] = [
     tags: ['독서', '토론', '인문'],
     maxMembers: 10,
     currentMembers: 7,
-    recruitDeadline: '2026-04-08',
-    startDate: '2026-04-15',
-    endDate: '2026-10-15',
+    recruitDeadline: '2026-06-05',
+    startDate: '2026-06-12',
+    endDate: '2026-12-12',
     status: 'RECRUITING',
-    leader: { id: 1, nickname: '김코딩', profileImage: 'https://avatars.githubusercontent.com/u/1?v=4' },
+    leader: { id: 20, nickname: '책리더', profileImage: 'https://avatars.githubusercontent.com/u/20?v=4' },
   },
   {
     id: 7,
@@ -170,7 +171,7 @@ export const BASE_GATHERINGS: GatheringListItem[] = [
     currentMembers: 4,
     recruitDeadline: '2026-03-25',
     startDate: '2026-04-01',
-    endDate: '2026-07-31',
+    endDate: '2026-05-15',
     status: 'COMPLETED',
     leader: { id: 6, nickname: '책벌레', profileImage: 'https://avatars.githubusercontent.com/u/6?v=4' },
   },
@@ -184,11 +185,11 @@ export const BASE_GATHERINGS: GatheringListItem[] = [
     tags: ['정보처리기사', '자격증', '실기'],
     maxMembers: 8,
     currentMembers: 6,
-    recruitDeadline: '2026-04-12',
-    startDate: '2026-04-20',
-    endDate: '2026-06-20',
+    recruitDeadline: '2026-06-12',
+    startDate: '2026-06-20',
+    endDate: '2026-08-20',
     status: 'RECRUITING',
-    leader: { id: 7, nickname: '합격러', profileImage: 'https://avatars.githubusercontent.com/u/7?v=4' },
+    leader: { id: 31, nickname: '합격러', profileImage: 'https://avatars.githubusercontent.com/u/31?v=4' },
   },
   {
     id: 9,
@@ -199,11 +200,11 @@ export const BASE_GATHERINGS: GatheringListItem[] = [
     tags: ['SQLD', 'SQL', '데이터베이스'],
     maxMembers: 6,
     currentMembers: 1,
-    recruitDeadline: '2026-04-25',
-    startDate: '2026-05-05',
-    endDate: '2026-06-02',
+    recruitDeadline: '2026-07-05',
+    startDate: '2026-07-15',
+    endDate: '2026-08-12',
     status: 'RECRUITING',
-    leader: { id: 8, nickname: 'DB마스터', profileImage: 'https://avatars.githubusercontent.com/u/8?v=4' },
+    leader: { id: 32, nickname: 'DB러버', profileImage: 'https://avatars.githubusercontent.com/u/32?v=4' },
   },
   {
     id: 10,
@@ -214,24 +215,30 @@ export const BASE_GATHERINGS: GatheringListItem[] = [
     tags: ['TOEIC', '영어', '자격증'],
     maxMembers: 10,
     currentMembers: 9,
-    recruitDeadline: '2026-04-03',
-    startDate: '2026-04-10',
-    endDate: '2026-06-10',
+    recruitDeadline: '2026-06-03',
+    startDate: '2026-06-10',
+    endDate: '2026-08-10',
     status: 'RECRUITING',
-    leader: { id: 4, nickname: '영어왕', profileImage: 'https://avatars.githubusercontent.com/u/4?v=4' },
+    leader: { id: 33, nickname: '토익900', profileImage: 'https://avatars.githubusercontent.com/u/33?v=4' },
   },
 ];
 
-// 페이지네이션 테스트를 위해 기본 10개 × 3 = 30개로 확장
+// 페이지네이션 테스트를 위해 기본 10개 × 3 = 30개로 확장.
+// round 0(원본 ID)는 BASE_GATHERINGS 값 그대로 유지 → 공유 데이터(GATHERING_MEMBERS)와 멤버 수 일치.
+// round 1·2(2기·3기 복제본)는 정원 풀 회피를 위해 cap 적용.
 const generateMockGatherings = (): GatheringListItem[] => {
   const result: GatheringListItem[] = [];
   for (let round = 0; round < 3; round++) {
     for (const base of BASE_GATHERINGS) {
+      const currentMembers =
+        round === 0
+          ? base.currentMembers
+          : Math.max(1, Math.min(base.maxMembers - 1, (base.currentMembers + round) % base.maxMembers));
       result.push({
         ...base,
         id: round * BASE_GATHERINGS.length + base.id,
         title: round === 0 ? base.title : `${base.title} (${round + 1}기)`,
-        currentMembers: Math.max(1, (base.currentMembers + round) % (base.maxMembers + 1)),
+        currentMembers,
       });
     }
   }
@@ -259,140 +266,45 @@ const mockDetails: Record<number, GatheringDetail> = {
       { url: 'https://placehold.co/800x500/fab1a0/333333?text=React+9', displayOrder: 8 },
       { url: 'https://placehold.co/800x500/81ecec/333333?text=React+10', displayOrder: 9 },
     ],
+    // gathering startDate(2026-06-20) 기준 8주 분량
     weeklyPlans: [
       {
         week: 1,
         title: 'React 19 개요 & useTransition',
-        startDate: '2026-04-15',
-        endDate: '2026-04-21',
+        startDate: '2026-06-20',
+        endDate: '2026-06-26',
         details: ['React 19 공식문서 읽기', 'useTransition 실습'],
       },
       {
         week: 2,
         title: 'Server Components & Actions',
-        startDate: '2026-04-22',
-        endDate: '2026-04-28',
+        startDate: '2026-06-27',
+        endDate: '2026-07-03',
         details: ['Server Components 개념 정리'],
       },
-      { week: 3, title: 'Next.js App Router 심화', startDate: '2026-04-29', endDate: '2026-05-05', details: [] },
+      { week: 3, title: 'Next.js App Router 심화', startDate: '2026-07-04', endDate: '2026-07-10', details: [] },
       {
         week: 4,
         title: 'Data Fetching 패턴',
-        startDate: '2026-05-06',
-        endDate: '2026-05-12',
+        startDate: '2026-07-11',
+        endDate: '2026-07-17',
         details: ['TanStack Query 패턴 비교', 'SWR vs React Query'],
       },
-      { week: 5, title: 'TanStack Query 연동', startDate: '2026-05-13', endDate: '2026-05-19', details: [] },
-      { week: 6, title: '인증 & 미들웨어', startDate: '2026-05-20', endDate: '2026-05-26', details: [] },
-      { week: 7, title: '배포 & CI/CD', startDate: '2026-05-27', endDate: '2026-06-02', details: [] },
-      { week: 8, title: '최종 프로젝트 발표', startDate: '2026-06-03', endDate: '2026-06-09', details: [] },
+      { week: 5, title: 'TanStack Query 연동', startDate: '2026-07-18', endDate: '2026-07-24', details: [] },
+      { week: 6, title: '인증 & 미들웨어', startDate: '2026-07-25', endDate: '2026-07-31', details: [] },
+      { week: 7, title: '배포 & CI/CD', startDate: '2026-08-01', endDate: '2026-08-07', details: [] },
+      { week: 8, title: '최종 프로젝트 발표', startDate: '2026-08-08', endDate: '2026-08-15', details: [] },
     ],
-    members: [
-      { userId: 1, nickname: '김코딩', profileImage: 'https://avatars.githubusercontent.com/u/1?v=4', role: 'LEADER' },
-      { userId: 2, nickname: '이개발', profileImage: 'https://avatars.githubusercontent.com/u/2?v=4', role: 'MEMBER' },
-      { userId: 3, nickname: '박프로', profileImage: 'https://avatars.githubusercontent.com/u/3?v=4', role: 'MEMBER' },
-      {
-        userId: 4,
-        nickname: '최모바일',
-        profileImage: 'https://avatars.githubusercontent.com/u/4?v=4',
-        role: 'MEMBER',
-      },
-    ],
+    // GATHERING_MEMBERS[1]과 동기화 (테스터/이개발/박디자인/최풀스택)
+    members: GATHERING_MEMBERS[1].map((m) => ({
+      userId: m.userId,
+      nickname: m.nickname,
+      profileImage: m.profileImage,
+      role: m.role,
+    })),
     myApplicationStatus: null,
   },
-  8: {
-    ...mockGatherings[7],
-    type: '스터디',
-    categories: ['디자인'],
-    title: '피그마 기초 스터디',
-    shortDescription: '피그마를 통해 디자인 이론부터 실습까지 목표로',
-    tags: ['실습', '디자인'],
-    maxMembers: 20,
-    currentMembers: 6,
-    recruitDeadline: '2026-03-31',
-    startDate: '2026-03-15',
-    endDate: '2026-04-05',
-    status: 'RECRUITING',
-    leader: { id: 10, nickname: '김민수', profileImage: null },
-    description:
-      '디자인 전공자, 비전공자 모두 환영합니다.\n피그마 기초를 함께 공부하고 최종적으로는 웹 서비스 1개를 완성하는 걸 목표로 합니다.\n적극적으로 스터디를 참여할 분들을 기다리겠습니다.',
-    goal: '피그마로 웹 서비스 1개 완성하기',
-    totalWeeks: 4,
-    images: [
-      { url: 'https://placehold.co/336x418/2d3436/ffffff?text=Figma+1', displayOrder: 0 },
-      { url: 'https://placehold.co/336x418/0984e3/ffffff?text=Figma+2', displayOrder: 1 },
-      { url: 'https://placehold.co/336x418/6c5ce7/ffffff?text=Figma+3', displayOrder: 2 },
-      { url: 'https://placehold.co/336x418/00b894/ffffff?text=Figma+4', displayOrder: 3 },
-      { url: 'https://placehold.co/336x418/fdcb6e/333333?text=Figma+5', displayOrder: 4 },
-      { url: 'https://placehold.co/336x418/e17055/ffffff?text=Figma+6', displayOrder: 5 },
-      { url: 'https://placehold.co/336x418/a29bfe/ffffff?text=Figma+7', displayOrder: 6 },
-      { url: 'https://placehold.co/336x418/55efc4/333333?text=Figma+8', displayOrder: 7 },
-      { url: 'https://placehold.co/336x418/74b9ff/333333?text=Figma+9', displayOrder: 8 },
-    ],
-    weeklyPlans: [
-      {
-        week: 1,
-        title: '피그마 이론 마스터',
-        startDate: '2026-03-15',
-        endDate: '2026-03-21',
-        details: ['01. 피그마 프레임 이론', '02. 피그마 컴포넌트 마스터'],
-      },
-      {
-        week: 2,
-        title: '피그마 실무',
-        startDate: '2026-03-22',
-        endDate: '2026-03-28',
-        details: ['01. 실무 프로젝트 분석'],
-      },
-      {
-        week: 3,
-        title: '서비스 기획 및 와이어프레임 작업',
-        startDate: '2026-03-29',
-        endDate: '2026-04-04',
-        details: [],
-      },
-      { week: 4, title: '서비스 완성', startDate: '2026-04-05', endDate: '2026-04-05', details: [] },
-    ],
-    members: [
-      {
-        userId: 10,
-        nickname: '김민수',
-        profileImage: 'https://avatars.githubusercontent.com/u/10?v=4',
-        role: 'LEADER',
-      },
-      {
-        userId: 11,
-        nickname: '최서연',
-        profileImage: 'https://avatars.githubusercontent.com/u/11?v=4',
-        role: 'MEMBER',
-      },
-      {
-        userId: 12,
-        nickname: '박수철',
-        profileImage: 'https://avatars.githubusercontent.com/u/12?v=4',
-        role: 'MEMBER',
-      },
-      {
-        userId: 13,
-        nickname: '이수태',
-        profileImage: 'https://avatars.githubusercontent.com/u/13?v=4',
-        role: 'MEMBER',
-      },
-      {
-        userId: 14,
-        nickname: '김경아',
-        profileImage: 'https://avatars.githubusercontent.com/u/14?v=4',
-        role: 'MEMBER',
-      },
-      {
-        userId: 15,
-        nickname: '정수진',
-        profileImage: 'https://avatars.githubusercontent.com/u/15?v=4',
-        role: 'MEMBER',
-      },
-    ],
-    myApplicationStatus: null,
-  },
+  // id 8(정보처리기사)은 mockDetails 미정의 → 핸들러 auto-gen으로 BASE_GATHERINGS와 일관되게 처리.
 };
 
 // ─── 헬퍼 ─────────────────────────────────────────────────────────────────────
@@ -404,7 +316,16 @@ const mockDetails: Record<number, GatheringDetail> = {
  * - 얕은 복사본에서 작업하므로 mockGatherings 원본은 변경되지 않는다.
  */
 const applyFilters = (list: GatheringListItem[], url: URL): GatheringListItem[] => {
-  const type = url.searchParams.get('type') as GatheringListItem['type'] | null;
+  // 클라이언트는 GATHERING_TYPE_TO_PARAM으로 'STUDY'/'PROJECT' 영문을 보내지만
+  // mockGatherings의 type 필드는 '스터디'/'프로젝트' 한글이라 그대로 비교하면 항상 false.
+  // 영문 ↔ 한글 매핑으로 정규화.
+  const typeParam = url.searchParams.get('type');
+  const type =
+    typeParam === 'STUDY'
+      ? '스터디'
+      : typeParam === 'PROJECT'
+        ? '프로젝트'
+        : (typeParam as GatheringListItem['type'] | null);
   const categoryIds = url.searchParams.getAll('categoryIds').map(Number).filter(Boolean);
   const sort = url.searchParams.get('sort') as 'latest' | 'popular' | 'deadline' | null;
   const status = url.searchParams.get('status') as GatheringListItem['status'] | 'ALL' | null;
@@ -413,8 +334,16 @@ const applyFilters = (list: GatheringListItem[], url: URL): GatheringListItem[] 
   let result = [...list]; // 얕은 복사 → filter/sort가 mockGatherings 원본을 변경하지 않음
 
   if (type) result = result.filter((g) => g.type === type);
-  // categoryIds 필터링은 mock에서 간소화 (실제로는 서버에서 ID 기반 필터링)
-  if (categoryIds.length > 0) result = result.filter(() => true);
+  // categoryIds 필터링: BASE_GATHERINGS의 categoryIds는 명시되어 있지 않으니
+  // categories(한글 라벨) 기반으로 매핑. MOCK_CATEGORIES의 id ↔ name 매핑 활용.
+  if (categoryIds.length > 0) {
+    const selectedNames = new Set(
+      categoryIds.map((cid) => MOCK_CATEGORIES.find((c) => c.id === cid)?.name).filter(Boolean) as string[],
+    );
+    if (selectedNames.size > 0) {
+      result = result.filter((g) => g.categories.some((c) => selectedNames.has(c)));
+    }
+  }
   if (status && status !== 'ALL') result = result.filter((g) => g.status === status);
   if (query) {
     const q = query.toLowerCase();
@@ -509,6 +438,24 @@ export const gatheringsHandlers = [
       if (!base)
         return HttpResponse.json({ success: false, data: null, message: '모임을 찾을 수 없습니다.' }, { status: 404 });
 
+      // 공유 mock(GATHERING_MEMBERS)에 멤버가 있으면 그걸 사용, 없으면 leader 1명만
+      const sharedMembers = GATHERING_MEMBERS[gatheringId];
+      const members = sharedMembers
+        ? sharedMembers.map((m) => ({
+            userId: m.userId,
+            nickname: m.nickname,
+            profileImage: m.profileImage,
+            role: m.role,
+          }))
+        : [
+            {
+              userId: base.leader.id,
+              nickname: base.leader.nickname,
+              profileImage: base.leader.profileImage,
+              role: 'LEADER' as const,
+            },
+          ];
+
       const generated: GatheringDetail = {
         ...base,
         description: `${base.title} 모임입니다.`,
@@ -516,14 +463,7 @@ export const gatheringsHandlers = [
         totalWeeks: 8,
         images: [],
         weeklyPlans: [],
-        members: [
-          {
-            userId: base.leader.id,
-            nickname: base.leader.nickname,
-            profileImage: base.leader.profileImage,
-            role: 'LEADER',
-          },
-        ],
+        members,
         myApplicationStatus: null,
       };
       return HttpResponse.json(createApiResponse(generated));
@@ -544,8 +484,8 @@ export const gatheringsHandlers = [
       id: Date.now(),
       type: PARAM_TO_TYPE[body.type] ?? '스터디',
       categories: body.categoryIds.map((id: number) => {
-        const names: Record<number, string> = { 1: '개발', 2: '어학', 3: '독서', 4: '자격증', 5: '디자인' };
-        return names[id] ?? `카테고리${id}`;
+        // MOCK_CATEGORIES와 동일한 ID 매핑 (7~11). lookup 실패 시 MOCK_CATEGORIES에서 직접 찾기.
+        return MOCK_CATEGORIES.find((c) => c.id === id)?.name ?? `카테고리${id}`;
       }),
       title: body.title,
       shortDescription: body.shortDescription,
@@ -556,7 +496,7 @@ export const gatheringsHandlers = [
       startDate: body.startDate,
       endDate: body.endDate,
       status: 'RECRUITING',
-      leader: { id: 1, nickname: '김코딩', profileImage: null },
+      leader: { id: CURRENT_USER.id, nickname: CURRENT_USER.nickname, profileImage: CURRENT_USER.profileImage },
     };
 
     const detail: GatheringDetail = {
@@ -566,7 +506,14 @@ export const gatheringsHandlers = [
       totalWeeks: getTotalWeeks(body.startDate, body.endDate),
       images: [],
       weeklyPlans: [],
-      members: [{ userId: 1, nickname: '김코딩', profileImage: null, role: 'LEADER' }],
+      members: [
+        {
+          userId: CURRENT_USER.id,
+          nickname: CURRENT_USER.nickname,
+          profileImage: CURRENT_USER.profileImage,
+          role: 'LEADER',
+        },
+      ],
       myApplicationStatus: null,
     };
 
