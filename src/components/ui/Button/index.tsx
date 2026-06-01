@@ -78,7 +78,7 @@ export const buttonVariants = cva('cursor-pointer transition-colors disabled:cur
       /** Hero CTA: 모바일 Small, md 이상 Big */
       'landing-hero':
         'h-12 w-[120px] rounded-[33.333px] text-body-02-sb md:h-[72px] md:w-[179px] md:rounded-full md:text-h5-b',
-      'approve-reject': 'px-6 py-2',
+      'approve-reject': 'px-7 py-3',
     },
   },
   defaultVariants: {

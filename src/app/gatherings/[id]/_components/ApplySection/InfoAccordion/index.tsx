@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { cn } from '@/lib/cn';
 
 import type { GatheringDetail } from '@/api/gatherings/types';
-import { ArrowIcon, CategoryIcon, FlagIcon, CalendarIcon, PersonIcon, AlarmIcon } from '@/components/ui/Icon';
+import { ArrowIcon, CategoryIconv2, FlagIcon, CalendarIcon, PersonIcon, AlarmIcon } from '@/components/ui/Icon';
 import { InfoRow } from './InfoRow';
 import { DeadlineLabel } from '../DeadlineLabel';
 import { formatDate, MILLISECONDS_IN_A_DAY } from '../utils/dateUtils';
@@ -29,7 +29,7 @@ export function InfoAccordion({ data, defaultOpen = true, className }: InfoAccor
   const weeksLabel = toWeeksLabel(data.startDate, data.endDate);
 
   return (
-    <div className={cn('border-gray-150 overflow-hidden rounded-xl border', className)}>
+    <div className={cn('overflow-hidden rounded-xl border border-gray-200', className)}>
       <button
         type='button'
         className='text-body-02-sb bg-gray-150 flex w-full items-center justify-between px-5 py-4 text-blue-500 transition-colors hover:bg-gray-50'
@@ -47,8 +47,8 @@ export function InfoAccordion({ data, defaultOpen = true, className }: InfoAccor
         )}
       >
         <div className='overflow-hidden'>
-          <ul className='border-gray-150 flex flex-col gap-3 border-t px-5 py-4'>
-            <InfoRow icon={<CategoryIcon size={24} className='text-gray-800' />}>{data.categories.join(', ')}</InfoRow>
+          <ul className='flex flex-col gap-3 border-t border-gray-200 px-5 py-4'>
+            <InfoRow icon={<CategoryIconv2 size={24} />}>{data.categories.join(', ')}</InfoRow>
             <InfoRow icon={<FlagIcon size={24} className='text-gray-800' />}>{data.goal}</InfoRow>
             <InfoRow icon={<CalendarIcon size={24} className='text-gray-800' />}>
               {formatDate(data.startDate)} ~ {formatDate(data.endDate)} · {weeksLabel}

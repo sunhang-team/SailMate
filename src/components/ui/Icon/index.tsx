@@ -4,6 +4,7 @@ export { ArrowIcon } from './ArrowIcon';
 export { BackupIcon } from './BackupIcon';
 export { CalendarIcon } from './CalendarIcon';
 export { CategoryIcon } from './CategoryIcon';
+export { CategoryIconv2 } from './CategoryIconv2';
 export { CheckIcon } from './CheckIcon';
 export { CloseIcon } from './CloseIcon';
 export { CollaborationMannersIcon } from './CollaborationMannersIcon';

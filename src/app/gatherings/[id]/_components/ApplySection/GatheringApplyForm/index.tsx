@@ -50,18 +50,18 @@ export function GatheringApplyForm({ gatheringTitle, onSubmit, isLoading }: Gath
   };
 
   return (
-    <form onSubmit={handleSubmit(handleFormSubmit)} className='flex flex-col gap-6'>
-      <div className='flex flex-col gap-2'>
+    <form onSubmit={handleSubmit(handleFormSubmit)} className='flex flex-col gap-7'>
+      <div className='flex flex-col gap-6'>
         <h2 className='text-h3-b text-gray-900'>모임 신청</h2>
-        <p className='text-body-02-m text-gray-600'>
+        <p className='text-body-02-m gap-2 text-gray-600'>
           신청 모임 <span className='mx-2 text-gray-600'>|</span>{' '}
           <span className='text-body-02-sb text-gray-900'>{gatheringTitle}</span>
         </p>
       </div>
 
-      <div className='flex flex-col gap-4'>
-        <div className='relative flex flex-col gap-2'>
-          <div className='flex justify-between'>
+      <div className='flex flex-col gap-7'>
+        <div className='relative flex flex-col'>
+          <div className='mb-2 flex justify-between'>
             <label className='text-body-02-m text-gray-800'>
               나의 목표 <span className='text-blue-400'>*</span>
             </label>
@@ -69,7 +69,7 @@ export function GatheringApplyForm({ gatheringTitle, onSubmit, isLoading }: Gath
           <Textarea
             {...register('personalGoal')}
             placeholder='이 모임에서 달성할 목표를 적어주세요. (최소 5자, 최대 200자)'
-            className='min-h-[160px]'
+            className='text-small-01-r min-h-[132px]'
             error={errors.personalGoal?.message}
           />
           <span className='text-small-01-r absolute right-4 bottom-1 text-gray-400'>{personalGoal.length}/200</span>
@@ -80,7 +80,7 @@ export function GatheringApplyForm({ gatheringTitle, onSubmit, isLoading }: Gath
           <Textarea
             {...register('selfIntroduction')}
             placeholder='(선택) 모임장에게 한마디를 적어주세요.'
-            className='min-h-[120px]'
+            className='text-small-01-r min-h-[100px]'
             error={errors.selfIntroduction?.message}
           />
           <span className='text-small-01-r absolute right-4 bottom-1 text-gray-400'>
@@ -89,9 +89,9 @@ export function GatheringApplyForm({ gatheringTitle, onSubmit, isLoading }: Gath
         </div>
       </div>
 
-      <div className='flex flex-col gap-2'>
+      <div className='flex flex-col gap-3'>
         <p className='text-body-02-m text-gray-800'>팀 구성을 위해 닉네임과 평판 점수가 모임장에게 전달됩니다.</p>
-        <label className='flex cursor-pointer items-center gap-2'>
+        <label className='flex cursor-pointer items-center gap-0.5'>
           <input type='checkbox' {...register('agreement')} className='peer sr-only' />
           <CheckIcon className={cn('size-5 transition-colors', agreement ? 'text-blue-300' : 'text-gray-500')} />
           <span className={cn('text-small-01-r transition-colors', agreement ? 'text-blue-300' : 'text-gray-500')}>
@@ -103,7 +103,7 @@ export function GatheringApplyForm({ gatheringTitle, onSubmit, isLoading }: Gath
       <Button
         type='submit'
         variant='action'
-        className='text-body-01-sb h-13.5 w-full md:h-18 lg:h-20'
+        className='text-h5-sb h-13.5 w-full md:h-18 lg:h-20'
         disabled={!isValid || isLoading}
       >
         {isLoading ? '신청 중...' : '작성 완료'}
