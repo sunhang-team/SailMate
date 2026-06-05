@@ -7,7 +7,7 @@ import { HandIcon } from '@/components/ui/Icon';
 import { ProgressBar } from '@/components/ui/Progress';
 import { useFallbackImage } from '@/hooks/useFallbackImage';
 
-import { MemberBadge } from '../../MemberBadge';
+import { MemberBadge, MIN_WEEKS_FOR_WARNING, WARNING_THRESHOLD } from '../../MemberBadge';
 import { RankBadge } from '../RankBadge';
 
 import type { AchievementRankingItem } from '@/api/achievements/types';
@@ -18,9 +18,6 @@ interface RankingItemProps {
   streakDays: number;
   currentWeek: number;
 }
-
-const WARNING_THRESHOLD = 50;
-const MIN_WEEKS_FOR_WARNING = 2;
 
 export function RankingItem({ item, isMe, streakDays, currentWeek }: RankingItemProps) {
   const { imgSrc, onError } = useFallbackImage(item.profileImage);

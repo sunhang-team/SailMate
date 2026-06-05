@@ -9,12 +9,12 @@ import { reviewQueries } from '@/api/reviews/queries';
 import { useAuth } from '@/hooks/useAuth';
 import { getCurrentWeek, getRemainingDays } from '@/lib/formatGatheringDate';
 
+import { MIN_WEEKS_FOR_WARNING, WARNING_THRESHOLD } from '../MemberBadge';
+
 import type { MemberAchievement } from '@/api/achievements/types';
 import type { Member } from '@/api/memberships/types';
 
 const MEMBERS_PER_PAGE = 10;
-const WARNING_ACHIEVEMENT_THRESHOLD = 50;
-const MIN_WEEKS_FOR_WARNING = 2;
 
 export const useMemberList = (gatheringId: number) => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -49,7 +49,7 @@ export const useMemberList = (gatheringId: number) => {
   };
 
   const getBadgeInfo = (member: Member): { type: 'streak' | 'warning' | null; label: string } => {
-    if (member.overallAchievementRate < WARNING_ACHIEVEMENT_THRESHOLD && currentWeek >= MIN_WEEKS_FOR_WARNING) {
+    if (member.overallAchievementRate < WARNING_THRESHOLD && currentWeek >= MIN_WEEKS_FOR_WARNING) {
       return { type: 'warning', label: '주의' };
     }
 

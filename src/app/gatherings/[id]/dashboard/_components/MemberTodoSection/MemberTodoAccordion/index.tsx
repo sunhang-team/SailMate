@@ -6,7 +6,7 @@ import { ArrowIcon } from '@/components/ui/Icon/ArrowIcon';
 import { Profile } from '@/components/ui/Profile';
 import { cn } from '@/lib/cn';
 
-import { MemberBadge } from '../../MemberBadge';
+import { MemberBadge, MIN_WEEKS_FOR_WARNING, WARNING_THRESHOLD } from '../../MemberBadge';
 import { MemberTodoGrid } from '../MemberTodoGrid';
 
 import type { Member } from '@/api/memberships/types';
@@ -18,9 +18,6 @@ interface MemberTodoAccordionProps {
   streakDays: number;
   currentWeek: number;
 }
-
-const WARNING_THRESHOLD = 50;
-const MIN_WEEKS_FOR_WARNING = 2;
 
 export function MemberTodoAccordion({ member, todos, streakDays, currentWeek }: MemberTodoAccordionProps) {
   const [isOpen, setIsOpen] = useState(false);

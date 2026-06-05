@@ -1,6 +1,9 @@
 import { StateIcon } from '@/components/ui/Icon';
 import { Tag } from '@/components/ui/Tag';
 
+export const WARNING_THRESHOLD = 50;
+export const MIN_WEEKS_FOR_WARNING = 2;
+
 interface MemberBadgeProps {
   type: 'streak' | 'warning';
   label: string;
