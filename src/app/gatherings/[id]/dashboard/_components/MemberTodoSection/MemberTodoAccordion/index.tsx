@@ -5,9 +5,8 @@ import { useState } from 'react';
 import { ArrowIcon } from '@/components/ui/Icon/ArrowIcon';
 import { Profile } from '@/components/ui/Profile';
 import { cn } from '@/lib/cn';
-import { StateIcon } from '@/components/ui/Icon';
-import { Tag } from '@/components/ui/Tag';
 
+import { MemberBadge } from '../../MemberBadge';
 import { MemberTodoGrid } from '../MemberTodoGrid';
 
 import type { Member } from '@/api/memberships/types';
@@ -51,22 +50,8 @@ export function MemberTodoAccordion({ member, todos, streakDays }: MemberTodoAcc
           </div>
         </div>
         <div className='flex items-center gap-2 md:gap-4'>
-          {isWarning && (
-            <span className='text-small-02-sb inline-flex items-center gap-1 rounded-[4px] px-2 py-0.5 text-orange-400'>
-              <Tag variant='info' state='bad'>
-                <StateIcon variant='warning' size={14} />
-                주의
-              </Tag>
-            </span>
-          )}
-          {!isWarning && streakDays > 0 && (
-            <span className='text-small-02-sb inline-flex items-center gap-1 rounded-[4px] px-2 py-0.5 text-blue-400'>
-              <Tag variant='info' state='good'>
-                <StateIcon variant='active' size={14} />
-                {streakDays}일
-              </Tag>
-            </span>
-          )}
+          {isWarning && <MemberBadge type='warning' label='주의' />}
+          {!isWarning && streakDays > 0 && <MemberBadge type='streak' label={`${streakDays}일`} />}
           <p className='text-small-01-r md:text-body-01-r mr-3 flex gap-1 whitespace-nowrap text-gray-900'>
             달성률
             <span className='text-small-01-sb md:text-body-01-sb flex items-center font-semibold text-blue-300'>
