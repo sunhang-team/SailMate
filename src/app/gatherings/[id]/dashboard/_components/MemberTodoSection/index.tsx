@@ -4,6 +4,7 @@ import { useState } from 'react';
 
 import { useSuspenseQueries, useSuspenseQuery } from '@tanstack/react-query';
 
+import { achievementQueries } from '@/api/achievements/queries';
 import { gatheringQueries } from '@/api/gatherings/queries';
 import { membershipQueries } from '@/api/memberships/queries';
 import { todoQueries } from '@/api/todos/queries';
@@ -31,6 +32,8 @@ export function MemberTodoSection({ gatheringId }: MemberTodoSectionProps) {
     ...todoQueries.list(gatheringId, { week: currentWeek }),
   });
 
+  const { data: achievementData } = useSuspenseQuery(achievementQueries.detail(gatheringId));
+
   const totalMembers = membersData.members.length;
   const totalPages = Math.ceil(totalMembers / ITEMS_PER_PAGE);
 
@@ -49,6 +52,7 @@ export function MemberTodoSection({ gatheringId }: MemberTodoSectionProps) {
               key={member.userId}
               member={member}
               todos={todoData.todos.filter((t) => t.userId === member.userId)}
+              streakDays={achievementData.members.find((m) => m.userId === member.userId)?.streakDays ?? 0}
             />
           ))}
         </div>
