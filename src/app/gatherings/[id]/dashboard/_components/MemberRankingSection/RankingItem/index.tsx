@@ -15,11 +15,12 @@ import type { AchievementRankingItem } from '@/api/achievements/types';
 interface RankingItemProps {
   item: AchievementRankingItem;
   isMe: boolean;
+  streakDays: number;
 }
 
 const WARNING_THRESHOLD = 50;
 
-export function RankingItem({ item, isMe }: RankingItemProps) {
+export function RankingItem({ item, isMe, streakDays }: RankingItemProps) {
   const { imgSrc, onError } = useFallbackImage(item.profileImage);
   const isWarning = item.overallRate < WARNING_THRESHOLD;
 
@@ -38,7 +39,7 @@ export function RankingItem({ item, isMe }: RankingItemProps) {
           <div className='flex items-center justify-between'>
             <div className='flex items-center gap-1 md:gap-2'>
               <span className='text-small-02-m md:text-body-01-m text-gray-900'>{item.nickname}</span>
-              {isWarning ? (
+              {isWarning && (
                 <Tag
                   variant='deadline'
                   state='warning'
@@ -47,14 +48,15 @@ export function RankingItem({ item, isMe }: RankingItemProps) {
                   <StateIcon variant='warning' className='h-3 w-3 md:h-4 md:w-4' />
                   주의
                 </Tag>
-              ) : (
+              )}
+              {!isWarning && streakDays > 0 && (
                 <Tag
                   variant='deadline'
                   state='goal'
                   className='md:text-small-02-m gap-0.3 flex h-[17px] w-10 px-1.5 py-0 text-[10px] md:h-[27px] md:w-[66px] md:gap-1 md:px-3 md:py-1'
                 >
                   <StateIcon variant='active' className='h-3 w-3 md:h-4 md:w-4' />
-                  14일
+                  {streakDays}일
                 </Tag>
               )}
             </div>
