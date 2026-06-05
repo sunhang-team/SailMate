@@ -15,7 +15,6 @@ import type { Member } from '@/api/memberships/types';
 const MEMBERS_PER_PAGE = 10;
 const WARNING_ACHIEVEMENT_THRESHOLD = 0.5; // 50% 이하면 주의 배지 (현재 주차 기준)
 const MIN_WEEKS_FOR_WARNING = 2;
-const DAYS_PER_WEEK = 7;
 
 export const useMemberList = (gatheringId: number) => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -57,21 +56,9 @@ export const useMemberList = (gatheringId: number) => {
       return { type: 'warning', label: '주의' };
     }
 
-    const STREAK_WEEKS_THRESHOLD = 2;
     const memberAchievement = achievementData.members.find((m: MemberAchievement) => m.userId === member.userId);
-    if (memberAchievement) {
-      let streak = 0;
-      for (let w = currentWeek; w >= 1; w--) {
-        const weekRate = memberAchievement.weeklyRates.find((wr) => wr.week === w);
-        if (weekRate && weekRate.rate > 0) {
-          streak++;
-        } else {
-          break;
-        }
-      }
-      if (streak >= STREAK_WEEKS_THRESHOLD) {
-        return { type: 'streak', label: `${streak * DAYS_PER_WEEK}일` };
-      }
+    if (memberAchievement && memberAchievement.streakDays > 0) {
+      return { type: 'streak', label: `${memberAchievement.streakDays}일` };
     }
 
     return { type: null, label: '' };
