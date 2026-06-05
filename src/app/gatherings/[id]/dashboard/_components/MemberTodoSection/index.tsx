@@ -53,6 +53,7 @@ export function MemberTodoSection({ gatheringId }: MemberTodoSectionProps) {
               member={member}
               todos={todoData.todos.filter((t) => t.userId === member.userId)}
               streakDays={achievementData.members.find((m) => m.userId === member.userId)?.streakDays ?? 0}
+              currentWeek={currentWeek}
             />
           ))}
         </div>

@@ -5,9 +5,11 @@ import { useState } from 'react';
 import { useSuspenseQueries } from '@tanstack/react-query';
 
 import { achievementQueries } from '@/api/achievements/queries';
+import { gatheringQueries } from '@/api/gatherings/queries';
 import { Pagination } from '@/components/ui/Pagination';
 import { useAuth } from '@/hooks/useAuth';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
+import { getCurrentWeek } from '@/lib/formatGatheringDate';
 
 import { RankingItem } from './RankingItem';
 
@@ -19,9 +21,14 @@ const ITEMS_PER_PAGE_DESKTOP = 10;
 const ITEMS_PER_PAGE_MOBILE = 5;
 
 export function MemberRankingSection({ gatheringId }: MemberRankingSectionProps) {
-  const [{ data }, { data: achievementData }] = useSuspenseQueries({
-    queries: [achievementQueries.ranking(gatheringId), achievementQueries.detail(gatheringId)],
+  const [{ data }, { data: achievementData }, { data: gatheringData }] = useSuspenseQueries({
+    queries: [
+      achievementQueries.ranking(gatheringId),
+      achievementQueries.detail(gatheringId),
+      gatheringQueries.detail(gatheringId),
+    ],
   });
+  const currentWeek = getCurrentWeek(gatheringData.startDate);
   const { user } = useAuth();
   const isDesktop = useMediaQuery('(min-width: 1024px)');
 
@@ -54,6 +61,7 @@ export function MemberRankingSection({ gatheringId }: MemberRankingSectionProps)
                 item={item}
                 isMe={user?.id === item.userId}
                 streakDays={achievementData.members.find((m) => m.userId === item.userId)?.streakDays ?? 0}
+                currentWeek={currentWeek}
               />
             ))}
           </div>
@@ -64,6 +72,7 @@ export function MemberRankingSection({ gatheringId }: MemberRankingSectionProps)
                 item={item}
                 isMe={user?.id === item.userId}
                 streakDays={achievementData.members.find((m) => m.userId === item.userId)?.streakDays ?? 0}
+                currentWeek={currentWeek}
               />
             ))}
           </div>
@@ -76,6 +85,7 @@ export function MemberRankingSection({ gatheringId }: MemberRankingSectionProps)
               item={item}
               isMe={user?.id === item.userId}
               streakDays={achievementData.members.find((m) => m.userId === item.userId)?.streakDays ?? 0}
+              currentWeek={currentWeek}
             />
           ))}
         </div>

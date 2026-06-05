@@ -16,14 +16,16 @@ interface MemberTodoAccordionProps {
   member: Member;
   todos: Todo[];
   streakDays: number;
+  currentWeek: number;
 }
 
 const WARNING_THRESHOLD = 50;
+const MIN_WEEKS_FOR_WARNING = 2;
 
-export function MemberTodoAccordion({ member, todos, streakDays }: MemberTodoAccordionProps) {
+export function MemberTodoAccordion({ member, todos, streakDays, currentWeek }: MemberTodoAccordionProps) {
   const [isOpen, setIsOpen] = useState(false);
 
-  const isWarning = member.overallAchievementRate < WARNING_THRESHOLD;
+  const isWarning = member.overallAchievementRate < WARNING_THRESHOLD && currentWeek >= MIN_WEEKS_FOR_WARNING;
 
   return (
     <div

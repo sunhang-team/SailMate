@@ -16,13 +16,15 @@ interface RankingItemProps {
   item: AchievementRankingItem;
   isMe: boolean;
   streakDays: number;
+  currentWeek: number;
 }
 
 const WARNING_THRESHOLD = 50;
+const MIN_WEEKS_FOR_WARNING = 2;
 
-export function RankingItem({ item, isMe, streakDays }: RankingItemProps) {
+export function RankingItem({ item, isMe, streakDays, currentWeek }: RankingItemProps) {
   const { imgSrc, onError } = useFallbackImage(item.profileImage);
-  const isWarning = item.overallRate < WARNING_THRESHOLD;
+  const isWarning = item.overallRate < WARNING_THRESHOLD && currentWeek >= MIN_WEEKS_FOR_WARNING;
 
   return (
     <div

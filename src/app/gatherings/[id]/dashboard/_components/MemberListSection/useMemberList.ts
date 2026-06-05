@@ -13,7 +13,7 @@ import type { MemberAchievement } from '@/api/achievements/types';
 import type { Member } from '@/api/memberships/types';
 
 const MEMBERS_PER_PAGE = 10;
-const WARNING_ACHIEVEMENT_THRESHOLD = 0.5; // 50% 이하면 주의 배지 (현재 주차 기준)
+const WARNING_ACHIEVEMENT_THRESHOLD = 50;
 const MIN_WEEKS_FOR_WARNING = 2;
 
 export const useMemberList = (gatheringId: number) => {
@@ -49,10 +49,7 @@ export const useMemberList = (gatheringId: number) => {
   };
 
   const getBadgeInfo = (member: Member): { type: 'streak' | 'warning' | null; label: string } => {
-    const achievedWeeks = getAchievedWeeks(member.userId);
-    const achievementRatio = currentWeek > 0 ? achievedWeeks / currentWeek : 0;
-
-    if (achievementRatio <= WARNING_ACHIEVEMENT_THRESHOLD && currentWeek >= MIN_WEEKS_FOR_WARNING) {
+    if (member.overallAchievementRate < WARNING_ACHIEVEMENT_THRESHOLD && currentWeek >= MIN_WEEKS_FOR_WARNING) {
       return { type: 'warning', label: '주의' };
     }
 
