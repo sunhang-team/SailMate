@@ -4,7 +4,13 @@ import type { Preview } from '@storybook/nextjs-vite';
 import { pretendard } from '../src/app/fonts';
 import '../src/app/globals.css';
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 60 * 1000,
+    },
+  },
+});
 
 const preview: Preview = {
   decorators: [
