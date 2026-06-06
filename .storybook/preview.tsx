@@ -1,12 +1,20 @@
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import type { Preview } from '@storybook/nextjs-vite';
+
 import { pretendard } from '../src/app/fonts';
 import '../src/app/globals.css';
+
+const queryClient = new QueryClient();
 
 const preview: Preview = {
   decorators: [
     (Story) => {
       document.documentElement.classList.add(pretendard.variable, 'font-pretendard');
-      return Story();
+      return (
+        <QueryClientProvider client={queryClient}>
+          <Story />
+        </QueryClientProvider>
+      );
     },
   ],
   parameters: {
