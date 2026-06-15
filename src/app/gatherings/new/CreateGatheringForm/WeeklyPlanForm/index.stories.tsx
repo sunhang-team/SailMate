@@ -11,7 +11,7 @@ interface WeeklyPlanFormStoryArgs {
 }
 
 const meta = {
-  title: 'app/CreateGatheringForm/WeeklyPlanForm',
+  title: 'app/CreateGathering/WeeklyPlanForm',
   args: {
     totalWeeks: 1,
   },
@@ -42,14 +42,14 @@ function WeeklyPlanFormStory({ totalWeeks }: WeeklyPlanFormStoryArgs) {
   );
 }
 
-export const OneWeek: Story = {
+export const MaxOneWeek: Story = {
   args: {
     totalWeeks: 1,
   },
   render: (args) => <WeeklyPlanFormStory totalWeeks={args.totalWeeks} />,
 };
 
-export const ThreeWeeks: Story = {
+export const MaxThreeWeeks: Story = {
   args: {
     totalWeeks: 3,
   },
