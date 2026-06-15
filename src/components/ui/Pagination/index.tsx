@@ -31,7 +31,7 @@ export function Pagination({
     <div
       className={cn(
         'flex items-center justify-center',
-        variant === 'numbered' ? 'gap-6 md:gap-10' : 'gap-3',
+        variant === 'numbered' ? 'gap-6 md:gap-10' : 'gap-2 md:gap-3',
         className,
       )}
     >

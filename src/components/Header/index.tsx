@@ -7,6 +7,7 @@ import { useRouter, usePathname } from 'next/navigation';
 
 import { AuthSection } from './AuthSection';
 import { useAuth } from '@/hooks/useAuth';
+import { useLogout } from '@/api/auth/queries';
 import { CloseIcon, ArrowIcon } from '@/components/ui/Icon';
 
 const BASE_NAV_ITEMS = [
@@ -23,6 +24,13 @@ export function Header() {
   const { isLoggedIn, isLoading } = useAuth();
   const hasSession = typeof document !== 'undefined' && document.cookie.includes('has-session=');
   const mobileNavItems = isLoggedIn ? [...BASE_NAV_ITEMS, { href: '/my', label: '마이페이지' }] : BASE_NAV_ITEMS;
+
+  const { mutate: logout } = useLogout({
+    onSuccess: () => {
+      router.push('/');
+      setIsSidebarOpen(false);
+    },
+  });
 
   useEffect(() => {
     if (!isSidebarOpen) {
@@ -147,6 +155,13 @@ export function Header() {
           </ul>
         </nav>
 
+        {isLoggedIn && (
+          <div className='text-body-02-m absolute right-7 bottom-7 text-gray-400'>
+            <button type='button' onClick={() => logout()}>
+              로그아웃
+            </button>
+          </div>
+        )}
         {(isLoading || !isLoggedIn) && (
           <div className='text-body-02-m absolute right-7 bottom-7 flex items-center gap-3 text-gray-400'>
             <button type='button' onClick={() => handleNavigate('/login')}>

@@ -76,11 +76,11 @@ export function EmailLoginForm() {
         />
         <button
           type='button'
-          className='absolute top-9 right-3 cursor-pointer text-gray-400 md:top-10'
+          className='absolute top-10 right-3 cursor-pointer text-gray-800 md:top-10'
           onClick={() => setShowPassword((prev) => !prev)}
           aria-label={showPassword ? '비밀번호 숨기기' : '비밀번호 보기'}
         >
-          <VisibilityIcon variant={showPassword ? 'on' : 'off'} size={20} />
+          <VisibilityIcon variant={showPassword ? 'on' : 'off'} size={24} />
         </button>
       </div>
 
