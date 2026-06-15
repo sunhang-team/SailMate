@@ -6,8 +6,6 @@ import { achievementQueries } from '@/api/achievements/queries';
 import { gatheringQueries } from '@/api/gatherings/queries';
 import { todoQueries } from '@/api/todos/queries';
 import { getCurrentWeek, getRemainingDays } from '@/lib/formatGatheringDate';
-import { calculateStreakDays } from '@/lib/streakUtils';
-
 import { AchievementGauge } from './AchievementGauge';
 import { StreakBadge } from './StreakBadge';
 import { SummaryInfoCard } from './SummaryInfoCard';
@@ -33,7 +31,7 @@ export function WeeklySummarySection({ gatheringId }: WeeklySummarySectionProps)
   const incompleteTodoCount = currentWeekTodos.filter((t) => !t.isCompleted).length;
   const myRate = myTodoData.weeklyAchievementRate;
   const teamRate = achievementData.teamWeeklyRates.find((r) => r.week === currentWeek)?.rate ?? 0;
-  const streakDays = calculateStreakDays(myTodoData.todos, currentWeek);
+  const streakDays = myTodoData.streakDays;
 
   return (
     <div className='border-gray-150 rounded-2xl border bg-white p-4 shadow-(--shadow-02) md:p-6'>

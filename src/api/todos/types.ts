@@ -35,6 +35,7 @@ export interface MyTodoListResponse {
   todos: Todo[];
   weeklyAchievementRate: number;
   overallAchievementRate: number;
+  streakDays: number;
 }
 
 /** POST `/gatherings/:gatheringId/todos` — Todo 생성 응답 내 todo 객체 */
