@@ -20,6 +20,7 @@ const mockSunny: GatheringAchievements = {
         { week: 3, rate: 60.0 },
       ],
       overallRate: 80.0,
+      streakDays: 21,
     },
     {
       userId: 2,
@@ -30,6 +31,7 @@ const mockSunny: GatheringAchievements = {
         { week: 3, rate: 40.0 },
       ],
       overallRate: 60.0,
+      streakDays: 14,
     },
     {
       userId: 3,
@@ -40,6 +42,7 @@ const mockSunny: GatheringAchievements = {
         { week: 3, rate: 80.0 },
       ],
       overallRate: 80.0,
+      streakDays: 7,
     },
   ],
   teamWeeklyRates: [
@@ -62,6 +65,7 @@ const mockCloudy: GatheringAchievements = {
         { week: 3, rate: 30.0 },
       ],
       overallRate: 50.0,
+      streakDays: 3,
     },
     {
       userId: 2,
@@ -72,6 +76,7 @@ const mockCloudy: GatheringAchievements = {
         { week: 3, rate: 30.0 },
       ],
       overallRate: 43.3,
+      streakDays: 0,
     },
     {
       userId: 3,
@@ -82,6 +87,7 @@ const mockCloudy: GatheringAchievements = {
         { week: 3, rate: 50.0 },
       ],
       overallRate: 56.7,
+      streakDays: 5,
     },
   ],
   teamWeeklyRates: [
@@ -104,6 +110,7 @@ const mockStormy: GatheringAchievements = {
         { week: 3, rate: 10.0 },
       ],
       overallRate: 23.3,
+      streakDays: 0,
     },
     {
       userId: 2,
@@ -114,6 +121,7 @@ const mockStormy: GatheringAchievements = {
         { week: 3, rate: 10.0 },
       ],
       overallRate: 20.0,
+      streakDays: 0,
     },
     {
       userId: 3,
@@ -124,6 +132,7 @@ const mockStormy: GatheringAchievements = {
         { week: 3, rate: 20.0 },
       ],
       overallRate: 30.0,
+      streakDays: 1,
     },
   ],
   teamWeeklyRates: [
@@ -294,6 +303,17 @@ const synthesizeWeeklyRates = (overall: number) =>
     return { week: i + 1, rate: round1(rate) };
   });
 
+const computeStreakDays = (weeklyRates: { week: number; rate: number }[]): number => {
+  const maxWeek = weeklyRates.reduce((max, wr) => Math.max(max, wr.week), 0);
+  let streak = 0;
+  for (let w = maxWeek; w >= 1; w--) {
+    const wr = weeklyRates.find((r) => r.week === w);
+    if (wr && wr.rate > 0) streak++;
+    else break;
+  }
+  return streak * 7;
+};
+
 const buildAchievementsFromShared = (gatheringId: number): GatheringAchievements | null => {
   const members = GATHERING_MEMBERS[gatheringId];
   if (!members) return null;
@@ -301,11 +321,13 @@ const buildAchievementsFromShared = (gatheringId: number): GatheringAchievements
   const memberAchievements = members.map((m) => {
     const todosWeekly = buildWeeklyRatesFromTodos(m.userId);
     const todosOverall = computeOverallRateFromTodos(m.userId);
+    const weeklyRates = todosWeekly ?? synthesizeWeeklyRates(m.overallAchievementRate);
     return {
       userId: m.userId,
       nickname: m.nickname,
-      weeklyRates: todosWeekly ?? synthesizeWeeklyRates(m.overallAchievementRate),
+      weeklyRates,
       overallRate: todosOverall ?? m.overallAchievementRate,
+      streakDays: computeStreakDays(weeklyRates),
     };
   });
 

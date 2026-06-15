@@ -2,12 +2,14 @@
 
 import { useState } from 'react';
 
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useSuspenseQueries } from '@tanstack/react-query';
 
 import { achievementQueries } from '@/api/achievements/queries';
+import { gatheringQueries } from '@/api/gatherings/queries';
 import { Pagination } from '@/components/ui/Pagination';
 import { useAuth } from '@/hooks/useAuth';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
+import { getCurrentWeek } from '@/lib/formatGatheringDate';
 
 import { RankingItem } from './RankingItem';
 
@@ -19,7 +21,14 @@ const ITEMS_PER_PAGE_DESKTOP = 10;
 const ITEMS_PER_PAGE_MOBILE = 5;
 
 export function MemberRankingSection({ gatheringId }: MemberRankingSectionProps) {
-  const { data } = useSuspenseQuery(achievementQueries.ranking(gatheringId));
+  const [{ data }, { data: achievementData }, { data: gatheringData }] = useSuspenseQueries({
+    queries: [
+      achievementQueries.ranking(gatheringId),
+      achievementQueries.detail(gatheringId),
+      gatheringQueries.detail(gatheringId),
+    ],
+  });
+  const currentWeek = getCurrentWeek(gatheringData.startDate);
   const { user } = useAuth();
   const isDesktop = useMediaQuery('(min-width: 1024px)');
 
@@ -47,19 +56,37 @@ export function MemberRankingSection({ gatheringId }: MemberRankingSectionProps)
         <div className='grid grid-cols-2 gap-4'>
           <div className='flex flex-col gap-4'>
             {leftItems.map((item) => (
-              <RankingItem key={item.userId} item={item} isMe={user?.id === item.userId} />
+              <RankingItem
+                key={item.userId}
+                item={item}
+                isMe={user?.id === item.userId}
+                streakDays={achievementData.members.find((m) => m.userId === item.userId)?.streakDays ?? 0}
+                currentWeek={currentWeek}
+              />
             ))}
           </div>
           <div className='flex flex-col gap-4'>
             {rightItems.map((item) => (
-              <RankingItem key={item.userId} item={item} isMe={user?.id === item.userId} />
+              <RankingItem
+                key={item.userId}
+                item={item}
+                isMe={user?.id === item.userId}
+                streakDays={achievementData.members.find((m) => m.userId === item.userId)?.streakDays ?? 0}
+                currentWeek={currentWeek}
+              />
             ))}
           </div>
         </div>
       ) : (
         <div className='flex flex-col gap-4'>
           {currentItems.map((item) => (
-            <RankingItem key={item.userId} item={item} isMe={user?.id === item.userId} />
+            <RankingItem
+              key={item.userId}
+              item={item}
+              isMe={user?.id === item.userId}
+              streakDays={achievementData.members.find((m) => m.userId === item.userId)?.streakDays ?? 0}
+              currentWeek={currentWeek}
+            />
           ))}
         </div>
       )}

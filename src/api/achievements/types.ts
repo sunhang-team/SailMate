@@ -10,6 +10,7 @@ export interface MemberAchievement {
   nickname: string;
   weeklyRates: WeeklyRate[];
   overallRate: number;
+  streakDays: number;
 }
 
 // GET /gatherings/:gatheringId/achievements 응답
