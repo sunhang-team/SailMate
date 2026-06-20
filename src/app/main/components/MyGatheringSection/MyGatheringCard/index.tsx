@@ -52,7 +52,7 @@ export function MyGatheringCard({ gathering, members = [], onClick, className }:
           <div>
             <div className='flex gap-1'>
               {gathering.tags.slice(0, 2).map((tag) => (
-                <div key={tag} className='text-small-01-r text-gray-500'>
+                <div key={tag} className='text-small-02-r text-gray-500'>
                   #{tag}
                 </div>
               ))}

@@ -12,7 +12,7 @@ import type { TagProps } from './types';
 const tagVariants = cva('inline-flex w-fit items-center justify-center rounded-lg whitespace-nowrap', {
   variants: {
     variant: {
-      category: 'bg-gray-150 text-blue-500 px-3 py-1 gap-1',
+      category: 'bg-gray-150 text-blue-500 px-3 py-1 gap-1 md:text-small-01-sb',
       deadline: 'text-small-02-m px-3 py-1',
       day: 'text-body-02-m px-5 py-1.5',
       info: 'text-small-02-m px-3 py-1 gap-0.5',
@@ -87,9 +87,9 @@ const renderContent = (props: TagProps): ReactNode => {
       return (
         <>
           {props.icon}
-          <span className='text-small-01-sb'>{props.label}</span>
+          <span className='text-small-02-sb md:text-small-01-sb'>{props.label}</span>
           <ArrowIcon size={14} direction='right' />
-          <span className='text-small-01-r'>{props.sublabel}</span>
+          <span className='text-small-02-r md:text-small-01-r'>{props.sublabel}</span>
         </>
       );
     case 'status': {

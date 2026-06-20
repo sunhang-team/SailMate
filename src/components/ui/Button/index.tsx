@@ -17,7 +17,7 @@ export const buttonVariants = cva('cursor-pointer transition-colors disabled:cur
       'file-upload': 'rounded-lg text-body-01-sb text-gray-800 border border-gray-300',
       'participation-outline':
         'rounded-lg text-body-01-sb text-blue-400 border-gradient-primary enabled:hover:bg-gradient-primary enabled:hover:text-white disabled:bg-gray-100 disabled:text-gray-600 disabled:border disabled:border-gray-150 disabled:before:hidden ',
-      cancel: 'rounded-lg md:text-body-01-sb text-small-01-sb text-blue-300 bg-blue-50 aria-pressed:bg-blue-100',
+      cancel: 'rounded-lg md:text-body-01-sb text-small-01-sb text-blue-300 bg-blue-50 hover:bg-blue-100',
       'mypage-edit':
         'rounded-lg text-small-01-m lg:text-body-01-m text-gray-600 bg-gray-100 border border-gray-150 md:text-body-02-m',
       'icon-hand': 'rounded-lg flex items-center justify-center text-gray-400 bg-gray-150',

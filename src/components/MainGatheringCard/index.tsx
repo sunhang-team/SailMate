@@ -75,7 +75,7 @@ export function MainGatheringCard({
           label={gathering.type}
           sublabel={gathering.categories.join(', ')}
         />
-        <div className='text-small-01-sb flex items-center'>
+        <div className='text-small-02-sb md:text-small-01-sb flex items-center'>
           <PersonIcon size={16} className='mr-2 text-blue-400' />
           <span className='text-blue-400'>{gathering.currentMembers}</span>
           <span className='text-gray-600'>/</span>
