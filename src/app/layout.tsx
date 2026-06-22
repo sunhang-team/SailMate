@@ -1,4 +1,6 @@
 import './globals.css';
+import { SerwistProvider } from '@serwist/turbopack/react';
+
 import { pretendard } from './fonts';
 import { AnalyticsScripts } from '@/components/analytics/AnalyticsScripts';
 import { BeusableScript } from '@/components/analytics/BeusableScript';
@@ -71,23 +73,25 @@ export default function RootLayout({
   return (
     <html lang='ko' className={`${pretendard.variable} relative`}>
       <body className='font-pretendard relative'>
-        <MSWProvider>
-          <QueryProvider>
-            <QueryParamsProvider>
-              <ToastProvider>
-                <Header />
-                {children}
-                <FooterWrapper />
-                <OverlayProvider />
-                <div id='modal-root' />
-              </ToastProvider>
-            </QueryParamsProvider>
-          </QueryProvider>
-        </MSWProvider>
-        <JsonLd data={buildOrganizationJsonLd()} />
-        <JsonLd data={buildWebSiteJsonLd()} />
-        <AnalyticsScripts />
-        <BeusableScript />
+        <SerwistProvider swUrl='/serwist/sw.js'>
+          <MSWProvider>
+            <QueryProvider>
+              <QueryParamsProvider>
+                <ToastProvider>
+                  <Header />
+                  {children}
+                  <FooterWrapper />
+                  <OverlayProvider />
+                  <div id='modal-root' />
+                </ToastProvider>
+              </QueryParamsProvider>
+            </QueryProvider>
+          </MSWProvider>
+          <JsonLd data={buildOrganizationJsonLd()} />
+          <JsonLd data={buildWebSiteJsonLd()} />
+          <AnalyticsScripts />
+          <BeusableScript />
+        </SerwistProvider>
       </body>
     </html>
   );
