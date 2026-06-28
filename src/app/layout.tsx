@@ -5,6 +5,7 @@ import { pretendard } from './fonts';
 import { AnalyticsScripts } from '@/components/analytics/AnalyticsScripts';
 import { BeusableScript } from '@/components/analytics/BeusableScript';
 import { Header } from '@/components/Header';
+import { NetworkStatusToast } from '@/components/NetworkStatusToast';
 import { MSWProvider } from '@/providers/MSWProvider';
 import { QueryParamsProvider } from '@/providers/QueryParamsProvider';
 import { QueryProvider } from '@/providers/QueryProvider';
@@ -78,6 +79,7 @@ export default function RootLayout({
             <QueryProvider>
               <QueryParamsProvider>
                 <ToastProvider>
+                  <NetworkStatusToast />
                   <Header />
                   {children}
                   <FooterWrapper />
