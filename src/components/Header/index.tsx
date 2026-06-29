@@ -9,6 +9,7 @@ import { AuthSection } from './AuthSection';
 import { useAuth } from '@/hooks/useAuth';
 import { useLogout } from '@/api/auth/queries';
 import { CloseIcon, ArrowIcon } from '@/components/ui/Icon';
+import { PWAInstallButton } from '@/components/PWAInstallButton';
 
 const BASE_NAV_ITEMS = [
   { href: '/', label: '홈', protected: false },
@@ -84,7 +85,8 @@ export function Header() {
             </nav>
           </div>
 
-          <div className='max-md:hidden'>
+          <div className='flex items-center gap-3 max-md:hidden'>
+            <PWAInstallButton />
             <AuthSection />
           </div>
 

@@ -1,17 +1,15 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, type ComponentProps } from 'react';
 
 import { Button } from '@/components/ui/Button';
 import { usePWAInstall } from '@/hooks/usePWAInstall';
 
 import { IOSInstallGuideBottomSheet } from './IOSInstallGuideBottomSheet';
 
-interface PWAInstallButtonProps {
-  className?: string;
-}
+type PWAInstallButtonProps = Omit<ComponentProps<typeof Button>, 'onClick' | 'children'>;
 
-export function PWAInstallButton({ className }: PWAInstallButtonProps) {
+export function PWAInstallButton(buttonProps: PWAInstallButtonProps) {
   const { isInstallable, isIOS, promptInstall } = usePWAInstall();
   const [isIOSGuideOpen, setIsIOSGuideOpen] = useState(false);
 
@@ -28,7 +26,7 @@ export function PWAInstallButton({ className }: PWAInstallButtonProps) {
 
   return (
     <>
-      <Button onClick={handleClick} className={className}>
+      <Button onClick={handleClick} {...buttonProps}>
         앱 설치
       </Button>
       {isIOS && <IOSInstallGuideBottomSheet isOpen={isIOSGuideOpen} onClose={() => setIsIOSGuideOpen(false)} />}
