@@ -61,15 +61,23 @@ const serwist = new Serwist({
 // install / activate / fetch 등 Serwist 기본 이벤트 연결
 serwist.addEventListeners();
 
-// ── L3(FCM 푸시) 자리 ──────────────────────────────────────────────
-// 푸시 도입 시 아래에 FCM 메시지 핸들러를 연결한다. 지금은 골격만 비워둠.
-//
-// self.addEventListener('push', (event) => {
-//   const data = event.data?.json();
-//   event.waitUntil(self.registration.showNotification(data.title, { body: data.body }));
-// });
-//
-// self.addEventListener('notificationclick', (event) => {
-//   event.notification.close();
-//   event.waitUntil(self.clients.openWindow(event.notification.data?.url ?? '/'));
-// });
+// ── L3(FCM 푸시) ────────────────────────────────────────────────────
+// 앱이 열려있을 때 백엔드가 보낸 푸시 알림을 수신해 시스템 알림으로 표시한다.
+// 앱이 닫혀있을 때는 public/firebase-messaging-sw.js의 onBackgroundMessage가 담당한다.
+
+self.addEventListener('push', (event: PushEvent) => {
+  const data = event.data?.json();
+  event.waitUntil(
+    self.registration.showNotification(data.title, {
+      body: data.body,
+      icon: '/icons/pwa/icon-192.png',
+      data: { url: data.url },
+    }),
+  );
+});
+
+// 사용자가 알림 팝업을 클릭하면 해당 URL로 이동한다.
+self.addEventListener('notificationclick', (event: NotificationEvent) => {
+  event.notification.close();
+  event.waitUntil(self.clients.openWindow(event.notification.data?.url ?? '/'));
+});
