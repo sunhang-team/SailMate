@@ -36,12 +36,15 @@ export const useFCMToken = () => {
     // useState + useEffect 구조로 훅을 재설계해야 한다.
     const TOKEN_TIMEOUT_MS = 10000;
     const tokenPromise = new Promise<string>((resolve, reject) => {
+      // eslint-disable-next-line prefer-const -- onRegistered 콜백이 동기 실행될 경우 TDZ를 피하기 위해 선언과 할당을 분리
+      let unsubscribe: () => void;
+
       const timeoutId = setTimeout(() => {
         unsubscribe();
         reject(new Error('FCM 토큰 발급이 지연되어 타임아웃되었습니다.'));
       }, TOKEN_TIMEOUT_MS);
 
-      const unsubscribe = onRegistered(messaging, (token) => {
+      unsubscribe = onRegistered(messaging, (token) => {
         clearTimeout(timeoutId);
         unsubscribe();
         resolve(token);
