@@ -40,13 +40,13 @@ export const useFCMToken = () => {
       let unsubscribe: () => void;
 
       const timeoutId = setTimeout(() => {
-        unsubscribe();
+        unsubscribe?.();
         reject(new Error('FCM 토큰 발급이 지연되어 타임아웃되었습니다.'));
       }, TOKEN_TIMEOUT_MS);
 
       unsubscribe = onRegistered(messaging, (token) => {
         clearTimeout(timeoutId);
-        unsubscribe();
+        unsubscribe?.();
         resolve(token);
       });
     });
