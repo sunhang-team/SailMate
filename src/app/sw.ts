@@ -66,9 +66,17 @@ serwist.addEventListeners();
 // 앱이 닫혀있을 때는 public/firebase-messaging-sw.js의 onBackgroundMessage가 담당한다.
 
 self.addEventListener('push', (event: PushEvent) => {
-  const data = event.data?.json();
+  // payload가 없거나 유효한 JSON이 아니면 .json()이 동기 예외를 던진다.
+  let data: { title?: string; body?: string; url?: string };
+  try {
+    data = event.data?.json() ?? {};
+  } catch {
+    // payload 파싱 실패 시에도 알림 자체는 표시한다.
+    data = { title: '새 알림', body: '새로운 알림이 도착했습니다.' };
+  }
+
   event.waitUntil(
-    self.registration.showNotification(data.title, {
+    self.registration.showNotification(data.title ?? '새 알림', {
       body: data.body,
       icon: '/icons/pwa/icon-192.png',
       data: { url: data.url },

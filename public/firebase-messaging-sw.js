@@ -10,8 +10,8 @@
 // process.env를 쓸 수 없다. Firebase 클라이언트 설정값은 공개해도 안전한 값이므로
 // 직접 입력한다. (보안은 Firebase Console 보안 규칙으로 처리)
 
-importScripts('https://www.gstatic.com/firebasejs/10.0.0/firebase-app-compat.js');
-importScripts('https://www.gstatic.com/firebasejs/10.0.0/firebase-messaging-compat.js');
+importScripts('https://www.gstatic.com/firebasejs/12.15.0/firebase-app-compat.js');
+importScripts('https://www.gstatic.com/firebasejs/12.15.0/firebase-messaging-compat.js');
 
 firebase.initializeApp({
   apiKey: 'AIzaSyDa06vqU1bcFPAeflXLWV50bndI8Ihatwo',
