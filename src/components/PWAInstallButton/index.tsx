@@ -26,7 +26,7 @@ export function PWAInstallButton(buttonProps: PWAInstallButtonProps) {
 
   return (
     <>
-      <Button onClick={handleClick} {...buttonProps}>
+      <Button className='text-body-02-m text-gray-700' onClick={handleClick} {...buttonProps}>
         앱 설치
       </Button>
       {isIOS && <IOSInstallGuideBottomSheet isOpen={isIOSGuideOpen} onClose={() => setIsIOSGuideOpen(false)} />}

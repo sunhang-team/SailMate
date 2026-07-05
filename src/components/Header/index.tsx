@@ -85,8 +85,8 @@ export function Header() {
             </nav>
           </div>
 
-          <div className='flex items-center gap-3 max-md:hidden'>
-            <PWAInstallButton />
+          <div className='flex items-center gap-2 max-md:hidden'>
+            <PWAInstallButton variant='login-outline' size='login-sm' />
             <AuthSection />
           </div>
 
