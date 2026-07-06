@@ -4,6 +4,7 @@ import { useState, type ComponentProps } from 'react';
 
 import { Button } from '@/components/ui/Button';
 import { usePWAInstall } from '@/hooks/usePWAInstall';
+import { cn } from '@/lib/cn';
 
 import { IOSInstallGuideBottomSheet } from './IOSInstallGuideBottomSheet';
 
@@ -26,7 +27,11 @@ export function PWAInstallButton(buttonProps: PWAInstallButtonProps) {
 
   return (
     <>
-      <Button onClick={handleClick} {...buttonProps} className='text-body-02-m text-gray-700'>
+      <Button
+        onClick={handleClick}
+        {...buttonProps}
+        className={cn('text-body-02-m text-gray-700', buttonProps.className)}
+      >
         앱 설치
       </Button>
       {isIOS && <IOSInstallGuideBottomSheet isOpen={isIOSGuideOpen} onClose={() => setIsIOSGuideOpen(false)} />}
