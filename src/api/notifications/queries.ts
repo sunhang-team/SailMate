@@ -1,6 +1,13 @@
 import { useMutation, useQuery, useQueryClient, useSuspenseInfiniteQuery } from '@tanstack/react-query';
-import { getNotifications, readAllNotifications, readNotification } from './index';
-import type { GetNotificationsParams } from './types';
+import {
+  getNotifications,
+  readAllNotifications,
+  readNotification,
+  registerFcmToken,
+  unregisterFcmToken,
+} from './index';
+import type { UseMutationOptions } from '@tanstack/react-query';
+import type { GetNotificationsParams, RegisterFcmTokenResponse, UnregisterFcmTokenResponse } from './types';
 
 export const notificationKeys = {
   all: ['notifications'] as const,
@@ -56,6 +63,34 @@ export const useReadAllNotifications = () => {
     mutationFn: () => readAllNotifications(),
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: notificationKeys.all });
+    },
+  });
+};
+
+/** POST /api/v1/notifications/tokens — FCM 푸시 토큰 등록/갱신 */
+export const useRegisterFcmToken = (options?: UseMutationOptions<RegisterFcmTokenResponse, Error, string>) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    ...options,
+    mutationFn: (token: string) => registerFcmToken(token),
+    onSettled: (data, error, variables, onMutateResult, context) => {
+      queryClient.invalidateQueries({ queryKey: notificationKeys.all });
+      options?.onSettled?.(data, error, variables, onMutateResult, context);
+    },
+  });
+};
+
+/** DELETE /api/v1/notifications/tokens — FCM 푸시 토큰 해지 */
+export const useUnregisterFcmToken = (options?: UseMutationOptions<UnregisterFcmTokenResponse, Error, string>) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    ...options,
+    mutationFn: (token: string) => unregisterFcmToken(token),
+    onSettled: (data, error, variables, onMutateResult, context) => {
+      queryClient.invalidateQueries({ queryKey: notificationKeys.all });
+      options?.onSettled?.(data, error, variables, onMutateResult, context);
     },
   });
 };
