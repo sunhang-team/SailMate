@@ -3,7 +3,6 @@ import Link from 'next/link';
 
 import { LANDING_IMAGES, LANDING_LINKS } from '@/components/landing/landingConstants';
 import { buttonVariants } from '@/components/ui/Button';
-import { PWAInstallButton } from '@/components/PWAInstallButton';
 import { cn } from '@/lib/cn';
 
 /**
@@ -144,9 +143,6 @@ export function LandingHero() {
                 </span>
               </span>
             </Link>
-          </div>
-          <div className='mt-4 md:hidden'>
-            <PWAInstallButton variant='login-outline' size='landing-sm' />
           </div>
         </div>
       </div>

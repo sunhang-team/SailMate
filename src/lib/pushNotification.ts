@@ -1,4 +1,4 @@
-import { unregisterFcmToken } from '@/api/notifications';
+import { unregisterFcmToken } from '@/api/push';
 
 export const PUSH_NOTIFICATION_ENABLED_KEY = 'sailmate:push-notification-enabled';
 export const PUSH_NOTIFICATION_TOKEN_KEY = 'sailmate:push-notification-token';

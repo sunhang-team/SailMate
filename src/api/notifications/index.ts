@@ -1,13 +1,7 @@
 import { axiosClient } from '@/lib/axiosClient';
 import { unwrapResponse } from '@/api/common/utils';
 import type { ApiResponse } from '@/api/common/types';
-import type {
-  GetNotificationsParams,
-  GetNotificationsResponse,
-  PatchNotificationReadResponse,
-  RegisterFcmTokenResponse,
-  UnregisterFcmTokenResponse,
-} from './types';
+import type { GetNotificationsParams, GetNotificationsResponse, PatchNotificationReadResponse } from './types';
 
 /**
  * GET /api/v1/notifications
@@ -35,27 +29,5 @@ export const readNotification = async (notificationId: number): Promise<PatchNot
  */
 export const readAllNotifications = async (): Promise<PatchNotificationReadResponse> => {
   const { data } = await axiosClient.patch<ApiResponse<PatchNotificationReadResponse>>('/v1/notifications/read-all');
-  return unwrapResponse(data);
-};
-
-/**
- * POST /api/v1/notifications/tokens
- * FCM 푸시 토큰 등록/갱신
- */
-export const registerFcmToken = async (token: string): Promise<RegisterFcmTokenResponse> => {
-  const { data } = await axiosClient.post<ApiResponse<RegisterFcmTokenResponse>>('/v1/notifications/tokens', {
-    token,
-  });
-  return unwrapResponse(data);
-};
-
-/**
- * DELETE /api/v1/notifications/tokens
- * FCM 푸시 토큰 해지
- */
-export const unregisterFcmToken = async (token: string): Promise<UnregisterFcmTokenResponse> => {
-  const { data } = await axiosClient.delete<ApiResponse<UnregisterFcmTokenResponse>>('/v1/notifications/tokens', {
-    data: { token },
-  });
   return unwrapResponse(data);
 };

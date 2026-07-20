@@ -29,14 +29,14 @@ export function IOSInstallGuideBottomSheet({ isOpen, onClose }: IOSInstallGuideB
         <h2 className='text-h5-b text-gray-800'>홈 화면에 추가하기</h2>
       </BottomSheet.Header>
       <BottomSheet.Body>
-        <p className='text-body-02-r text-gray-600'>Safari에서 아래 단계를 따라 앱을 홈 화면에 추가하세요.</p>
+        <p className='text-body-02-m text-gray-700'>Safari에서 아래 단계를 따라 앱을 홈 화면에 추가하세요.</p>
         <ol className='mt-6 flex flex-col gap-5'>
           {STEPS.map(({ step, description }) => (
             <li key={step} className='flex items-start gap-4'>
-              <span className='bg-gradient-primary text-small-01-sb flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-white'>
+              <span className='text-small-01-sm text-gray-0 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-blue-300'>
                 {step}
               </span>
-              <p className='text-body-02-r text-gray-700'>{description}</p>
+              <p className='text-body-02-m text-gray-600'>{description}</p>
             </li>
           ))}
         </ol>

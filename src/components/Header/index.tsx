@@ -28,7 +28,8 @@ export function Header() {
   const { isLoggedIn } = useAuth();
   const hasSession = typeof document !== 'undefined' && document.cookie.includes('has-session=');
   const mobileNavItems = isLoggedIn ? [...BASE_NAV_ITEMS, { href: '/my', label: '마이페이지' }] : BASE_NAV_ITEMS;
-  const { isIOS, promptInstall } = usePWAInstall();
+  const { isInstallable, isIOS, promptInstall } = usePWAInstall();
+  const isPWAInstallButtonVisible = isInstallable || isIOS;
   const [isIOSGuideOpen, setIsIOSGuideOpen] = useState(false);
 
   const { mutate: logout } = useLogout({
@@ -99,8 +100,9 @@ export function Header() {
             </nav>
           </div>
 
-          <div className='flex items-center gap-2 max-md:hidden'>
-            <PWAInstallButton variant='login-outline' size='login-sm' />
+          <div className='flex items-center gap-3 max-md:hidden'>
+            <PWAInstallButton className='h-[42px] w-[70px] rounded-lg bg-blue-100 text-blue-300' />
+            {isPWAInstallButtonVisible && <span className='h-6 w-px bg-gray-300' aria-hidden />}
             <AuthSection />
           </div>
 
@@ -120,15 +122,17 @@ export function Header() {
       </header>
 
       <div
-        className={`fixed inset-0 z-50 bg-black/35 transition-opacity duration-200 md:hidden ${
+        className={`fixed inset-0 z-40 bg-black/35 transition-opacity duration-200 md:hidden ${
           isSidebarOpen ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'
         }`}
         onClick={() => setIsSidebarOpen(false)}
         aria-hidden
       />
 
+      {/* Modal/BottomSheet/Toast(z-50)가 사이드바가 열려 있는 동안에도 그 위에 뜰 수 있도록
+          사이드바는 자기 배경(z-40)보다는 높고 공용 오버레이 레이어(z-50)보다는 낮게 둔다. */}
       <aside
-        className={`bg-gray-0 fixed top-0 right-0 z-60 h-dvh w-[74%] max-w-[320px] rounded-l-2xl px-6 py-5 transition-transform duration-300 ease-out md:hidden ${
+        className={`bg-gray-0 fixed top-0 right-0 z-45 h-dvh w-[74%] max-w-[320px] rounded-l-2xl px-6 py-5 transition-transform duration-300 ease-out md:hidden ${
           isSidebarOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
         aria-hidden={!isSidebarOpen}

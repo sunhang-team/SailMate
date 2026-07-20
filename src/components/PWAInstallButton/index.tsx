@@ -30,7 +30,7 @@ export function PWAInstallButton(buttonProps: PWAInstallButtonProps) {
       <Button
         onClick={handleClick}
         {...buttonProps}
-        className={cn('text-body-02-m text-gray-700', buttonProps.className)}
+        className={cn('text-body-02-m text-blue-300', buttonProps.className)}
       >
         앱 설치
       </Button>

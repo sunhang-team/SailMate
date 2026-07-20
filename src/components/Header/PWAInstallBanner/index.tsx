@@ -50,7 +50,7 @@ export function PWAInstallBanner() {
           <button
             type='button'
             onClick={handleInstallClick}
-            className='text-small-02-m md:text-body-02-m bg-gray-0 shrink-0 rounded-md px-3 py-2 text-blue-300'
+            className='text-small-02-m md:text-body-02-m bg-gray-0 shrink-0 cursor-pointer rounded-md px-3 py-2 text-blue-300'
           >
             앱 설치하기
           </button>

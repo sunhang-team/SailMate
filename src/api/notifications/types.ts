@@ -41,17 +41,3 @@ export interface GetNotificationsResponse {
 export interface PatchNotificationReadResponse {
   success: boolean;
 }
-
-/**
- * POST /api/v1/notifications/tokens
- */
-export interface RegisterFcmTokenResponse {
-  success: boolean;
-}
-
-/**
- * DELETE /api/v1/notifications/tokens
- */
-export interface UnregisterFcmTokenResponse {
-  success: boolean;
-}

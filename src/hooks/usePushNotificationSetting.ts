@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 import { useIsMounted } from '@frontend-toolkit-js/hooks';
 
-import { useRegisterFcmToken, useUnregisterFcmToken } from '@/api/notifications/queries';
+import { useRegisterFcmToken, useUnregisterFcmToken } from '@/api/push/queries';
 import { useFCMToken } from '@/hooks/useFCMToken';
 import { PUSH_NOTIFICATION_ENABLED_KEY, PUSH_NOTIFICATION_TOKEN_KEY } from '@/lib/pushNotification';
 

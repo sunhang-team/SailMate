@@ -6,8 +6,6 @@ import type {
   GetNotificationsResponse,
   NotificationItem,
   PatchNotificationReadResponse,
-  RegisterFcmTokenResponse,
-  UnregisterFcmTokenResponse,
 } from '@/api/notifications/types';
 
 const BASE = '/api/v1/notifications';
@@ -115,17 +113,5 @@ export const notificationsHandlers = [
       n.isRead = true;
     });
     return HttpResponse.json(createApiResponse<PatchNotificationReadResponse>({ success: true }));
-  }),
-
-  /** POST /api/v1/notifications/tokens */
-  http.post(`${BASE}/tokens`, async () => {
-    await delay(100);
-    return HttpResponse.json(createApiResponse<RegisterFcmTokenResponse>({ success: true }));
-  }),
-
-  /** DELETE /api/v1/notifications/tokens */
-  http.delete(`${BASE}/tokens`, async () => {
-    await delay(100);
-    return HttpResponse.json(createApiResponse<UnregisterFcmTokenResponse>({ success: true }));
   }),
 ];
