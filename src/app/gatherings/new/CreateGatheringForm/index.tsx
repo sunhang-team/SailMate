@@ -4,7 +4,7 @@ import { type ReactNode, useEffect, useMemo, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { differenceInDays, isValid, parseISO } from 'date-fns';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, type Resolver, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { Button } from '@/components/ui/Button';
@@ -18,7 +18,12 @@ import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import { useToastStore } from '@/components/ui/Toast/useToastStore';
 import { gatheringQueries, useCreateGathering, useUpdateGathering } from '@/api/gatherings/queries';
-import { gatheringFormSchema } from '@/api/gatherings/schemas';
+import {
+  createInProgressDateRefinementSchema,
+  gatheringFormBaseSchema,
+  gatheringFormSchema,
+  gatheringUpdateFormSchema,
+} from '@/api/gatherings/schemas';
 import { GATHERING_TYPES } from '@/constants/gathering';
 import { cn } from '@/lib/cn';
 import {
@@ -31,7 +36,7 @@ import { ImageUpload } from './ImageUpload';
 import { TagInput } from './TagInput';
 import { WeeklyPlanForm } from './WeeklyPlanForm';
 
-import type { GatheringForm } from '@/api/gatherings/types';
+import type { GatheringForm, GatheringStatus } from '@/api/gatherings/types';
 
 const RotatingArrow = () => {
   const { isOpen } = useDropdown();
@@ -71,12 +76,19 @@ interface CreateGatheringFormProps {
   mode?: 'create' | 'edit';
   gatheringId?: number;
   initialValues?: Partial<GatheringForm>;
+  gatheringStatus?: GatheringStatus;
 }
 
-export function CreateGatheringForm({ mode = 'create', gatheringId, initialValues }: CreateGatheringFormProps) {
+export function CreateGatheringForm({
+  mode = 'create',
+  gatheringId,
+  initialValues,
+  gatheringStatus,
+}: CreateGatheringFormProps) {
   const router = useRouter();
   const showToast = useToastStore((state) => state.showToast);
   const isEditMode = mode === 'edit';
+  const isInProgressEdit = isEditMode && gatheringStatus === 'IN_PROGRESS';
 
   const { data: categoriesData } = useSuspenseQuery(gatheringQueries.categories());
   const categories = categoriesData.categories;
@@ -84,6 +96,19 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
     () => Object.fromEntries(categories.map((c) => [c.id, { label: c.name }])) as Record<number, { label: string }>,
     [categories],
   );
+
+  const schema = useMemo(() => {
+    if (!isEditMode) return gatheringFormSchema;
+    if (isInProgressEdit) {
+      return gatheringFormBaseSchema.partial().and(
+        createInProgressDateRefinementSchema({
+          recruitDeadline: initialValues?.recruitDeadline ?? '',
+          startDate: initialValues?.startDate ?? '',
+        }),
+      );
+    }
+    return gatheringUpdateFormSchema;
+  }, [isEditMode, isInProgressEdit, initialValues?.recruitDeadline, initialValues?.startDate]);
 
   const {
     register,
@@ -93,7 +118,9 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
     trigger,
     formState: { errors, touchedFields, isDirty },
   } = useForm<GatheringForm>({
-    resolver: zodResolver(gatheringFormSchema),
+    // schema는 mode/status에 따라 create/RECRUITING/IN_PROGRESS 스키마 중 하나로 바뀌지만
+    // 셋 다 GatheringForm 필드의 부분집합만 optional로 검증하므로 폼 타입과 안전하게 호환됨
+    resolver: zodResolver(schema) as Resolver<GatheringForm>,
     mode: 'onBlur',
     defaultValues: {
       tags: [],
@@ -501,6 +528,7 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
                   onBlur={field.onBlur}
                   placeholder='모집 마감 일정을 선택해주세요'
                   error={errors.recruitDeadline?.message}
+                  disabled={isInProgressEdit}
                   className='bg-gray-0 h-[43px] md:h-[58px] lg:h-[72px] lg:px-7 lg:py-5'
                 />
               </div>
@@ -532,6 +560,7 @@ export function CreateGatheringForm({ mode = 'create', gatheringId, initialValue
                   onBlur={field.onBlur}
                   placeholder='모임 시작일을 선택해주세요'
                   error={errors.startDate?.message}
+                  disabled={isInProgressEdit}
                   className='bg-gray-0 h-[43px] md:h-[58px] lg:h-[72px] lg:px-7 lg:py-5'
                 />
               </div>
