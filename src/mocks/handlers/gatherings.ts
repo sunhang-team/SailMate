@@ -502,7 +502,7 @@ export const gatheringsHandlers = [
 
     const detail: GatheringDetail = {
       ...newGathering,
-      description: body.description,
+      description: body.description ?? '',
       goal: body.goal,
       totalWeeks: getTotalWeeks(body.startDate, body.endDate),
       images: [],

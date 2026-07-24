@@ -32,7 +32,8 @@ export const gatheringFormBaseSchema = z.object({
   description: z
     .string()
     .min(10, '상세 설명은 10자 이상이어야 합니다.')
-    .max(1000, '상세 설명은 최대 1000자까지 가능합니다.'),
+    .max(1000, '상세 설명은 최대 1000자까지 가능합니다.')
+    .optional(),
   tags: z
     .array(z.string().max(15, '태그는 15자 이내로 입력해 주세요.'))
     .max(10, '태그는 최대 10개까지 가능합니다.')
@@ -45,7 +46,7 @@ export const gatheringFormBaseSchema = z.object({
   recruitDeadline: dateStringSchema('모집 마감일을 선택해주세요.'),
   startDate: dateStringSchema('모임 시작일을 선택해주세요.'),
   endDate: dateStringSchema('모임 종료일을 선택해주세요.'),
-  weeklyGuides: z.array(weeklyGuideSchema).min(1, '최소 1주차 계획은 입력해 주세요.'),
+  weeklyGuides: z.array(weeklyGuideSchema).optional(),
   images: z
     .array(z.instanceof(File, { message: '유효한 파일이 아닙니다.' }))
     .max(6, '이미지는 최대 6장까지 업로드 가능합니다.')
