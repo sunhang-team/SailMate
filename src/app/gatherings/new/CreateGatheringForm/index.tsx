@@ -3,7 +3,6 @@
 import { type ReactNode, useEffect, useMemo, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSuspenseQuery } from '@tanstack/react-query';
-import { differenceInDays, isValid, parseISO } from 'date-fns';
 import { Controller, type Resolver, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -31,6 +30,7 @@ import {
   trackGatheringCreateStart,
   trackGatheringCreateSubmit,
 } from '@/lib/analytics/gathering';
+import { getTotalWeeks } from '@/lib/formatGatheringDate';
 
 import { ImageUpload } from './ImageUpload';
 import { TagInput } from './TagInput';
@@ -155,16 +155,7 @@ export function CreateGatheringForm({
   const startDateValue = watch('startDate');
   const endDateValue = watch('endDate');
   const weeklyGuidesValue = watch('weeklyGuides') ?? [];
-  const totalWeeks = useMemo(() => {
-    if (!startDateValue || !endDateValue) return 0;
-
-    const startDate = parseISO(startDateValue);
-    const endDate = parseISO(endDateValue);
-    const isDateRangeInvalid = !isValid(startDate) || !isValid(endDate);
-    if (isDateRangeInvalid) return 0;
-
-    return Math.max(1, Math.ceil(differenceInDays(endDate, startDate) / 7));
-  }, [endDateValue, startDateValue]);
+  const totalWeeks = startDateValue && endDateValue ? getTotalWeeks(startDateValue, endDateValue) : 0;
 
   const isWeeklyGuidesComplete =
     weeklyGuidesValue.length > 0 && weeklyGuidesValue.every((guide) => Boolean(guide?.title?.trim()));
