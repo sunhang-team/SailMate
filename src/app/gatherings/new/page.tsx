@@ -1,6 +1,6 @@
 import { SuspenseBoundary } from '@/components/SuspenseBoundary';
 
-import { CreateGatheringForm } from './CreateGatheringForm';
+import { CreateGatheringFunnel } from './CreateGatheringFunnel';
 
 import type { Metadata } from 'next';
 
@@ -11,8 +11,7 @@ export const metadata: Metadata = {
 
 export default function CreateGatheringPage() {
   return (
-    <main className='mx-auto max-w-[1720px] px-5 pt-20 pb-40'>
-      <h1 className='text-body-01-b md:text-h4-b lg:text-h3-b mb-8 text-gray-900'>모임 만들기</h1>
+    <main className='mx-auto max-w-[1720px] px-4 pt-20 pb-40 md:px-7 xl:px-30'>
       <SuspenseBoundary
         pendingFallback={
           <div className='flex flex-col gap-8'>
@@ -26,7 +25,7 @@ export default function CreateGatheringPage() {
           </div>
         }
       >
-        <CreateGatheringForm />
+        <CreateGatheringFunnel />
       </SuspenseBoundary>
     </main>
   );

@@ -33,7 +33,7 @@ export function CompleteStep({ gatheringId, onAddDetail }: CompleteStepProps) {
           variant='mypage-edit'
           size={undefined}
           onClick={() => router.push('/main')}
-          className='h-12 w-[164px] md:h-[72px] md:w-75 lg:h-20'
+          className='text-small-01-sb md:text-body-01-sb lg:text-h5-sb h-12 w-[164px] md:h-[72px] md:w-75 lg:h-20'
         >
           나중에 하기
         </Button>
@@ -42,7 +42,7 @@ export function CompleteStep({ gatheringId, onAddDetail }: CompleteStepProps) {
           variant='action'
           size='action-sm'
           onClick={onAddDetail}
-          className='text-small-01-sb md:text-body-01-sb lg:text-h5-b h-12 w-[164px] md:h-[72px] md:w-75 lg:h-20'
+          className='text-small-01-sb md:text-body-01-sb lg:text-h5-sb h-12 w-[164px] md:h-[72px] md:w-75 lg:h-20'
         >
           모임 소개 추가
         </Button>
@@ -54,7 +54,7 @@ export function CompleteStep({ gatheringId, onAddDetail }: CompleteStepProps) {
           variant='mypage-edit'
           size={undefined}
           onClick={() => router.push(`/gatherings/${gatheringId}`)}
-          className='self-end'
+          className='text-small-02-m md:text-body-02-m self-end'
         >
           작성 글 보러가기
         </Button>

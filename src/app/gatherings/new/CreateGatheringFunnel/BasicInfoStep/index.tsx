@@ -85,6 +85,8 @@ export function BasicInfoStep({ onNext }: BasicInfoStepProps) {
 
   return (
     <div className='flex flex-col gap-10 md:gap-14 lg:gap-20'>
+      <h1 className='text-body-01-b md:text-h4-b lg:text-h3-b text-gray-900'>어떤 모임을 만들까요?</h1>
+
       {/* 모임 유형 */}
       <section className='flex flex-col gap-3'>
         <p className='text-small-01-sb md:text-body-01-sb lg:text-h5-b text-gray-800'>
@@ -305,7 +307,6 @@ export function BasicInfoStep({ onNext }: BasicInfoStepProps) {
         <div className='flex flex-col gap-1'>
           <p className='text-small-02-m md:text-body-02-m lg:text-body-01-m flex items-center gap-1 text-gray-800'>
             태그
-            <span className='md:text-small-02-r lg:text-small-01-r text-[8px] font-normal text-gray-400'>(선택)</span>
           </p>
           <Controller
             name='tags'
@@ -327,7 +328,7 @@ export function BasicInfoStep({ onNext }: BasicInfoStepProps) {
           type='button'
           variant='social'
           size={undefined}
-          className='h-12 w-[164px] text-gray-800 md:h-[72px] md:w-75 lg:h-20'
+          className='text-small-01-sb md:text-body-01-sb lg:text-h5-sb h-12 w-[164px] text-gray-800 md:h-[72px] md:w-75 lg:h-20'
         >
           임시 저장
         </Button>

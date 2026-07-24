@@ -49,6 +49,8 @@ export function ScheduleStep({ onPrev, onCreated }: ScheduleStepProps) {
 
   return (
     <div className='flex flex-col gap-10 md:gap-14 lg:gap-20'>
+      <h1 className='text-body-01-b md:text-h4-b lg:text-h3-b text-gray-900'>모집과 운영 일정을 설정해보세요.</h1>
+
       {/* 모집 정보 */}
       <section className='flex flex-col gap-4'>
         <p className='text-small-01-sb md:text-body-01-sb lg:text-h5-b text-gray-800'>
@@ -160,7 +162,7 @@ export function ScheduleStep({ onPrev, onCreated }: ScheduleStepProps) {
           type='button'
           variant='social'
           size={undefined}
-          className='h-12 w-[164px] text-gray-800 md:h-[72px] md:w-75 lg:h-20'
+          className='text-small-01-sb md:text-body-01-sb lg:text-h5-sb h-12 w-[164px] text-gray-800 md:h-[72px] md:w-75 lg:h-20'
         >
           임시 저장
         </Button>
@@ -170,7 +172,7 @@ export function ScheduleStep({ onPrev, onCreated }: ScheduleStepProps) {
             variant='mypage-edit'
             size={undefined}
             onClick={onPrev}
-            className='h-12 w-[164px] md:h-[72px] md:w-75 lg:h-20'
+            className='text-small-01-sb md:text-body-01-sb lg:text-h5-sb h-12 w-[164px] md:h-[72px] md:w-75 lg:h-20'
           >
             이전 단계
           </Button>
@@ -180,7 +182,7 @@ export function ScheduleStep({ onPrev, onCreated }: ScheduleStepProps) {
             size='action-sm'
             disabled={isPending}
             onClick={handleNext}
-            className='text-small-01-sb md:text-body-01-sb lg:text-h5-b h-12 w-[164px] md:h-[72px] md:w-75 lg:h-20'
+            className='text-small-01-sb md:text-body-01-sb lg:text-h5-sb h-12 w-[164px] md:h-[72px] md:w-75 lg:h-20'
           >
             다음 단계
           </Button>

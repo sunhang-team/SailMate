@@ -116,7 +116,7 @@ export function DetailStep({ gatheringId }: DetailStepProps) {
           type='button'
           variant='social'
           size={undefined}
-          className='h-12 w-[164px] text-gray-800 md:h-[72px] md:w-75 lg:h-20'
+          className='text-small-01-sb md:text-body-01-sb lg:text-h5-sb h-12 w-[164px] text-gray-800 md:h-[72px] md:w-75 lg:h-20'
         >
           임시 저장
         </Button>
@@ -126,7 +126,7 @@ export function DetailStep({ gatheringId }: DetailStepProps) {
           size='action-sm'
           disabled={isPending}
           onClick={handleComplete}
-          className='text-small-01-sb md:text-body-01-sb lg:text-h5-b h-12 w-[164px] md:h-[72px] md:w-75 lg:h-20'
+          className='text-small-01-sb md:text-body-01-sb lg:text-h5-sb h-12 w-[164px] md:h-[72px] md:w-75 lg:h-20'
         >
           완료
         </Button>
