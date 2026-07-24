@@ -322,8 +322,13 @@ export function BasicInfoStep({ onNext }: BasicInfoStepProps) {
         </div>
       </section>
 
-      <div className='flex justify-end gap-3'>
-        <Button type='button' variant='cancel' className='h-12 w-[164px] md:h-[72px] md:w-75 lg:h-20'>
+      <div className='flex justify-between gap-3'>
+        <Button
+          type='button'
+          variant='social'
+          size={undefined}
+          className='h-12 w-[164px] text-gray-800 md:h-[72px] md:w-75 lg:h-20'
+        >
           임시 저장
         </Button>
         <Button
