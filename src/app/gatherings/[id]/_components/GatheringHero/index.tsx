@@ -41,7 +41,7 @@ export function GatheringHero({ gatheringId }: GatheringHeroProps) {
           </p>
           <h1 className='text-h5-b md:text-h3-b xl:text-h2-b text-blue-500'>{data.title}</h1>
         </div>
-        {isLeader && <LeaderActionDropdown gatheringId={gatheringId} />}
+        {isLeader && <LeaderActionDropdown gatheringId={gatheringId} gatheringStatus={data.status} />}
       </div>
     </section>
   );

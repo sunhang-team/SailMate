@@ -52,7 +52,7 @@ export const gatheringFormBaseSchema = z.object({
     .optional(),
 });
 
-/** 날짜 크로스필드 검증 스키마 — 필드 검증은 base schema에 위임, 여기서는 cross-field 검증만 담당 */
+/** 날짜 크로스필드 검증 스키마 (RECRUITING 상태 전용) — 필드 검증은 base schema에 위임, 여기서는 cross-field 검증만 담당 */
 const dateRefinementSchema = z
   .object({
     recruitDeadline: z.string().optional(),
@@ -83,8 +83,36 @@ const dateRefinementSchema = z
     }
   });
 
+/**
+ * 날짜 크로스필드 검증 스키마 (IN_PROGRESS 상태 전용)
+ * recruitDeadline/startDate는 원본과 달라지면 에러,
+ * endDate는 원본 startDate 이후인지만 검증
+ */
+export const createInProgressDateRefinementSchema = (original: { recruitDeadline: string; startDate: string }) =>
+  z
+    .object({
+      recruitDeadline: z.string().optional(),
+      startDate: z.string().optional(),
+      endDate: z.string().optional(),
+    })
+    .superRefine((data, ctx) => {
+      if (data.recruitDeadline && data.recruitDeadline !== original.recruitDeadline) {
+        ctx.addIssue({
+          code: 'custom',
+          message: '모집이 시작되면 모집 마감일을 변경할 수 없습니다.',
+          path: ['recruitDeadline'],
+        });
+      }
+      if (data.startDate && data.startDate !== original.startDate) {
+        ctx.addIssue({ code: 'custom', message: '모임이 시작되면 시작일을 변경할 수 없습니다.', path: ['startDate'] });
+      }
+      if (data.endDate && data.endDate <= original.startDate) {
+        ctx.addIssue({ code: 'custom', message: '종료일은 시작일 이후여야 합니다.', path: ['endDate'] });
+      }
+    });
+
 /** POST `/gatherings` — 모임 생성 폼 */
 export const gatheringFormSchema = gatheringFormBaseSchema.and(dateRefinementSchema);
 
-/** PUT `/gatherings/:gatheringId` — 모임 수정 폼 (모든 필드 optional) */
-export const gatheringUpdateFormSchema = gatheringFormBaseSchema.partial();
+/** PUT `/gatherings/:gatheringId` — 모임 수정 폼 (RECRUITING 상태, 모든 필드 optional) */
+export const gatheringUpdateFormSchema = gatheringFormBaseSchema.partial().and(dateRefinementSchema);
