@@ -123,6 +123,7 @@ export function CreateGatheringForm({
     resolver: zodResolver(schema) as Resolver<GatheringForm>,
     mode: 'onBlur',
     defaultValues: {
+      categoryIds: [],
       tags: [],
       weeklyGuides: [],
       ...initialValues,
@@ -203,7 +204,7 @@ export function CreateGatheringForm({
     <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-10 md:gap-14 lg:gap-20'>
       {/* 모임 유형 */}
       <section className='flex flex-col gap-3'>
-        <p className='text-small-01-sb md:text-body-01-sb lg:text-h5-b text-gray-800'>
+        <p className='text-small-01-sb md:text-body-01-sb lg:text-h5-sb text-gray-800'>
           모임 유형 <span className='text-blue-400'>*</span>
         </p>
         <Controller
@@ -262,7 +263,7 @@ export function CreateGatheringForm({
 
       {/* 기본 정보 */}
       <section className='flex flex-col gap-6 md:gap-8'>
-        <p className='text-small-01-sb md:text-body-01-sb lg:text-h5-b text-gray-800'>
+        <p className='text-small-01-sb md:text-body-01-sb lg:text-h5-sb text-gray-800'>
           기본 정보 <span className='text-blue-400'>*</span>
         </p>
         <div className='flex flex-col gap-6 lg:flex-row lg:gap-4'>
@@ -459,7 +460,7 @@ export function CreateGatheringForm({
         <div className='relative'>
           <Input
             label={
-              <span className='text-small-01-sb md:text-body-01-sb lg:text-h5-b text-gray-800'>
+              <span className='text-small-01-sb md:text-body-01-sb lg:text-h5-sb text-gray-800'>
                 모임 최종 목표 <span className='text-blue-400'>*</span>
               </span>
             }
@@ -483,7 +484,7 @@ export function CreateGatheringForm({
 
       {/* 모집 정보 */}
       <section className='flex flex-col gap-4'>
-        <p className='text-small-01-sb md:text-body-01-sb lg:text-h5-b text-gray-800'>
+        <p className='text-small-01-sb md:text-body-01-sb lg:text-h5-sb text-gray-800'>
           모집 정보 <span className='text-blue-400'>*</span>
         </p>
 
@@ -530,7 +531,7 @@ export function CreateGatheringForm({
 
       {/* 모임 일정 */}
       <section className='flex flex-col gap-4'>
-        <p className='text-small-01-sb md:text-body-01-sb lg:text-h5-b text-gray-800'>
+        <p className='text-small-01-sb md:text-body-01-sb lg:text-h5-sb text-gray-800'>
           모임 일정 <span className='text-blue-400'>*</span>
         </p>
 

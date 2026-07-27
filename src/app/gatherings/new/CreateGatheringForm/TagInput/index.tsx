@@ -7,7 +7,7 @@ import { fieldGradientFocusWrapperClass } from '@/components/ui/fieldControlVari
 import { Tag } from '@/components/ui/Tag';
 import { cn } from '@/lib/cn';
 
-const MAX_TAGS = 5;
+const MAX_TAGS = 10;
 const MAX_TAG_LENGTH = 15;
 
 interface TagInputProps {
@@ -60,7 +60,11 @@ export function TagInput({ value, onChange, onBlur, error }: TagInputProps) {
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder={value.length >= MAX_TAGS ? '최대 5개까지 입력했어요' : '태그를 입력해주세요 (최대 5개)'}
+              placeholder={
+                value.length >= MAX_TAGS
+                  ? `최대 ${MAX_TAGS}개까지 입력했어요`
+                  : `태그를 입력해주세요 (최대 ${MAX_TAGS}개)`
+              }
               maxLength={MAX_TAG_LENGTH}
               disabled={value.length >= MAX_TAGS}
               onBlur={onBlur}

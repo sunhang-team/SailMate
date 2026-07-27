@@ -36,8 +36,8 @@ export const gatheringFormBaseSchema = z.object({
     .optional(),
   tags: z
     .array(z.string().max(15, '태그는 15자 이내로 입력해 주세요.'))
-    .max(10, '태그는 최대 10개까지 가능합니다.')
-    .optional(),
+    .min(1, '태그를 최소 1개 입력해 주세요.')
+    .max(10, '태그는 최대 10개까지 가능합니다.'),
   goal: z.string().min(1, '모임 목표를 입력해 주세요.').max(200, '모임 목표는 최대 200자까지 가능합니다.'),
   maxMembers: z
     .number({ error: '모집 인원을 입력해주세요.' })
