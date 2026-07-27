@@ -5,14 +5,15 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 
-import { AuthSection } from './AuthSection';
-import { PWAInstallBanner } from './PWAInstallBanner';
 import { useAuth } from '@/hooks/useAuth';
 import { useLogout } from '@/api/auth/queries';
 import { usePWAInstall } from '@/hooks/usePWAInstall';
 import { CloseIcon, ArrowIcon } from '@/components/ui/Icon';
 import { PWAInstallButton } from '@/components/PWAInstallButton';
 import { IOSInstallGuideBottomSheet } from '@/components/PWAInstallButton/IOSInstallGuideBottomSheet';
+
+import { AuthSection } from './AuthSection';
+import { PWAInstallBanner } from './PWAInstallBanner';
 
 const BASE_NAV_ITEMS = [
   { href: '/', label: '홈', protected: false },
