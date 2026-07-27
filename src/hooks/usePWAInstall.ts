@@ -25,7 +25,13 @@ export const usePWAInstall = () => {
   // userAgent는 세션 중 바뀌지 않으므로 subscribe는 no-op
   const isIOSDetected = useSyncExternalStore(
     noopSubscribe,
-    () => /iphone|ipad|ipod/i.test(navigator.userAgent),
+    () => {
+      if (/iphone|ipad|ipod/i.test(navigator.userAgent)) return true;
+      // iPadOS 13+는 기본 "데스크톱 사이트 요청" 모드라 UA에 Mac OS X만 보내고 iPad가 안 들어있다.
+      // 실제 Mac(트랙패드 포함)은 터치스크린이 없어 maxTouchPoints가 항상 0이므로,
+      // 터치 지원 여부(0보다 큰지)만으로 iPad를 구분한다.
+      return navigator.userAgent.includes('Macintosh') && navigator.maxTouchPoints > 0;
+    },
     () => false,
   );
 
@@ -61,9 +67,13 @@ export const usePWAInstall = () => {
     }
   }, [deferredPrompt]);
 
+  const isIOS = isIOSDetected && !isStandalone;
+
   return {
-    isInstallable: !!deferredPrompt && !isStandalone,
-    isIOS: isIOSDetected && !isStandalone,
+    // 에뮬레이터 등에서 iOS UA인데도 beforeinstallprompt가 발생하는 경우가 있어(실기기 Safari는 발생 안 함),
+    // isIOS일 땐 항상 가이드만 뜨도록 isInstallable을 명시적으로 배제한다.
+    isInstallable: !!deferredPrompt && !isStandalone && !isIOS,
+    isIOS,
     isStandalone,
     promptInstall,
   };
