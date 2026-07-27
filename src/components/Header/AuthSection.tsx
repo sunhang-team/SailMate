@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useLogout } from '@/api/auth/queries';
 import { useAuth } from '@/hooks/useAuth';
 import { cn } from '@/lib/cn';
+import { revokeFcmTokenOnLogout } from '@/lib/pushNotification';
 import { Dropdown } from '@/components/ui/Dropdown';
 import { NotificationDropdown } from './NotificationDropdown';
 import { Profile } from '@/components/ui/Profile';
@@ -16,6 +17,7 @@ export function AuthSection() {
 
   const { mutate: logout, isPending: isLogoutPending } = useLogout({
     onSuccess: () => {
+      void revokeFcmTokenOnLogout();
       router.push('/');
     },
   });

@@ -1,4 +1,5 @@
 import './globals.css';
+import Script from 'next/script';
 import { SerwistProvider } from '@serwist/turbopack/react';
 
 import { pretendard } from './fonts';
@@ -74,6 +75,16 @@ export default function RootLayout({
   return (
     <html lang='ko' className={`${pretendard.variable} relative`}>
       <body className='font-pretendard relative'>
+        {/* beforeinstallprompt는 하이드레이션 전에 발생할 수 있어, React 이펙트 등록보다
+            먼저 실행되도록 beforeInteractive 스크립트로 최대한 일찍 캡처해둔다. */}
+        <Script id='pwa-install-prompt-capture' strategy='beforeInteractive'>
+          {`
+            window.addEventListener('beforeinstallprompt', function (e) {
+              e.preventDefault();
+              window.__deferredInstallPrompt = e;
+            });
+          `}
+        </Script>
         <SerwistProvider swUrl='/serwist/sw.js'>
           <MSWProvider>
             <QueryProvider>

@@ -15,6 +15,7 @@ import { cn } from '@/lib/cn';
 
 import { ActivityEnergySection } from './ActivityEnergySection';
 import { ActivityStatsSection } from './ActivityStatsSection';
+import { NotificationSettingsSection } from './NotificationSettingsSection';
 import { ProfileEditForm } from './ProfileEditForm';
 import { ProfileIdentitySection } from './ProfileIdentitySection';
 import { SidebarAvatar } from './SidebarAvatar';
@@ -180,6 +181,7 @@ export function ProfileSidebar({ className }: ProfileSidebarProps) {
                 reputationLabel={user.reputationLabel}
               />
               <ActivityStatsSection variant='tablet' rows={statRows} />
+              <NotificationSettingsSection variant='tablet' />
             </div>
           </div>
 
@@ -194,6 +196,7 @@ export function ProfileSidebar({ className }: ProfileSidebarProps) {
               reputationLabel={user.reputationLabel}
             />
             <ActivityStatsSection variant='wide' rows={statRows} />
+            <NotificationSettingsSection variant='wide' />
           </div>
         </>
       )}

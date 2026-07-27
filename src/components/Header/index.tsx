@@ -5,10 +5,15 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 
-import { AuthSection } from './AuthSection';
 import { useAuth } from '@/hooks/useAuth';
 import { useLogout } from '@/api/auth/queries';
+import { usePWAInstall } from '@/hooks/usePWAInstall';
 import { CloseIcon, ArrowIcon } from '@/components/ui/Icon';
+import { PWAInstallButton } from '@/components/PWAInstallButton';
+import { IOSInstallGuideBottomSheet } from '@/components/PWAInstallButton/IOSInstallGuideBottomSheet';
+
+import { AuthSection } from './AuthSection';
+import { PWAInstallBanner } from './PWAInstallBanner';
 
 const BASE_NAV_ITEMS = [
   { href: '/', label: '홈', protected: false },
@@ -21,9 +26,12 @@ export function Header() {
   const router = useRouter();
   const pathname = usePathname();
   const isNavActive = (href: string) => pathname === href || (href === '/' && pathname === '/main');
-  const { isLoggedIn, isLoading } = useAuth();
+  const { isLoggedIn } = useAuth();
   const hasSession = typeof document !== 'undefined' && document.cookie.includes('has-session=');
   const mobileNavItems = isLoggedIn ? [...BASE_NAV_ITEMS, { href: '/my', label: '마이페이지' }] : BASE_NAV_ITEMS;
+  const { isInstallable, isIOS, promptInstall } = usePWAInstall();
+  const isPWAInstallButtonVisible = isInstallable || isIOS;
+  const [isIOSGuideOpen, setIsIOSGuideOpen] = useState(false);
 
   const { mutate: logout } = useLogout({
     onSuccess: () => {
@@ -31,6 +39,14 @@ export function Header() {
       setIsSidebarOpen(false);
     },
   });
+
+  const handleInstallClick = () => {
+    if (isIOS) {
+      setIsIOSGuideOpen(true);
+      return;
+    }
+    void promptInstall();
+  };
 
   useEffect(() => {
     if (!isSidebarOpen) {
@@ -51,6 +67,7 @@ export function Header() {
 
   return (
     <>
+      <PWAInstallBanner />
       <header className='border-gray-150 bg-gray-0 h-[88px] border-b max-md:h-[48px] max-md:px-4 md:px-7 xl:px-30'>
         <div className='flex h-full w-full items-center justify-between'>
           <div className='flex items-center gap-11 lg:gap-20'>
@@ -84,7 +101,9 @@ export function Header() {
             </nav>
           </div>
 
-          <div className='max-md:hidden'>
+          <div className='flex items-center gap-3 max-md:hidden'>
+            <PWAInstallButton className='h-[42px] w-[70px] rounded-lg bg-blue-100 text-blue-300' />
+            {isPWAInstallButtonVisible && <span className='h-6 w-px bg-gray-300' aria-hidden />}
             <AuthSection />
           </div>
 
@@ -104,15 +123,17 @@ export function Header() {
       </header>
 
       <div
-        className={`fixed inset-0 z-50 bg-black/35 transition-opacity duration-200 md:hidden ${
+        className={`fixed inset-0 z-40 bg-black/35 transition-opacity duration-200 md:hidden ${
           isSidebarOpen ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'
         }`}
         onClick={() => setIsSidebarOpen(false)}
         aria-hidden
       />
 
+      {/* Modal/BottomSheet/Toast(z-50)가 사이드바가 열려 있는 동안에도 그 위에 뜰 수 있도록
+          사이드바는 자기 배경(z-40)보다는 높고 공용 오버레이 레이어(z-50)보다는 낮게 둔다. */}
       <aside
-        className={`bg-gray-0 fixed top-0 right-0 z-60 h-dvh w-[74%] max-w-[320px] rounded-l-2xl px-6 py-5 transition-transform duration-300 ease-out md:hidden ${
+        className={`bg-gray-0 fixed top-0 right-0 z-45 h-dvh w-[74%] max-w-[320px] rounded-l-2xl px-6 py-5 transition-transform duration-300 ease-out md:hidden ${
           isSidebarOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
         aria-hidden={!isSidebarOpen}
@@ -155,25 +176,29 @@ export function Header() {
           </ul>
         </nav>
 
-        {isLoggedIn && (
-          <div className='text-body-02-m absolute right-7 bottom-7 text-gray-400'>
-            <button type='button' onClick={() => logout()}>
+        <div className='text-body-02-m absolute right-7 bottom-7 flex flex-col items-end gap-3'>
+          <button type='button' onClick={handleInstallClick} className='text-blue-300'>
+            앱 설치
+          </button>
+          {isLoggedIn ? (
+            <button type='button' onClick={() => logout()} className='text-gray-400'>
               로그아웃
             </button>
-          </div>
-        )}
-        {(isLoading || !isLoggedIn) && (
-          <div className='text-body-02-m absolute right-7 bottom-7 flex items-center gap-3 text-gray-400'>
-            <button type='button' onClick={() => handleNavigate('/login')}>
-              로그인
-            </button>
-            <span>|</span>
-            <button type='button' onClick={() => handleNavigate('/register')}>
-              회원가입
-            </button>
-          </div>
-        )}
+          ) : (
+            <div className='flex items-center gap-3 text-gray-400'>
+              <button type='button' onClick={() => handleNavigate('/login')}>
+                로그인
+              </button>
+              <span>|</span>
+              <button type='button' onClick={() => handleNavigate('/register')}>
+                회원가입
+              </button>
+            </div>
+          )}
+        </div>
       </aside>
+
+      <IOSInstallGuideBottomSheet isOpen={isIOSGuideOpen} onClose={() => setIsIOSGuideOpen(false)} />
     </>
   );
 }
