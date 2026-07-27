@@ -23,8 +23,8 @@ export function CreateGatheringFunnel() {
 
   const methods = useForm<GatheringForm>({
     resolver: zodResolver(gatheringFormSchema),
-    mode: 'onBlur',
-    defaultValues: { tags: [], weeklyGuides: [] },
+    mode: 'onChange',
+    defaultValues: { categoryIds: [], tags: [], weeklyGuides: [] },
   });
 
   return (
