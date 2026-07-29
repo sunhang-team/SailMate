@@ -4,7 +4,8 @@ import { HandIcon } from '@/components/ui/Icon';
 import { Button } from '@/components/ui/Button';
 
 import { ReviewButton } from '../ReviewButton';
-import { MemberBadge, MeBadge } from './Badge';
+import { MemberBadge } from '../../MemberBadge';
+import { MeBadge } from './Badge';
 
 import type { Member } from '@/api/memberships/types';
 

@@ -29,7 +29,7 @@ export async function GatheringDetailContainer({ gatheringId }: GatheringDetailC
 
       <AnchorTabNav gatheringId={gatheringId} />
 
-      <div className='px-4 pt-10 md:px-7 xl:flex xl:gap-20 xl:px-30'>
+      <div className='px-4 pt-15 md:px-7 xl:flex xl:gap-20 xl:px-30'>
         <section className='min-w-0 flex-1'>
           <GatheringDetailContent gatheringId={gatheringId} />
         </section>

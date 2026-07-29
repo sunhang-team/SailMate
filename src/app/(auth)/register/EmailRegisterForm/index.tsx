@@ -118,11 +118,11 @@ export function EmailRegisterForm() {
         />
         <button
           type='button'
-          className='absolute top-9 right-3 cursor-pointer text-gray-400 md:top-10'
+          className='absolute top-10 right-3 cursor-pointer text-gray-800'
           onClick={() => state.setShowPassword((prev) => !prev)}
           aria-label={state.showPassword ? '비밀번호 숨기기' : '비밀번호 보기'}
         >
-          <VisibilityIcon variant={state.showPassword ? 'on' : 'off'} size={20} />
+          <VisibilityIcon variant={state.showPassword ? 'on' : 'off'} size={24} />
         </button>
       </div>
 
@@ -141,11 +141,11 @@ export function EmailRegisterForm() {
         />
         <button
           type='button'
-          className='absolute top-9 right-3 cursor-pointer text-gray-400 md:top-10'
+          className='absolute top-10 right-3 cursor-pointer text-gray-800'
           onClick={() => state.setShowPasswordConfirm((prev) => !prev)}
           aria-label={state.showPasswordConfirm ? '비밀번호 숨기기' : '비밀번호 보기'}
         >
-          <VisibilityIcon variant={state.showPasswordConfirm ? 'on' : 'off'} size={20} />
+          <VisibilityIcon variant={state.showPasswordConfirm ? 'on' : 'off'} size={24} />
         </button>
       </div>
 

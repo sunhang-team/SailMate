@@ -5,9 +5,8 @@ import { useState } from 'react';
 import { ArrowIcon } from '@/components/ui/Icon/ArrowIcon';
 import { Profile } from '@/components/ui/Profile';
 import { cn } from '@/lib/cn';
-import { StateIcon } from '@/components/ui/Icon';
-import { Tag } from '@/components/ui/Tag';
 
+import { MemberBadge, MIN_WEEKS_FOR_WARNING, WARNING_THRESHOLD } from '../../MemberBadge';
 import { MemberTodoGrid } from '../MemberTodoGrid';
 
 import type { Member } from '@/api/memberships/types';
@@ -16,14 +15,14 @@ import type { Todo } from '@/api/todos/types';
 interface MemberTodoAccordionProps {
   member: Member;
   todos: Todo[];
+  streakDays: number;
+  currentWeek: number;
 }
 
-export function MemberTodoAccordion({ member, todos }: MemberTodoAccordionProps) {
+export function MemberTodoAccordion({ member, todos, streakDays, currentWeek }: MemberTodoAccordionProps) {
   const [isOpen, setIsOpen] = useState(false);
 
-  // 디자인 시안에 따른 임시 배지 로직 (D-day 및 주의)
-  const isWarning = member.userId % 3 === 0; // 임시 조건
-  const dDay = 14; // 임시 값
+  const isWarning = member.overallAchievementRate < WARNING_THRESHOLD && currentWeek >= MIN_WEEKS_FOR_WARNING;
 
   return (
     <div
@@ -50,21 +49,8 @@ export function MemberTodoAccordion({ member, todos }: MemberTodoAccordionProps)
           </div>
         </div>
         <div className='flex items-center gap-2 md:gap-4'>
-          {isWarning ? (
-            <span className='text-small-02-sb inline-flex items-center gap-1 rounded-[4px] px-2 py-0.5 text-orange-400'>
-              <Tag variant='info' state='bad'>
-                <StateIcon variant='warning' size={14} />
-                주의
-              </Tag>
-            </span>
-          ) : (
-            <span className='text-small-02-sb inline-flex items-center gap-1 rounded-[4px] px-2 py-0.5 text-blue-400'>
-              <Tag variant='info' state='good'>
-                <StateIcon variant='active' size={14} />
-                {dDay}일
-              </Tag>
-            </span>
-          )}
+          {isWarning && <MemberBadge type='warning' label='주의' />}
+          {!isWarning && streakDays > 0 && <MemberBadge type='streak' label={`${streakDays}일`} />}
           <p className='text-small-01-r md:text-body-01-r mr-3 flex gap-1 whitespace-nowrap text-gray-900'>
             달성률
             <span className='text-small-01-sb md:text-body-01-sb flex items-center font-semibold text-blue-300'>

@@ -32,7 +32,7 @@ export function ParticipantsList({ members, maxMembers, className }: Participant
             />
           </div>
         </Dropdown.Trigger>
-        <Dropdown.Menu className='scrollbar-hide custom-scrollbar absolute top-[-20px] right-[-110px] z-50 mt-2 max-h-60 w-42 overflow-y-auto rounded-xl bg-white p-2 shadow-lg md:right-[-130px] md:w-48'>
+        <Dropdown.Menu className='custom-scrollbar shadow-01 absolute top-[-20px] right-[-110px] z-50 mt-2 max-h-84.5 w-55 overflow-y-auto rounded-lg bg-white p-2 md:right-[-130px] md:w-48'>
           {members.map((member) => (
             <Dropdown.Item
               key={member.userId}
@@ -41,7 +41,7 @@ export function ParticipantsList({ members, maxMembers, className }: Participant
                   <MemberDetailModal memberId={member.userId} isOpen={isOpen} onClose={() => close(true)} />
                 ));
               }}
-              className='flex cursor-pointer items-center justify-between rounded-md p-2 hover:bg-blue-100'
+              className='group flex cursor-pointer items-center justify-between rounded-md p-2 hover:bg-blue-100'
             >
               <div className='flex items-center gap-2'>
                 <AvatarGroup
@@ -52,7 +52,9 @@ export function ParticipantsList({ members, maxMembers, className }: Participant
                 />
                 <span className='text-sm font-medium'>{member.nickname}</span>
               </div>
-              <span className='text-small-02-r text-blue-300'>상세보기</span>
+              <span className='text-small-02-r invisible text-blue-300 transition-all duration-100 group-hover:visible'>
+                상세보기
+              </span>
             </Dropdown.Item>
           ))}
         </Dropdown.Menu>

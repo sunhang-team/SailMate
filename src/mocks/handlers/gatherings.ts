@@ -1,6 +1,6 @@
 import { http, HttpResponse, delay } from 'msw';
 
-import { gatheringFormBaseSchema, gatheringUpdateFormSchema } from '@/api/gatherings/schemas';
+import { gatheringFormBaseSchema } from '@/api/gatherings/schemas';
 import { getTotalWeeks } from '@/lib/formatGatheringDate';
 import { createApiResponse } from '../utils';
 import { CURRENT_USER, GATHERING_MEMBERS } from '../_data';
@@ -43,7 +43,8 @@ import type { GatheringType } from '@/api/gatherings/types';
 const createBodySchema = gatheringFormBaseSchema
   .omit({ images: true })
   .extend({ type: z.enum(['STUDY', 'PROJECT', '스터디', '프로젝트']) });
-const updateBodySchema = gatheringUpdateFormSchema
+const updateBodySchema = gatheringFormBaseSchema
+  .partial()
   .omit({ images: true })
   .extend({ type: z.enum(['STUDY', 'PROJECT', '스터디', '프로젝트']).optional() });
 

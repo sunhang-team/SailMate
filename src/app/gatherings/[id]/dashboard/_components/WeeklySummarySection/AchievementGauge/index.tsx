@@ -75,9 +75,9 @@ export function AchievementGauge({ label, rate, arcColor }: AchievementGaugeProp
         {/* 달성률 숫자 (반원 중앙) */}
         <text x={CX} y={CY - 10} textAnchor='middle' fontSize={42} fontWeight={700} fill='#010937'>
           {rate}
-        </text>
-        <text x={CX + 30} y={CY - 15} textAnchor='middle' fontSize={22} fontWeight={700} fill='#010937'>
-          %
+          <tspan fontSize={22} dy={-7} dx={2}>
+            %
+          </tspan>
         </text>
 
         {/* 0 / 100 라벨 */}
