@@ -9,7 +9,7 @@ import { Card } from '@/components/ui/Card';
 import { Dropdown } from '@/components/ui/Dropdown';
 import { useDropdown } from '@/components/ui/Dropdown/context';
 import { CheckIcon } from '@/components/ui/Icon/CheckIcon';
-import { StudyIcon, ProjectIcon, CategoryIcon, ArrowIcon, CloseIcon } from '@/components/ui/Icon';
+import { CategoryIcon, ArrowIcon, CloseIcon } from '@/components/ui/Icon';
 import { Input } from '@/components/ui/Input';
 import { gatheringQueries } from '@/api/gatherings/queries';
 import { GATHERING_TYPES } from '@/constants/gathering';
@@ -48,8 +48,8 @@ const CategoryTriggerBorder = ({ children }: { children: ReactNode }) => {
 };
 
 const TYPE_META = {
-  스터디: { label: '스터디', subtitle: '함께 학습하고 성장해요', Icon: StudyIcon },
-  프로젝트: { label: '프로젝트', subtitle: '함께 만들고 완성해요', Icon: ProjectIcon },
+  스터디: { label: '스터디', subtitle: '함께 학습하고 성장해요' },
+  프로젝트: { label: '프로젝트', subtitle: '함께 만들고 완성해요' },
 } as const;
 
 const MAX_CATEGORIES = 3;
@@ -100,7 +100,7 @@ export function BasicInfoStep({ onNext }: BasicInfoStepProps) {
               <div className='flex flex-col gap-4 md:flex-row'>
                 {GATHERING_TYPES.map((type) => {
                   const isSelected = field.value === type;
-                  const { label, subtitle, Icon } = TYPE_META[type];
+                  const { label, subtitle } = TYPE_META[type];
                   return (
                     <Card
                       key={type}
@@ -136,7 +136,6 @@ export function BasicInfoStep({ onNext }: BasicInfoStepProps) {
                           {subtitle}
                         </span>
                       </div>
-                      {isSelected && <Icon className='size-9 text-blue-300 md:size-12 lg:size-14' />}
                     </Card>
                   );
                 })}
@@ -338,7 +337,7 @@ export function BasicInfoStep({ onNext }: BasicInfoStepProps) {
           type='button'
           variant='social'
           size={undefined}
-          className='bg-gray-0 text-small-01-sb md:text-body-01-sb lg:text-h5-sb h-12 w-[164px] text-gray-700 md:h-[72px] md:w-75 lg:h-20'
+          className='bg-gray-0 text-small-01-sb md:text-body-01-sb lg:text-h5-sb h-12 w-20 text-gray-700 md:h-18 md:w-40 lg:h-20 lg:w-75'
         >
           임시 저장
         </Button>
@@ -347,7 +346,7 @@ export function BasicInfoStep({ onNext }: BasicInfoStepProps) {
           variant='action'
           size='action-sm'
           onClick={handleNext}
-          className='text-small-01-sb md:text-body-01-sb lg:text-h5-sb h-12 w-[164px] bg-blue-300 md:h-[72px] md:w-75 lg:h-20'
+          className='text-small-01-sb md:text-body-01-sb lg:text-h5-sb h-12 w-25 bg-blue-300 md:h-18 md:w-56 lg:h-20 lg:w-75'
         >
           다음 단계
         </Button>

@@ -214,13 +214,13 @@ export function CreateGatheringForm({
             <div className='flex flex-col gap-4 md:flex-row'>
               {GATHERING_TYPES.map((type) => {
                 const isSelected = field.value === type;
-                const { label, subtitle, Icon } = TYPE_META[type];
+                const { subtitle, Icon } = TYPE_META[type];
                 return (
                   <Card
                     key={type}
                     className={cn(
                       'flex h-40 cursor-pointer items-center gap-6 rounded-lg px-8 shadow-none hover:shadow-none',
-                      'h-[85px]',
+                      'h-21.25',
                       'md:h-40 md:w-auto md:flex-1 md:gap-6 md:px-8',
                       isSelected ? 'border-focus-100 bg-blue-50' : 'border-gray-300 bg-gray-100',
                     )}
@@ -298,8 +298,6 @@ export function CreateGatheringForm({
             control={control}
             render={({ field }) => {
               const selected = field.value ?? [];
-              const selectedLabel =
-                selected.length > 0 ? selected.map((id) => categoryMeta[id]?.label).join(', ') : null;
 
               const MAX_CATEGORIES = 3;
 

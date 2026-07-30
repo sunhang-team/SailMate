@@ -165,7 +165,7 @@ export function ScheduleStep({ onPrev, onCreated }: ScheduleStepProps) {
           type='button'
           variant='social'
           size={undefined}
-          className='bg-gray-0 text-small-01-sb md:text-body-01-sb lg:text-h5-sb h-12 w-[164px] text-gray-800 md:h-[72px] md:w-75 lg:h-20'
+          className='bg-gray-0 text-small-01-sb md:text-body-01-sb lg:text-h5-sb h-12 w-20 text-gray-800 md:h-18 md:w-40 lg:h-20 lg:w-75'
         >
           임시 저장
         </Button>
@@ -175,7 +175,7 @@ export function ScheduleStep({ onPrev, onCreated }: ScheduleStepProps) {
             variant='mypage-edit'
             size={undefined}
             onClick={onPrev}
-            className='text-small-01-sb md:text-body-01-sb lg:text-h5-sb bg-gray-150 h-12 w-[164px] border-gray-400 text-gray-700 md:h-[72px] md:w-75 lg:h-20'
+            className='text-small-01-sb md:text-body-01-sb lg:text-h5-sb bg-gray-150 h-12 w-25 border-gray-400 text-gray-700 md:h-18 md:w-56 lg:h-20 lg:w-75'
           >
             이전 단계
           </Button>
@@ -185,7 +185,7 @@ export function ScheduleStep({ onPrev, onCreated }: ScheduleStepProps) {
             size='action-sm'
             disabled={isPending}
             onClick={handleNext}
-            className='text-small-01-sb md:text-body-01-sb lg:text-h5-sb h-12 w-[164px] bg-blue-300 md:h-[72px] md:w-75 lg:h-20'
+            className='text-small-01-sb md:text-body-01-sb lg:text-h5-sb h-12 w-25 bg-blue-300 md:h-18 md:w-56 lg:h-20 lg:w-75'
           >
             다음 단계
           </Button>
