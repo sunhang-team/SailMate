@@ -33,7 +33,8 @@ export const gatheringFormBaseSchema = z.object({
     .string()
     .min(10, '상세 설명은 10자 이상이어야 합니다.')
     .max(1000, '상세 설명은 최대 1000자까지 가능합니다.')
-    .optional(),
+    .optional()
+    .or(z.literal('')),
   tags: z
     .array(z.string().max(15, '태그는 15자 이내로 입력해 주세요.'))
     .min(1, '태그를 최소 1개 입력해 주세요.')
@@ -115,5 +116,5 @@ export const createInProgressDateRefinementSchema = (original: { recruitDeadline
 /** POST `/gatherings` — 모임 생성 폼 */
 export const gatheringFormSchema = gatheringFormBaseSchema.and(dateRefinementSchema);
 
-/** PUT `/gatherings/:gatheringId` — 모임 수정 폼 (RECRUITING 상태, 모든 필드 optional) */
-export const gatheringUpdateFormSchema = gatheringFormBaseSchema.partial().and(dateRefinementSchema);
+/** PUT `/gatherings/:gatheringId` — 모임 수정 폼 (RECRUITING 상태, 생성과 동일한 필수 조건) */
+export const gatheringUpdateFormSchema = gatheringFormBaseSchema.and(dateRefinementSchema);

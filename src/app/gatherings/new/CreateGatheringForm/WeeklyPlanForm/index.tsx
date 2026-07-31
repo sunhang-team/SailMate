@@ -59,6 +59,9 @@ function WeekDetailInputs({ control, index, error }: WeekDetailInputsProps) {
     <div className='flex flex-col gap-3'>
       <p className='text-small-02-sb md:text-small-01-m lg:text-body-02-m flex items-center gap-1 text-gray-800'>
         세부 계획
+        <span className='md:text-small-02-r lg:text-small-01-r text-[8px] font-normal text-gray-400'>
+          (추가 시 입력 필수, X를 눌러 제거할 수 있어요)
+        </span>
       </p>
 
       {details.length === 0 ? (
@@ -98,6 +101,7 @@ function WeekDetailInputs({ control, index, error }: WeekDetailInputsProps) {
                   value={details[1] ?? ''}
                   onBlur={field.onBlur}
                   onChange={(event) => updateDetail(1, event.target.value)}
+                  error={error}
                   className='text-small-02-r md:text-body-02-r lg:text-body-01-r bg-gray-0 h-10.75 pr-10 md:h-14.5 lg:h-18 lg:px-7 lg:py-5 lg:pr-10'
                 />
                 <button
@@ -231,9 +235,21 @@ export function WeeklyPlanForm({ control, register, errors, totalWeeks }: Weekly
                   key={field.id}
                   className='border-gray-150 flex flex-col gap-6 border-b pb-5 last:border-b-0 last:pb-0'
                 >
-                  <p className='text-small-02-sb md:text-body-02-sb lg:text-body-01-sb text-gray-800'>
-                    {index + 1}주차
-                  </p>
+                  <div className='flex items-center justify-between'>
+                    <p className='text-small-02-sb md:text-body-02-sb lg:text-body-01-sb text-gray-800'>
+                      {index + 1}주차
+                    </p>
+                    {index === fields.length - 1 && (
+                      <button
+                        type='button'
+                        onClick={() => remove(index)}
+                        className='text-gray-400 hover:text-gray-600'
+                        aria-label={`${index + 1}주차 삭제`}
+                      >
+                        <CloseIcon className='size-4 md:size-5' />
+                      </button>
+                    )}
+                  </div>
 
                   <Input
                     label={

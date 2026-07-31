@@ -78,7 +78,7 @@ export interface GatheringListItem {
 
 /** GET `/gatherings/:gatheringId` — 모임 상세 정보 */
 export interface GatheringDetail extends GatheringListItem {
-  description: string;
+  description: string | null;
   goal: string;
   totalWeeks: number;
   images: GatheringImage[];

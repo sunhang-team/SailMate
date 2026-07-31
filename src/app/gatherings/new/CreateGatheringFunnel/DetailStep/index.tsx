@@ -32,6 +32,8 @@ export function DetailStep({ gatheringId }: DetailStepProps) {
     formState: { errors },
   } = useFormContext<GatheringForm>();
 
+  const isDetailStepValid = DETAIL_STEP_FIELDS.every((field) => !errors[field]);
+
   const typeValue = watch('type');
   const titleValue = watch('title');
   const descValue = watch('description') ?? '';
@@ -128,16 +130,23 @@ export function DetailStep({ gatheringId }: DetailStepProps) {
         >
           임시 저장
         </Button>
-        <Button
-          type='button'
-          variant='action'
-          size='action-sm'
-          disabled={isPending}
-          onClick={handleComplete}
-          className='text-small-01-sb md:text-body-01-sb lg:text-h5-sb h-12 w-41 md:h-18 md:w-75 lg:h-20'
-        >
-          완료
-        </Button>
+        <div className='group relative'>
+          <Button
+            type='button'
+            variant='action'
+            size='action-sm'
+            disabled={isPending || !isDetailStepValid}
+            onClick={handleComplete}
+            className='text-small-01-sb md:text-body-01-sb lg:text-h5-sb h-12 w-41 md:h-18 md:w-75 lg:h-20'
+          >
+            완료
+          </Button>
+          {!isDetailStepValid && (
+            <div className='text-small-02-r pointer-events-none absolute bottom-full left-1/2 mb-2 w-max max-w-60 -translate-x-1/2 rounded-lg bg-gray-800 px-3 py-2 text-center text-white opacity-0 transition-opacity group-hover:opacity-100'>
+              제목을 입력하거나 세부 계획을 완성해주세요
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

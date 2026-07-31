@@ -14,7 +14,7 @@ export const toFormValues = (detail: GatheringDetail, nameToId: Record<string, n
   categoryIds: detail.categories.map((name) => nameToId[name]).filter((id): id is number => typeof id === 'number'),
   title: detail.title,
   shortDescription: detail.shortDescription,
-  description: detail.description,
+  description: detail.description ?? '',
   tags: detail.tags,
   goal: detail.goal,
   maxMembers: detail.maxMembers,
