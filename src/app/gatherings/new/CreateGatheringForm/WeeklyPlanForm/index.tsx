@@ -165,11 +165,7 @@ export function WeeklyPlanForm({ control, register, errors, totalWeeks }: Weekly
       return;
     }
 
-    // 최초 1주차는 자동 생성, 이후 주차는 "다음 주차 추가" 버튼으로만 생성
-    if (currentLength === 0) {
-      append(createEmptyGuide(1), { shouldFocus: false });
-      return;
-    }
+    if (currentLength === 0) return;
 
     const normalized = fields.map((field, index) => ({
       week: index + 1,
@@ -180,7 +176,7 @@ export function WeeklyPlanForm({ control, register, errors, totalWeeks }: Weekly
     if (!hasSameWeekOrder) {
       replace(normalized);
     }
-  }, [append, fields, remove, replace, totalWeeks]);
+  }, [fields, remove, replace, totalWeeks]);
 
   const guideErrors = useMemo(() => errors.weeklyGuides, [errors.weeklyGuides]);
   const canAddNextWeek = fields.length < Math.max(0, totalWeeks);
@@ -224,7 +220,9 @@ export function WeeklyPlanForm({ control, register, errors, totalWeeks }: Weekly
                 <div className='flex flex-col items-center gap-2 py-6 text-gray-400'>
                   <CalendarIcon className='size-8' />
                   <p className='text-small-01-r md:text-body-02-r text-center'>
-                    모임 시작일과 종료일을 입력하면 주차별 계획을 작성할 수 있어요
+                    {totalWeeks > 0
+                      ? '아래 버튼을 눌러 주차별 계획을 추가해보세요'
+                      : '모임 시작일과 종료일을 입력하면 주차별 계획을 작성할 수 있어요'}
                   </p>
                 </div>
               )}

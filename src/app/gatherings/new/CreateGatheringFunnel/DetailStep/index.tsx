@@ -45,9 +45,14 @@ export function DetailStep({ gatheringId }: DetailStepProps) {
     const isValid = await trigger(DETAIL_STEP_FIELDS);
     if (!isValid) return;
 
-    const { description, weeklyGuides, images } = getValues();
+    const formValues = getValues();
+    const weeklyGuides = formValues.weeklyGuides?.map((guide) => ({
+      ...guide,
+      details: guide.details?.filter((detail) => detail.trim() !== ''),
+    }));
+
     mutate(
-      { description: description?.trim() || undefined, weeklyGuides, images },
+      { ...formValues, description: formValues.description?.trim() || undefined, weeklyGuides },
       {
         onSuccess: () => {
           showToast({ variant: 'success', title: '모임 소개가 추가되었습니다.' });

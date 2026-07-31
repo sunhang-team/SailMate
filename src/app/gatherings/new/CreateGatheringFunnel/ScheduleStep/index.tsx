@@ -43,7 +43,7 @@ export function ScheduleStep({ onPrev, onCreated }: ScheduleStepProps) {
     if (!isValid) return;
 
     mutate(getValues(), {
-      onSuccess: (data) => onCreated(data.gathering.id),
+      onSuccess: (data) => onCreated(data.id),
       onError: () => showToast({ variant: 'error', title: '모임 생성에 실패했습니다.' }),
     });
   };

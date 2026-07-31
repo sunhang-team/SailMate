@@ -10,7 +10,7 @@ export const weeklyGuideSchema = z.object({
   week: z.number().min(1, '주차는 1 이상이어야 합니다.'),
   title: z.string().min(1, '제목을 입력해주세요.').max(100, '제목은 최대 100자까지 가능합니다.'),
   details: z
-    .array(z.string().max(200, '세부 계획은 200자 이하여야 합니다.'))
+    .array(z.string().min(1, '세부 계획을 입력해주세요.').max(200, '세부 계획은 200자 이하여야 합니다.'))
     .max(2, '세부 계획은 최대 2개까지 입력할 수 있습니다.')
     .optional(),
 });
