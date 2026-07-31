@@ -5,7 +5,8 @@ import { useRouter } from 'next/navigation';
 import { useSuspenseQueries } from '@tanstack/react-query';
 
 import { gatheringQueries } from '@/api/gatherings/queries';
-import { CreateGatheringForm } from '@/app/gatherings/new/CreateGatheringForm';
+
+import { EditGatheringForm } from '../EditGatheringForm';
 
 import type { Category, GatheringDetail, GatheringForm } from '@/api/gatherings/types';
 
@@ -54,7 +55,7 @@ export function EditGatheringContent({ gatheringId }: EditGatheringContentProps)
   if (isCompleted) return null;
 
   return (
-    <CreateGatheringForm
+    <EditGatheringForm
       mode='edit'
       gatheringId={gatheringId}
       initialValues={initialValues}

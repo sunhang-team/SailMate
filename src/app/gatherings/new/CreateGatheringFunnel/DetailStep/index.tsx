@@ -8,10 +8,10 @@ import { Card } from '@/components/ui/Card';
 import { Textarea } from '@/components/ui/Textarea';
 import { useToastStore } from '@/components/ui/Toast/useToastStore';
 import { useUpdateGathering } from '@/api/gatherings/queries';
+import { ImageUpload } from '@/app/gatherings/_gathering-form-components/ImageUpload';
+import { WeeklyPlanForm } from '@/app/gatherings/_gathering-form-components/WeeklyPlanForm';
 import { getTotalWeeks } from '@/lib/formatGatheringDate';
 
-import { ImageUpload } from '../../CreateGatheringForm/ImageUpload';
-import { WeeklyPlanForm } from '../../CreateGatheringForm/WeeklyPlanForm';
 import { DETAIL_STEP_FIELDS } from '../steps';
 
 import type { GatheringForm } from '@/api/gatherings/types';

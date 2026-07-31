@@ -12,10 +12,10 @@ import { CheckIcon } from '@/components/ui/Icon/CheckIcon';
 import { CategoryIcon, ArrowIcon, CloseIcon } from '@/components/ui/Icon';
 import { Input } from '@/components/ui/Input';
 import { gatheringQueries } from '@/api/gatherings/queries';
+import { TagInput } from '@/app/gatherings/_gathering-form-components/TagInput';
 import { GATHERING_TYPES } from '@/constants/gathering';
 import { cn } from '@/lib/cn';
 
-import { TagInput } from '../../CreateGatheringForm/TagInput';
 import { BASIC_STEP_FIELDS } from '../steps';
 
 import type { GatheringForm } from '@/api/gatherings/types';

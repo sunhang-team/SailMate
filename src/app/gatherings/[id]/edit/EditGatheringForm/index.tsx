@@ -23,6 +23,9 @@ import {
   gatheringFormSchema,
   gatheringUpdateFormSchema,
 } from '@/api/gatherings/schemas';
+import { ImageUpload } from '@/app/gatherings/_gathering-form-components/ImageUpload';
+import { TagInput } from '@/app/gatherings/_gathering-form-components/TagInput';
+import { WeeklyPlanForm } from '@/app/gatherings/_gathering-form-components/WeeklyPlanForm';
 import { GATHERING_TYPES } from '@/constants/gathering';
 import { cn } from '@/lib/cn';
 import {
@@ -31,10 +34,6 @@ import {
   trackGatheringCreateSubmit,
 } from '@/lib/analytics/gathering';
 import { getTotalWeeks } from '@/lib/formatGatheringDate';
-
-import { ImageUpload } from './ImageUpload';
-import { TagInput } from './TagInput';
-import { WeeklyPlanForm } from './WeeklyPlanForm';
 
 import type { GatheringForm, GatheringStatus } from '@/api/gatherings/types';
 
@@ -87,19 +86,19 @@ const TYPE_META = {
   프로젝트: { label: '프로젝트', subtitle: '함께 만들고 완성해요', Icon: ProjectIcon },
 } as const;
 
-interface CreateGatheringFormProps {
+interface EditGatheringFormProps {
   mode?: 'create' | 'edit';
   gatheringId?: number;
   initialValues?: Partial<GatheringForm>;
   gatheringStatus?: GatheringStatus;
 }
 
-export function CreateGatheringForm({
+export function EditGatheringForm({
   mode = 'create',
   gatheringId,
   initialValues,
   gatheringStatus,
-}: CreateGatheringFormProps) {
+}: EditGatheringFormProps) {
   const router = useRouter();
   const showToast = useToastStore((state) => state.showToast);
   const isEditMode = mode === 'edit';
