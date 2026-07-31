@@ -502,7 +502,7 @@ export const gatheringsHandlers = [
 
     const detail: GatheringDetail = {
       ...newGathering,
-      description: body.description,
+      description: body.description ?? '',
       goal: body.goal,
       totalWeeks: getTotalWeeks(body.startDate, body.endDate),
       images: [],
@@ -522,7 +522,7 @@ export const gatheringsHandlers = [
     mockGatherings.unshift(newGathering);
     mockDetails[newGathering.id] = detail;
 
-    return HttpResponse.json(createApiResponse<CreateGatheringResponse>({ gathering: detail }), { status: 201 });
+    return HttpResponse.json(createApiResponse<CreateGatheringResponse>(detail), { status: 201 });
   }),
 
   /** PUT /api/v1/gatherings/:gatheringId — 모임 수정 */
@@ -558,7 +558,7 @@ export const gatheringsHandlers = [
     const updatedDetail: GatheringDetail = { ...existingDetail, ...mockGatherings[idx], ...body } as GatheringDetail;
     mockDetails[gatheringId] = updatedDetail;
 
-    return HttpResponse.json(createApiResponse<UpdateGatheringResponse>({ gathering: updatedDetail }));
+    return HttpResponse.json(createApiResponse<UpdateGatheringResponse>(updatedDetail));
   }),
 
   /** DELETE /api/v1/gatherings/:gatheringId — 모임 삭제 */

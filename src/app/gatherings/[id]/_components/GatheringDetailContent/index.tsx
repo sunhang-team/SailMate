@@ -46,7 +46,7 @@ export function GatheringDetailContent({ gatheringId }: GatheringDetailContentPr
       )}
 
       <section id='description' className={cn('scroll-mt-10 xl:scroll-mt-12', isLeader && 'mt-15')}>
-        <GatheringDescription description={data.description} />
+        <GatheringDescription description={data.description ?? ''} />
       </section>
 
       {data.images.length > 0 && (

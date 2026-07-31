@@ -78,7 +78,7 @@ export interface GatheringListItem {
 
 /** GET `/gatherings/:gatheringId` — 모임 상세 정보 */
 export interface GatheringDetail extends GatheringListItem {
-  description: string;
+  description: string | null;
   goal: string;
   totalWeeks: number;
   images: GatheringImage[];
@@ -121,9 +121,7 @@ export interface GetGatheringsResponse {
 export type CreateGatheringRequest = GatheringForm;
 
 /** POST `/gatherings` — 모임 생성 응답 */
-export interface CreateGatheringResponse {
-  gathering: GatheringDetail;
-}
+export type CreateGatheringResponse = GatheringDetail;
 
 /** GET `/gatherings/categories` — 카테고리 목록 응답 */
 export interface GetCategoriesResponse {
@@ -149,9 +147,7 @@ export type GetGatheringDetailResponse = GatheringDetail;
 export type UpdateGatheringRequest = GatheringUpdateForm;
 
 /** PUT `/gatherings/:gatheringId` — 모임 수정 응답 */
-export interface UpdateGatheringResponse {
-  gathering: GatheringDetail;
-}
+export type UpdateGatheringResponse = GatheringDetail;
 
 /** DELETE `/gatherings/:gatheringId` — 모임 삭제 응답 */
 export interface DeleteGatheringResponse {
