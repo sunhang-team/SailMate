@@ -71,7 +71,7 @@ export function ScheduleStep({ onPrev, onCreated }: ScheduleStepProps) {
                 placeholder='모집 인원을 적어주세요'
                 error={errors.maxMembers?.message}
                 {...register('maxMembers', { valueAsNumber: true })}
-                className='text-small-02-r md:text-body-02-r lg:text-body-01-r bg-gray-0 h-[43px] md:h-[58px] lg:h-[72px] lg:px-7 lg:py-5'
+                className='text-small-02-r md:text-body-02-r lg:text-body-01-r bg-gray-0 h-10.75 md:h-14.5 lg:h-18 lg:px-7 lg:py-5'
               />
             </div>
 
@@ -91,7 +91,7 @@ export function ScheduleStep({ onPrev, onCreated }: ScheduleStepProps) {
                     onBlur={field.onBlur}
                     placeholder='모집 마감 일정을 선택해주세요'
                     error={errors.recruitDeadline?.message}
-                    className='bg-gray-0 h-[43px] md:h-[58px] lg:h-[72px] lg:px-7 lg:py-5'
+                    className='bg-gray-0 h-10.75 md:h-14.5 lg:h-18 lg:px-7 lg:py-5'
                   />
                 </div>
               )}
@@ -122,7 +122,7 @@ export function ScheduleStep({ onPrev, onCreated }: ScheduleStepProps) {
                     onBlur={field.onBlur}
                     placeholder='모임 시작일을 선택해주세요'
                     error={errors.startDate?.message}
-                    className='bg-gray-0 h-[43px] md:h-[58px] lg:h-[72px] lg:px-7 lg:py-5'
+                    className='bg-gray-0 h-10.75 md:h-14.5 lg:h-18 lg:px-7 lg:py-5'
                   />
                 </div>
               )}
@@ -144,14 +144,14 @@ export function ScheduleStep({ onPrev, onCreated }: ScheduleStepProps) {
                     onBlur={field.onBlur}
                     placeholder='모임 종료일을 선택해주세요'
                     error={errors.endDate?.message}
-                    className='bg-gray-0 h-[43px] md:h-[58px] lg:h-[72px] lg:px-7 lg:py-5'
+                    className='bg-gray-0 h-10.75 md:h-14.5 lg:h-18 lg:px-7 lg:py-5'
                   />
                 </div>
               )}
             />
           </div>
 
-          <div className='mt-2 flex h-[43px] items-center justify-between rounded-lg bg-gray-100 px-7 py-5 md:mt-4 md:h-[58px] lg:h-[72px]'>
+          <div className='mt-2 flex h-10.75 items-center justify-between rounded-lg bg-gray-100 px-7 py-5 md:mt-4 md:h-14.5 lg:h-18'>
             <p className='text-small-02-sb md:text-body-02-sb lg:text-body-01-sb text-gray-800'>모임 기간</p>
             <p className='text-small-02-sb md:text-body-02-sb lg:text-body-01-sb text-gray-800'>
               <span className='text-blue-400'>{totalWeeks}</span> 주

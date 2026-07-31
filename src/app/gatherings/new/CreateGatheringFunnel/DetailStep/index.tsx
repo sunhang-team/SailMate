@@ -61,7 +61,7 @@ export function DetailStep({ gatheringId }: DetailStepProps) {
   return (
     <div className='flex flex-col gap-10 md:gap-14 lg:gap-10'>
       <div className='flex flex-col gap-1'>
-        <p className='text-small-01-r text-gray-500'>
+        <p className='text-small-02-r md:text-body-02-r text-gray-500'>
           {typeValue} / {titleValue}
         </p>
         <h1 className='text-body-01-b md:text-h4-b lg:text-h3-b text-gray-900'>모임을 더 자세히 소개해보세요.</h1>
@@ -71,6 +71,7 @@ export function DetailStep({ gatheringId }: DetailStepProps) {
         <section className='flex flex-col gap-6 md:gap-8'>
           <p className='text-small-01-sb md:text-body-01-sb lg:text-h5-b text-gray-800'>모임 세부 정보</p>
 
+          {/* 주차별 계획 */}
           <WeeklyPlanForm control={control} register={register} errors={errors} totalWeeks={totalWeeks} />
 
           {/* 상세 설명 */}
@@ -101,7 +102,6 @@ export function DetailStep({ gatheringId }: DetailStepProps) {
           <div className='flex flex-col gap-1'>
             <p className='text-small-02-m md:text-body-02-m lg:text-body-01-m flex items-center gap-1 text-gray-800'>
               이미지
-              <span className='md:text-small-02-r lg:text-small-01-r text-[8px] font-normal text-gray-400'>(선택)</span>
             </p>
             <Controller
               name='images'
@@ -119,7 +119,7 @@ export function DetailStep({ gatheringId }: DetailStepProps) {
           type='button'
           variant='social'
           size={undefined}
-          className='bg-gray-0 text-small-01-sb md:text-body-01-sb lg:text-h5-sb h-12 w-[164px] text-gray-800 md:h-[72px] md:w-75 lg:h-20'
+          className='bg-gray-0 text-small-01-sb md:text-body-01-sb lg:text-h5-sb h-12 w-41 text-gray-800 md:h-18 md:w-75 lg:h-20'
         >
           임시 저장
         </Button>
@@ -129,7 +129,7 @@ export function DetailStep({ gatheringId }: DetailStepProps) {
           size='action-sm'
           disabled={isPending}
           onClick={handleComplete}
-          className='text-small-01-sb md:text-body-01-sb lg:text-h5-sb h-12 w-[164px] md:h-[72px] md:w-75 lg:h-20'
+          className='text-small-01-sb md:text-body-01-sb lg:text-h5-sb h-12 w-41 md:h-18 md:w-75 lg:h-20'
         >
           완료
         </Button>
