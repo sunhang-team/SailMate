@@ -194,7 +194,7 @@ export function WeeklyPlanForm({ control, register, errors, totalWeeks }: Weekly
     <section className='mt-2 flex flex-col md:mt-4'>
       <button
         type='button'
-        onClick={() => setIsOpenOverride((prev) => !(prev ?? totalWeeks > 0))}
+        onClick={() => setIsOpenOverride((prev) => !(prev ?? isOpen))}
         className={cn(
           'bg-gray-150 flex h-10.75 items-center justify-between border border-gray-200 px-7 py-5 md:h-14.5 lg:h-18',
           isOpen ? 'rounded-t-lg rounded-b-none' : 'rounded-lg',
