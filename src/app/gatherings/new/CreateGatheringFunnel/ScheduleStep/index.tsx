@@ -1,15 +1,17 @@
 'use client';
 
 import { Controller, useFormContext } from 'react-hook-form';
+import axios from 'axios';
 
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { DatePicker } from '@/components/ui/DatePicker';
 import { Input } from '@/components/ui/Input';
 import { useToastStore } from '@/components/ui/Toast/useToastStore';
-import { useCreateGathering } from '@/api/gatherings/queries';
+import { useCreateGathering, useCreateGatheringDraft, useUpdateGatheringDraft } from '@/api/gatherings/queries';
 import { getTotalWeeks } from '@/lib/formatGatheringDate';
 
+import { buildGatheringDraftPayload } from '../buildGatheringDraftPayload';
 import { SCHEDULE_STEP_FIELDS } from '../steps';
 
 import type { GatheringForm } from '@/api/gatherings/types';
@@ -17,11 +19,13 @@ import type { GatheringForm } from '@/api/gatherings/types';
 const DATE_FIELDS = ['recruitDeadline', 'startDate', 'endDate'] as const;
 
 interface ScheduleStepProps {
+  draftId: number | null;
+  onDraftSaved: (draftId: number) => void;
   onPrev: () => void;
   onCreated: (gatheringId: number) => void;
 }
 
-export function ScheduleStep({ onPrev, onCreated }: ScheduleStepProps) {
+export function ScheduleStep({ draftId, onDraftSaved, onPrev, onCreated }: ScheduleStepProps) {
   const showToast = useToastStore((state) => state.showToast);
   const {
     register,
@@ -37,6 +41,35 @@ export function ScheduleStep({ onPrev, onCreated }: ScheduleStepProps) {
   const totalWeeks = startDateValue && endDateValue ? getTotalWeeks(startDateValue, endDateValue) : 0;
 
   const { mutate, isPending } = useCreateGathering();
+  const { mutate: createDraft, isPending: isCreatingDraft } = useCreateGatheringDraft();
+  const { mutate: updateDraft, isPending: isUpdatingDraft } = useUpdateGatheringDraft(draftId);
+
+  const handleSaveDraft = () => {
+    const payload = buildGatheringDraftPayload(getValues());
+    const onError = (error: unknown) => {
+      if (axios.isAxiosError(error) && error.response?.status === 409) {
+        showToast({ variant: 'error', title: '임시저장은 최대 5개까지 가능합니다.' });
+        return;
+      }
+      showToast({ variant: 'error', title: '임시저장에 실패했습니다.' });
+    };
+
+    if (draftId) {
+      updateDraft(payload, {
+        onSuccess: () => showToast({ variant: 'success', title: '임시저장되었습니다.' }),
+        onError,
+      });
+      return;
+    }
+
+    createDraft(payload, {
+      onSuccess: (data) => {
+        onDraftSaved(data.draftId);
+        showToast({ variant: 'success', title: '임시저장되었습니다.' });
+      },
+      onError,
+    });
+  };
 
   const handleNext = async () => {
     const isValid = await trigger(SCHEDULE_STEP_FIELDS);
@@ -165,6 +198,8 @@ export function ScheduleStep({ onPrev, onCreated }: ScheduleStepProps) {
           type='button'
           variant='social'
           size={undefined}
+          disabled={isCreatingDraft || isUpdatingDraft}
+          onClick={handleSaveDraft}
           className='bg-gray-0 text-small-01-sb md:text-body-01-sb lg:text-h5-sb h-12 w-20 text-gray-800 md:h-18 md:w-40 lg:h-20 lg:w-75'
         >
           임시 저장

@@ -4,12 +4,14 @@ import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
+import { SuspenseBoundary } from '@/components/SuspenseBoundary';
 import { gatheringFormSchema } from '@/api/gatherings/schemas';
 import { useFunnel } from '@/hooks/useFunnel';
 
 import { BasicInfoStep } from './BasicInfoStep';
 import { CompleteStep } from './CompleteStep';
 import { DetailStep } from './DetailStep';
+import { DraftInitializer } from './DraftInitializer';
 import { ScheduleStep } from './ScheduleStep';
 import { StepIndicator } from './StepIndicator';
 
@@ -17,9 +19,14 @@ import type { GatheringForm } from '@/api/gatherings/types';
 
 type FunnelStep = 'BASIC' | 'SCHEDULE' | 'COMPLETE' | 'DETAIL';
 
-export function CreateGatheringFunnel() {
+interface CreateGatheringFunnelProps {
+  initialDraftId?: number | null;
+}
+
+export function CreateGatheringFunnel({ initialDraftId = null }: CreateGatheringFunnelProps) {
   const { Funnel, Step, setStep, currentStep } = useFunnel<FunnelStep>('BASIC');
   const [createdGatheringId, setCreatedGatheringId] = useState<number | null>(null);
+  const [draftId, setDraftId] = useState<number | null>(initialDraftId);
 
   const methods = useForm<GatheringForm>({
     resolver: zodResolver(gatheringFormSchema),
@@ -27,15 +34,17 @@ export function CreateGatheringFunnel() {
     defaultValues: { categoryIds: [], tags: [], weeklyGuides: [] },
   });
 
-  return (
-    <FormProvider {...methods}>
+  const funnelContent = (
+    <>
       <StepIndicator currentStep={currentStep} />
       <Funnel>
         <Step name='BASIC'>
-          <BasicInfoStep onNext={() => setStep('SCHEDULE')} />
+          <BasicInfoStep draftId={draftId} onDraftSaved={setDraftId} onNext={() => setStep('SCHEDULE')} />
         </Step>
         <Step name='SCHEDULE'>
           <ScheduleStep
+            draftId={draftId}
+            onDraftSaved={setDraftId}
             onPrev={() => setStep('BASIC')}
             onCreated={(gatheringId) => {
               setCreatedGatheringId(gatheringId);
@@ -48,6 +57,30 @@ export function CreateGatheringFunnel() {
         </Step>
         <Step name='DETAIL'>{createdGatheringId && <DetailStep gatheringId={createdGatheringId} />}</Step>
       </Funnel>
+    </>
+  );
+
+  return (
+    <FormProvider {...methods}>
+      {initialDraftId ? (
+        <SuspenseBoundary
+          pendingFallback={
+            <div className='flex flex-col gap-8'>
+              <div className='bg-gray-150 h-40 animate-pulse rounded-lg' />
+              <div className='bg-gray-150 h-60 animate-pulse rounded-lg' />
+            </div>
+          }
+          errorFallback={
+            <div className='rounded-lg border border-gray-200 bg-gray-50 px-4 py-6'>
+              <p className='text-body-02-r text-gray-500'>임시저장을 불러올 수 없습니다</p>
+            </div>
+          }
+        >
+          <DraftInitializer draftId={initialDraftId}>{funnelContent}</DraftInitializer>
+        </SuspenseBoundary>
+      ) : (
+        funnelContent
+      )}
     </FormProvider>
   );
 }

@@ -3,6 +3,7 @@
 import { type ReactNode, useMemo } from 'react';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { Controller, useFormContext } from 'react-hook-form';
+import axios from 'axios';
 
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
@@ -11,11 +12,13 @@ import { useDropdown } from '@/components/ui/Dropdown/context';
 import { CheckIcon } from '@/components/ui/Icon/CheckIcon';
 import { CategoryIcon, ArrowIcon, CloseIcon } from '@/components/ui/Icon';
 import { Input } from '@/components/ui/Input';
-import { gatheringQueries } from '@/api/gatherings/queries';
+import { useToastStore } from '@/components/ui/Toast/useToastStore';
+import { gatheringQueries, useCreateGatheringDraft, useUpdateGatheringDraft } from '@/api/gatherings/queries';
 import { TagInput } from '@/app/gatherings/_gathering-form-components/TagInput';
 import { GATHERING_TYPES } from '@/constants/gathering';
 import { cn } from '@/lib/cn';
 
+import { buildGatheringDraftPayload } from '../buildGatheringDraftPayload';
 import { BASIC_STEP_FIELDS } from '../steps';
 
 import type { GatheringForm } from '@/api/gatherings/types';
@@ -55,10 +58,12 @@ const TYPE_META = {
 const MAX_CATEGORIES = 3;
 
 interface BasicInfoStepProps {
+  draftId: number | null;
+  onDraftSaved: (draftId: number) => void;
   onNext: () => void;
 }
 
-export function BasicInfoStep({ onNext }: BasicInfoStepProps) {
+export function BasicInfoStep({ draftId, onDraftSaved, onNext }: BasicInfoStepProps) {
   const { data: categoriesData } = useSuspenseQuery(gatheringQueries.categories());
   const categories = categoriesData.categories;
   const categoryMeta = useMemo(
@@ -66,17 +71,49 @@ export function BasicInfoStep({ onNext }: BasicInfoStepProps) {
     [categories],
   );
 
+  const showToast = useToastStore((state) => state.showToast);
   const {
     register,
     control,
     watch,
     trigger,
+    getValues,
     formState: { errors },
   } = useFormContext<GatheringForm>();
 
   const titleValue = watch('title') ?? '';
   const shortDescValue = watch('shortDescription') ?? '';
   const goalValue = watch('goal') ?? '';
+
+  const { mutate: createDraft, isPending: isCreatingDraft } = useCreateGatheringDraft();
+  const { mutate: updateDraft, isPending: isUpdatingDraft } = useUpdateGatheringDraft(draftId);
+
+  const handleSaveDraft = () => {
+    const payload = buildGatheringDraftPayload(getValues());
+    const onError = (error: unknown) => {
+      if (axios.isAxiosError(error) && error.response?.status === 409) {
+        showToast({ variant: 'error', title: '임시저장은 최대 5개까지 가능합니다.' });
+        return;
+      }
+      showToast({ variant: 'error', title: '임시저장에 실패했습니다.' });
+    };
+
+    if (draftId) {
+      updateDraft(payload, {
+        onSuccess: () => showToast({ variant: 'success', title: '임시저장되었습니다.' }),
+        onError,
+      });
+      return;
+    }
+
+    createDraft(payload, {
+      onSuccess: (data) => {
+        onDraftSaved(data.draftId);
+        showToast({ variant: 'success', title: '임시저장되었습니다.' });
+      },
+      onError,
+    });
+  };
 
   const handleNext = async () => {
     const isValid = await trigger(BASIC_STEP_FIELDS);
@@ -337,6 +374,8 @@ export function BasicInfoStep({ onNext }: BasicInfoStepProps) {
           type='button'
           variant='social'
           size={undefined}
+          disabled={isCreatingDraft || isUpdatingDraft}
+          onClick={handleSaveDraft}
           className='bg-gray-0 text-small-01-sb md:text-body-01-sb lg:text-h5-sb h-12 w-20 text-gray-700 md:h-18 md:w-40 lg:h-20 lg:w-75'
         >
           임시 저장
