@@ -254,12 +254,15 @@ export const getGatheringDraftDetail = async (draftId: number): Promise<GetGathe
   return unwrapResponse(data);
 };
 
-/** DELETE /v1/gatherings/drafts/:draftId — 임시저장 삭제 */
+/**
+ * DELETE /v1/gatherings/drafts/:draftId — 임시저장 삭제
+ * 응답이 { success: true }만 오고 data 필드가 없으므로 unwrapResponse(data 필수) 대신 직접 파싱
+ */
 export const deleteGatheringDraft = async (draftId: number): Promise<DeleteGatheringDraftResponse> => {
   const { data } = await axiosClient.delete<ApiResponse<DeleteGatheringDraftResponse>>(
     `/v1/gatherings/drafts/${draftId}`,
   );
-  return unwrapResponse(data);
+  return { success: data.success };
 };
 
 /**

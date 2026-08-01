@@ -8,7 +8,6 @@ import type {
   GatheringDraftSummary,
   GetGatheringDraftsResponse,
   SaveGatheringDraftResponse,
-  DeleteGatheringDraftResponse,
 } from '@/api/gatherings/types';
 
 const BASE = '/api/v1/gatherings/drafts';
@@ -216,6 +215,7 @@ export const gatheringDraftsHandlers = [
     // filter로 새 배열을 만들어 재할당 (mockDrafts가 let인 이유)
     mockDrafts = mockDrafts.filter((d) => d.draftId !== draftId);
 
-    return HttpResponse.json(createApiResponse<DeleteGatheringDraftResponse>({ success: true }));
+    // 실제 백엔드 응답이 data 필드 없이 { success: true }만 내려주므로 동일하게 맞춤
+    return HttpResponse.json({ success: true });
   }),
 ];
