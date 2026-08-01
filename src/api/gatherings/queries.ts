@@ -12,6 +12,11 @@ import {
   createGathering,
   updateGathering,
   deleteGathering,
+  createGatheringDraft,
+  updateGatheringDraft,
+  getGatheringDrafts,
+  getGatheringDraftDetail,
+  deleteGatheringDraft,
   GATHERING_TAGS,
   getMainGatherings,
 } from './index';
@@ -24,6 +29,9 @@ import type {
   CreateGatheringResponse,
   UpdateGatheringRequest,
   UpdateGatheringResponse,
+  SaveGatheringDraftRequest,
+  SaveGatheringDraftResponse,
+  DeleteGatheringDraftResponse,
 } from './types';
 
 export const gatheringKeys = {
@@ -33,6 +41,8 @@ export const gatheringKeys = {
   list: (params?: GetGatheringsParams) => [...gatheringKeys.all, 'list', params ?? {}] as const,
   detail: (gatheringId: number) => [...gatheringKeys.all, 'detail', gatheringId] as const,
   applicationStatus: (gatheringId: number) => [...gatheringKeys.all, 'applicationStatus', gatheringId] as const,
+  drafts: () => [...gatheringKeys.all, 'drafts'] as const,
+  draft: (draftId: number) => [...gatheringKeys.all, 'draft', draftId] as const,
 };
 
 export const gatheringQueries = {
@@ -70,6 +80,20 @@ export const gatheringQueries = {
     queryOptions({
       queryKey: gatheringKeys.list(params),
       queryFn: () => getGatherings(params),
+    }),
+
+  /** GET /gatherings/drafts — 내 임시저장 목록 */
+  drafts: () =>
+    queryOptions({
+      queryKey: gatheringKeys.drafts(),
+      queryFn: () => getGatheringDrafts(),
+    }),
+
+  /** GET /gatherings/drafts/:draftId — 임시저장 상세 */
+  draft: (draftId: number) =>
+    queryOptions({
+      queryKey: gatheringKeys.draft(draftId),
+      queryFn: () => getGatheringDraftDetail(draftId),
     }),
 };
 
@@ -130,6 +154,59 @@ export const useDeleteGathering = (gatheringId: number, options?: UseMutationOpt
         queryClient.invalidateQueries({ queryKey: gatheringKeys.all }),
         queryClient.invalidateQueries({ queryKey: ['memberships'] }),
       ]);
+      options?.onSuccess?.(data, variables, onMutateResult, context);
+    },
+  });
+};
+
+/** POST /gatherings/drafts — 임시저장 생성 */
+export const useCreateGatheringDraft = (
+  options?: UseMutationOptions<SaveGatheringDraftResponse, Error, SaveGatheringDraftRequest, unknown>,
+) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (body: SaveGatheringDraftRequest) => createGatheringDraft(body),
+    ...options,
+    onSuccess: (data, variables, onMutateResult, context) => {
+      queryClient.invalidateQueries({ queryKey: gatheringKeys.drafts() });
+      options?.onSuccess?.(data, variables, onMutateResult, context);
+    },
+  });
+};
+
+/** PUT /gatherings/drafts/:draftId — 임시저장 수정 */
+export const useUpdateGatheringDraft = (
+  draftId: number | null,
+  options?: UseMutationOptions<SaveGatheringDraftResponse, Error, SaveGatheringDraftRequest, unknown>,
+) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (body: SaveGatheringDraftRequest) => {
+      if (!draftId) throw new Error('draftId is required for draft update');
+      return updateGatheringDraft(draftId, body);
+    },
+    ...options,
+    onSuccess: (data, variables, onMutateResult, context) => {
+      queryClient.invalidateQueries({ queryKey: gatheringKeys.drafts() });
+      options?.onSuccess?.(data, variables, onMutateResult, context);
+    },
+  });
+};
+
+/** DELETE /gatherings/drafts/:draftId — 임시저장 삭제 */
+export const useDeleteGatheringDraft = (
+  draftId: number,
+  options?: UseMutationOptions<DeleteGatheringDraftResponse, Error, void, unknown>,
+) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: () => deleteGatheringDraft(draftId),
+    ...options,
+    onSuccess: (data, variables, onMutateResult, context) => {
+      queryClient.invalidateQueries({ queryKey: gatheringKeys.drafts() });
       options?.onSuccess?.(data, variables, onMutateResult, context);
     },
   });

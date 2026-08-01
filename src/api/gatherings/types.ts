@@ -1,6 +1,6 @@
 import type { z } from 'zod';
 
-import type { gatheringFormSchema, gatheringUpdateFormSchema } from './schemas';
+import type { gatheringDraftSchema, gatheringFormSchema, gatheringUpdateFormSchema } from './schemas';
 
 /** 모임 유형 (응답/표시용) */
 export type GatheringType = '스터디' | '프로젝트';
@@ -156,3 +156,40 @@ export interface DeleteGatheringResponse {
 
 /** POST `/gatherings` — 모임 생성 폼 (호환용 별칭) */
 export type GatheringFormPartial = GatheringForm;
+
+/** POST|PUT `/gatherings/drafts` — 모임 임시저장 폼 */
+export type GatheringDraftForm = z.infer<typeof gatheringDraftSchema>;
+
+/** POST|PUT `/gatherings/drafts` — 임시저장 생성/수정 요청 body */
+export type SaveGatheringDraftRequest = GatheringDraftForm;
+
+/** POST|PUT `/gatherings/drafts` — 임시저장 생성/수정 응답 */
+export interface SaveGatheringDraftResponse {
+  draftId: number;
+  updatedAt: string;
+}
+
+/** GET `/gatherings/drafts` — 임시저장 목록 아이템 */
+export interface GatheringDraftSummary {
+  draftId: number;
+  title: string | null;
+  type: GatheringType | null;
+  updatedAt: string;
+}
+
+/** GET `/gatherings/drafts` — 임시저장 목록 응답 */
+export interface GetGatheringDraftsResponse {
+  drafts: GatheringDraftSummary[];
+  totalCount: number;
+}
+
+/** GET `/gatherings/drafts/:draftId` — 임시저장 상세 응답 */
+export type GetGatheringDraftDetailResponse = GatheringDraftForm & {
+  draftId: number;
+  updatedAt: string;
+};
+
+/** DELETE `/gatherings/drafts/:draftId` — 임시저장 삭제 응답 */
+export interface DeleteGatheringDraftResponse {
+  success: boolean;
+}

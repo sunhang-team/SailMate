@@ -118,3 +118,6 @@ export const gatheringFormSchema = gatheringFormBaseSchema.and(dateRefinementSch
 
 /** PUT `/gatherings/:gatheringId` — 모임 수정 폼 (RECRUITING 상태, 생성과 동일한 필수 조건) */
 export const gatheringUpdateFormSchema = gatheringFormBaseSchema.and(dateRefinementSchema);
+
+/** POST|PUT `/gatherings/drafts` — 모임 임시저장 폼 (전 필드 선택, 이미지 미지원, 크로스필드 날짜 검증 없음) */
+export const gatheringDraftSchema = gatheringFormBaseSchema.omit({ images: true }).partial();
