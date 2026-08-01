@@ -8,31 +8,26 @@ import { useOverlay } from '@/hooks/useOverlay';
 import { MemberDetailModal } from '../MemberDetailModal';
 
 import type { MemberInfo } from '@/api/gatherings/types';
+import { ArrowIcon } from '@/components/ui/Icon';
 
 interface ParticipantsListProps {
   members: MemberInfo[];
-  maxMembers: number;
   className?: string;
 }
 
-export function ParticipantsList({ members, maxMembers, className }: ParticipantsListProps) {
+export function ParticipantsList({ members, className }: ParticipantsListProps) {
   const overlay = useOverlay();
-  const remainingCount = maxMembers - members.length;
 
   return (
     <div className={cn('flex items-center justify-end gap-2', className)}>
       <Dropdown>
         <Dropdown.Trigger>
-          <div className='relative flex cursor-pointer items-center'>
-            <AvatarGroup
-              avatars={members.map((member) => ({ id: member.userId, imageUrl: member.profileImage }))}
-              max={maxMembers}
-              size='md'
-              shape='full'
-            />
+          <div className='text-body-02-m relative flex cursor-pointer items-center text-blue-400'>
+            참여 멤버 보기
+            <ArrowIcon size={24} className='text-body-02-m text-blue-400' />
           </div>
         </Dropdown.Trigger>
-        <Dropdown.Menu className='custom-scrollbar shadow-01 absolute top-[-20px] right-[-110px] z-50 mt-2 max-h-84.5 w-55 overflow-y-auto rounded-lg bg-white p-2 md:right-[-130px] md:w-48'>
+        <Dropdown.Menu className='custom-scrollbar shadow-01 absolute -top-2.5 -right-27.5 z-50 mt-2 max-h-84.5 w-55 overflow-y-auto rounded-lg bg-white p-2 md:w-48'>
           {members.map((member) => (
             <Dropdown.Item
               key={member.userId}
@@ -59,12 +54,6 @@ export function ParticipantsList({ members, maxMembers, className }: Participant
           ))}
         </Dropdown.Menu>
       </Dropdown>
-
-      {remainingCount > 0 && (
-        <span className='text-small-01-sb text-blue-300'>
-          <span className='mr-2'>·</span> {remainingCount}명 남음
-        </span>
-      )}
     </div>
   );
 }
