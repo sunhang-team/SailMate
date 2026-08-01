@@ -3,12 +3,12 @@
 import { cn } from '@/lib/cn';
 import { AvatarGroup } from '@/components/ui/AvatarGroup';
 import { Dropdown } from '@/components/ui/Dropdown';
+import { ArrowIcon } from '@/components/ui/Icon';
 import { useOverlay } from '@/hooks/useOverlay';
 
 import { MemberDetailModal } from '../MemberDetailModal';
 
 import type { MemberInfo } from '@/api/gatherings/types';
-import { ArrowIcon } from '@/components/ui/Icon';
 
 interface ParticipantsListProps {
   members: MemberInfo[];
