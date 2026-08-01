@@ -121,15 +121,7 @@ export function DetailStep({ gatheringId }: DetailStepProps) {
         </section>
       </Card>
 
-      <div className='flex justify-between gap-3'>
-        <Button
-          type='button'
-          variant='social'
-          size={undefined}
-          className='bg-gray-0 text-small-01-sb md:text-body-01-sb lg:text-h5-sb h-12 w-41 text-gray-800 md:h-18 md:w-75 lg:h-20'
-        >
-          임시 저장
-        </Button>
+      <div className='flex justify-end gap-3'>
         <div className='group relative'>
           <Button
             type='button'
