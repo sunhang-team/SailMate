@@ -14,6 +14,6 @@ export function DeadlineLabel({ recruitDeadline }: DeadlineLabelProps) {
   }
   const deadlineMidnight = new Date(deadline.getFullYear(), deadline.getMonth(), deadline.getDate());
   const diffDays = Math.ceil((deadlineMidnight.getTime() - todayMidnight.getTime()) / MILLISECONDS_IN_A_DAY);
-
-  return <span className='text-small-01-sb text-red-200'>D-{Math.max(0, diffDays)}</span>;
+  const label = diffDays > 0 ? `D-${diffDays}` : diffDays === 0 ? 'D-day' : '마감';
+  return <span className='text-small-01-sb text-red-200'>{label}</span>;
 }
