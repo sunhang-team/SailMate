@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 
 import { usePWAInstall } from '@/hooks/usePWAInstall';
 import { CloseIcon } from '@/components/ui/Icon';
+import { BottomSheet } from '@/components/ui/BottomSheet';
 import { IOSInstallGuideBottomSheet } from '@/components/PWAInstallButton/IOSInstallGuideBottomSheet';
 
 const LANDING_PATHNAME = '/';
@@ -15,21 +16,26 @@ const getIsDismissedFromStorage = () => sessionStorage.getItem(PWA_BANNER_DISMIS
 
 export function PWAInstallBanner() {
   const pathname = usePathname();
-  const { isIOS, promptInstall } = usePWAInstall();
+  const { isInstallable, isIOS, isStandalone, promptInstall } = usePWAInstall();
   const [isManuallyDismissed, setIsManuallyDismissed] = useState(false);
   const [isIOSGuideOpen, setIsIOSGuideOpen] = useState(false);
+  const [isDesktopGuideOpen, setIsDesktopGuideOpen] = useState(false);
 
   // sessionStorage는 마운트 시점에만 읽으면 되므로 subscribe는 no-op (변경 알림은 로컬 state로 처리)
   const isDismissedInSession = useSyncExternalStore(noopSubscribe, getIsDismissedFromStorage, () => false);
   const isDismissed = isManuallyDismissed || isDismissedInSession;
 
-  const isVisible = pathname === LANDING_PATHNAME && !isDismissed;
+  const isVisible = pathname === LANDING_PATHNAME && !isDismissed && !isStandalone;
 
   if (!isVisible) return null;
 
   const handleInstallClick = () => {
     if (isIOS) {
       setIsIOSGuideOpen(true);
+      return;
+    }
+    if (!isInstallable) {
+      setIsDesktopGuideOpen(true);
       return;
     }
     void promptInstall();
@@ -65,6 +71,27 @@ export function PWAInstallBanner() {
         </button>
       </div>
       {isIOS && <IOSInstallGuideBottomSheet isOpen={isIOSGuideOpen} onClose={() => setIsIOSGuideOpen(false)} />}
+      <DesktopInstallGuideBottomSheet isOpen={isDesktopGuideOpen} onClose={() => setIsDesktopGuideOpen(false)} />
     </>
+  );
+}
+
+interface DesktopInstallGuideBottomSheetProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+function DesktopInstallGuideBottomSheet({ isOpen, onClose }: DesktopInstallGuideBottomSheetProps) {
+  return (
+    <BottomSheet isOpen={isOpen} onClose={onClose} ariaLabel='브라우저 앱 설치 안내'>
+      <BottomSheet.Header>
+        <h2 className='text-h5-b text-gray-800'>브라우저에서 앱 설치하기</h2>
+      </BottomSheet.Header>
+      <BottomSheet.Body>
+        <p className='text-body-02-m text-gray-700'>
+          주소창 오른쪽의 설치 아이콘이나 Chrome 메뉴의 저장 및 공유에서 완성도를 설치할 수 있어요.
+        </p>
+      </BottomSheet.Body>
+    </BottomSheet>
   );
 }
