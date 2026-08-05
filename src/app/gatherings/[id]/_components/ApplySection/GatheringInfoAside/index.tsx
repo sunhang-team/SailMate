@@ -82,7 +82,7 @@ export function GatheringInfoAside({ gatheringId }: GatheringInfoAsideProps) {
     <div>
       {/* 모집 상태 바 - 항상 노출 */}
       {tagState === 'recruiting' && (
-        <div className='border-focus-100 mb-4 flex justify-between rounded-[8px] border bg-blue-100 px-8 py-2.5'>
+        <div className='border-focus-100 mb-4 flex justify-between rounded-lg border bg-blue-100 px-8 py-2.5'>
           <div className='text-body-02-sb flex items-center text-blue-400'>{displayLabel}</div>
           <div className='flex items-center gap-2'>
             <span className='text-body-02-m text-gray-700'>모집 마감까지</span>
@@ -93,7 +93,7 @@ export function GatheringInfoAside({ gatheringId }: GatheringInfoAsideProps) {
         </div>
       )}
       {tagState === 'progressing' && (
-        <div className='border-focus-100 mb-4 flex justify-between rounded-[8px] border bg-blue-100 px-8 py-2.5'>
+        <div className='border-focus-100 mb-4 flex justify-between rounded-lg border bg-blue-100 px-8 py-2.5'>
           <div className='text-body-02-sb flex items-center text-blue-400'>{displayLabel}</div>
           <div className='flex items-center gap-2'>
             <span className='text-body-02-sb text-blue-300'>{getCurrentWeek(data.startDate)}주차</span>
@@ -102,7 +102,7 @@ export function GatheringInfoAside({ gatheringId }: GatheringInfoAsideProps) {
         </div>
       )}
       {tagState === 'completed' && (
-        <div className='border-gray-150 bg-gray-150 mb-4 flex justify-between rounded-[8px] border px-8 py-2.5'>
+        <div className='border-gray-150 bg-gray-150 mb-4 flex justify-between rounded-lg border px-8 py-2.5'>
           <div className='text-body-02-sb flex items-center text-gray-600'>{displayLabel}</div>
           <div className='flex items-center gap-2'>
             <span className='text-body-02-m text-gray-500'>완료된 모임</span>
@@ -159,7 +159,7 @@ export function GatheringInfoAside({ gatheringId }: GatheringInfoAsideProps) {
 
             <div className='flex flex-col'>
               <InfoAccordion data={data} className='mb-7' />
-              <ParticipantsList members={data.members} maxMembers={data.maxMembers} className='mb-7' />
+              <ParticipantsList members={data.members} className='mb-7' />
             </div>
 
             <Button
