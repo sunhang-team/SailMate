@@ -2,21 +2,61 @@
 
 import { useMemo } from 'react';
 
-import { useQuery } from '@tanstack/react-query';
+import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 
-import { gatheringQueries } from '@/api/gatherings/queries';
+import { gatheringKeys, gatheringQueries } from '@/api/gatherings/queries';
+import { ErrorFallback } from '@/components/ErrorFallback';
+import { SuspenseBoundary } from '@/components/SuspenseBoundary';
 import { GATHERING_TYPES } from '@/constants/gathering';
 import { cn } from '@/lib/cn';
 import { Dropdown } from '@/components/ui/Dropdown';
 import { useDropdown } from '@/components/ui/Dropdown/context';
 import { ArrowIcon, SearchIcon } from '@/components/ui/Icon';
 
+import type { ReactNode } from 'react';
 import type { GatheringType } from '@/api/gatherings/types';
 
 export const RECOMMENDED_KEYWORDS = ['코딩', '디자인', '피그마', '앱 기획', 'AI'] as const;
 
 const ALL_TYPE_LABEL = '모임유형 전체';
 const ALL_CATEGORY_LABEL = '카테고리 전체';
+
+function HeroSearchFormSkeleton() {
+  return (
+    <div className='flex w-full flex-col gap-5'>
+      <div className='flex w-full gap-4'>
+        <div className='h-14 flex-1 animate-pulse rounded-lg bg-gray-100 md:h-18' />
+        <div className='h-14 w-14 shrink-0 animate-pulse rounded-lg bg-gray-100 md:h-18 md:w-18' />
+      </div>
+      <div className='flex flex-col gap-4 md:flex-row md:items-center md:justify-between'>
+        <div className='h-9 w-full max-w-md animate-pulse rounded-md bg-gray-100' />
+        <div className='h-8 w-64 animate-pulse rounded-md bg-gray-100' />
+      </div>
+    </div>
+  );
+}
+
+interface HeroSearchFormBoundaryProps {
+  children: ReactNode;
+}
+
+export function HeroSearchFormBoundary({ children }: HeroSearchFormBoundaryProps) {
+  const queryClient = useQueryClient();
+
+  const handleReset = () => {
+    queryClient.resetQueries({ queryKey: gatheringKeys.categories() });
+  };
+
+  return (
+    <SuspenseBoundary
+      onReset={handleReset}
+      pendingFallback={<HeroSearchFormSkeleton />}
+      errorFallback={(_, reset) => <ErrorFallback message='검색 폼을 불러올 수 없습니다.' onRetry={reset} />}
+    >
+      {children}
+    </SuspenseBoundary>
+  );
+}
 
 function FilterArrow() {
   const { isOpen } = useDropdown();
@@ -49,7 +89,7 @@ function HeroFilterDropdown<T extends string | number>({
   return (
     <Dropdown className='**:[[role=listbox]]:right-0 **:[[role=listbox]]:w-40'>
       <Dropdown.Trigger>
-        <div className='text-body-02-sb md:text-body-01-sb flex items-center gap-2 text-gray-800'>
+        <div className='text-body-02-sb md:text-body-01-sb flex cursor-pointer items-center gap-2 text-gray-800'>
           <span>{selectedLabel}</span>
           <FilterArrow />
         </div>
@@ -104,10 +144,10 @@ export function HeroSearchForm({
   onCategoryIdsChange,
   onSearch,
 }: HeroSearchFormProps) {
-  const { data: categoriesData } = useQuery(gatheringQueries.categories());
+  const { data: categoriesData } = useSuspenseQuery(gatheringQueries.categories());
 
   const categoryItems = useMemo(
-    () => categoriesData?.categories.map((category) => ({ label: category.name, value: category.id })) ?? [],
+    () => categoriesData.categories.map((category) => ({ label: category.name, value: category.id })),
     [categoriesData],
   );
 
@@ -157,7 +197,7 @@ export function HeroSearchForm({
         <button
           type='submit'
           aria-label='모임 검색'
-          className='flex h-14 w-14 shrink-0 items-center justify-center rounded-lg bg-blue-300 text-white transition-colors hover:bg-blue-400 md:h-18 md:w-18'
+          className='flex h-14 w-14 shrink-0 cursor-pointer items-center justify-center rounded-lg bg-blue-300 text-white transition-colors hover:bg-blue-400 md:h-18 md:w-18'
         >
           <SearchIcon className='h-6 w-6 md:h-8 md:w-8' />
         </button>
@@ -171,7 +211,7 @@ export function HeroSearchForm({
               key={keyword}
               type='button'
               onClick={() => handleKeywordClick(keyword)}
-              className='text-small-01-r md:text-body-02-r bg-gray-0 rounded-md px-4 py-2 text-gray-700 transition-colors hover:bg-blue-100 hover:text-blue-400'
+              className='text-small-01-r md:text-body-02-r bg-gray-0 cursor-pointer rounded-md px-4 py-2 text-gray-700 transition-colors hover:bg-blue-100 hover:text-blue-400'
             >
               {keyword}
             </button>

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-import { HeroSearchForm } from '@/components/Search/HeroSearchForm';
+import { HeroSearchForm, HeroSearchFormBoundary } from '@/components/Search/HeroSearchForm';
 
 import type { GatheringType } from '@/api/gatherings/types';
 
@@ -26,14 +26,16 @@ export function MainHeroSearchForm() {
   };
 
   return (
-    <HeroSearchForm
-      query={query}
-      type={type}
-      categoryIds={categoryIds}
-      onQueryChange={setQuery}
-      onTypeChange={setType}
-      onCategoryIdsChange={setCategoryIds}
-      onSearch={moveToGatherings}
-    />
+    <HeroSearchFormBoundary>
+      <HeroSearchForm
+        query={query}
+        type={type}
+        categoryIds={categoryIds}
+        onQueryChange={setQuery}
+        onTypeChange={setType}
+        onCategoryIdsChange={setCategoryIds}
+        onSearch={moveToGatherings}
+      />
+    </HeroSearchFormBoundary>
   );
 }

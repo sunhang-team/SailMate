@@ -2,7 +2,7 @@
 
 import { startTransition, useState } from 'react';
 
-import { HeroSearchForm } from '@/components/Search/HeroSearchForm';
+import { HeroSearchForm, HeroSearchFormBoundary } from '@/components/Search/HeroSearchForm';
 import { useGatheringSearchParams } from '@/hooks/useGatheringSearchParams';
 
 import type { GatheringType } from '@/api/gatherings/types';
@@ -49,5 +49,9 @@ function SearchFormContent({ initialQuery }: SearchFormContentProps) {
 export function SearchForm() {
   const { query } = useGatheringSearchParams();
 
-  return <SearchFormContent key={query} initialQuery={query} />;
+  return (
+    <HeroSearchFormBoundary>
+      <SearchFormContent key={query} initialQuery={query} />
+    </HeroSearchFormBoundary>
+  );
 }
