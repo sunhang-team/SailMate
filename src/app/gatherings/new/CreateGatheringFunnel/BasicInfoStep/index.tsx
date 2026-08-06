@@ -1,6 +1,6 @@
 'use client';
 
-import { type ReactNode, useMemo } from 'react';
+import { type ReactNode, useEffect, useMemo, useRef } from 'react';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { Controller, useFormContext } from 'react-hook-form';
 import axios from 'axios';
@@ -17,6 +17,7 @@ import { gatheringQueries, useCreateGatheringDraft, useUpdateGatheringDraft } fr
 import { TagInput } from '@/app/gatherings/_gathering-form-components/TagInput';
 import { GATHERING_TYPES } from '@/constants/gathering';
 import { cn } from '@/lib/cn';
+import { trackGatheringCreateStart } from '@/lib/analytics/gathering';
 
 import { buildGatheringDraftPayload } from '../buildGatheringDraftPayload';
 import { BASIC_STEP_FIELDS } from '../steps';
@@ -78,8 +79,18 @@ export function BasicInfoStep({ draftId, onDraftSaved, onNext }: BasicInfoStepPr
     watch,
     trigger,
     getValues,
-    formState: { errors },
+    formState: { errors, isDirty },
   } = useFormContext<GatheringForm>();
+
+  // 단순 페이지 진입(헤더 호기심 클릭 등)은 page_view 자동 측정으로 잡히므로 제외.
+  // isDirty 가 true 가 되는 순간 = 사용자가 어느 필드든 처음으로 값을 변경한 시점 =
+  // 실제 "모임 만들기를 시작했다"는 의도. 그 시점에 1회 발사.
+  const hasFiredStartRef = useRef(false);
+  useEffect(() => {
+    if (!isDirty || hasFiredStartRef.current) return;
+    hasFiredStartRef.current = true;
+    trackGatheringCreateStart();
+  }, [isDirty]);
 
   const titleValue = watch('title') ?? '';
   const shortDescValue = watch('shortDescription') ?? '';

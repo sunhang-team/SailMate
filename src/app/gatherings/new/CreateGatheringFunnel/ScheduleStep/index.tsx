@@ -1,5 +1,6 @@
 'use client';
 
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { Controller, useFormContext } from 'react-hook-form';
 import axios from 'axios';
 
@@ -8,7 +9,13 @@ import { Card } from '@/components/ui/Card';
 import { DatePicker } from '@/components/ui/DatePicker';
 import { Input } from '@/components/ui/Input';
 import { useToastStore } from '@/components/ui/Toast/useToastStore';
-import { useCreateGathering, useCreateGatheringDraft, useUpdateGatheringDraft } from '@/api/gatherings/queries';
+import {
+  gatheringQueries,
+  useCreateGathering,
+  useCreateGatheringDraft,
+  useUpdateGatheringDraft,
+} from '@/api/gatherings/queries';
+import { trackGatheringCreateFailed, trackGatheringCreateSubmit } from '@/lib/analytics/gathering';
 import { getTotalWeeks } from '@/lib/formatGatheringDate';
 
 import { buildGatheringDraftPayload } from '../buildGatheringDraftPayload';
@@ -39,6 +46,9 @@ export function ScheduleStep({ draftId, onDraftSaved, onPrev, onCreated }: Sched
   const startDateValue = watch('startDate');
   const endDateValue = watch('endDate');
   const totalWeeks = startDateValue && endDateValue ? getTotalWeeks(startDateValue, endDateValue) : 0;
+
+  const { data: categoriesData } = useSuspenseQuery(gatheringQueries.categories());
+  const categories = categoriesData.categories;
 
   const { mutate, isPending } = useCreateGathering();
   const { mutate: createDraft, isPending: isCreatingDraft } = useCreateGatheringDraft();
@@ -75,9 +85,18 @@ export function ScheduleStep({ draftId, onDraftSaved, onPrev, onCreated }: Sched
     const isValid = await trigger(SCHEDULE_STEP_FIELDS);
     if (!isValid) return;
 
-    mutate(getValues(), {
-      onSuccess: (data) => onCreated(data.id),
-      onError: () => showToast({ variant: 'error', title: '모임 생성에 실패했습니다.' }),
+    const values = getValues();
+    const category = categories.find((c) => c.id === values.categoryIds[0])?.name ?? 'unknown';
+
+    mutate(values, {
+      onSuccess: (data) => {
+        trackGatheringCreateSubmit({ category, memberCount: values.maxMembers });
+        onCreated(data.id);
+      },
+      onError: (error) => {
+        trackGatheringCreateFailed({ category, error });
+        showToast({ variant: 'error', title: '모임 생성에 실패했습니다.' });
+      },
     });
   };
 

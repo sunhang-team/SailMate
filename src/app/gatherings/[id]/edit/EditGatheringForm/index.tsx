@@ -1,6 +1,6 @@
 'use client';
 
-import { type ReactNode, useEffect, useMemo, useRef } from 'react';
+import { type ReactNode, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { Controller, type Resolver, useForm } from 'react-hook-form';
@@ -16,11 +16,10 @@ import { useDropdown } from '@/components/ui/Dropdown/context';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import { useToastStore } from '@/components/ui/Toast/useToastStore';
-import { gatheringQueries, useCreateGathering, useUpdateGathering } from '@/api/gatherings/queries';
+import { gatheringQueries, useUpdateGathering } from '@/api/gatherings/queries';
 import {
   createInProgressDateRefinementSchema,
   gatheringFormBaseSchema,
-  gatheringFormSchema,
   gatheringUpdateFormSchema,
 } from '@/api/gatherings/schemas';
 import { ImageUpload } from '@/app/gatherings/_gathering-form-components/ImageUpload';
@@ -28,11 +27,6 @@ import { TagInput } from '@/app/gatherings/_gathering-form-components/TagInput';
 import { WeeklyPlanForm } from '@/app/gatherings/_gathering-form-components/WeeklyPlanForm';
 import { GATHERING_TYPES } from '@/constants/gathering';
 import { cn } from '@/lib/cn';
-import {
-  trackGatheringCreateFailed,
-  trackGatheringCreateStart,
-  trackGatheringCreateSubmit,
-} from '@/lib/analytics/gathering';
 import { getTotalWeeks } from '@/lib/formatGatheringDate';
 
 import type { GatheringForm, GatheringStatus } from '@/api/gatherings/types';
@@ -82,22 +76,15 @@ const TYPE_META = {
 } as const;
 
 interface EditGatheringFormProps {
-  mode?: 'create' | 'edit';
-  gatheringId?: number;
-  initialValues?: Partial<GatheringForm>;
-  gatheringStatus?: GatheringStatus;
+  gatheringId: number;
+  initialValues: Partial<GatheringForm>;
+  gatheringStatus: GatheringStatus;
 }
 
-export function EditGatheringForm({
-  mode = 'create',
-  gatheringId,
-  initialValues,
-  gatheringStatus,
-}: EditGatheringFormProps) {
+export function EditGatheringForm({ gatheringId, initialValues, gatheringStatus }: EditGatheringFormProps) {
   const router = useRouter();
   const showToast = useToastStore((state) => state.showToast);
-  const isEditMode = mode === 'edit';
-  const isInProgressEdit = isEditMode && gatheringStatus === 'IN_PROGRESS';
+  const isInProgressEdit = gatheringStatus === 'IN_PROGRESS';
 
   const { data: categoriesData } = useSuspenseQuery(gatheringQueries.categories());
   const categories = categoriesData.categories;
@@ -107,7 +94,6 @@ export function EditGatheringForm({
   );
 
   const schema = useMemo(() => {
-    if (!isEditMode) return gatheringFormSchema;
     if (isInProgressEdit) {
       return gatheringFormBaseSchema.partial().and(
         createInProgressDateRefinementSchema({
@@ -117,7 +103,7 @@ export function EditGatheringForm({
       );
     }
     return gatheringUpdateFormSchema;
-  }, [isEditMode, isInProgressEdit, initialValues?.recruitDeadline, initialValues?.startDate]);
+  }, [isInProgressEdit, initialValues?.recruitDeadline, initialValues?.startDate]);
 
   const {
     register,
@@ -125,10 +111,10 @@ export function EditGatheringForm({
     control,
     watch,
     trigger,
-    formState: { errors, touchedFields, isDirty, isValid },
+    formState: { errors, touchedFields, isValid },
   } = useForm<GatheringForm>({
-    // schema는 mode/status에 따라 create/RECRUITING/IN_PROGRESS 스키마 중 하나로 바뀌지만
-    // 셋 다 GatheringForm 필드의 부분집합만 optional로 검증하므로 폼 타입과 안전하게 호환됨
+    // schema는 status(RECRUITING/IN_PROGRESS)에 따라 둘 중 하나로 바뀌지만
+    // 둘 다 GatheringForm 필드의 부분집합만 optional로 검증하므로 폼 타입과 안전하게 호환됨
     resolver: zodResolver(schema) as Resolver<GatheringForm>,
     mode: 'onChange',
     defaultValues: {
@@ -140,26 +126,13 @@ export function EditGatheringForm({
   });
 
   // resolver(zodResolver)가 있는 useForm은 마운트 시 formState.isValid를 자동 계산하지 않는다.
-  // edit 모드는 initialValues가 서버 응답으로 채워진 뒤 렌더링되므로, 여기서 한 번 trigger해
+  // initialValues가 서버 응답으로 채워진 뒤 렌더링되므로, 여기서 한 번 trigger해
   // 사용자가 아무 필드도 건드리기 전부터 제출 버튼 상태가 실제 값과 일치하도록 만든다.
   useEffect(() => {
-    if (isEditMode) trigger();
-  }, [isEditMode, trigger]);
+    trigger();
+  }, [trigger]);
 
-  const { mutate: createMutate, isPending: isCreatePending } = useCreateGathering();
-  const { mutate: updateMutate, isPending: isUpdatePending } = useUpdateGathering(gatheringId ?? 0);
-  const mutate = isEditMode ? updateMutate : createMutate;
-  const isPending = isEditMode ? isUpdatePending : isCreatePending;
-
-  // 단순 페이지 진입(헤더 호기심 클릭 등)은 page_view 자동 측정으로 잡히므로 제외.
-  // isDirty 가 true 가 되는 순간 = 사용자가 어느 필드든 처음으로 값을 변경한 시점 =
-  // 실제 "모임 만들기를 시작했다"는 의도. 그 시점에 1회 발사.
-  const hasFiredStartRef = useRef(false);
-  useEffect(() => {
-    if (isEditMode || !isDirty || hasFiredStartRef.current) return;
-    hasFiredStartRef.current = true;
-    trackGatheringCreateStart();
-  }, [isDirty, isEditMode]);
+  const { mutate, isPending } = useUpdateGathering(gatheringId);
 
   const titleValue = watch('title') ?? '';
   const shortDescValue = watch('shortDescription') ?? '';
@@ -174,26 +147,11 @@ export function EditGatheringForm({
       { ...data, description: data.description?.trim() || undefined },
       {
         onSuccess: () => {
-          if (!isEditMode) {
-            const category = categories.find((c) => c.id === data.categoryIds[0])?.name ?? 'unknown';
-            trackGatheringCreateSubmit({ category, memberCount: data.maxMembers });
-          }
-          showToast({ variant: 'success', title: isEditMode ? '모임이 수정되었습니다.' : '모임이 생성되었습니다.' });
-          if (isEditMode && gatheringId) {
-            router.push(`/gatherings/${gatheringId}`);
-          } else {
-            router.push('/main');
-          }
+          showToast({ variant: 'success', title: '모임이 수정되었습니다.' });
+          router.push(`/gatherings/${gatheringId}`);
         },
-        onError: (error) => {
-          if (!isEditMode) {
-            const category = categories.find((c) => c.id === data.categoryIds[0])?.name ?? 'unknown';
-            trackGatheringCreateFailed({ category, error });
-          }
-          showToast({
-            variant: 'error',
-            title: isEditMode ? '모임 수정에 실패했습니다.' : '모임 생성에 실패했습니다.',
-          });
+        onError: () => {
+          showToast({ variant: 'error', title: '모임 수정에 실패했습니다.' });
         },
       },
     );
@@ -702,17 +660,15 @@ export function EditGatheringForm({
       </Card>
 
       <div className='flex justify-end gap-3'>
-        {isEditMode && gatheringId && (
-          <Button
-            type='button'
-            variant='mypage-edit'
-            size={undefined}
-            onClick={() => router.push(`/gatherings/${gatheringId}`)}
-            className='text-small-01-sb md:text-body-01-sb lg:text-h5-sb bg-gray-150 h-12 w-25 border-gray-400 text-gray-700 md:h-18 md:w-56 lg:h-20 lg:w-75'
-          >
-            취소
-          </Button>
-        )}
+        <Button
+          type='button'
+          variant='mypage-edit'
+          size={undefined}
+          onClick={() => router.push(`/gatherings/${gatheringId}`)}
+          className='text-small-01-sb md:text-body-01-sb lg:text-h5-sb bg-gray-150 h-12 w-25 border-gray-400 text-gray-700 md:h-18 md:w-56 lg:h-20 lg:w-75'
+        >
+          취소
+        </Button>
         <Button
           type='submit'
           variant='action'
@@ -720,7 +676,7 @@ export function EditGatheringForm({
           disabled={isPending || !isValid}
           className='text-small-01-sb md:text-body-01-sb lg:text-h5-sb h-12 w-25 bg-blue-300 md:h-18 md:w-56 lg:h-20 lg:w-75'
         >
-          {isEditMode ? '변경 사항 저장' : '작성 완료'}
+          변경 사항 저장
         </Button>
       </div>
     </form>
