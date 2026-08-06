@@ -1,0 +1,297 @@
+name: Codex Code Review
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+  issue_comment:
+    types: [created]
+  pull_request_review_comment:
+    types: [created]
+  pull_request_review:
+    types: [submitted]
+
+jobs:
+  review:
+    concurrency:
+      group: codex-review-${{ github.event.pull_request.number || github.event.issue.number || github.run_id }}
+      cancel-in-progress: true
+    if: |
+      (github.event_name == 'pull_request' && github.event.pull_request.draft == false) ||
+      (github.event_name == 'issue_comment' && github.event.issue.pull_request.url != '' && (contains(github.event.comment.body, '@codex') || contains(github.event.comment.body, '@claude'))) ||
+      (github.event_name == 'pull_request_review_comment' && (contains(github.event.comment.body, '@codex') || contains(github.event.comment.body, '@claude'))) ||
+      (github.event_name == 'pull_request_review' && (contains(github.event.review.body, '@codex') || contains(github.event.review.body, '@claude')))
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+    outputs:
+      final_message: ${{ steps.run_codex.outputs.final-message }}
+
+    steps:
+      - name: Resolve PR context
+        id: pr
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+
+            let pullRequest = context.payload.pull_request;
+
+            if (!pullRequest && context.payload.issue?.pull_request) {
+              const { data } = await github.rest.pulls.get({
+                owner,
+                repo,
+                pull_number: context.payload.issue.number,
+              });
+              pullRequest = data;
+            }
+
+            if (!pullRequest) {
+              core.setFailed('PR 컨텍스트를 찾을 수 없습니다.');
+              return;
+            }
+
+            core.setOutput('number', String(pullRequest.number));
+            core.setOutput('base_ref', pullRequest.base.ref);
+            core.setOutput('base_sha', pullRequest.base.sha);
+            core.setOutput('head_ref', pullRequest.head.ref);
+            core.setOutput('head_sha', pullRequest.head.sha);
+            core.setOutput('title', pullRequest.title);
+            core.setOutput('body', pullRequest.body ?? '');
+
+      - name: Checkout PR merge commit
+        uses: actions/checkout@v6
+        with:
+          ref: refs/pull/${{ steps.pr.outputs.number }}/merge
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Fetch PR refs
+        env:
+          PR_BASE_REF: ${{ steps.pr.outputs.base_ref }}
+          PR_NUMBER: ${{ steps.pr.outputs.number }}
+        run: |
+          git fetch --no-tags origin \
+            "$PR_BASE_REF" \
+            "+refs/pull/$PR_NUMBER/head"
+
+      - name: Prepare Codex review prompt
+        id: prepare
+        uses: actions/github-script@v7
+        env:
+          EVENT_ACTION: ${{ github.event.action }}
+          PR_NUMBER: ${{ steps.pr.outputs.number }}
+          PR_TITLE: ${{ steps.pr.outputs.title }}
+          PR_BODY: ${{ steps.pr.outputs.body }}
+          PR_BASE_REF: ${{ steps.pr.outputs.base_ref }}
+          PR_BASE_SHA: ${{ steps.pr.outputs.base_sha }}
+          PR_HEAD_REF: ${{ steps.pr.outputs.head_ref }}
+          PR_HEAD_SHA: ${{ steps.pr.outputs.head_sha }}
+          JOB_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        with:
+          script: |
+            const fs = require('fs');
+            const { owner, repo } = context.repo;
+            const pullNumber = Number(process.env.PR_NUMBER);
+            const marker = '<!-- codex-review-comment -->';
+
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              owner,
+              repo,
+              issue_number: pullNumber,
+              per_page: 100,
+            });
+
+            const existingComment = comments.find((comment) =>
+              comment.body?.includes(marker),
+            );
+
+            const inProgressBody = [
+              marker,
+              '### Codex 리뷰 진행 중',
+              '',
+              '- [x] PR 컨텍스트 확인',
+              '- [x] 리뷰 프롬프트 준비',
+              '- [ ] 프로젝트 규칙과 PR diff 검토',
+              '- [ ] 리뷰 결과 정리',
+              '',
+              `[View job run](${process.env.JOB_URL})`,
+            ].join('\n');
+
+            let commentId = existingComment?.id;
+
+            if (commentId) {
+              await github.rest.issues.updateComment({
+                owner,
+                repo,
+                comment_id: commentId,
+                body: inProgressBody,
+              });
+            } else {
+              const { data } = await github.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number: pullNumber,
+                body: inProgressBody,
+              });
+              commentId = data.id;
+            }
+
+            const changedFiles = await github.paginate(github.rest.pulls.listFiles, {
+              owner,
+              repo,
+              pull_number: pullNumber,
+              per_page: 100,
+            });
+
+            const reviewComments = await github.paginate(
+              github.rest.pulls.listReviewComments,
+              {
+                owner,
+                repo,
+                pull_number: pullNumber,
+                per_page: 100,
+              },
+            );
+
+            const previousReviewSummary = reviewComments
+              .slice(-30)
+              .map((comment) => `- ${comment.path}:${comment.line ?? comment.original_line ?? '?'} ${comment.body}`)
+              .join('\n');
+
+            const changedFileSummary = changedFiles
+              .map((file) => `- ${file.filename} (${file.status}) +${file.additions}/-${file.deletions}`)
+              .join('\n');
+
+            const prompt = [
+              `EVENT_ACTION: ${process.env.EVENT_ACTION}`,
+              `REPO: ${owner}/${repo}`,
+              `PR_NUMBER: ${pullNumber}`,
+              `PR_TITLE: ${process.env.PR_TITLE}`,
+              `PR_BRANCH: ${process.env.PR_HEAD_REF} -> ${process.env.PR_BASE_REF}`,
+              `BASE_SHA: ${process.env.PR_BASE_SHA}`,
+              `HEAD_SHA: ${process.env.PR_HEAD_SHA}`,
+              '',
+              '이 PR을 프로젝트 규칙(CLAUDE.md, .claude/rules/)에 따라 리뷰해주세요.',
+              '',
+              '## 리뷰 대상',
+              '',
+              '반드시 아래 diff 범위만 리뷰해주세요.',
+              '',
+              '```bash',
+              `git diff origin/${process.env.PR_BASE_REF}...HEAD`,
+              `git log --oneline origin/${process.env.PR_BASE_REF}..HEAD`,
+              '```',
+              '',
+              '## PR 본문',
+              '',
+              process.env.PR_BODY || '(본문 없음)',
+              '',
+              '## 변경 파일',
+              '',
+              changedFileSummary || '(변경 파일 없음)',
+              '',
+              '## 리뷰 모드',
+              '',
+              'EVENT_ACTION 값에 따라 리뷰 방식을 달리해주세요.',
+              '',
+              '### opened',
+              '- PR 전체 diff를 리뷰해주세요.',
+              '- 아래 리뷰 기준에 따라 실제 이슈만 찾아주세요.',
+              '',
+              '### synchronize',
+              '- 이전 리뷰 코멘트 요약을 참고해주세요.',
+              '- 이전에 지적된 이슈가 해결되었는지 확인해주세요.',
+              '- 새로 변경된 코드에서만 이슈를 검토해주세요.',
+              '- 이전 리뷰와 동일한 내용을 반복하지 말아주세요.',
+              '',
+              '## 이전 리뷰 코멘트 요약',
+              '',
+              previousReviewSummary || '(이전 리뷰 코멘트 없음)',
+              '',
+              '## 리뷰 기준',
+              '',
+              '### CRITICAL',
+              "- page.tsx에 'use client' 사용 여부",
+              '- 서버 컴포넌트에서 React 훅(useQuery, useState 등) 사용 여부',
+              '- 서버에서 axios 사용 여부 (fetch만 허용)',
+              '- 서버 캐시 데이터(prefetch + next.tags)의 mutation 시 이중 캐시 무효화 누락. 클라이언트 전용 데이터는 invalidateQueries만으로 충분',
+              '',
+              '### HIGH',
+              '- 공개 데이터에 prefetchQuery + HydrationBoundary 패턴 사용 여부',
+              '- API 호출 컴포넌트의 ErrorBoundary 누락',
+              '- prefetch 없는 클라이언트 컴포넌트의 SuspenseBoundary 누락',
+              '- staleTime 미설정 (prefetch 무의미)',
+              '- queryKey 서버/클라이언트 불일치',
+              '',
+              '### MEDIUM',
+              "- 'use client' 경계가 불필요하게 넓은지",
+              '- named export 미사용',
+              '- any 타입 사용',
+              '- Promise.all 누락 (순차 fetch)',
+              '',
+              '## 출력 규칙',
+              '',
+              '- 한국어로 작성해주세요.',
+              '- 발견된 이슈만 심각도별로 정리해주세요. 이슈가 없는 카테고리는 생략해주세요.',
+              '- 해당 PR과 무관한 규칙은 체크하지 말아주세요.',
+              '- 구체적인 코드 이슈는 파일 경로와 line을 포함해주세요.',
+              '- 수정이 필요한 코드는 가능하면 GitHub Suggestion 블록으로 제안해주세요.',
+              '- 전체 코멘트는 요약과 결론 중심으로 20줄 이내로 간결하게 작성해주세요.',
+              '- "잘 작성된 점"은 정말 돋보이는 패턴만 1-2줄로 작성해주세요.',
+              '- 이슈가 없으면 "리뷰 결과, 수정이 필요한 이슈를 찾지 못했습니다."라고 명확히 작성해주세요.',
+              '- 서명, 생성자 표기, "by Codex" 문구는 작성하지 말아주세요.',
+              `- 마지막 줄에 반드시 "[View job run](${process.env.JOB_URL})" 링크를 포함해주세요.`,
+              '',
+            ].join('\n');
+
+            fs.writeFileSync('.codex-review-prompt.md', prompt);
+            core.setOutput('comment_id', String(commentId));
+
+      - name: Run Codex Code Review
+        id: run_codex
+        uses: openai/codex-action@v1
+        with:
+          openai-api-key: ${{ secrets.OPENAI_API_KEY }}
+          permission-profile: ':read-only'
+          prompt-file: .codex-review-prompt.md
+
+      - name: Update Codex review comment
+        if: always() && steps.prepare.outputs.comment_id != ''
+        uses: actions/github-script@v7
+        env:
+          COMMENT_ID: ${{ steps.prepare.outputs.comment_id }}
+          CODEX_FINAL_MESSAGE: ${{ steps.run_codex.outputs.final-message }}
+          JOB_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          CODEX_OUTCOME: ${{ steps.run_codex.outcome }}
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const marker = '<!-- codex-review-comment -->';
+            const commentId = Number(process.env.COMMENT_ID);
+            const finalMessage = process.env.CODEX_FINAL_MESSAGE?.trim();
+            const isSuccess = process.env.CODEX_OUTCOME === 'success';
+            const jobLink = `[View job run](${process.env.JOB_URL})`;
+
+            const body = finalMessage
+              ? `${marker}\n${finalMessage.includes('[View job run]') ? finalMessage : `${finalMessage}\n\n${jobLink}`}`
+              : [
+                  marker,
+                  '### Codex 리뷰 실패',
+                  '',
+                  'Codex 리뷰 실행 중 오류가 발생했습니다. Actions 로그를 확인해주세요.',
+                  '',
+                  jobLink,
+                ].join('\n');
+
+            await github.rest.issues.updateComment({
+              owner,
+              repo,
+              comment_id: commentId,
+              body,
+            });
+
+            if (!isSuccess) {
+              core.setFailed('Codex 리뷰 실행이 실패했습니다.');
+            }
