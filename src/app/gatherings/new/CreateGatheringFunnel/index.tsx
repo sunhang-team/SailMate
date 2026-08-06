@@ -53,7 +53,9 @@ export function CreateGatheringFunnel({ initialDraftId = null }: CreateGathering
           />
         </Step>
         <Step name='COMPLETE'>
-          <CompleteStep gatheringId={createdGatheringId} onAddDetail={() => setStep('DETAIL')} />
+          {createdGatheringId && (
+            <CompleteStep gatheringId={createdGatheringId} onAddDetail={() => setStep('DETAIL')} />
+          )}
         </Step>
         <Step name='DETAIL'>{createdGatheringId && <DetailStep gatheringId={createdGatheringId} />}</Step>
       </Funnel>
