@@ -1,8 +1,9 @@
 'use client';
 
-import { type ReactNode, useMemo } from 'react';
+import { type ReactNode, useEffect, useMemo, useRef } from 'react';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { Controller, useFormContext } from 'react-hook-form';
+import axios from 'axios';
 
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
@@ -11,11 +12,15 @@ import { useDropdown } from '@/components/ui/Dropdown/context';
 import { CheckIcon } from '@/components/ui/Icon/CheckIcon';
 import { CategoryIcon, ArrowIcon, CloseIcon } from '@/components/ui/Icon';
 import { Input } from '@/components/ui/Input';
-import { gatheringQueries } from '@/api/gatherings/queries';
+import { useToastStore } from '@/components/ui/Toast/useToastStore';
+import { gatheringQueries, useCreateGatheringDraft, useUpdateGatheringDraft } from '@/api/gatherings/queries';
 import { TagInput } from '@/app/gatherings/_gathering-form-components/TagInput';
 import { GATHERING_TYPES } from '@/constants/gathering';
 import { cn } from '@/lib/cn';
+import { trackGatheringCreateStart } from '@/lib/analytics/gathering';
 
+import { buildGatheringDraftPayload } from '../buildGatheringDraftPayload';
+import { isGatheringDraftEmpty } from '../isGatheringDraftEmpty';
 import { BASIC_STEP_FIELDS } from '../steps';
 
 import type { GatheringForm } from '@/api/gatherings/types';
@@ -38,7 +43,7 @@ const CategoryTriggerBorder = ({ children }: { children: ReactNode }) => {
   return (
     <div
       className={cn(
-        'flex h-[47px] w-full cursor-pointer items-center justify-between rounded-lg bg-white px-4 py-3 transition-colors duration-200 md:h-[62px] lg:h-[76px] lg:px-7 lg:py-5',
+        'flex h-11.75 w-full cursor-pointer items-center justify-between rounded-lg bg-white px-4 py-3 transition-colors duration-200 md:h-15.5 lg:h-19 lg:px-7 lg:py-5',
         isOpen ? 'border-gradient-primary' : 'border border-gray-200',
       )}
     >
@@ -55,10 +60,12 @@ const TYPE_META = {
 const MAX_CATEGORIES = 3;
 
 interface BasicInfoStepProps {
+  draftId: number | null;
+  onDraftSaved: (draftId: number) => void;
   onNext: () => void;
 }
 
-export function BasicInfoStep({ onNext }: BasicInfoStepProps) {
+export function BasicInfoStep({ draftId, onDraftSaved, onNext }: BasicInfoStepProps) {
   const { data: categoriesData } = useSuspenseQuery(gatheringQueries.categories());
   const categories = categoriesData.categories;
   const categoryMeta = useMemo(
@@ -66,17 +73,65 @@ export function BasicInfoStep({ onNext }: BasicInfoStepProps) {
     [categories],
   );
 
+  const showToast = useToastStore((state) => state.showToast);
   const {
     register,
     control,
     watch,
     trigger,
-    formState: { errors },
+    getValues,
+    formState: { errors, isDirty },
   } = useFormContext<GatheringForm>();
+
+  // 단순 페이지 진입(헤더 호기심 클릭 등)은 page_view 자동 측정으로 잡히므로 제외.
+  // isDirty 가 true 가 되는 순간 = 사용자가 어느 필드든 처음으로 값을 변경한 시점 =
+  // 실제 "모임 만들기를 시작했다"는 의도. 그 시점에 1회 발사.
+  const hasFiredStartRef = useRef(false);
+  useEffect(() => {
+    if (!isDirty || hasFiredStartRef.current) return;
+    hasFiredStartRef.current = true;
+    trackGatheringCreateStart();
+  }, [isDirty]);
 
   const titleValue = watch('title') ?? '';
   const shortDescValue = watch('shortDescription') ?? '';
   const goalValue = watch('goal') ?? '';
+
+  const { mutate: createDraft, isPending: isCreatingDraft } = useCreateGatheringDraft();
+  const { mutate: updateDraft, isPending: isUpdatingDraft } = useUpdateGatheringDraft(draftId);
+
+  const handleSaveDraft = () => {
+    const values = getValues();
+    if (isGatheringDraftEmpty(values)) {
+      showToast({ variant: 'error', title: '최소 1개 항목은 입력해야 임시저장할 수 있습니다.' });
+      return;
+    }
+
+    const payload = buildGatheringDraftPayload(values);
+    const onError = (error: unknown) => {
+      if (axios.isAxiosError(error) && error.response?.status === 409) {
+        showToast({ variant: 'error', title: '임시저장은 최대 5개까지 가능합니다.' });
+        return;
+      }
+      showToast({ variant: 'error', title: '임시저장에 실패했습니다.' });
+    };
+
+    if (draftId) {
+      updateDraft(payload, {
+        onSuccess: () => showToast({ variant: 'success', title: '임시저장되었습니다.' }),
+        onError,
+      });
+      return;
+    }
+
+    createDraft(payload, {
+      onSuccess: (data) => {
+        onDraftSaved(data.draftId);
+        showToast({ variant: 'success', title: '임시저장되었습니다.' });
+      },
+      onError,
+    });
+  };
 
   const handleNext = async () => {
     const isValid = await trigger(BASIC_STEP_FIELDS);
@@ -337,6 +392,8 @@ export function BasicInfoStep({ onNext }: BasicInfoStepProps) {
           type='button'
           variant='social'
           size={undefined}
+          disabled={isCreatingDraft || isUpdatingDraft}
+          onClick={handleSaveDraft}
           className='bg-gray-0 text-small-01-sb md:text-body-01-sb lg:text-h5-sb h-12 w-20 text-gray-700 md:h-18 md:w-40 lg:h-20 lg:w-75'
         >
           임시 저장

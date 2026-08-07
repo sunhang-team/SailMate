@@ -7,7 +7,7 @@ import { Card } from '@/components/ui/Card';
 import { CheckIcon } from '@/components/ui/Icon/CheckIcon';
 
 interface CompleteStepProps {
-  gatheringId: number | null;
+  gatheringId: number;
   onAddDetail: () => void;
 }
 
@@ -33,10 +33,10 @@ export function CompleteStep({ gatheringId, onAddDetail }: CompleteStepProps) {
             type='button'
             variant='mypage-edit'
             size={undefined}
-            onClick={() => router.push('/main')}
+            onClick={() => router.push(`/gatherings/${gatheringId}`)}
             className='text-small-01-sb md:text-body-01-sb lg:text-h5-sb bg-gray-150 h-12 w-36.75 border-gray-400 text-gray-700 md:h-18 md:w-76 lg:h-20 lg:w-75'
           >
-            나중에 하기
+            모임 확인하기
           </Button>
           <Button
             type='button'
@@ -49,20 +49,6 @@ export function CompleteStep({ gatheringId, onAddDetail }: CompleteStepProps) {
           </Button>
         </div>
       </Card>
-
-      {gatheringId && (
-        <div className='flex w-full justify-end'>
-          <Button
-            type='button'
-            variant='mypage-edit'
-            size={undefined}
-            onClick={() => router.push(`/gatherings/${gatheringId}`)}
-            className='lg:text-h5-sb md:text-body-01-sb text-small-01-sb h-12 w-35 border border-gray-400 bg-white text-gray-700 md:h-18 md:w-56.5 lg:h-20 lg:w-75'
-          >
-            작성 글 보러가기
-          </Button>
-        </div>
-      )}
     </div>
   );
 }

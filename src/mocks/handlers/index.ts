@@ -1,4 +1,5 @@
 import { gatheringsHandlers } from './gatherings';
+import { gatheringDraftsHandlers } from './gatheringDrafts';
 import { todosHandlers } from './todos';
 import { authHandlers } from './auth';
 import { usersHandlers } from './users';
@@ -16,6 +17,7 @@ export const handlers = [
   ...usersHandlers,
   ...membershipsHandlers,
   ...gatheringsHandlers,
+  ...gatheringDraftsHandlers,
   ...achievementsHandlers,
   ...applicationsHandlers,
   ...reviewsHandlers,

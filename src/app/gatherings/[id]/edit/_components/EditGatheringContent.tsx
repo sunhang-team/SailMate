@@ -54,12 +54,5 @@ export function EditGatheringContent({ gatheringId }: EditGatheringContentProps)
 
   if (isCompleted) return null;
 
-  return (
-    <EditGatheringForm
-      mode='edit'
-      gatheringId={gatheringId}
-      initialValues={initialValues}
-      gatheringStatus={detail.status}
-    />
-  );
+  return <EditGatheringForm gatheringId={gatheringId} initialValues={initialValues} gatheringStatus={detail.status} />;
 }

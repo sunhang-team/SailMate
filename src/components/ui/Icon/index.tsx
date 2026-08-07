@@ -49,6 +49,7 @@ export { LandingCheckIcon } from './LandingCheckIcon';
 export { LandingFlagIcon } from './LandingFlagIcon';
 export { LandingHeartIcon } from './LandingHeartIcon';
 export { TimeIcon } from './TimeIcon';
+export { TrashIcon } from './TrashIcon';
 export { TypeIcon } from './TypeIcon';
 export { VisibilityIcon } from './VisibilityIcon';
 export { WaitingIcon } from './WaitingIcon';

@@ -9,7 +9,15 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false, googleBot: { index: false, follow: false } },
 };
 
-export default function CreateGatheringPage() {
+interface CreateGatheringPageProps {
+  searchParams: Promise<{ draftId?: string }>;
+}
+
+export default async function CreateGatheringPage({ searchParams }: CreateGatheringPageProps) {
+  const { draftId: draftIdRaw } = await searchParams;
+  const parsedDraftId = Number(draftIdRaw);
+  const initialDraftId = draftIdRaw && Number.isInteger(parsedDraftId) ? parsedDraftId : null;
+
   return (
     <main className='bg-gray-100'>
       <div className='mx-auto max-w-[1720px] px-4 pt-20 pb-40 md:px-7 xl:px-30'>
@@ -26,7 +34,7 @@ export default function CreateGatheringPage() {
             </div>
           }
         >
-          <CreateGatheringFunnel />
+          <CreateGatheringFunnel initialDraftId={initialDraftId} />
         </SuspenseBoundary>
       </div>
     </main>
