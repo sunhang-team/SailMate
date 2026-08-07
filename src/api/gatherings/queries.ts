@@ -170,6 +170,7 @@ export const useCreateGatheringDraft = (
     ...options,
     onSuccess: (data, variables, onMutateResult, context) => {
       queryClient.invalidateQueries({ queryKey: gatheringKeys.drafts() });
+      queryClient.invalidateQueries({ queryKey: gatheringKeys.draft(data.draftId) });
       options?.onSuccess?.(data, variables, onMutateResult, context);
     },
   });
@@ -190,6 +191,7 @@ export const useUpdateGatheringDraft = (
     ...options,
     onSuccess: (data, variables, onMutateResult, context) => {
       queryClient.invalidateQueries({ queryKey: gatheringKeys.drafts() });
+      if (draftId) queryClient.invalidateQueries({ queryKey: gatheringKeys.draft(draftId) });
       options?.onSuccess?.(data, variables, onMutateResult, context);
     },
   });
