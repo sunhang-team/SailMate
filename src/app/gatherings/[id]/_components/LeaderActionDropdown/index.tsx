@@ -7,6 +7,7 @@ import { Dropdown } from '@/components/ui/Dropdown';
 import { MoreIcon } from '@/components/ui/Icon';
 import { useToastStore } from '@/components/ui/Toast/useToastStore';
 import { useOverlay } from '@/hooks/useOverlay';
+import { cn } from '@/lib/cn';
 
 import { DeleteGatheringModal } from './DeleteGatheringModal';
 
@@ -23,6 +24,7 @@ export function LeaderActionDropdown({ gatheringId, gatheringStatus }: LeaderAct
   const { showToast } = useToastStore();
   const { mutate: deleteGathering } = useDeleteGathering(gatheringId);
   const canEdit = gatheringStatus !== 'COMPLETED';
+  const canDelete = gatheringStatus !== 'IN_PROGRESS';
 
   const handleEdit = () => {
     router.push(`/gatherings/${gatheringId}/edit`);
@@ -64,7 +66,8 @@ export function LeaderActionDropdown({ gatheringId, gatheringStatus }: LeaderAct
         </Dropdown.Item>
         <Dropdown.Item
           onClick={handleDelete}
-          className='text-body-02-m cursor-pointer text-gray-900 hover:text-blue-300'
+          disabled={!canDelete}
+          className={cn('text-body-02-m cursor-pointer text-gray-900', canDelete && 'hover:text-blue-300')}
         >
           삭제
         </Dropdown.Item>

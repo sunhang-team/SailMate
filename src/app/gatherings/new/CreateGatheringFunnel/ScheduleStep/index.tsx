@@ -19,6 +19,7 @@ import { trackGatheringCreateFailed, trackGatheringCreateSubmit } from '@/lib/an
 import { getTotalWeeks } from '@/lib/formatGatheringDate';
 
 import { buildGatheringDraftPayload } from '../buildGatheringDraftPayload';
+import { isGatheringDraftEmpty } from '../isGatheringDraftEmpty';
 import { SCHEDULE_STEP_FIELDS } from '../steps';
 
 import type { GatheringForm } from '@/api/gatherings/types';
@@ -55,7 +56,13 @@ export function ScheduleStep({ draftId, onDraftSaved, onPrev, onCreated }: Sched
   const { mutate: updateDraft, isPending: isUpdatingDraft } = useUpdateGatheringDraft(draftId);
 
   const handleSaveDraft = () => {
-    const payload = buildGatheringDraftPayload(getValues());
+    const values = getValues();
+    if (isGatheringDraftEmpty(values)) {
+      showToast({ variant: 'error', title: '최소 1개 항목은 입력해야 임시저장할 수 있습니다.' });
+      return;
+    }
+
+    const payload = buildGatheringDraftPayload(values);
     const onError = (error: unknown) => {
       if (axios.isAxiosError(error) && error.response?.status === 409) {
         showToast({ variant: 'error', title: '임시저장은 최대 5개까지 가능합니다.' });

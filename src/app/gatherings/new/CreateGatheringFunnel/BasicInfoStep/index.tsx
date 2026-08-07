@@ -20,6 +20,7 @@ import { cn } from '@/lib/cn';
 import { trackGatheringCreateStart } from '@/lib/analytics/gathering';
 
 import { buildGatheringDraftPayload } from '../buildGatheringDraftPayload';
+import { isGatheringDraftEmpty } from '../isGatheringDraftEmpty';
 import { BASIC_STEP_FIELDS } from '../steps';
 
 import type { GatheringForm } from '@/api/gatherings/types';
@@ -42,7 +43,7 @@ const CategoryTriggerBorder = ({ children }: { children: ReactNode }) => {
   return (
     <div
       className={cn(
-        'flex h-[47px] w-full cursor-pointer items-center justify-between rounded-lg bg-white px-4 py-3 transition-colors duration-200 md:h-[62px] lg:h-[76px] lg:px-7 lg:py-5',
+        'flex h-11.75 w-full cursor-pointer items-center justify-between rounded-lg bg-white px-4 py-3 transition-colors duration-200 md:h-15.5 lg:h-19 lg:px-7 lg:py-5',
         isOpen ? 'border-gradient-primary' : 'border border-gray-200',
       )}
     >
@@ -100,7 +101,13 @@ export function BasicInfoStep({ draftId, onDraftSaved, onNext }: BasicInfoStepPr
   const { mutate: updateDraft, isPending: isUpdatingDraft } = useUpdateGatheringDraft(draftId);
 
   const handleSaveDraft = () => {
-    const payload = buildGatheringDraftPayload(getValues());
+    const values = getValues();
+    if (isGatheringDraftEmpty(values)) {
+      showToast({ variant: 'error', title: '최소 1개 항목은 입력해야 임시저장할 수 있습니다.' });
+      return;
+    }
+
+    const payload = buildGatheringDraftPayload(values);
     const onError = (error: unknown) => {
       if (axios.isAxiosError(error) && error.response?.status === 409) {
         showToast({ variant: 'error', title: '임시저장은 최대 5개까지 가능합니다.' });
