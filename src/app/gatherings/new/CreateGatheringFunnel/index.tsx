@@ -15,36 +15,34 @@ import { DraftInitializer } from './DraftInitializer';
 import { ScheduleStep } from './ScheduleStep';
 import { StepIndicator } from './StepIndicator';
 
+import type { FunnelStep } from './getInitialDraftStep';
 import type { GatheringForm } from '@/api/gatherings/types';
-
-type FunnelStep = 'BASIC' | 'SCHEDULE' | 'COMPLETE' | 'DETAIL';
 
 interface CreateGatheringFunnelProps {
   initialDraftId?: number | null;
 }
 
-export function CreateGatheringFunnel({ initialDraftId = null }: CreateGatheringFunnelProps) {
-  const { Funnel, Step, setStep, currentStep } = useFunnel<FunnelStep>('BASIC');
+interface GatheringFunnelStepsProps {
+  initialStep: FunnelStep;
+  draftId: number | null;
+  onDraftIdChange: (draftId: number) => void;
+}
+
+function GatheringFunnelSteps({ initialStep, draftId, onDraftIdChange }: GatheringFunnelStepsProps) {
+  const { Funnel, Step, setStep, currentStep } = useFunnel<FunnelStep>(initialStep);
   const [createdGatheringId, setCreatedGatheringId] = useState<number | null>(null);
-  const [draftId, setDraftId] = useState<number | null>(initialDraftId);
 
-  const methods = useForm<GatheringForm>({
-    resolver: zodResolver(gatheringFormSchema),
-    mode: 'onChange',
-    defaultValues: { categoryIds: [], tags: [], weeklyGuides: [] },
-  });
-
-  const funnelContent = (
+  return (
     <>
       <StepIndicator currentStep={currentStep} />
       <Funnel>
         <Step name='BASIC'>
-          <BasicInfoStep draftId={draftId} onDraftSaved={setDraftId} onNext={() => setStep('SCHEDULE')} />
+          <BasicInfoStep draftId={draftId} onDraftSaved={onDraftIdChange} onNext={() => setStep('SCHEDULE')} />
         </Step>
         <Step name='SCHEDULE'>
           <ScheduleStep
             draftId={draftId}
-            onDraftSaved={setDraftId}
+            onDraftSaved={onDraftIdChange}
             onPrev={() => setStep('BASIC')}
             onCreated={(gatheringId) => {
               setCreatedGatheringId(gatheringId);
@@ -61,6 +59,16 @@ export function CreateGatheringFunnel({ initialDraftId = null }: CreateGathering
       </Funnel>
     </>
   );
+}
+
+export function CreateGatheringFunnel({ initialDraftId = null }: CreateGatheringFunnelProps) {
+  const [draftId, setDraftId] = useState<number | null>(initialDraftId);
+
+  const methods = useForm<GatheringForm>({
+    resolver: zodResolver(gatheringFormSchema),
+    mode: 'onChange',
+    defaultValues: { categoryIds: [], tags: [], weeklyGuides: [] },
+  });
 
   return (
     <FormProvider {...methods}>
@@ -78,10 +86,14 @@ export function CreateGatheringFunnel({ initialDraftId = null }: CreateGathering
             </div>
           }
         >
-          <DraftInitializer draftId={initialDraftId}>{funnelContent}</DraftInitializer>
+          <DraftInitializer draftId={initialDraftId}>
+            {(initialStep) => (
+              <GatheringFunnelSteps initialStep={initialStep} draftId={draftId} onDraftIdChange={setDraftId} />
+            )}
+          </DraftInitializer>
         </SuspenseBoundary>
       ) : (
-        funnelContent
+        <GatheringFunnelSteps initialStep='BASIC' draftId={draftId} onDraftIdChange={setDraftId} />
       )}
     </FormProvider>
   );
