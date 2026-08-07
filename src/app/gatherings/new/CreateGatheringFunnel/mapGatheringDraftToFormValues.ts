@@ -24,7 +24,7 @@ export const mapGatheringDraftToFormValues = (draft: GetGatheringDraftDetailResp
   categoryIds: draft.categoryIds ?? [],
   title: draft.title ?? '',
   shortDescription: draft.shortDescription ?? '',
-  description: draft.description ?? '',
+  description: draft.description ?? undefined,
   tags: draft.tags ?? [],
   goal: draft.goal ?? '',
   maxMembers: draft.maxMembers ?? undefined,
