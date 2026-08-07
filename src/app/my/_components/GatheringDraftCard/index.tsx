@@ -1,16 +1,19 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { formatDistanceToNow } from 'date-fns';
+import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 
+import { SuspenseBoundary } from '@/components/SuspenseBoundary';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
+import { TrashIcon } from '@/components/ui/Icon';
 import { useToastStore } from '@/components/ui/Toast/useToastStore';
 import { useDeleteGatheringDraft } from '@/api/gatherings/queries';
 import { useOverlay } from '@/hooks/useOverlay';
 
 import { DeleteDraftModal } from './DeleteDraftModal';
+import { GatheringDraftStepTag } from './GatheringDraftStepTag';
 
 import type { GatheringDraftSummary } from '@/api/gatherings/types';
 
@@ -39,32 +42,39 @@ export function GatheringDraftCard({ draft }: GatheringDraftCardProps) {
 
   return (
     <Card className='flex flex-col gap-4 p-6'>
+      <div className='flex items-start justify-between'>
+        <SuspenseBoundary
+          pendingFallback={<div className='bg-gray-150 h-6.5 w-24 animate-pulse rounded-full' />}
+          errorFallback={null}
+        >
+          <GatheringDraftStepTag draftId={draft.draftId} />
+        </SuspenseBoundary>
+        <button
+          type='button'
+          aria-label='임시저장 삭제'
+          onClick={handleDelete}
+          className='text-gray-500 transition-colors hover:text-gray-600'
+        >
+          <TrashIcon size={20} />
+        </button>
+      </div>
+
       <div className='flex flex-col gap-1'>
-        <span className='text-small-02-r md:text-body-02-r text-gray-500'>{draft.type ?? '유형 미정'}</span>
-        <p className='text-body-02-b md:text-body-01-b truncate text-gray-900'>{draft.title ?? '제목 없음'}</p>
-        <span className='text-small-02-r md:text-small-01-r text-gray-400'>
-          {formatDistanceToNow(new Date(draft.updatedAt), { addSuffix: true, locale: ko })} 저장됨
+        <p className='text-body-02-sb md:text-body-01-sb truncate text-gray-900'>
+          {draft.title?.trim() ? draft.title : '제목 없음'}
+        </p>
+        <span className='text-small-02-r md:text-small-01-r text-gray-500'>
+          마지막 저장 {format(new Date(draft.updatedAt), 'M월 d일 a h:mm', { locale: ko })}
         </span>
       </div>
 
-      <div className='flex gap-2'>
-        <Button
-          variant='reject'
-          size='approve-reject'
-          onClick={handleDelete}
-          className='text-small-01-sb md:text-body-01-sb h-12 flex-1 md:h-14'
-        >
-          삭제
-        </Button>
-        <Button
-          variant='action'
-          size='approve-reject'
-          onClick={() => router.push(`/gatherings/new?draftId=${draft.draftId}`)}
-          className='text-small-01-sb md:text-body-01-sb h-12 flex-1 md:h-14'
-        >
-          이어쓰기
-        </Button>
-      </div>
+      <Button
+        variant='approve'
+        onClick={() => router.push(`/gatherings/new?draftId=${draft.draftId}`)}
+        className='text-small-01-m md:text-body-01-m h-12 w-full md:h-14'
+      >
+        이어서 작성
+      </Button>
     </Card>
   );
 }
