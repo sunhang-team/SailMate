@@ -10,9 +10,10 @@ import { useDropdown } from './context';
 
 interface TriggerProps {
   children: ReactNode;
+  className?: string;
 }
 
-export function Trigger({ children }: TriggerProps) {
+export function Trigger({ children, className }: TriggerProps) {
   const { toggle, isOpen, close } = useDropdown();
   const triggerRef = useRef<HTMLButtonElement>(null);
 
@@ -36,7 +37,7 @@ export function Trigger({ children }: TriggerProps) {
       onClick={toggle}
       onKeyDown={handleKeyDown}
       style={{ transitionDuration: `${OVERLAY_ANIMATION_DURATION}ms` }}
-      className={cn('transition-colors')}
+      className={cn('transition-colors', className)}
     >
       {children}
     </button>
