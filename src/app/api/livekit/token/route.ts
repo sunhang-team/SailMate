@@ -133,7 +133,7 @@ export const GET = withBffErrorHandling(async (req: NextRequest) => {
     });
   }
 
-  const participantIdentity = `user-${userId}`;
+  const participantIdentity = isMswDev ? `user-${userId}-${crypto.randomUUID()}` : `user-${userId}`;
 
   const at = new AccessToken(apiKey, apiSecret, {
     identity: participantIdentity,
