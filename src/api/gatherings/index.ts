@@ -57,6 +57,7 @@ export const GATHERING_TAGS = {
 } as const;
 
 const CATEGORIES_REVALIDATE_SECONDS = 3600;
+const MAIN_GATHERINGS_REVALIDATE_SECONDS = 3600;
 
 const getBaseUrl = () => {
   if (typeof window !== 'undefined') {
@@ -125,7 +126,10 @@ export const fetchMainGatherings = async (params?: GetMainGatheringsParams): Pro
   const qs = searchParams.toString();
 
   const res = await fetch(`${getBaseUrl()}/v1/gatherings/main${qs ? `?${qs}` : ''}`, {
-    next: { tags: [GATHERING_TAGS.all, GATHERING_TAGS.main] },
+    next: {
+      tags: [GATHERING_TAGS.all, GATHERING_TAGS.main],
+      revalidate: MAIN_GATHERINGS_REVALIDATE_SECONDS,
+    },
   });
 
   if (!res.ok) throw new Error(`gatherings/main fetch failed: ${res.status}`);
