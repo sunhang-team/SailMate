@@ -23,14 +23,14 @@ const ALL_CATEGORY_LABEL = '카테고리 전체';
 
 function HeroSearchFormSkeleton() {
   return (
-    <div className='flex w-full flex-col gap-5'>
-      <div className='flex w-full gap-4'>
-        <div className='h-14 flex-1 animate-pulse rounded-lg bg-gray-100 md:h-18' />
-        <div className='h-14 w-14 shrink-0 animate-pulse rounded-lg bg-gray-100 md:h-18 md:w-18' />
+    <div className='flex w-full flex-col gap-2 min-[744px]:gap-4'>
+      <div className='flex w-full gap-2 min-[744px]:gap-4'>
+        <div className='h-[54px] flex-1 animate-pulse rounded-xl bg-gray-100 min-[744px]:h-18 min-[744px]:rounded-2xl' />
+        <div className='h-[54px] w-[54px] shrink-0 animate-pulse rounded-xl bg-gray-100 min-[744px]:h-18 min-[744px]:w-18' />
       </div>
-      <div className='flex flex-col gap-4 md:flex-row md:items-center md:justify-between'>
-        <div className='h-9 w-full max-w-md animate-pulse rounded-md bg-gray-100' />
-        <div className='h-8 w-64 animate-pulse rounded-md bg-gray-100' />
+      <div className='flex flex-col gap-2 min-[744px]:gap-4 xl:w-[calc(100%_-_88px)] xl:flex-row xl:items-center xl:justify-between xl:self-start'>
+        <div className='h-5 w-full max-w-2xl animate-pulse rounded-md bg-gray-100 min-[744px]:h-9' />
+        <div className='h-5 w-48 animate-pulse rounded-md bg-gray-100 min-[744px]:h-8' />
       </div>
     </div>
   );
@@ -58,13 +58,21 @@ export function HeroSearchFormBoundary({ children }: HeroSearchFormBoundaryProps
   );
 }
 
-function FilterArrow() {
+interface FilterArrowProps {
+  className?: string;
+}
+
+function FilterArrow({ className }: FilterArrowProps) {
   const { isOpen } = useDropdown();
 
   return (
     <ArrowIcon
       size={16}
-      className={cn('shrink-0 rotate-90 text-gray-800 transition-transform duration-200', isOpen && 'rotate-270')}
+      className={cn(
+        'shrink-0 rotate-90 text-gray-800 transition-transform duration-200',
+        className,
+        isOpen && 'rotate-270',
+      )}
     />
   );
 }
@@ -89,9 +97,9 @@ function HeroFilterDropdown<T extends string | number>({
   return (
     <Dropdown className='**:[[role=listbox]]:right-0 **:[[role=listbox]]:w-40'>
       <Dropdown.Trigger>
-        <div className='text-body-02-sb md:text-body-01-sb flex cursor-pointer items-center gap-2 text-gray-800'>
+        <div className='text-small-02-sb min-[744px]:text-body-01-sb flex cursor-pointer items-center gap-1 text-gray-800 min-[744px]:gap-2'>
           <span>{selectedLabel}</span>
-          <FilterArrow />
+          <FilterArrow className='size-4 min-[744px]:size-6' />
         </div>
       </Dropdown.Trigger>
       <Dropdown.Menu className='flex flex-col gap-1 p-2' containerClassName='right-0'>
@@ -183,42 +191,44 @@ export function HeroSearchForm({
   };
 
   return (
-    <div className='flex w-full flex-col gap-5'>
-      <form onSubmit={handleSubmit} className='flex w-full gap-4'>
-        <div className='border-gradient-primary bg-gray-0 flex h-14 flex-1 items-center gap-3 rounded-lg px-5 md:h-18 md:px-7'>
+    <div className='flex w-full flex-col gap-2 min-[744px]:gap-4'>
+      <form onSubmit={handleSubmit} className='flex w-full gap-2 min-[744px]:gap-4'>
+        <div className='border-gradient-primary bg-gray-0 flex h-[54px] min-w-0 flex-1 items-center rounded-xl px-[21px] min-[744px]:h-18 min-[744px]:rounded-2xl min-[744px]:px-7'>
           <input
             type='text'
             value={query}
             onChange={(e) => onQueryChange(e.target.value)}
             placeholder='모임명 또는 키워드를 검색하세요'
-            className='text-body-02-r md:text-body-01-r h-full w-full outline-none placeholder:text-gray-400'
+            className='text-small-01-r min-[744px]:text-body-01-r h-full w-full min-w-0 outline-none placeholder:text-gray-600'
           />
         </div>
         <button
           type='submit'
           aria-label='모임 검색'
-          className='flex h-14 w-14 shrink-0 cursor-pointer items-center justify-center rounded-lg bg-blue-300 text-white transition-colors hover:bg-blue-400 md:h-18 md:w-18'
+          className='flex h-[54px] w-[54px] shrink-0 cursor-pointer items-center justify-center rounded-xl bg-blue-300 text-white transition-colors hover:bg-blue-400 min-[744px]:h-18 min-[744px]:w-18'
         >
-          <SearchIcon className='h-6 w-6 md:h-8 md:w-8' />
+          <SearchIcon className='size-6 min-[744px]:size-8' />
         </button>
       </form>
 
-      <div className='flex flex-col gap-4 md:flex-row md:items-center md:justify-between'>
-        <div className='flex flex-wrap items-center gap-2 md:gap-3'>
-          <span className='text-small-01-sb md:text-body-02-sb mr-2 text-gray-600'>추천 검색어</span>
+      <div className='flex flex-col gap-2 min-[744px]:gap-4 xl:w-[calc(100%_-_88px)] xl:flex-row xl:items-center xl:justify-between xl:self-start'>
+        <div className='flex flex-wrap items-center gap-1.5 min-[744px]:gap-2'>
+          <span className='min-[744px]:text-body-02-sb text-[8px] leading-[160%] font-semibold text-gray-700 min-[744px]:mr-3'>
+            추천 검색어
+          </span>
           {RECOMMENDED_KEYWORDS.map((keyword) => (
             <button
               key={keyword}
               type='button'
               onClick={() => handleKeywordClick(keyword)}
-              className='text-small-01-r md:text-body-02-r bg-gray-0 cursor-pointer rounded-md px-4 py-2 text-gray-700 transition-colors hover:bg-blue-100 hover:text-blue-400'
+              className='min-[744px]:text-body-02-m cursor-pointer rounded-md bg-gray-50 px-3 py-1 text-[8px] leading-[160%] font-medium text-gray-700 transition-colors hover:bg-blue-100 hover:text-blue-400 min-[744px]:rounded-lg min-[744px]:px-4'
             >
               {keyword}
             </button>
           ))}
         </div>
 
-        <div className='flex items-center justify-end gap-8 md:gap-12'>
+        <div className='flex items-center justify-start gap-5 xl:gap-7'>
           <HeroFilterDropdown<GatheringType>
             label={ALL_TYPE_LABEL}
             selectedLabel={type ?? ALL_TYPE_LABEL}

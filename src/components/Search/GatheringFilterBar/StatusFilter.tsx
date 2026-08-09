@@ -35,7 +35,7 @@ export function StatusFilter({ value, onChange }: StatusFilterProps) {
 
   return (
     <Dropdown className='**:[[role=listbox]]:-left-3'>
-      <Dropdown.Trigger>
+      <Dropdown.Trigger className='cursor-pointer'>
         <div className='flex items-center gap-2'>
           <span className='text-small-02-m md:text-body-02-m text-gray-800'>{selectedLabel}</span>
           <RotatingArrow />
