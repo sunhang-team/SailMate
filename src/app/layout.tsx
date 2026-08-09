@@ -1,8 +1,12 @@
 import './globals.css';
+import Script from 'next/script';
+import { SerwistProvider } from '@serwist/turbopack/react';
+
 import { pretendard } from './fonts';
 import { AnalyticsScripts } from '@/components/analytics/AnalyticsScripts';
 import { BeusableScript } from '@/components/analytics/BeusableScript';
 import { Header } from '@/components/Header';
+import { NetworkStatusToast } from '@/components/NetworkStatusToast';
 import { MSWProvider } from '@/providers/MSWProvider';
 import { QueryParamsProvider } from '@/providers/QueryParamsProvider';
 import { QueryProvider } from '@/providers/QueryProvider';
@@ -23,6 +27,8 @@ import {
 } from '@/lib/seo';
 
 import type { Metadata } from 'next';
+
+const shouldUseSerwist = process.env.NODE_ENV === 'production' || process.env.NEXT_PUBLIC_MSW_ENABLED !== 'true';
 
 export const generateMetadata = async (): Promise<Metadata> => {
   const siteUrl = getSiteUrl();
@@ -68,26 +74,43 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const app = (
+    <MSWProvider>
+      <QueryProvider>
+        <QueryParamsProvider>
+          <ToastProvider>
+            <NetworkStatusToast />
+            <Header />
+            {children}
+            <FooterWrapper />
+            <OverlayProvider />
+            <div id='modal-root' />
+          </ToastProvider>
+        </QueryParamsProvider>
+      </QueryProvider>
+    </MSWProvider>
+  );
+
   return (
     <html lang='ko' className={`${pretendard.variable} relative`}>
       <body className='font-pretendard relative'>
-        <MSWProvider>
-          <QueryProvider>
-            <QueryParamsProvider>
-              <ToastProvider>
-                <Header />
-                {children}
-                <FooterWrapper />
-                <OverlayProvider />
-                <div id='modal-root' />
-              </ToastProvider>
-            </QueryParamsProvider>
-          </QueryProvider>
-        </MSWProvider>
-        <JsonLd data={buildOrganizationJsonLd()} />
-        <JsonLd data={buildWebSiteJsonLd()} />
-        <AnalyticsScripts />
-        <BeusableScript />
+        {/* beforeinstallprompt는 하이드레이션 전에 발생할 수 있어, React 이펙트 등록보다
+            먼저 실행되도록 beforeInteractive 스크립트로 최대한 일찍 캡처해둔다. */}
+        <Script id='pwa-install-prompt-capture' strategy='beforeInteractive'>
+          {`
+            window.addEventListener('beforeinstallprompt', function (e) {
+              e.preventDefault();
+              window.__deferredInstallPrompt = e;
+            });
+          `}
+        </Script>
+        {shouldUseSerwist ? <SerwistProvider swUrl='/serwist/sw.js'>{app}</SerwistProvider> : app}
+        <>
+          <JsonLd data={buildOrganizationJsonLd()} />
+          <JsonLd data={buildWebSiteJsonLd()} />
+          <AnalyticsScripts />
+          <BeusableScript />
+        </>
       </body>
     </html>
   );

@@ -83,7 +83,7 @@ export default async function GatheringDetailPage({ params }: GatheringDetailPag
   }
 
   return (
-    <main className='mb-20 min-h-screen'>
+    <main className='mb-40 min-h-screen'>
       {detail && <JsonLd data={buildGatheringEventJsonLd(detail)} />}
       {!Number.isNaN(gatheringId) && <GatheringDetailTracker gatheringId={gatheringId} />}
       <MainGatheringStreaming>

@@ -17,6 +17,11 @@ import type {
   CreateGatheringResponse,
   UpdateGatheringRequest,
   UpdateGatheringResponse,
+  SaveGatheringDraftRequest,
+  SaveGatheringDraftResponse,
+  GetGatheringDraftsResponse,
+  GetGatheringDraftDetailResponse,
+  DeleteGatheringDraftResponse,
 } from './types';
 import { GATHERING_TYPE_TO_PARAM } from './types';
 
@@ -52,6 +57,7 @@ export const GATHERING_TAGS = {
 } as const;
 
 const CATEGORIES_REVALIDATE_SECONDS = 3600;
+const MAIN_GATHERINGS_REVALIDATE_SECONDS = 3600;
 
 const getBaseUrl = () => {
   if (typeof window !== 'undefined') {
@@ -120,7 +126,10 @@ export const fetchMainGatherings = async (params?: GetMainGatheringsParams): Pro
   const qs = searchParams.toString();
 
   const res = await fetch(`${getBaseUrl()}/v1/gatherings/main${qs ? `?${qs}` : ''}`, {
-    next: { tags: [GATHERING_TAGS.all, GATHERING_TAGS.main] },
+    next: {
+      tags: [GATHERING_TAGS.all, GATHERING_TAGS.main],
+      revalidate: MAIN_GATHERINGS_REVALIDATE_SECONDS,
+    },
   });
 
   if (!res.ok) throw new Error(`gatherings/main fetch failed: ${res.status}`);
@@ -206,6 +215,58 @@ export const updateGathering = async (
 /** DELETE /v1/gatherings/:gatheringId — 모임 삭제 */
 export const deleteGathering = async (gatheringId: number): Promise<void> => {
   await axiosClient.delete(`/v1/gatherings/${gatheringId}`);
+};
+
+/** POST /v1/gatherings/drafts — 임시저장 생성 */
+export const createGatheringDraft = async (body: SaveGatheringDraftRequest): Promise<SaveGatheringDraftResponse> => {
+  const { type, ...rest } = body;
+  const requestData = { ...rest, ...(type && { type: GATHERING_TYPE_TO_PARAM[type] }) };
+
+  const { data } = await axiosClient.post<ApiResponse<SaveGatheringDraftResponse>>(
+    '/v1/gatherings/drafts',
+    requestData,
+  );
+  return unwrapResponse(data);
+};
+
+/** PUT /v1/gatherings/drafts/:draftId — 임시저장 수정 (부분 업데이트) */
+export const updateGatheringDraft = async (
+  draftId: number,
+  body: SaveGatheringDraftRequest,
+): Promise<SaveGatheringDraftResponse> => {
+  const { type, ...rest } = body;
+  const requestData = { ...rest, ...(type && { type: GATHERING_TYPE_TO_PARAM[type] }) };
+
+  const { data } = await axiosClient.put<ApiResponse<SaveGatheringDraftResponse>>(
+    `/v1/gatherings/drafts/${draftId}`,
+    requestData,
+  );
+  return unwrapResponse(data);
+};
+
+/** GET /v1/gatherings/drafts — 내 임시저장 목록 조회 */
+export const getGatheringDrafts = async (): Promise<GetGatheringDraftsResponse> => {
+  const { data } = await axiosClient.get<ApiResponse<GetGatheringDraftsResponse>>('/v1/gatherings/drafts');
+  return unwrapResponse(data);
+};
+
+/** GET /v1/gatherings/drafts/:draftId — 임시저장 상세 조회 */
+export const getGatheringDraftDetail = async (draftId: number): Promise<GetGatheringDraftDetailResponse> => {
+  const { data } = await axiosClient.get<ApiResponse<GetGatheringDraftDetailResponse>>(
+    `/v1/gatherings/drafts/${draftId}`,
+  );
+  return unwrapResponse(data);
+};
+
+/**
+ * DELETE /v1/gatherings/drafts/:draftId — 임시저장 삭제
+ * 응답이 { success: true }만 오고 data 필드가 없으므로 unwrapResponse(data 필수) 대신 직접 파싱
+ */
+export const deleteGatheringDraft = async (draftId: number): Promise<DeleteGatheringDraftResponse> => {
+  const { data } = await axiosClient.delete<ApiResponse<DeleteGatheringDraftResponse>>(
+    `/v1/gatherings/drafts/${draftId}`,
+  );
+  return { success: data.success };
 };
 
 /**

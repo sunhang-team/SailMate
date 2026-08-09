@@ -11,12 +11,12 @@ interface MeetingLobbyProps {
 
 export function MeetingLobby({ presentUsers, userName, onJoin, isJoining }: MeetingLobbyProps) {
   return (
-    <div className='relative flex flex-col items-center justify-center text-center'>
-      <div className='mb-8 flex h-24 w-24 rotate-3 items-center justify-center rounded-3xl bg-blue-600 text-white shadow-2xl shadow-blue-200 transition-transform group-hover:rotate-0'>
+    <div className='relative flex min-h-[420px] flex-col items-center justify-center text-center md:min-h-[520px]'>
+      <div className='mb-6 flex h-18 w-18 rotate-3 items-center justify-center rounded-2xl bg-blue-600 text-white shadow-2xl shadow-blue-200 transition-transform group-hover:rotate-0 md:mb-8 md:h-24 md:w-24 md:rounded-3xl'>
         <svg
           xmlns='http://www.w3.org/2000/svg'
-          width='40'
-          height='40'
+          width='32'
+          height='32'
           viewBox='0 0 24 24'
           fill='none'
           stroke='currentColor'
@@ -31,14 +31,14 @@ export function MeetingLobby({ presentUsers, userName, onJoin, isJoining }: Meet
         </svg>
       </div>
 
-      <h2 className='text-h1-b mb-3 text-gray-900'>회의실 입장</h2>
-      <p className='text-body-01-r mb-10 max-w-md text-gray-500'>
+      <h2 className='text-h4-b md:text-h1-b mb-3 text-gray-900'>회의실 입장</h2>
+      <p className='text-body-02-r md:text-body-01-r mb-8 max-w-md text-gray-500 md:mb-10'>
         <span className='font-bold text-blue-600'>{userName}</span>님, 실시간 화상 회의에 참여하시겠습니까? <br />
         동료들과 더 가깝게 소통해보세요.
       </p>
 
       {presentUsers.length > 0 && (
-        <div className='mb-12 w-full max-w-lg rounded-2xl bg-gray-50 p-6'>
+        <div className='mb-8 w-full max-w-lg rounded-2xl bg-gray-50 p-4 md:mb-12 md:p-6'>
           <p className='text-small-01-b mb-4 text-left tracking-wider text-gray-400 uppercase'>현재 회의 중인 멤버</p>
           <div className='flex flex-wrap gap-2'>
             {presentUsers.map((p) => (
@@ -57,7 +57,7 @@ export function MeetingLobby({ presentUsers, userName, onJoin, isJoining }: Meet
       <button
         onClick={onJoin}
         disabled={isJoining}
-        className='text-h4-b relative flex items-center justify-center gap-3 overflow-hidden rounded-2xl bg-blue-600 px-16 py-5 text-white transition-all hover:bg-blue-700 hover:shadow-2xl hover:shadow-blue-200 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50'
+        className='text-body-01-b md:text-h4-b relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-2xl bg-blue-600 px-6 py-4 text-white transition-all hover:bg-blue-700 hover:shadow-2xl hover:shadow-blue-200 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto md:px-16 md:py-5'
       >
         <span>{isJoining ? '입장 중...' : '회의 참여하기'}</span>
         {!isJoining && (
@@ -83,11 +83,11 @@ export function MeetingLobby({ presentUsers, userName, onJoin, isJoining }: Meet
 
 MeetingLobby.Skeleton = function MeetingLobbySkeleton() {
   return (
-    <div className='relative flex flex-col items-center justify-center text-center opacity-50'>
-      <div className='mb-8 h-24 w-24 rounded-3xl bg-gray-200' />
-      <div className='mb-3 h-8 w-48 rounded-lg bg-gray-200' />
-      <div className='mb-10 h-16 w-64 rounded-lg bg-gray-200' />
-      <div className='h-14 w-56 rounded-2xl bg-gray-200' />
+    <div className='relative flex min-h-[420px] flex-col items-center justify-center text-center opacity-50 md:min-h-[520px]'>
+      <div className='mb-6 h-18 w-18 rounded-2xl bg-gray-200 md:mb-8 md:h-24 md:w-24 md:rounded-3xl' />
+      <div className='mb-3 h-8 w-40 rounded-lg bg-gray-200 md:w-48' />
+      <div className='mb-8 h-16 w-56 rounded-lg bg-gray-200 md:mb-10 md:w-64' />
+      <div className='h-14 w-full max-w-56 rounded-2xl bg-gray-200' />
     </div>
   );
 };

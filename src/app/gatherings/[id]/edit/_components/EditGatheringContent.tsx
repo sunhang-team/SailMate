@@ -1,10 +1,12 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
+import { useRouter } from 'next/navigation';
 import { useSuspenseQueries } from '@tanstack/react-query';
 
 import { gatheringQueries } from '@/api/gatherings/queries';
-import { CreateGatheringForm } from '@/app/gatherings/new/CreateGatheringForm';
+
+import { EditGatheringForm } from '../EditGatheringForm';
 
 import type { Category, GatheringDetail, GatheringForm } from '@/api/gatherings/types';
 
@@ -13,7 +15,7 @@ export const toFormValues = (detail: GatheringDetail, nameToId: Record<string, n
   categoryIds: detail.categories.map((name) => nameToId[name]).filter((id): id is number => typeof id === 'number'),
   title: detail.title,
   shortDescription: detail.shortDescription,
-  description: detail.description,
+  description: detail.description ?? '',
   tags: detail.tags,
   goal: detail.goal,
   maxMembers: detail.maxMembers,
@@ -32,6 +34,7 @@ interface EditGatheringContentProps {
 }
 
 export function EditGatheringContent({ gatheringId }: EditGatheringContentProps) {
+  const router = useRouter();
   const [{ data: detail }, { data: categoriesData }] = useSuspenseQueries({
     queries: [gatheringQueries.detail(gatheringId), gatheringQueries.categories()],
   });
@@ -43,5 +46,13 @@ export function EditGatheringContent({ gatheringId }: EditGatheringContentProps)
 
   const initialValues = useMemo(() => toFormValues(detail, nameToId), [detail, nameToId]);
 
-  return <CreateGatheringForm mode='edit' gatheringId={gatheringId} initialValues={initialValues} />;
+  const isCompleted = detail.status === 'COMPLETED';
+
+  useEffect(() => {
+    if (isCompleted) router.replace(`/gatherings/${gatheringId}`);
+  }, [isCompleted, gatheringId, router]);
+
+  if (isCompleted) return null;
+
+  return <EditGatheringForm gatheringId={gatheringId} initialValues={initialValues} gatheringStatus={detail.status} />;
 }

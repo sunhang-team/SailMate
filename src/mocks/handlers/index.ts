@@ -1,4 +1,5 @@
 import { gatheringsHandlers } from './gatherings';
+import { gatheringDraftsHandlers } from './gatheringDrafts';
 import { todosHandlers } from './todos';
 import { authHandlers } from './auth';
 import { usersHandlers } from './users';
@@ -8,6 +9,7 @@ import { achievementsHandlers } from './achievements';
 import { reviewsHandlers } from './reviews';
 import { likesHandlers } from './likes';
 import { notificationsHandlers } from './notifications';
+import { pushHandlers } from './push';
 
 export const handlers = [
   ...todosHandlers,
@@ -15,9 +17,11 @@ export const handlers = [
   ...usersHandlers,
   ...membershipsHandlers,
   ...gatheringsHandlers,
+  ...gatheringDraftsHandlers,
   ...achievementsHandlers,
   ...applicationsHandlers,
   ...reviewsHandlers,
   ...likesHandlers,
   ...notificationsHandlers,
+  ...pushHandlers,
 ];

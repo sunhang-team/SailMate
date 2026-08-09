@@ -15,6 +15,7 @@ import { cn } from '@/lib/cn';
 
 import { ActivityEnergySection } from './ActivityEnergySection';
 import { ActivityStatsSection } from './ActivityStatsSection';
+import { NotificationSettingsSection } from './NotificationSettingsSection';
 import { ProfileEditForm } from './ProfileEditForm';
 import { ProfileIdentitySection } from './ProfileIdentitySection';
 import { SidebarAvatar } from './SidebarAvatar';
@@ -27,7 +28,7 @@ export function ProfileSidebarSkeleton({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        'border-gray-150 bg-gray-0 w-full animate-pulse rounded-2xl border px-7 py-12 shadow-(--shadow-02) lg:w-[35%] lg:min-w-[300px] lg:shrink-0',
+        'border-gray-150 bg-gray-0 w-full animate-pulse rounded-2xl border px-7 py-12 shadow-(--shadow-02) lg:w-[27%] lg:min-w-[300px] lg:shrink-0',
         className,
       )}
     >
@@ -145,7 +146,7 @@ export function ProfileSidebar({ className }: ProfileSidebarProps) {
   return (
     <aside
       className={cn(
-        'border-gray-150 bg-gray-0 w-full rounded-2xl border px-6 py-6 shadow-(--shadow-02) md:max-h-[688px] md:px-7 md:py-8 lg:max-h-[915px] lg:w-[35%] lg:min-w-[300px] lg:shrink-0 lg:px-7 lg:py-12',
+        'border-gray-150 bg-gray-0 w-full rounded-2xl border px-6 py-6 shadow-(--shadow-02) md:max-h-[688px] md:px-7 md:py-8 lg:max-h-[915px] lg:w-[27%] lg:min-w-[300px] lg:shrink-0 lg:px-7 lg:py-12',
         className,
       )}
     >
@@ -180,6 +181,7 @@ export function ProfileSidebar({ className }: ProfileSidebarProps) {
                 reputationLabel={user.reputationLabel}
               />
               <ActivityStatsSection variant='tablet' rows={statRows} />
+              <NotificationSettingsSection variant='tablet' />
             </div>
           </div>
 
@@ -194,6 +196,7 @@ export function ProfileSidebar({ className }: ProfileSidebarProps) {
               reputationLabel={user.reputationLabel}
             />
             <ActivityStatsSection variant='wide' rows={statRows} />
+            <NotificationSettingsSection variant='wide' />
           </div>
         </>
       )}

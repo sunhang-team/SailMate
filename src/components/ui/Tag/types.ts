@@ -4,7 +4,7 @@ type TagBaseProps = Omit<React.ComponentProps<'span'>, 'color' | 'children'>;
 
 interface CategoryTagProps extends TagBaseProps {
   variant: 'category';
-  icon: ReactNode;
+  icon?: ReactNode;
   label: string;
   sublabel: string;
 }
@@ -87,6 +87,11 @@ interface RouteTagProps extends TagBaseProps {
   children: ReactNode;
 }
 
+interface StepTagProps extends TagBaseProps {
+  variant: 'step';
+  children: ReactNode;
+}
+
 export type TagProps =
   | CategoryTagProps
   | DeadlineTagProps
@@ -102,4 +107,5 @@ export type TagProps =
   | FilterTagProps
   | CoreFeatureTagProps
   | CoreFeatureSmallTagProps
-  | RouteTagProps;
+  | RouteTagProps
+  | StepTagProps;

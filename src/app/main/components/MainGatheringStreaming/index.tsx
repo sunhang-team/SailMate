@@ -2,8 +2,7 @@
 
 import type { ReactNode } from 'react';
 
-import { SuspenseBoundary } from '@/components/SuspenseBoundary';
-import { GatheringSectionSkeleton } from '@/app/main/components/GatheringSectionSkeleton';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 
 interface MainGatheringStreamingProps {
   children: ReactNode;
@@ -11,9 +10,8 @@ interface MainGatheringStreamingProps {
 
 export function MainGatheringStreaming({ children }: MainGatheringStreamingProps) {
   return (
-    <SuspenseBoundary
-      pendingFallback={<GatheringSectionSkeleton />}
-      errorFallback={(_error, reset) => (
+    <ErrorBoundary
+      fallback={(_error, reset) => (
         <div className='flex flex-col items-center justify-center gap-4 py-20 text-center'>
           <p className='text-body-01-m text-gray-500'>모임 목록을 불러오지 못했습니다.</p>
           <button
@@ -26,6 +24,6 @@ export function MainGatheringStreaming({ children }: MainGatheringStreamingProps
       )}
     >
       {children}
-    </SuspenseBoundary>
+    </ErrorBoundary>
   );
 }

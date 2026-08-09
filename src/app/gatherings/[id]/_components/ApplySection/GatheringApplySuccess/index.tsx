@@ -19,7 +19,7 @@ export function GatheringApplySuccess({ onClose }: GatheringApplySuccessProps) {
         <p className='text-small-01-r md:text-body-01-r text-gray-600'>모임장의 승인을 기다려주세요.</p>
       </div>
 
-      <Button variant='action' className='w-full' onClick={onClose}>
+      <Button variant='action' className='text-h5-sb w-full md:h-18 lg:h-20' onClick={onClose}>
         확인
       </Button>
     </div>

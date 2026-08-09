@@ -1,4 +1,5 @@
 import { withSentryConfig } from '@sentry/nextjs';
+import { withSerwist } from '@serwist/turbopack';
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
@@ -52,7 +53,9 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default withSentryConfig(nextConfig, {
+// Serwist(turbopack): swSrc 컴파일·SW 서빙은 app/serwist/[path]/route.ts에서 처리.
+// 여기서는 turbopack 통합만 활성화한다. Sentry는 바깥에서 감싼다.
+export default withSentryConfig(withSerwist(nextConfig), {
   org: 'completionisland',
   project: 'javascript-nextjs',
   silent: !process.env.CI,

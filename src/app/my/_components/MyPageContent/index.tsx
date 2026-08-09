@@ -10,6 +10,8 @@ import { MyCreatedGatheringList } from '../MyCreatedGatheringList';
 
 import { LikedGatheringsList } from '../LikedGatheringsList';
 
+import { GatheringDraftsList } from '../GatheringDraftsList';
+
 interface MyPageContentProps {
   activeTab: MyPageTab;
   pendingSort: PendingGatheringSort;
@@ -87,6 +89,19 @@ export function MyPageContent({ activeTab, pendingSort }: MyPageContentProps) {
         }
       >
         <LikedGatheringsList />
+      </SuspenseBoundary>
+    );
+  }
+  if (activeTab === 'gathering-drafts') {
+    return (
+      <SuspenseBoundary
+        key={activeTab}
+        pendingFallback={<div className='flex h-40 items-center justify-center text-gray-400'>불러오는 중...</div>}
+        errorFallback={
+          <p className='flex h-40 items-center justify-center text-gray-500'>임시저장을 불러올 수 없습니다.</p>
+        }
+      >
+        <GatheringDraftsList />
       </SuspenseBoundary>
     );
   }

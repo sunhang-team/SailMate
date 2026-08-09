@@ -10,7 +10,7 @@ export const weeklyGuideSchema = z.object({
   week: z.number().min(1, '주차는 1 이상이어야 합니다.'),
   title: z.string().min(1, '제목을 입력해주세요.').max(100, '제목은 최대 100자까지 가능합니다.'),
   details: z
-    .array(z.string().max(200, '세부 계획은 200자 이하여야 합니다.'))
+    .array(z.string().min(1, '세부 계획을 입력해주세요.').max(200, '세부 계획은 200자 이하여야 합니다.'))
     .max(2, '세부 계획은 최대 2개까지 입력할 수 있습니다.')
     .optional(),
 });
@@ -32,11 +32,13 @@ export const gatheringFormBaseSchema = z.object({
   description: z
     .string()
     .min(10, '상세 설명은 10자 이상이어야 합니다.')
-    .max(1000, '상세 설명은 최대 1000자까지 가능합니다.'),
+    .max(1000, '상세 설명은 최대 1000자까지 가능합니다.')
+    .optional()
+    .or(z.literal('')),
   tags: z
     .array(z.string().max(15, '태그는 15자 이내로 입력해 주세요.'))
-    .max(10, '태그는 최대 10개까지 가능합니다.')
-    .optional(),
+    .min(1, '태그를 최소 1개 입력해 주세요.')
+    .max(10, '태그는 최대 10개까지 가능합니다.'),
   goal: z.string().min(1, '모임 목표를 입력해 주세요.').max(200, '모임 목표는 최대 200자까지 가능합니다.'),
   maxMembers: z
     .number({ error: '모집 인원을 입력해주세요.' })
@@ -45,14 +47,14 @@ export const gatheringFormBaseSchema = z.object({
   recruitDeadline: dateStringSchema('모집 마감일을 선택해주세요.'),
   startDate: dateStringSchema('모임 시작일을 선택해주세요.'),
   endDate: dateStringSchema('모임 종료일을 선택해주세요.'),
-  weeklyGuides: z.array(weeklyGuideSchema).min(1, '최소 1주차 계획은 입력해 주세요.'),
+  weeklyGuides: z.array(weeklyGuideSchema).optional(),
   images: z
     .array(z.instanceof(File, { message: '유효한 파일이 아닙니다.' }))
     .max(6, '이미지는 최대 6장까지 업로드 가능합니다.')
     .optional(),
 });
 
-/** 날짜 크로스필드 검증 스키마 — 필드 검증은 base schema에 위임, 여기서는 cross-field 검증만 담당 */
+/** 날짜 크로스필드 검증 스키마 (RECRUITING 상태 전용) — 필드 검증은 base schema에 위임, 여기서는 cross-field 검증만 담당 */
 const dateRefinementSchema = z
   .object({
     recruitDeadline: z.string().optional(),
@@ -83,8 +85,39 @@ const dateRefinementSchema = z
     }
   });
 
+/**
+ * 날짜 크로스필드 검증 스키마 (IN_PROGRESS 상태 전용)
+ * recruitDeadline/startDate는 원본과 달라지면 에러,
+ * endDate는 원본 startDate 이후인지만 검증
+ */
+export const createInProgressDateRefinementSchema = (original: { recruitDeadline: string; startDate: string }) =>
+  z
+    .object({
+      recruitDeadline: z.string().optional(),
+      startDate: z.string().optional(),
+      endDate: z.string().optional(),
+    })
+    .superRefine((data, ctx) => {
+      if (data.recruitDeadline && data.recruitDeadline !== original.recruitDeadline) {
+        ctx.addIssue({
+          code: 'custom',
+          message: '모집이 시작되면 모집 마감일을 변경할 수 없습니다.',
+          path: ['recruitDeadline'],
+        });
+      }
+      if (data.startDate && data.startDate !== original.startDate) {
+        ctx.addIssue({ code: 'custom', message: '모임이 시작되면 시작일을 변경할 수 없습니다.', path: ['startDate'] });
+      }
+      if (data.endDate && data.endDate <= original.startDate) {
+        ctx.addIssue({ code: 'custom', message: '종료일은 시작일 이후여야 합니다.', path: ['endDate'] });
+      }
+    });
+
 /** POST `/gatherings` — 모임 생성 폼 */
 export const gatheringFormSchema = gatheringFormBaseSchema.and(dateRefinementSchema);
 
-/** PUT `/gatherings/:gatheringId` — 모임 수정 폼 (모든 필드 optional) */
-export const gatheringUpdateFormSchema = gatheringFormBaseSchema.partial();
+/** PUT `/gatherings/:gatheringId` — 모임 수정 폼 (RECRUITING 상태, 생성과 동일한 필수 조건) */
+export const gatheringUpdateFormSchema = gatheringFormBaseSchema.and(dateRefinementSchema);
+
+/** POST|PUT `/gatherings/drafts` — 모임 임시저장 폼 (전 필드 선택, 이미지 미지원, 크로스필드 날짜 검증 없음) */
+export const gatheringDraftSchema = gatheringFormBaseSchema.omit({ images: true }).partial();
