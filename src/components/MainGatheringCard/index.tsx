@@ -5,6 +5,7 @@ import { GatheringCard } from '@/components/ui/GatheringCard';
 import { HeartIcon, PersonIcon } from '@/components/ui/Icon';
 import { Tag } from '@/components/ui/Tag';
 import { cn } from '@/lib/cn';
+import { formatRecruitDeadlineLabel } from '@/lib/formatGatheringDate';
 import { useLikeToggle } from '@/api/likes/hooks';
 
 import type { GatheringListItem } from '@/api/gatherings/types';
@@ -20,22 +21,6 @@ interface MainGatheringCardProps {
 }
 
 const MILLISECONDS_IN_A_DAY = 1000 * 60 * 60 * 24;
-
-const formatDate = (isoDate: string) => isoDate.slice(0, 10);
-
-const toDeadlineDdayLabel = (recruitDeadline: string) => {
-  const today = new Date();
-  const todayMidnight = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-
-  const deadline = new Date(recruitDeadline);
-  if (Number.isNaN(deadline.getTime())) {
-    return `모집 마감 ${formatDate(recruitDeadline)}`;
-  }
-  const deadlineMidnight = new Date(deadline.getFullYear(), deadline.getMonth(), deadline.getDate());
-  const diffDays = Math.ceil((deadlineMidnight.getTime() - todayMidnight.getTime()) / MILLISECONDS_IN_A_DAY);
-
-  return `모집 마감 D-${Math.max(0, diffDays)}`;
-};
 
 const toWeeksLabel = (startDate: string, endDate: string) => {
   const start = new Date(startDate);
@@ -56,7 +41,7 @@ export function MainGatheringCard({
   const { isLiked, toggleLike, isPending } = useLikeToggle(gathering.id);
 
   const totalWeeksLabel = toWeeksLabel(gathering.startDate, gathering.endDate);
-  const deadlineLabel = `${toDeadlineDdayLabel(gathering.recruitDeadline)}`;
+  const deadlineLabel = formatRecruitDeadlineLabel(gathering.recruitDeadline);
 
   return (
     <GatheringCard className={cn('flex h-full flex-col', className)}>
