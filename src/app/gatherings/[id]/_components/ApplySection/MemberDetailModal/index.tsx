@@ -13,8 +13,16 @@ interface MemberDetailModalProps<T = boolean> {
 
 export function MemberDetailModal({ memberId, isOpen, onClose }: MemberDetailModalProps) {
   return (
-    <Modal isOpen={isOpen} onClose={() => onClose(false)} className='w-[calc(100%-48px)] max-w-2xl md:w-full'>
-      <CloseIcon size={48} onClick={() => onClose(false)} className='absolute top-6 right-6 z-10 cursor-pointer p-2' />
+    <Modal
+      isOpen={isOpen}
+      onClose={() => onClose(false)}
+      className='max-h-[90vh] w-[327px] max-w-[calc(100%-48px)] overflow-hidden rounded-2xl min-[744px]:w-[600px] lg:w-[688px]'
+    >
+      <CloseIcon
+        size={48}
+        onClick={() => onClose(false)}
+        className='absolute top-4 right-4 z-10 size-7 cursor-pointer p-1 text-gray-600 min-[744px]:top-5 min-[744px]:right-5 min-[744px]:size-12 min-[744px]:p-2'
+      />
       <SuspenseBoundary
         errorFallback={<div>에러</div>}
         pendingFallback={

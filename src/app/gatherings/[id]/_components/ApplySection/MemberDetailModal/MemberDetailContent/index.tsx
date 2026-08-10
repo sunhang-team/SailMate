@@ -17,22 +17,22 @@ export function MemberDetailContent({ memberId }: Pick<MemberDetailModalProps, '
 
   return (
     <>
-      <Modal.Header className='mt-6 flex gap-6'>
+      <Modal.Header className='px-5 pt-7 pb-4 min-[744px]:px-7 min-[744px]:pt-12 min-[744px]:pb-8'>
         <ProfileHeader profile={userProfile} />
       </Modal.Header>
 
-      <Modal.Body className='scrollbar-hide custom-scrollbar flex max-h-[60vh] flex-col gap-4 overflow-y-auto px-6'>
+      <Modal.Body className='scrollbar-hide custom-scrollbar flex flex-1 flex-col gap-6 overflow-y-auto px-5 py-0 min-[744px]:gap-8 min-[744px]:px-7'>
         <div className='border-gray-150 border-t' />
-        <section className='flex flex-col gap-2'>
-          <h3 className='text-small-02-sb md:text-body-01-sb text-gray-900'>키워드 평가</h3>
+        <section className='flex flex-col gap-2 min-[744px]:gap-4'>
+          <h3 className='text-small-02-sb min-[744px]:text-body-01-sb text-gray-900'>키워드 평가</h3>
           <KeywordTags tags={aggregatedTags} />
         </section>
-        <section className='flex w-full flex-col gap-3'>
-          <h3 className='text-small-02-sb md:text-body-01-sb text-gray-800'>
-            받은 리뷰 <span className='text-blue-500'>{reviewsData?.totalCount || 0}</span>
+        <section className='flex w-full flex-col gap-2 min-[744px]:gap-4'>
+          <h3 className='text-small-02-sb min-[744px]:text-body-01-sb text-gray-800'>
+            받은 리뷰 <span className='text-gray-600'>{reviewsData?.totalCount || 0}</span>
           </h3>
 
-          <ul className='flex w-full flex-col gap-2'>
+          <ul className='flex w-full flex-col gap-2 min-[744px]:gap-4 lg:gap-6'>
             {reviewsData?.reviews.map((review) => (
               <ReviewItem key={review.id} review={review} profileImg={reviewerProfilesMap[review.reviewer.id]} />
             ))}
@@ -40,15 +40,16 @@ export function MemberDetailContent({ memberId }: Pick<MemberDetailModalProps, '
         </section>
       </Modal.Body>
 
-      <Modal.Footer className='px-6'>
+      <Modal.Footer className='px-5 pt-6 pb-7 min-[744px]:px-7 min-[744px]:pt-8 min-[744px]:pb-12'>
         {totalPages > 1 && (
-          <div className='mt-2 mb-12 flex w-full justify-center'>
+          <div className='flex w-full justify-center'>
             <Pagination
               disabled={isPending}
               variant='numbered'
               currentPage={page}
               totalPages={totalPages}
               onPageChange={setPage}
+              className='min-[744px]:[&_button]:text-body-02-m min-[744px]:gap-10 min-[744px]:[&_svg]:size-12'
             />
           </div>
         )}

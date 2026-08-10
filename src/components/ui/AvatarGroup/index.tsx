@@ -28,27 +28,30 @@ const avatarSizeVariants = cva('relative bg-gray-300 flex items-center justify-c
   },
 });
 
-const overflowSizeVariants = cva('bg-gray-200 flex items-center justify-center text-gray-500 font-medium', {
-  variants: {
-    size: {
-      sm: 'h-5 w-5 text-[8px]',
-      md: 'h-8 w-8 text-[10px]',
+const overflowSizeVariants = cva(
+  'relative z-10 flex items-center justify-center bg-gray-200 font-medium text-gray-500',
+  {
+    variants: {
+      size: {
+        sm: 'h-5 w-5 text-[8px]',
+        md: 'h-8 w-8 text-[10px]',
+      },
+      shape: {
+        full: 'rounded-full',
+        lg: 'rounded-lg',
+      },
+      hasBorder: {
+        true: 'border-2 border-gray-0',
+        false: 'border-0',
+      },
     },
-    shape: {
-      full: 'rounded-full',
-      lg: 'rounded-lg',
-    },
-    hasBorder: {
-      true: 'border-2 border-gray-0',
-      false: 'border-0',
+    defaultVariants: {
+      size: 'sm',
+      shape: 'full',
+      hasBorder: true,
     },
   },
-  defaultVariants: {
-    size: 'sm',
-    shape: 'full',
-    hasBorder: true,
-  },
-});
+);
 
 interface AvatarItem {
   id?: number;
