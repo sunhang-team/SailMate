@@ -1,5 +1,8 @@
+'use client';
+
 import { Modal } from '@/components/ui/Modal';
 import { Pagination } from '@/components/ui/Pagination';
+
 import { useMemberDetail } from '../../hooks/useMemberDetail';
 import { KeywordTags } from './KeywordTags';
 import { ProfileHeader } from './ProfileHeader';

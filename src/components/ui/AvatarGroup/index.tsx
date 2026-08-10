@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+
 import { cva } from 'class-variance-authority';
 
 import { useFallbackImage } from '@/hooks/useFallbackImage';
