@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 import { EmptyState } from '@/components/EmptyState';
-import { GatheringSectionSkeleton } from '@/app/main/components/GatheringSectionSkeleton';
 import { MainGatheringCard } from '@/components/MainGatheringCard';
 import { Pagination } from '@/components/ui/Pagination';
 
@@ -12,16 +11,12 @@ import { usePopularGatherings } from './usePopularGatherings';
 
 export function PopularGatheringList() {
   const router = useRouter();
-  const { page, setPage, totalPages, visibleGatherings, isPending } = usePopularGatherings();
+  const { page, setPage, totalPages, visibleGatherings } = usePopularGatherings();
   const isEmpty = visibleGatherings.length === 0;
 
   const handleJoin = (id: number) => {
     router.push(`/gatherings/${id}?source=recommendation`);
   };
-
-  if (isPending) {
-    return <GatheringSectionSkeleton />;
-  }
 
   return (
     <div>
