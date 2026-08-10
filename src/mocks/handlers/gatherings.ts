@@ -227,16 +227,86 @@ export const BASE_GATHERINGS: GatheringListItem[] = [
 // 페이지네이션 테스트를 위해 기본 10개 × 3 = 30개로 확장.
 // round 0(원본 ID)는 BASE_GATHERINGS 값 그대로 유지 → 공유 데이터(GATHERING_MEMBERS)와 멤버 수 일치.
 // round 1·2(2기·3기 복제본)는 정원 풀 회피를 위해 cap 적용.
+const formatMockDate = (date: Date): string => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
+const addDays = (date: Date, days: number): Date => {
+  const next = new Date(date);
+  next.setDate(next.getDate() + days);
+  return next;
+};
+
+const withRelativeDates = (gathering: GatheringListItem, round: number): GatheringListItem => {
+  const today = new Date();
+  const baseOffset = gathering.id + round * 3;
+
+  if (gathering.status === 'RECRUITING') {
+    const recruitDeadline = addDays(today, 2 + baseOffset);
+    const startDate = addDays(recruitDeadline, 5);
+    const endDate = addDays(startDate, 56);
+
+    return {
+      ...gathering,
+      recruitDeadline: formatMockDate(recruitDeadline),
+      startDate: formatMockDate(startDate),
+      endDate: formatMockDate(endDate),
+    };
+  }
+
+  if (gathering.status === 'IN_PROGRESS') {
+    return {
+      ...gathering,
+      recruitDeadline: formatMockDate(addDays(today, -21 - baseOffset)),
+      startDate: formatMockDate(addDays(today, -14 - baseOffset)),
+      endDate: formatMockDate(addDays(today, 28 + baseOffset)),
+    };
+  }
+
+  return {
+    ...gathering,
+    recruitDeadline: formatMockDate(addDays(today, -70 - baseOffset)),
+    startDate: formatMockDate(addDays(today, -63 - baseOffset)),
+    endDate: formatMockDate(addDays(today, -7 - baseOffset)),
+  };
+};
+
+const isRecruitableGathering = (gathering: GatheringListItem): boolean => {
+  const today = new Date();
+  const todayMidnight = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  const deadline = new Date(gathering.recruitDeadline);
+  const endDate = new Date(gathering.endDate);
+
+  if (Number.isNaN(deadline.getTime()) || Number.isNaN(endDate.getTime())) return false;
+
+  const deadlineMidnight = new Date(deadline.getFullYear(), deadline.getMonth(), deadline.getDate());
+  const endMidnight = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
+
+  return (
+    gathering.status === 'RECRUITING' &&
+    gathering.currentMembers < gathering.maxMembers &&
+    deadlineMidnight >= todayMidnight &&
+    endMidnight >= todayMidnight
+  );
+};
+
 const generateMockGatherings = (): GatheringListItem[] => {
   const result: GatheringListItem[] = [];
   for (let round = 0; round < 3; round++) {
     for (const base of BASE_GATHERINGS) {
+      const relativeBase = withRelativeDates(base, round);
       const currentMembers =
         round === 0
-          ? base.currentMembers
-          : Math.max(1, Math.min(base.maxMembers - 1, (base.currentMembers + round) % base.maxMembers));
+          ? relativeBase.currentMembers
+          : Math.max(
+              1,
+              Math.min(relativeBase.maxMembers - 1, (relativeBase.currentMembers + round) % relativeBase.maxMembers),
+            );
       result.push({
-        ...base,
+        ...relativeBase,
         id: round * BASE_GATHERINGS.length + base.id,
         title: round === 0 ? base.title : `${base.title} (${round + 1}기)`,
         currentMembers,
@@ -402,15 +472,15 @@ export const gatheringsHandlers = [
 
     const url = new URL(request.url);
     const limit = Math.max(1, Number(url.searchParams.get('limit') ?? 4));
+    const recruitableGatherings = mockGatherings.filter(isRecruitableGathering);
 
-    const popular = [...mockGatherings].sort((a, b) => b.currentMembers - a.currentMembers).slice(0, limit);
+    const popular = [...recruitableGatherings].sort((a, b) => b.currentMembers - a.currentMembers).slice(0, limit);
 
-    const deadline = [...mockGatherings]
-      .filter((g) => g.status === 'RECRUITING')
+    const deadline = [...recruitableGatherings]
       .sort((a, b) => new Date(a.recruitDeadline).getTime() - new Date(b.recruitDeadline).getTime())
       .slice(0, limit);
 
-    const latest = [...mockGatherings].sort((a, b) => b.id - a.id).slice(0, limit);
+    const latest = [...recruitableGatherings].sort((a, b) => b.id - a.id).slice(0, limit);
 
     return HttpResponse.json(createApiResponse<GetMainGatheringsResponse>({ popular, deadline, latest }));
   }),

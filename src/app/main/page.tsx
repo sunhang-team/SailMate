@@ -1,11 +1,7 @@
-import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
-
-import { HeroSection } from './components/HeroSection';
+import { HeroSectionContainer } from './components/HeroSectionContainer';
 import { MyGatheringSection } from './components/MyGatheringSection';
 import { MainGatheringContainer } from './components/MainGatheringContainer';
 import { MainGatheringStreaming } from './components/MainGatheringStreaming';
-import { gatheringQueries } from '@/api/gatherings/queries';
-import { getQueryClient } from '@/lib/getQueryClient';
 import { getDefaultOpenGraph } from '@/lib/seo';
 
 import type { Metadata } from 'next';
@@ -24,20 +20,16 @@ export const metadata: Metadata = {
 
 export const revalidate = 3600;
 
-export default async function MainPage() {
-  const queryClient = getQueryClient();
-
-  await queryClient.prefetchQuery(gatheringQueries.categories());
-
+export default function MainPage() {
   return (
-    <HydrationBoundary state={dehydrate(queryClient)}>
-      <HeroSection />
+    <>
+      <HeroSectionContainer />
       <div className='mx-auto flex w-full max-w-[1920px] flex-col gap-15 px-4 py-10 pb-30 md:gap-26 md:px-7 md:py-20 md:pb-40 lg:gap-30 lg:px-12 lg:pt-25 xl:px-20 2xl:px-30'>
         <MyGatheringSection />
         <MainGatheringStreaming>
           <MainGatheringContainer />
         </MainGatheringStreaming>
       </div>
-    </HydrationBoundary>
+    </>
   );
 }
