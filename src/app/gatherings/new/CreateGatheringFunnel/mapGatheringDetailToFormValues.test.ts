@@ -1,4 +1,4 @@
-import { toFormValues } from './EditGatheringContent';
+import { mapGatheringDetailToFormValues } from './mapGatheringDetailToFormValues';
 
 import type { GatheringDetail } from '@/api/gatherings/types';
 
@@ -29,7 +29,7 @@ const buildDetail = (overrides: Partial<GatheringDetail> = {}): GatheringDetail 
   ...overrides,
 });
 
-describe('toFormValues (name→id 역매핑)', () => {
+describe('mapGatheringDetailToFormValues (name→id 역매핑)', () => {
   const nameToId: Record<string, number> = {
     개발: 7,
     어학: 8,
@@ -40,21 +40,21 @@ describe('toFormValues (name→id 역매핑)', () => {
 
   it('detail.categories(이름 배열)를 categoryIds(숫자 배열)로 정확히 역매핑한다', () => {
     const detail = buildDetail({ categories: ['개발', '디자인'] });
-    const result = toFormValues(detail, nameToId);
+    const result = mapGatheringDetailToFormValues(detail, nameToId);
 
     expect(result.categoryIds).toEqual([7, 11]);
   });
 
   it('nameToId 맵에 없는 이름은 필터링되어 categoryIds에서 제외된다', () => {
     const detail = buildDetail({ categories: ['개발', '알수없음', '어학'] });
-    const result = toFormValues(detail, nameToId);
+    const result = mapGatheringDetailToFormValues(detail, nameToId);
 
     expect(result.categoryIds).toEqual([7, 8]);
   });
 
   it('빈 categories는 빈 categoryIds로 매핑된다', () => {
     const detail = buildDetail({ categories: [] });
-    const result = toFormValues(detail, nameToId);
+    const result = mapGatheringDetailToFormValues(detail, nameToId);
 
     expect(result.categoryIds).toEqual([]);
   });
@@ -68,14 +68,14 @@ describe('toFormValues (name→id 역매핑)', () => {
       디자인: 105,
     };
     const detail = buildDetail({ categories: ['독서', '자격증'] });
-    const result = toFormValues(detail, newNameToId);
+    const result = mapGatheringDetailToFormValues(detail, newNameToId);
 
     expect(result.categoryIds).toEqual([103, 104]);
   });
 
   it('상세 정보의 나머지 필드(type, title, weeklyGuides 등)를 GatheringForm 형태로 변환한다', () => {
     const detail = buildDetail();
-    const result = toFormValues(detail, nameToId);
+    const result = mapGatheringDetailToFormValues(detail, nameToId);
 
     expect(result).toMatchObject({
       type: '스터디',

@@ -12,6 +12,7 @@ import { BasicInfoStep } from './BasicInfoStep';
 import { CompleteStep } from './CompleteStep';
 import { DetailStep } from './DetailStep';
 import { DraftInitializer } from './DraftInitializer';
+import { GatheringDetailFormInitializer } from './GatheringDetailFormInitializer';
 import { ScheduleStep } from './ScheduleStep';
 import { StepIndicator } from './StepIndicator';
 
@@ -20,17 +21,24 @@ import type { GatheringForm } from '@/api/gatherings/types';
 
 interface CreateGatheringFunnelProps {
   initialDraftId?: number | null;
+  initialGatheringId?: number | null;
 }
 
 interface GatheringFunnelStepsProps {
   initialStep: FunnelStep;
+  initialGatheringId?: number | null;
   draftId: number | null;
   onDraftIdChange: (draftId: number) => void;
 }
 
-function GatheringFunnelSteps({ initialStep, draftId, onDraftIdChange }: GatheringFunnelStepsProps) {
+function GatheringFunnelSteps({
+  initialStep,
+  initialGatheringId,
+  draftId,
+  onDraftIdChange,
+}: GatheringFunnelStepsProps) {
   const { Funnel, Step, setStep, currentStep } = useFunnel<FunnelStep>(initialStep);
-  const [createdGatheringId, setCreatedGatheringId] = useState<number | null>(null);
+  const [createdGatheringId, setCreatedGatheringId] = useState<number | null>(initialGatheringId ?? null);
 
   return (
     <>
@@ -61,7 +69,10 @@ function GatheringFunnelSteps({ initialStep, draftId, onDraftIdChange }: Gatheri
   );
 }
 
-export function CreateGatheringFunnel({ initialDraftId = null }: CreateGatheringFunnelProps) {
+export function CreateGatheringFunnel({
+  initialDraftId = null,
+  initialGatheringId = null,
+}: CreateGatheringFunnelProps) {
   const [draftId, setDraftId] = useState<number | null>(initialDraftId);
 
   const methods = useForm<GatheringForm>({
@@ -72,7 +83,30 @@ export function CreateGatheringFunnel({ initialDraftId = null }: CreateGathering
 
   return (
     <FormProvider {...methods}>
-      {initialDraftId ? (
+      {initialGatheringId ? (
+        <SuspenseBoundary
+          pendingFallback={
+            <div className='flex flex-col gap-8'>
+              <div className='bg-gray-150 h-40 animate-pulse rounded-lg' />
+              <div className='bg-gray-150 h-60 animate-pulse rounded-lg' />
+            </div>
+          }
+          errorFallback={
+            <div className='rounded-lg border border-gray-200 bg-gray-50 px-4 py-6'>
+              <p className='text-body-02-r text-gray-500'>모임 정보를 불러올 수 없습니다</p>
+            </div>
+          }
+        >
+          <GatheringDetailFormInitializer gatheringId={initialGatheringId}>
+            <GatheringFunnelSteps
+              initialStep='DETAIL'
+              initialGatheringId={initialGatheringId}
+              draftId={draftId}
+              onDraftIdChange={setDraftId}
+            />
+          </GatheringDetailFormInitializer>
+        </SuspenseBoundary>
+      ) : initialDraftId ? (
         <SuspenseBoundary
           pendingFallback={
             <div className='flex flex-col gap-8'>
