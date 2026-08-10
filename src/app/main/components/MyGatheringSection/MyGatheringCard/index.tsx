@@ -1,3 +1,5 @@
+'use client';
+
 import { differenceInDays, startOfDay } from 'date-fns';
 
 import { cn } from '@/lib/cn';
