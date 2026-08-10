@@ -3,7 +3,9 @@
 import Image from 'next/image';
 
 import { useFallbackImage } from '@/hooks/useFallbackImage';
+
 import { formatReviewDate } from '../../utils/dateUtils';
+
 import type { Review } from '@/api/reviews/types';
 
 interface ReviewItemProps {

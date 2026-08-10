@@ -1,7 +1,9 @@
+'use client';
+
 import { useEffect, useState } from 'react';
 
-import { cn } from '@/lib/cn';
 import { CloseIcon } from '@/components/ui/Icon';
+import { cn } from '@/lib/cn';
 
 const TAGS_PER_PAGE_MOBILE = 2;
 const TAGS_PER_PAGE_TABLET = 6;

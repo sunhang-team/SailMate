@@ -1,10 +1,10 @@
 'use client';
 
-import { cva } from 'class-variance-authority';
 import Image from 'next/image';
+import { cva } from 'class-variance-authority';
 
-import { cn } from '@/lib/cn';
 import { useFallbackImage } from '@/hooks/useFallbackImage';
+import { cn } from '@/lib/cn';
 
 const avatarSizeVariants = cva('relative bg-gray-300 flex items-center justify-center overflow-hidden', {
   variants: {

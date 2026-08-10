@@ -2,10 +2,11 @@
 
 import Image from 'next/image';
 
+import { IllustrationIcon } from '@/components/ui/Icon';
 import { ProgressBar } from '@/components/ui/Progress';
 import { Tag } from '@/components/ui/Tag';
-import { IllustrationIcon } from '@/components/ui/Icon';
 import { useFallbackImage } from '@/hooks/useFallbackImage';
+
 import type { UserPublicProfile } from '@/api/users/types';
 
 interface ProfileHeaderProps {
