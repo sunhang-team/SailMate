@@ -9,6 +9,7 @@ import { formatDateDot, formatDday } from '@/lib/formatGatheringDate';
 import { useAuth } from '@/hooks/useAuth';
 
 import { GatheringDescription } from '../GatheringDescription';
+import { GatheringIntroBanner } from '../GatheringIntroBanner';
 import { ImageCarousel } from '../ImageCarousel';
 import { InfoCard } from '../InfoCard';
 import { MembersStatus } from '../MembersStatus';
@@ -27,11 +28,14 @@ export function GatheringDetailContent({ gatheringId }: GatheringDetailContentPr
   if (!data) return null;
 
   const isLeader = data.members.some((m) => m.userId === user?.id && m.role === 'LEADER');
+  const showIntroBanner = !data.description && data.weeklyPlans.length === 0 && isLeader;
 
   return (
     <div className='flex flex-col'>
+      {showIntroBanner && <GatheringIntroBanner gatheringId={gatheringId} />}
+
       {isLeader && (
-        <section id='pending-applications' className='scroll-mt-10 xl:scroll-mt-12'>
+        <section id='pending-applications' className={cn('scroll-mt-10 xl:scroll-mt-12', showIntroBanner && 'mt-10')}>
           <SuspenseBoundary
             pendingFallback={<PendingApplicationsSkeleton />}
             errorFallback={
