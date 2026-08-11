@@ -10,8 +10,11 @@ import { MAX_GATHERING_LIMIT } from '../../constant/constant';
 
 export async function MainGatheringContainer() {
   const queryClient = getQueryClient();
+  const isMswDev = process.env.NODE_ENV !== 'production' && process.env.NEXT_PUBLIC_MSW_ENABLED === 'true';
 
-  await queryClient.prefetchQuery(gatheringQueries.main({ limit: MAX_GATHERING_LIMIT }));
+  if (!isMswDev) {
+    await queryClient.prefetchQuery(gatheringQueries.main({ limit: MAX_GATHERING_LIMIT }));
+  }
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
