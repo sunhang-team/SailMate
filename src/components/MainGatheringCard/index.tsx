@@ -1,5 +1,7 @@
 'use client';
 
+import Link from 'next/link';
+
 import { Button } from '@/components/ui/Button';
 import { GatheringCard } from '@/components/ui/GatheringCard';
 import { HeartIcon, PersonIcon } from '@/components/ui/Icon';
@@ -12,11 +14,11 @@ import type { GatheringListItem } from '@/api/gatherings/types';
 
 interface MainGatheringCardProps {
   gathering: GatheringListItem;
+  href: string;
   joinButtonLabel?: string;
   joinButtonClassName?: string;
   isJoinDisabled?: boolean;
   initialFavorite?: boolean;
-  onJoin?: () => void;
   className?: string;
 }
 
@@ -32,10 +34,10 @@ const toWeeksLabel = (startDate: string, endDate: string) => {
 
 export function MainGatheringCard({
   gathering,
+  href,
   joinButtonLabel = '참여하기',
   joinButtonClassName,
   isJoinDisabled = false,
-  onJoin,
   className,
 }: MainGatheringCardProps) {
   const { isLiked, toggleLike, isPending } = useLikeToggle(gathering.id);
@@ -44,62 +46,63 @@ export function MainGatheringCard({
   const deadlineLabel = formatRecruitDeadlineLabel(gathering.recruitDeadline);
 
   return (
-    <GatheringCard className={cn('flex h-full flex-col', className)}>
-      <GatheringCard.Header className='items-center'>
-        <Tag variant='category' label={gathering.type} sublabel={gathering.categories.join(', ')} />
-        <div className='text-small-02-sb md:text-small-01-sb flex items-center'>
-          <PersonIcon size={16} className='mr-2 text-blue-400' />
-          <span className='text-blue-400'>{gathering.currentMembers}</span>
-          <span className='text-gray-600'>/</span>
-          <span className='text-gray-600'>{gathering.maxMembers}</span>
-        </div>
-      </GatheringCard.Header>
-      <GatheringCard.Body className='mb-4 flex-1 gap-3'>
-        <div className='flex flex-col gap-0.5'>
-          <div className='flex flex-wrap gap-1'>
-            {gathering.tags.map((tag) => (
-              <span key={tag} className='text-small-02-r text-gray-500'>
-                #{tag}
-              </span>
-            ))}
+    <Link href={href}>
+      <GatheringCard className={cn('flex h-full flex-col', className)}>
+        <GatheringCard.Header className='items-center'>
+          <Tag variant='category' label={gathering.type} sublabel={gathering.categories.join(', ')} />
+          <div className='text-small-02-sb md:text-small-01-sb flex items-center'>
+            <PersonIcon size={16} className='mr-2 text-blue-400' />
+            <span className='text-blue-400'>{gathering.currentMembers}</span>
+            <span className='text-gray-600'>/</span>
+            <span className='text-gray-600'>{gathering.maxMembers}</span>
           </div>
-          <p className='text-body-01-b line-clamp-2 text-gray-900'>{gathering.title}</p>
-          <p className='text-small-01-r line-clamp-1 text-gray-800'>{gathering.shortDescription}</p>
-        </div>
-        <div className='flex items-center gap-1'>
-          <Tag variant='duration'>{totalWeeksLabel}</Tag>
-          <Tag variant='deadline' state='goal'>
-            {deadlineLabel}
-          </Tag>
-        </div>
-      </GatheringCard.Body>
-      <GatheringCard.Footer className='border-gray-150 mt-auto items-center gap-2 border-t pt-4'>
-        <Button
-          variant='bookmark'
-          size='bookmark-sm'
-          className='shrink-0'
-          data-selected={isLiked}
-          aria-label='찜하기'
-          aria-pressed={isLiked}
-          disabled={isPending}
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            toggleLike();
-          }}
-        >
-          <HeartIcon size={24} variant={isLiked ? 'filled' : 'outline'} />
-        </Button>
-        <Button
-          variant='participation-outline-sm'
-          size='participation-sm'
-          className={cn('w-full', joinButtonClassName)}
-          disabled={isJoinDisabled}
-          onClick={onJoin}
-        >
-          {joinButtonLabel}
-        </Button>
-      </GatheringCard.Footer>
-    </GatheringCard>
+        </GatheringCard.Header>
+        <GatheringCard.Body className='mb-4 flex-1 gap-3'>
+          <div className='flex flex-col gap-0.5'>
+            <div className='flex flex-wrap gap-1'>
+              {gathering.tags.map((tag) => (
+                <span key={tag} className='text-small-02-r text-gray-500'>
+                  #{tag}
+                </span>
+              ))}
+            </div>
+            <p className='text-body-01-b line-clamp-2 text-gray-900'>{gathering.title}</p>
+            <p className='text-small-01-r line-clamp-1 text-gray-800'>{gathering.shortDescription}</p>
+          </div>
+          <div className='flex items-center gap-1'>
+            <Tag variant='duration'>{totalWeeksLabel}</Tag>
+            <Tag variant='deadline' state='goal'>
+              {deadlineLabel}
+            </Tag>
+          </div>
+        </GatheringCard.Body>
+        <GatheringCard.Footer className='border-gray-150 mt-auto items-center gap-2 border-t pt-4'>
+          <Button
+            variant='bookmark'
+            size='bookmark-sm'
+            className='shrink-0'
+            data-selected={isLiked}
+            aria-label='찜하기'
+            aria-pressed={isLiked}
+            disabled={isPending}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              toggleLike();
+            }}
+          >
+            <HeartIcon size={24} variant={isLiked ? 'filled' : 'outline'} />
+          </Button>
+          <Button
+            variant='participation-outline-sm'
+            size='participation-sm'
+            className={cn('w-full', joinButtonClassName)}
+            disabled={isJoinDisabled}
+          >
+            {joinButtonLabel}
+          </Button>
+        </GatheringCard.Footer>
+      </GatheringCard>
+    </Link>
   );
 }
