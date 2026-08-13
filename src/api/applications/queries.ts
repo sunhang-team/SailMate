@@ -1,4 +1,5 @@
 import { queryOptions, useMutation, UseMutationOptions, useQueryClient } from '@tanstack/react-query';
+import axios from 'axios';
 
 import {
   createApplication,
@@ -10,6 +11,8 @@ import {
 
 import { invalidateServerCache } from '@/lib/invalidateServerCache';
 
+import { applicationKeys } from './keys';
+
 import { GATHERING_TAGS } from '../gatherings';
 import { gatheringKeys } from '../gatherings/queries';
 
@@ -20,11 +23,7 @@ import {
   UpdateApplicationStatusResponse,
 } from './types';
 
-export const applicationKeys = {
-  all: ['applications'] as const,
-  list: (gatheringId: number) => [...applicationKeys.all, 'list', gatheringId] as const,
-  myList: () => [...applicationKeys.all, 'myList'] as const,
-};
+export { applicationKeys };
 
 export const applicationQueries = {
   /** GET /v1/gatherings/:gatheringId/applications - 신청 목록 조회(모임장)*/
@@ -32,6 +31,11 @@ export const applicationQueries = {
     queryOptions({
       queryKey: applicationKeys.list(gatheringId),
       queryFn: () => getApplicationList(gatheringId),
+      // 404는 리소스가 실제로 없다는 확정적 응답이므로 재시도하지 않음 (삭제 직후 잔여 구독자로 인한 재요청 낭비 방지)
+      retry: (failureCount, error) => {
+        if (axios.isAxiosError(error) && error.response?.status === 404) return false;
+        return failureCount < 3;
+      },
     }),
 
   /** GET v1/users/me/applications — 내 신청 목록 조회(신청자) */
