@@ -21,7 +21,23 @@ const STATUS_FILTER_MAP: Record<string, GatheringStatus> = {
   completed: 'COMPLETED',
 };
 
-// gatherings.ts BASE_GATHERINGS와 ID·title·dates를 일치시킨 "내 모임" 데이터.
+const formatMockDate = (date: Date): string => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
+const addDays = (date: Date, days: number): Date => {
+  const next = new Date(date);
+  next.setDate(next.getDate() + days);
+  return next;
+};
+
+const today = new Date();
+
+// gatherings.ts BASE_GATHERINGS와 ID·title을 일치시킨 "내 모임" 데이터.
+// 날짜는 오늘 기준 상대값(addDays)으로 계산해 시간이 지나도 status와 화면 표시가 어긋나지 않도록 함.
 // 리뷰 작성 흐름 테스트를 위해 id 7(독서 기록 앱, COMPLETED)을 포함.
 const mockGatherings: MembershipGathering[] = [
   {
@@ -33,8 +49,8 @@ const mockGatherings: MembershipGathering[] = [
     tags: ['React', 'Next.js', 'TypeScript'],
     maxMembers: 6,
     currentMembers: 4,
-    startDate: '2026-06-20',
-    endDate: '2026-08-15',
+    startDate: formatMockDate(addDays(today, 12)),
+    endDate: formatMockDate(addDays(today, 12 + 56)),
     status: 'RECRUITING',
     myRole: 'LEADER',
     hasReviewed: false,
@@ -50,8 +66,8 @@ const mockGatherings: MembershipGathering[] = [
     tags: ['SaaS', 'React', 'Node.js'],
     maxMembers: 5,
     currentMembers: 4,
-    startDate: '2026-07-05',
-    endDate: '2026-11-30',
+    startDate: formatMockDate(addDays(today, 7)),
+    endDate: formatMockDate(addDays(today, 7 + 120)),
     status: 'RECRUITING',
     myRole: 'MEMBER',
     hasReviewed: false,
@@ -67,8 +83,8 @@ const mockGatherings: MembershipGathering[] = [
     tags: ['Java', 'Spring', 'JPA'],
     maxMembers: 8,
     currentMembers: 7,
-    startDate: '2026-05-05',
-    endDate: '2026-08-05',
+    startDate: formatMockDate(addDays(today, -30)),
+    endDate: formatMockDate(addDays(today, 40)),
     status: 'IN_PROGRESS',
     myRole: 'MEMBER',
     hasReviewed: false,
@@ -84,8 +100,8 @@ const mockGatherings: MembershipGathering[] = [
     tags: ['영어', '회화'],
     maxMembers: 8,
     currentMembers: 3, // GATHERING_MEMBERS[4].length와 일치
-    startDate: '2026-06-15',
-    endDate: '2026-09-15',
+    startDate: formatMockDate(addDays(today, 9)),
+    endDate: formatMockDate(addDays(today, 9 + 90)),
     status: 'RECRUITING',
     myRole: 'LEADER',
     hasReviewed: false,
@@ -101,8 +117,8 @@ const mockGatherings: MembershipGathering[] = [
     tags: ['독서', '사이드프로젝트', 'Flutter'],
     maxMembers: 4,
     currentMembers: 4,
-    startDate: '2026-04-01',
-    endDate: '2026-05-15',
+    startDate: formatMockDate(addDays(today, -90)),
+    endDate: formatMockDate(addDays(today, -60)),
     status: 'COMPLETED',
     myRole: 'MEMBER',
     hasReviewed: false,
