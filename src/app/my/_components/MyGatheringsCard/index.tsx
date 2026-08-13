@@ -37,8 +37,11 @@ export function MyGatheringsCard({ gathering }: MyGatheringsCardProps) {
 
   const { displayLabel, tagState, isFinished } = getGatheringDisplayStatus(gathering);
 
+  const href =
+    gathering.status === 'RECRUITING' ? `/gatherings/${gathering.id}` : `/gatherings/${gathering.id}/dashboard`;
+
   return (
-    <Link href={`/gatherings/${gathering.id}/dashboard`}>
+    <Link href={href}>
       <GatheringCard>
         <GatheringCard.Header className='items-start'>
           <div className='flex gap-1'>
