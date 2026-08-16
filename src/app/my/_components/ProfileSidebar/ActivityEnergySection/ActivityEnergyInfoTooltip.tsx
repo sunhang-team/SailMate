@@ -12,14 +12,14 @@ export function ActivityEnergyInfoTooltip() {
         <p className='text-body-02-r whitespace-pre-line text-gray-100'>{DESCRIPTION}</p>
       </div>
       <div className='bg-gray-0 overflow-hidden rounded-xl'>
-        <div className='text-body-02-m border-gray-150 bg-gray-0 flex items-center gap-53.5 border-b px-5 py-3 text-gray-900'>
-          <span>등급</span>
+        <div className='text-body-02-m border-gray-150 bg-gray-0 flex items-center gap-54.5 border-b px-5 py-3 text-gray-900 min-[475px]:justify-normal min-[475px]:gap-35'>
+          <span className='min-[475px]:w-26.5 min-[475px]:shrink-0'>등급</span>
           <span>기준</span>
         </div>
-        <div className='flex flex-col gap-6 px-4 py-4'>
+        <div className='flex flex-col gap-6 px-5 py-4'>
           {ENERGY_GRADE_LEVELS.map((grade) => (
-            <div key={grade.variant} className='inline-flex items-center gap-35'>
-              <div className='flex items-center gap-2'>
+            <div key={grade.variant} className='flex items-center gap-35 min-[475px]:justify-normal min-[475px]:gap-35'>
+              <div className='flex min-w-0 items-center gap-2 min-[475px]:w-26.5 min-[475px]:shrink-0'>
                 <IllustrationIcon variant={grade.variant} className='size-6 shrink-0' aria-hidden />
                 <span className='text-body-02-r text-gray-800'>{grade.label}</span>
               </div>

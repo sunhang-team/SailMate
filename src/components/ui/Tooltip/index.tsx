@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode, useEffect, useRef, useState } from 'react';
+import { ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 
 import { cn } from '@/lib/cn';
 
@@ -25,32 +25,40 @@ export function Tooltip({ triggerLabel, trigger, children, className, panelClass
   const close = () => setIsOpen(false);
   const toggle = () => setIsOpen((prev) => !prev);
 
-  useEffect(() => {
-    if (!isOpen || !containerRef.current || !panelRef.current) return;
+  const updatePosition = useCallback(() => {
+    if (!containerRef.current || !panelRef.current) return;
 
     const triggerRect = containerRef.current.getBoundingClientRect();
-    const maxLeft = window.innerWidth - panelRef.current.offsetWidth - VIEWPORT_MARGIN;
+    const panelRect = panelRef.current.getBoundingClientRect();
+
+    const maxLeft = window.innerWidth - panelRect.width - VIEWPORT_MARGIN;
     const left = Math.max(Math.min(triggerRect.left, maxLeft), VIEWPORT_MARGIN);
 
-    setPosition({ top: triggerRect.bottom + PANEL_GAP, left });
-  }, [isOpen]);
+    const maxTop = window.innerHeight - panelRect.height - VIEWPORT_MARGIN;
+    const top = Math.max(Math.min(triggerRect.bottom + PANEL_GAP, maxTop), VIEWPORT_MARGIN);
+
+    setPosition({ top, left });
+  }, []);
 
   useEffect(() => {
     if (!isOpen) return;
+
+    updatePosition();
 
     const handleClickOutside = (e: MouseEvent) => {
       if (!containerRef.current?.contains(e.target as Node)) close();
     };
 
     document.addEventListener('mousedown', handleClickOutside);
-    window.addEventListener('scroll', close, true);
-    window.addEventListener('resize', close);
+    // 스크롤/리사이즈 시 닫는 대신 위치를 다시 계산해 트리거에 계속 붙어있도록 유지
+    window.addEventListener('scroll', updatePosition, true);
+    window.addEventListener('resize', updatePosition);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
-      window.removeEventListener('scroll', close, true);
-      window.removeEventListener('resize', close);
+      window.removeEventListener('scroll', updatePosition, true);
+      window.removeEventListener('resize', updatePosition);
     };
-  }, [isOpen]);
+  }, [isOpen, updatePosition]);
 
   return (
     <div ref={containerRef} className={cn('relative inline-flex', className)}>
