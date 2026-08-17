@@ -39,11 +39,6 @@ export function LatestGatheringList() {
               key={gathering.id}
               gathering={gathering}
               href={`/gatherings/${gathering.id}?source=recommendation`}
-              joinButtonLabel='참여하기'
-              joinButtonClassName=''
-              isJoinDisabled={false}
-              initialFavorite={false}
-              className=''
             />
           ))}
         </div>

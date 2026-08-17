@@ -50,10 +50,7 @@ export const Default: Story = {
 
 export const Favorite: Story = {
   name: '2. 찜',
-  args: {
-    ...baseArgs,
-    initialFavorite: true,
-  },
+  args: baseArgs,
 };
 
 export const JoinDisabled: Story = {

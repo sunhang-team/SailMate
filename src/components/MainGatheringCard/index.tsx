@@ -18,7 +18,6 @@ interface MainGatheringCardProps {
   joinButtonLabel?: string;
   joinButtonClassName?: string;
   isJoinDisabled?: boolean;
-  initialFavorite?: boolean;
   className?: string;
 }
 
