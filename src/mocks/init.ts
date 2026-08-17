@@ -1,5 +1,7 @@
+import { isMswEnabled } from '@/lib/msw';
+
 export const initMsw = async () => {
-  if (process.env.NODE_ENV === 'production' || process.env.NEXT_PUBLIC_MSW_ENABLED !== 'true') return;
+  if (!isMswEnabled) return;
   if (typeof window === 'undefined') return;
 
   if ('serviceWorker' in navigator) {

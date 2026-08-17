@@ -2,6 +2,7 @@ import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
 
 import { gatheringQueries } from '@/api/gatherings/queries';
 import { getQueryClient } from '@/lib/getQueryClient';
+import { isMswEnabled } from '@/lib/msw';
 
 import { DeadlineGatheringSection } from '../DeadlineGatheringSection';
 import { LatestGatheringSection } from '../LatestGatheringSection';
@@ -10,9 +11,8 @@ import { MAX_GATHERING_LIMIT } from '../../constant/constant';
 
 export async function MainGatheringContainer() {
   const queryClient = getQueryClient();
-  const isMswDev = process.env.NODE_ENV !== 'production' && process.env.NEXT_PUBLIC_MSW_ENABLED === 'true';
 
-  if (!isMswDev) {
+  if (!isMswEnabled) {
     await queryClient.prefetchQuery(gatheringQueries.main({ limit: MAX_GATHERING_LIMIT }));
   }
 
