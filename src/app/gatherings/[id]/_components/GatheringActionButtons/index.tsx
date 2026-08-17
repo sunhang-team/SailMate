@@ -3,22 +3,20 @@
 import { useRouter } from 'next/navigation';
 
 import { useDeleteGathering } from '@/api/gatherings/queries';
-import { Dropdown } from '@/components/ui/Dropdown';
-import { MoreIcon } from '@/components/ui/Icon';
+import { Button } from '@/components/ui/Button';
 import { useToastStore } from '@/components/ui/Toast/useToastStore';
 import { useOverlay } from '@/hooks/useOverlay';
-import { cn } from '@/lib/cn';
 
 import { DeleteGatheringModal } from './DeleteGatheringModal';
 
 import type { GatheringStatus } from '@/api/gatherings/types';
 
-interface LeaderActionDropdownProps {
+interface GatheringActionButtonsProps {
   gatheringId: number;
   gatheringStatus: GatheringStatus;
 }
 
-export function LeaderActionDropdown({ gatheringId, gatheringStatus }: LeaderActionDropdownProps) {
+export function GatheringActionButtons({ gatheringId, gatheringStatus }: GatheringActionButtonsProps) {
   const router = useRouter();
   const overlay = useOverlay();
   const { showToast } = useToastStore();
@@ -49,29 +47,27 @@ export function LeaderActionDropdown({ gatheringId, gatheringStatus }: LeaderAct
   };
 
   return (
-    <Dropdown>
-      <Dropdown.Trigger>
-        <MoreIcon size={32} className='text-blue-500' />
-      </Dropdown.Trigger>
-      <Dropdown.Menu
-        containerClassName='right-0'
-        className='flex w-20 flex-col gap-3 px-3 py-2 shadow-[0px_0px_12px_0px_rgba(30,88,248,0.04)]'
+    <div className='flex items-center gap-2'>
+      <Button
+        type='button'
+        variant='mypage-edit'
+        size={undefined}
+        onClick={handleEdit}
+        disabled={!canEdit}
+        className='text-small-01-sb md:text-body-02-m border-blue-150 h-14 w-32.5 shrink-0 border bg-white text-blue-300 disabled:opacity-50'
       >
-        <Dropdown.Item
-          onClick={handleEdit}
-          disabled={!canEdit}
-          className='text-body-02-r cursor-pointer text-gray-500 hover:text-blue-300'
-        >
-          수정
-        </Dropdown.Item>
-        <Dropdown.Item
-          onClick={handleDelete}
-          disabled={!canDelete}
-          className={cn('text-body-02-m cursor-pointer text-gray-900', canDelete && 'hover:text-blue-300')}
-        >
-          삭제
-        </Dropdown.Item>
-      </Dropdown.Menu>
-    </Dropdown>
+        정보 수정
+      </Button>
+      <Button
+        type='button'
+        variant='mypage-edit'
+        size={undefined}
+        onClick={handleDelete}
+        disabled={!canDelete}
+        className='text-small-01-sb md:text-body-02-m h-14 w-32.5 shrink-0 border border-gray-200 bg-white text-gray-700 disabled:opacity-50'
+      >
+        모임 삭제
+      </Button>
+    </div>
   );
 }

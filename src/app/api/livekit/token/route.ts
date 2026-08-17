@@ -4,6 +4,7 @@ import * as Sentry from '@sentry/nextjs';
 import { AccessToken } from 'livekit-server-sdk';
 
 import { requestBackend } from '@/lib/serverFetch';
+import { isMswEnabled } from '@/lib/msw';
 import { withBffErrorHandling } from '@/lib/withBffErrorHandling';
 
 interface BffErrorParams {
@@ -36,14 +37,13 @@ export const GET = withBffErrorHandling(async (req: NextRequest) => {
   }
 
   const gatheringId = parseInt(room.split('-')[1], 10);
-  // prod 환경에서 NEXT_PUBLIC_MSW_ENABLED가 실수로 켜져도 auth bypass 되지 않도록 NODE_ENV로 이중 가드.
-  const isMswDev = process.env.NODE_ENV !== 'production' && process.env.NEXT_PUBLIC_MSW_ENABLED === 'true';
 
   let userId: number | undefined;
   let nickname: string | undefined;
 
-  if (isMswDev) {
-    // MSW dev — Next.js 16 + Turbopack에서 msw/node가 서버 fetch를 못 잡아
+  if (isMswEnabled) {
+    // TEMP: 백엔드 재배포 전까지 Vercel production MSW 배포에서도 회의실 시연을 허용한다.
+    // MSW 환경 — Next.js 16 + Turbopack에서 msw/node가 서버 fetch를 못 잡아
     // requestBackend()로 멤버/me 검증이 실패함. CURRENT_USER로 토큰 발급해 회의실 시연 가능하게 함.
     userId = 1;
     nickname = '테스터';
@@ -133,7 +133,7 @@ export const GET = withBffErrorHandling(async (req: NextRequest) => {
     });
   }
 
-  const participantIdentity = isMswDev ? `user-${userId}-${crypto.randomUUID()}` : `user-${userId}`;
+  const participantIdentity = isMswEnabled ? `user-${userId}-${crypto.randomUUID()}` : `user-${userId}`;
 
   const at = new AccessToken(apiKey, apiSecret, {
     identity: participantIdentity,

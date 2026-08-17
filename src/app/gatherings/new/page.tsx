@@ -10,13 +10,17 @@ export const metadata: Metadata = {
 };
 
 interface CreateGatheringPageProps {
-  searchParams: Promise<{ draftId?: string }>;
+  searchParams: Promise<{ draftId?: string; gatheringId?: string; step?: string }>;
 }
 
 export default async function CreateGatheringPage({ searchParams }: CreateGatheringPageProps) {
-  const { draftId: draftIdRaw } = await searchParams;
+  const { draftId: draftIdRaw, gatheringId: gatheringIdRaw, step } = await searchParams;
   const parsedDraftId = Number(draftIdRaw);
   const initialDraftId = draftIdRaw && Number.isInteger(parsedDraftId) ? parsedDraftId : null;
+
+  const parsedGatheringId = Number(gatheringIdRaw);
+  const initialGatheringId =
+    step === 'DETAIL' && gatheringIdRaw && Number.isInteger(parsedGatheringId) ? parsedGatheringId : null;
 
   return (
     <main className='bg-gray-100'>
@@ -34,7 +38,7 @@ export default async function CreateGatheringPage({ searchParams }: CreateGather
             </div>
           }
         >
-          <CreateGatheringFunnel initialDraftId={initialDraftId} />
+          <CreateGatheringFunnel initialDraftId={initialDraftId} initialGatheringId={initialGatheringId} />
         </SuspenseBoundary>
       </div>
     </main>

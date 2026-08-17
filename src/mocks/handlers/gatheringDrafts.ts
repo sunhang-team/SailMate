@@ -1,6 +1,6 @@
 import { http, HttpResponse, delay } from 'msw';
+import { z } from 'zod';
 
-import { gatheringDraftSchema } from '@/api/gatherings/schemas';
 import { createApiResponse } from '../utils';
 import { CURRENT_USER } from '../_data';
 
@@ -12,6 +12,53 @@ import type {
 
 const BASE = '/api/v1/gatherings/drafts';
 const DRAFT_LIMIT_PER_USER = 5;
+
+const draftRequestSchema = z
+  .object({
+    type: z.enum(['STUDY', 'PROJECT', '스터디', '프로젝트']).or(z.literal('')).nullable().optional(),
+    categoryIds: z.array(z.number()).optional(),
+    title: z.string().nullable().optional(),
+    shortDescription: z.string().nullable().optional(),
+    description: z.string().nullable().optional(),
+    tags: z.array(z.string()).optional(),
+    goal: z.string().nullable().optional(),
+    maxMembers: z.number().nullable().optional(),
+    recruitDeadline: z.string().nullable().optional(),
+    startDate: z.string().nullable().optional(),
+    endDate: z.string().nullable().optional(),
+    weeklyGuides: z
+      .array(
+        z.object({
+          week: z.number(),
+          title: z.string(),
+          details: z.array(z.string()).optional(),
+        }),
+      )
+      .optional(),
+  })
+  .partial();
+
+type DraftRequestBody = z.infer<typeof draftRequestSchema>;
+
+const hasDraftContent = (body: DraftRequestBody): boolean => {
+  const hasText = [
+    body.type,
+    body.title,
+    body.shortDescription,
+    body.description,
+    body.goal,
+    body.recruitDeadline,
+    body.startDate,
+    body.endDate,
+  ].some((value) => typeof value === 'string' && value.trim().length > 0);
+
+  const hasArray = [body.categoryIds, body.tags, body.weeklyGuides].some(
+    (value) => Array.isArray(value) && value.length > 0,
+  );
+  const hasMaxMembers = typeof body.maxMembers === 'number' && Number.isFinite(body.maxMembers);
+
+  return hasText || hasArray || hasMaxMembers;
+};
 
 // API 함수(createGatheringDraft/updateGatheringDraft)가 type을 한글 → 영어(STUDY/PROJECT)로
 // 변환한 뒤 전송하므로, mock 저장/조회 왕복 시 다시 한글로 되돌리기 위한 역변환 테이블.
@@ -46,9 +93,64 @@ interface MockDraftRecord {
 
 // 인메모리 "가짜 DB". 페이지를 새로고침하기 전까지만 유지된다.
 // let인 이유: 삭제 핸들러에서 filter로 새 배열을 만들어 통째로 재할당하기 때문.
-let mockDrafts: MockDraftRecord[] = [];
-// 다음 draft에 부여할 ID. 후위 증가(draftIdSeq++)라 1번부터 순서대로 나간다.
-let draftIdSeq = 1;
+let mockDrafts: MockDraftRecord[] = [
+  {
+    draftId: 1,
+    ownerId: CURRENT_USER.id,
+    type: 'STUDY',
+    categoryIds: [7],
+    title: 'React 성능 최적화 스터디',
+    shortDescription: '렌더링 병목과 메모이제이션 기준을 함께 정리하는 스터디',
+    description: null,
+    tags: ['React', '성능', '프론트엔드'],
+    goal: '실제 프로젝트에서 성능 병목을 찾고 개선할 수 있게 되기',
+    maxMembers: null,
+    recruitDeadline: null,
+    startDate: null,
+    endDate: null,
+    weeklyGuides: [],
+    updatedAt: '2026-08-10T13:30:00.000Z',
+  },
+  {
+    draftId: 2,
+    ownerId: CURRENT_USER.id,
+    type: 'PROJECT',
+    categoryIds: [7, 11],
+    title: '디자인 시스템 토이 프로젝트',
+    shortDescription: '컴포넌트 문서화와 Storybook 운영 흐름을 연습하는 프로젝트',
+    description: '공통 UI 컴포넌트를 만들고 사용 예시를 Storybook으로 정리합니다.',
+    tags: ['Storybook', 'DesignSystem'],
+    goal: '재사용 가능한 UI 컴포넌트와 문서화 흐름 만들기',
+    maxMembers: 4,
+    recruitDeadline: '2026-08-24',
+    startDate: '2026-09-01',
+    endDate: '2026-09-28',
+    weeklyGuides: [
+      { week: 1, title: '컴포넌트 목록 정의', details: ['Button, Tag, Card 사용 기준 정리'] },
+      { week: 2, title: 'Storybook 문서화', details: ['주요 상태별 스토리 작성'] },
+    ],
+    updatedAt: '2026-08-09T08:15:00.000Z',
+  },
+  {
+    draftId: 3,
+    ownerId: CURRENT_USER.id,
+    type: 'STUDY',
+    categoryIds: [8],
+    title: null,
+    shortDescription: null,
+    description: null,
+    tags: [],
+    goal: null,
+    maxMembers: null,
+    recruitDeadline: null,
+    startDate: null,
+    endDate: null,
+    weeklyGuides: [],
+    updatedAt: '2026-08-08T11:00:00.000Z',
+  },
+];
+// 다음 draft에 부여할 ID. 후위 증가(draftIdSeq++)라 초기 mock 다음 ID부터 순서대로 나간다.
+let draftIdSeq = 4;
 
 // GET /gatherings/drafts(목록)용 — 명세상 목록 응답은 draftId/title/type/updatedAt만 필요
 const toSummary = (draft: MockDraftRecord): GatheringDraftSummary => ({
@@ -102,12 +204,18 @@ export const gatheringDraftsHandlers = [
       );
     }
 
-    // gatheringDraftSchema는 전 필드 optional이라 실패할 일이 거의 없지만,
-    // 형식이 아예 어긋난 요청(타입 불일치 등)에 대비해 safeParse로 방어
-    const parsed = gatheringDraftSchema.safeParse(await request.json());
+    // 운영 임시저장은 작성 중인 빈 값('' / [] / null)을 허용하므로 mock도 느슨하게 받는다.
+    // 단, 완전히 빈 draft는 프론트와 동일하게 저장하지 않는다.
+    const parsed = draftRequestSchema.safeParse(await request.json());
     if (!parsed.success)
       return HttpResponse.json({ success: false, data: null, message: '잘못된 요청입니다.' }, { status: 400 });
     const body = parsed.data;
+    if (!hasDraftContent(body)) {
+      return HttpResponse.json(
+        { success: false, data: null, message: '최소 1개 항목은 입력해야 임시저장할 수 있습니다.' },
+        { status: 400 },
+      );
+    }
 
     const now = new Date().toISOString();
     // 폼에서 아직 안 채운 필드는 body에서 undefined로 오므로, 저장 시점에 null로 정규화
@@ -172,10 +280,16 @@ export const gatheringDraftsHandlers = [
     if (idx === -1) return notFound();
     if (mockDrafts[idx].ownerId !== CURRENT_USER.id) return forbidden();
 
-    const parsed = gatheringDraftSchema.safeParse(await request.json());
+    const parsed = draftRequestSchema.safeParse(await request.json());
     if (!parsed.success)
       return HttpResponse.json({ success: false, data: null, message: '잘못된 요청입니다.' }, { status: 400 });
     const body = parsed.data;
+    if (!hasDraftContent(body)) {
+      return HttpResponse.json(
+        { success: false, data: null, message: '최소 1개 항목은 입력해야 임시저장할 수 있습니다.' },
+        { status: 400 },
+      );
+    }
 
     const now = new Date().toISOString();
     // 명세서 "부분 업데이트" 규칙: 요청 바디에 "보낸 필드만" 반영해야 한다.

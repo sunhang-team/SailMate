@@ -1,6 +1,10 @@
 import { queryOptions, useMutation, useQueryClient, isServer } from '@tanstack/react-query';
+import axios from 'axios';
 
 import { invalidateServerCache } from '@/lib/invalidateServerCache';
+
+import { applicationKeys } from '../applications/keys';
+
 import {
   getCategories,
   fetchCategories,
@@ -66,6 +70,11 @@ export const gatheringQueries = {
     queryOptions({
       queryKey: gatheringKeys.detail(gatheringId),
       queryFn: () => (isServer ? fetchGatheringDetail(gatheringId) : getGatheringDetail(gatheringId)),
+      // 404는 리소스가 실제로 없다는 확정적 응답이므로 재시도하지 않음 (삭제 직후 잔여 구독자로 인한 재요청 낭비 방지)
+      retry: (failureCount, error) => {
+        if (axios.isAxiosError(error) && error.response?.status === 404) return false;
+        return failureCount < 3;
+      },
     }),
 
   /** GET /gatherings/:gatheringId/application-status — 모임 신청 상태 */
@@ -150,9 +159,24 @@ export const useDeleteGathering = (gatheringId: number, options?: UseMutationOpt
     ...options,
     onSuccess: async (data, variables, onMutateResult, context) => {
       await invalidateServerCache(GATHERING_TAGS.all);
+
+      // 삭제된 모임의 detail/applicationStatus는 재요청 대상이 아니므로 캐시에서 완전히 제거
+      queryClient.removeQueries({ queryKey: gatheringKeys.detail(gatheringId), exact: true });
+      queryClient.removeQueries({ queryKey: gatheringKeys.applicationStatus(gatheringId), exact: true });
+
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: gatheringKeys.all }),
+        // 목록류(main/list/categories/drafts)는 최신 상태 반영 위해 invalidate 유지,
+        // detail/applicationStatus는 위에서 이미 제거했으므로 제외
+        queryClient.invalidateQueries({
+          queryKey: gatheringKeys.all,
+          predicate: (query) => {
+            const [, resource] = query.queryKey;
+            return resource !== 'detail' && resource !== 'applicationStatus';
+          },
+        }),
         queryClient.invalidateQueries({ queryKey: ['memberships'] }),
+        // 삭제된 모임에 걸린 신청 내역도 더는 유효하지 않으므로 함께 무효화
+        queryClient.invalidateQueries({ queryKey: applicationKeys.all }),
       ]);
       options?.onSuccess?.(data, variables, onMutateResult, context);
     },

@@ -14,6 +14,7 @@ import { OverlayProvider } from '@/providers/OverlayProvider';
 import { FooterWrapper } from '@/components/Footer/FooterWrapper';
 import { ToastProvider } from '@/components/ui/Toast/ToastProvider';
 import { JsonLd } from '@/components/seo/JsonLd';
+import { isMswEnabled } from '@/lib/msw';
 import {
   SITE_NAME,
   SITE_TITLE_DEFAULT,
@@ -28,7 +29,7 @@ import {
 
 import type { Metadata } from 'next';
 
-const shouldUseSerwist = process.env.NODE_ENV === 'production' || process.env.NEXT_PUBLIC_MSW_ENABLED !== 'true';
+const shouldUseSerwist = !isMswEnabled;
 
 export const generateMetadata = async (): Promise<Metadata> => {
   const siteUrl = getSiteUrl();
