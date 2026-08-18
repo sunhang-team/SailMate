@@ -17,11 +17,7 @@ import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import { useToastStore } from '@/components/ui/Toast/useToastStore';
 import { gatheringQueries, useUpdateGathering } from '@/api/gatherings/queries';
-import {
-  createInProgressDateRefinementSchema,
-  gatheringFormBaseSchema,
-  gatheringUpdateFormSchema,
-} from '@/api/gatherings/schemas';
+import { gatheringUpdateFormSchema } from '@/api/gatherings/schemas';
 import { ImageUpload } from '@/app/gatherings/_gathering-form-components/ImageUpload';
 import { TagInput } from '@/app/gatherings/_gathering-form-components/TagInput';
 import { WeeklyPlanForm } from '@/app/gatherings/_gathering-form-components/WeeklyPlanForm';
@@ -29,16 +25,15 @@ import { GATHERING_TYPES } from '@/constants/gathering';
 import { cn } from '@/lib/cn';
 import { getTotalWeeks } from '@/lib/formatGatheringDate';
 
-import type { GatheringForm, GatheringStatus } from '@/api/gatherings/types';
+import type { GatheringForm } from '@/api/gatherings/types';
 
-const RotatingArrow = ({ isInProgressEdit }: { isInProgressEdit: boolean }) => {
+const RotatingArrow = () => {
   const { isOpen } = useDropdown();
   return (
     <ArrowIcon
       className={cn(
         'size-4 rotate-90 transition-transform duration-200 md:size-6 lg:size-7',
         isOpen ? '-rotate-90' : '',
-        isInProgressEdit && 'text-gray-400',
       )}
     />
   );
@@ -61,15 +56,6 @@ const CategoryTriggerBorder = ({ children }: { children: ReactNode }) => {
 
 const DATE_FIELDS = ['recruitDeadline', 'startDate', 'endDate'] as const;
 
-interface RequiredMarkProps {
-  isInProgressEdit: boolean;
-}
-
-const RequiredMark = ({ isInProgressEdit }: RequiredMarkProps) => {
-  if (!isInProgressEdit) return null;
-  return <span className='text-small-02-r lg:text-small-01-r font-normal text-gray-400'>(수정 불가)</span>;
-};
-
 const TYPE_META = {
   스터디: { label: '스터디', subtitle: '함께 학습하고 성장해요', Icon: StudyIcon },
   프로젝트: { label: '프로젝트', subtitle: '함께 만들고 완성해요', Icon: ProjectIcon },
@@ -78,13 +64,11 @@ const TYPE_META = {
 interface EditGatheringFormProps {
   gatheringId: number;
   initialValues: Partial<GatheringForm>;
-  gatheringStatus: GatheringStatus;
 }
 
-export function EditGatheringForm({ gatheringId, initialValues, gatheringStatus }: EditGatheringFormProps) {
+export function EditGatheringForm({ gatheringId, initialValues }: EditGatheringFormProps) {
   const router = useRouter();
   const showToast = useToastStore((state) => state.showToast);
-  const isInProgressEdit = gatheringStatus === 'IN_PROGRESS';
 
   const { data: categoriesData } = useSuspenseQuery(gatheringQueries.categories());
   const categories = categoriesData.categories;
@@ -92,18 +76,6 @@ export function EditGatheringForm({ gatheringId, initialValues, gatheringStatus 
     () => Object.fromEntries(categories.map((c) => [c.id, { label: c.name }])) as Record<number, { label: string }>,
     [categories],
   );
-
-  const schema = useMemo(() => {
-    if (isInProgressEdit) {
-      return gatheringFormBaseSchema.partial().and(
-        createInProgressDateRefinementSchema({
-          recruitDeadline: initialValues?.recruitDeadline ?? '',
-          startDate: initialValues?.startDate ?? '',
-        }),
-      );
-    }
-    return gatheringUpdateFormSchema;
-  }, [isInProgressEdit, initialValues?.recruitDeadline, initialValues?.startDate]);
 
   const {
     register,
@@ -113,9 +85,7 @@ export function EditGatheringForm({ gatheringId, initialValues, gatheringStatus 
     trigger,
     formState: { errors, touchedFields, isValid },
   } = useForm<GatheringForm>({
-    // schema는 status(RECRUITING/IN_PROGRESS)에 따라 둘 중 하나로 바뀌지만
-    // 둘 다 GatheringForm 필드의 부분집합만 optional로 검증하므로 폼 타입과 안전하게 호환됨
-    resolver: zodResolver(schema) as Resolver<GatheringForm>,
+    resolver: zodResolver(gatheringUpdateFormSchema) as Resolver<GatheringForm>,
     mode: 'onChange',
     defaultValues: {
       categoryIds: [],
@@ -162,14 +132,7 @@ export function EditGatheringForm({ gatheringId, initialValues, gatheringStatus 
       <Card className='hover:shadow-02 shadow-02 flex flex-col gap-10 border-none p-6 py-10 md:gap-14 md:p-10 md:py-14 lg:gap-20 lg:p-14 lg:py-18'>
         {/* 모임 유형 */}
         <section className='flex flex-col gap-3'>
-          <p
-            className={cn(
-              'text-small-01-sb md:text-body-01-sb lg:text-h5-sb text-gray-800',
-              isInProgressEdit && 'text-gray-400',
-            )}
-          >
-            모임 유형 <RequiredMark isInProgressEdit={isInProgressEdit} />
-          </p>
+          <p className='text-small-01-sb md:text-body-01-sb lg:text-h5-sb text-gray-800'>모임 유형</p>
           <Controller
             name='type'
             control={control}
@@ -185,13 +148,10 @@ export function EditGatheringForm({ gatheringId, initialValues, gatheringStatus 
                         'flex h-40 items-center gap-6 rounded-lg px-8 shadow-none hover:shadow-none',
                         'h-21.25',
                         'md:h-40 md:w-auto md:flex-1 md:gap-6 md:px-8',
-                        isInProgressEdit ? 'cursor-not-allowed opacity-60' : 'cursor-pointer',
+                        'cursor-pointer',
                         isSelected ? 'border-focus-100 bg-blue-50' : 'border-gray-300 bg-gray-100',
                       )}
-                      onClick={() => {
-                        if (isInProgressEdit) return;
-                        field.onChange(type);
-                      }}
+                      onClick={() => field.onChange(type)}
                     >
                       <CheckIcon
                         className={cn('size-8 md:size-10 lg:size-14', isSelected ? 'text-blue-300' : 'text-gray-300')}
@@ -230,33 +190,18 @@ export function EditGatheringForm({ gatheringId, initialValues, gatheringStatus 
 
         {/* 기본 정보 */}
         <section className='flex flex-col gap-6 md:gap-8'>
-          <p
-            className={cn(
-              'text-small-01-sb md:text-body-01-sb lg:text-h5-sb text-gray-800',
-              isInProgressEdit && 'text-gray-400',
-            )}
-          >
-            기본 정보 <RequiredMark isInProgressEdit={isInProgressEdit} />
-          </p>
+          <p className='text-small-01-sb md:text-body-01-sb lg:text-h5-sb text-gray-800'>기본 정보</p>
           <div className='flex flex-col gap-6 lg:flex-row lg:gap-4'>
             <div className='flex w-full flex-col gap-1 lg:flex-1'>
               <div className='relative'>
                 <Input
                   label={
-                    <span
-                      className={cn(
-                        'text-small-02-m md:text-body-02-m lg:text-body-01-m text-gray-800',
-                        isInProgressEdit && 'text-gray-400',
-                      )}
-                    >
-                      모임 제목
-                    </span>
+                    <span className='text-small-02-m md:text-body-02-m lg:text-body-01-m text-gray-800'>모임 제목</span>
                   }
                   maxLength={30}
                   placeholder='제목을 입력하세요'
                   error={errors.title?.message}
                   hideErrorMessage
-                  disabled={isInProgressEdit}
                   {...register('title')}
                   className={cn(
                     'text-small-02-r md:text-body-02-r lg:text-body-01-r bg-gray-0 pr-12 disabled:text-gray-400 lg:px-7 lg:py-5 lg:pr-20',
@@ -282,7 +227,6 @@ export function EditGatheringForm({ gatheringId, initialValues, gatheringStatus 
                 const MAX_CATEGORIES = 3;
 
                 const toggleCategory = (id: number) => {
-                  if (isInProgressEdit) return;
                   if (selected.includes(id)) {
                     field.onChange(selected.filter((v) => v !== id));
                     return;
@@ -292,43 +236,19 @@ export function EditGatheringForm({ gatheringId, initialValues, gatheringStatus 
                 };
 
                 return (
-                  <div
-                    className={cn(
-                      'flex w-full flex-col gap-1.5 lg:flex-1',
-                      isInProgressEdit && 'pointer-events-none opacity-60',
-                    )}
-                  >
-                    <p
-                      className={cn(
-                        'text-small-02-m md:text-body-02-m lg:text-body-01-m text-gray-800',
-                        isInProgressEdit && 'text-gray-400',
-                      )}
-                    >
-                      카테고리
-                    </p>
+                  <div className='flex w-full flex-col gap-1.5 lg:flex-1'>
+                    <p className='text-small-02-m md:text-body-02-m lg:text-body-01-m text-gray-800'>카테고리</p>
                     <Dropdown className='flex w-full flex-col'>
                       <Dropdown.Trigger>
                         <CategoryTriggerBorder>
                           <div className='flex items-center gap-2'>
-                            <CategoryIcon
-                              className={cn('size-4 md:size-6 lg:size-7', isInProgressEdit && 'text-gray-400')}
-                            />
+                            <CategoryIcon className='size-4 md:size-6 lg:size-7' />
                             {selected.length > 0 ? (
                               <div className='flex items-center gap-1'>
-                                <span
-                                  className={cn(
-                                    'text-small-02-sb md:text-body-02-sb lg:text-body-01-sb text-gray-900',
-                                    isInProgressEdit && 'text-gray-400',
-                                  )}
-                                >
+                                <span className='text-small-02-sb md:text-body-02-sb lg:text-body-01-sb text-gray-900'>
                                   카테고리({selected.length})
                                 </span>
-                                <span
-                                  className={cn(
-                                    'text-small-02-m md:text-body-02-m lg:text-body-01-m text-gray-900',
-                                    isInProgressEdit && 'text-gray-400',
-                                  )}
-                                >
+                                <span className='text-small-02-m md:text-body-02-m lg:text-body-01-m text-gray-900'>
                                   {selected.map((id) => categoryMeta[id]?.label).join(', ')}
                                 </span>
                               </div>
@@ -338,7 +258,7 @@ export function EditGatheringForm({ gatheringId, initialValues, gatheringStatus 
                               </span>
                             )}
                           </div>
-                          <RotatingArrow isInProgressEdit={isInProgressEdit} />
+                          <RotatingArrow />
                         </CategoryTriggerBorder>
                       </Dropdown.Trigger>
                       <Dropdown.Menu
@@ -378,20 +298,12 @@ export function EditGatheringForm({ gatheringId, initialValues, gatheringStatus 
             <div className='relative'>
               <Input
                 label={
-                  <span
-                    className={cn(
-                      'text-small-02-m md:text-body-02-m lg:text-body-01-m text-gray-800',
-                      isInProgressEdit && 'text-gray-400',
-                    )}
-                  >
-                    한 줄 소개
-                  </span>
+                  <span className='text-small-02-m md:text-body-02-m lg:text-body-01-m text-gray-800'>한 줄 소개</span>
                 }
                 maxLength={50}
                 placeholder='소개를 적어주세요'
                 error={errors.shortDescription?.message}
                 hideErrorMessage
-                disabled={isInProgressEdit}
                 {...register('shortDescription')}
                 className='text-small-02-r md:text-body-02-r lg:text-body-01-r bg-gray-0 h-10.75 pr-12 disabled:text-gray-400 md:h-14.5 lg:h-18 lg:px-7 lg:py-5 lg:pr-20'
               />
@@ -411,12 +323,7 @@ export function EditGatheringForm({ gatheringId, initialValues, gatheringStatus 
             <div className='relative'>
               <Input
                 label={
-                  <span
-                    className={cn(
-                      'text-small-02-m md:text-body-02-m lg:text-body-01-m text-gray-800',
-                      isInProgressEdit && 'text-gray-400',
-                    )}
-                  >
+                  <span className='text-small-02-m md:text-body-02-m lg:text-body-01-m text-gray-800'>
                     모임 최종 목표
                   </span>
                 }
@@ -424,7 +331,6 @@ export function EditGatheringForm({ gatheringId, initialValues, gatheringStatus 
                 placeholder='모임의 최종 목표를 적어주세요'
                 error={errors.goal?.message}
                 hideErrorMessage
-                disabled={isInProgressEdit}
                 {...register('goal')}
                 className='text-small-02-r md:text-body-02-r lg:text-body-01-r bg-gray-0 h-10.75 pr-14 disabled:text-gray-400 md:h-14.5 lg:h-18 lg:px-7 lg:py-5 lg:pr-24'
               />
@@ -440,13 +346,8 @@ export function EditGatheringForm({ gatheringId, initialValues, gatheringStatus 
           </div>
 
           {/* 태그 */}
-          <div className={cn('flex flex-col gap-1', isInProgressEdit && 'pointer-events-none opacity-60')}>
-            <p
-              className={cn(
-                'text-small-02-m md:text-body-02-m lg:text-body-01-m flex items-center gap-1 text-gray-800',
-                isInProgressEdit && 'text-gray-400',
-              )}
-            >
+          <div className='flex flex-col gap-1'>
+            <p className='text-small-02-m md:text-body-02-m lg:text-body-01-m flex items-center gap-1 text-gray-800'>
               태그
             </p>
             <Controller
@@ -468,14 +369,7 @@ export function EditGatheringForm({ gatheringId, initialValues, gatheringStatus 
       <Card className='hover:shadow-02 shadow-02 flex flex-col gap-10 border-none p-6 py-10 md:gap-14 md:p-10 md:py-14 lg:gap-20 lg:p-14 lg:py-18'>
         {/* 모집 정보 */}
         <section className='flex flex-col gap-4'>
-          <p
-            className={cn(
-              'text-small-01-sb md:text-body-01-sb lg:text-h5-sb text-gray-800',
-              isInProgressEdit && 'text-gray-400',
-            )}
-          >
-            모집 정보 <RequiredMark isInProgressEdit={isInProgressEdit} />
-          </p>
+          <p className='text-small-01-sb md:text-body-01-sb lg:text-h5-sb text-gray-800'>모집 정보</p>
 
           <div className='flex w-full flex-col gap-4 md:flex-row'>
             <div className='flex w-full flex-col gap-1.5'>
@@ -484,18 +378,10 @@ export function EditGatheringForm({ gatheringId, initialValues, gatheringStatus 
                 min={2}
                 max={10}
                 label={
-                  <span
-                    className={cn(
-                      'text-small-02-m md:text-body-02-m lg:text-body-01-m text-gray-800',
-                      isInProgressEdit && 'text-gray-400',
-                    )}
-                  >
-                    모집 인원
-                  </span>
+                  <span className='text-small-02-m md:text-body-02-m lg:text-body-01-m text-gray-800'>모집 인원</span>
                 }
                 placeholder='모집 인원을 적어주세요'
                 error={errors.maxMembers?.message}
-                disabled={isInProgressEdit}
                 {...register('maxMembers', { valueAsNumber: true })}
                 className='text-small-02-r md:text-body-02-r lg:text-body-01-r bg-gray-0 h-10.75 disabled:text-gray-400 md:h-14.5 lg:h-18 lg:px-7 lg:py-5'
               />
@@ -506,14 +392,7 @@ export function EditGatheringForm({ gatheringId, initialValues, gatheringStatus 
               control={control}
               render={({ field }) => (
                 <div className='flex w-full flex-col gap-1.5'>
-                  <p
-                    className={cn(
-                      'text-small-02-m md:text-body-02-m lg:text-body-01-m text-gray-800',
-                      isInProgressEdit && 'text-gray-400',
-                    )}
-                  >
-                    모집 마감 일정
-                  </p>
+                  <p className='text-small-02-m md:text-body-02-m lg:text-body-01-m text-gray-800'>모집 마감 일정</p>
                   <DatePicker
                     value={field.value}
                     onChange={(value) => {
@@ -524,7 +403,6 @@ export function EditGatheringForm({ gatheringId, initialValues, gatheringStatus 
                     onBlur={field.onBlur}
                     placeholder='모집 마감 일정을 선택해주세요'
                     error={errors.recruitDeadline?.message}
-                    disabled={isInProgressEdit}
                     className='bg-gray-0 h-10.75 md:h-14.5 lg:h-18 lg:px-7 lg:py-5'
                   />
                 </div>
@@ -535,14 +413,7 @@ export function EditGatheringForm({ gatheringId, initialValues, gatheringStatus 
 
         {/* 모임 일정 */}
         <section className='flex flex-col gap-4'>
-          <p className='text-small-01-sb md:text-body-01-sb lg:text-h5-sb text-gray-800'>
-            모임 일정
-            {isInProgressEdit && (
-              <span className='text-small-02-r lg:text-small-01-r ml-1 font-normal text-gray-400'>
-                (종료일만 수정 가능)
-              </span>
-            )}
-          </p>
+          <p className='text-small-01-sb md:text-body-01-sb lg:text-h5-sb text-gray-800'>모임 일정</p>
 
           <div className='flex flex-col gap-4 md:flex-row'>
             <Controller
@@ -550,14 +421,7 @@ export function EditGatheringForm({ gatheringId, initialValues, gatheringStatus 
               control={control}
               render={({ field }) => (
                 <div className='flex w-full flex-col gap-1.5'>
-                  <p
-                    className={cn(
-                      'text-small-02-m md:text-body-02-m lg:text-body-01-m text-gray-800',
-                      isInProgressEdit && 'text-gray-400',
-                    )}
-                  >
-                    모임 시작일
-                  </p>
+                  <p className='text-small-02-m md:text-body-02-m lg:text-body-01-m text-gray-800'>모임 시작일</p>
                   <DatePicker
                     value={field.value}
                     onChange={(value) => {
@@ -568,7 +432,6 @@ export function EditGatheringForm({ gatheringId, initialValues, gatheringStatus 
                     onBlur={field.onBlur}
                     placeholder='모임 시작일을 선택해주세요'
                     error={errors.startDate?.message}
-                    disabled={isInProgressEdit}
                     className='bg-gray-0 h-10.75 md:h-14.5 lg:h-18 lg:px-7 lg:py-5'
                   />
                 </div>
@@ -610,10 +473,7 @@ export function EditGatheringForm({ gatheringId, initialValues, gatheringStatus 
       <Card className='hover:shadow-02 shadow-02 flex flex-col gap-6 border-none p-6 py-10 md:gap-8 md:p-10 md:py-14 lg:p-14 lg:py-18'>
         {/* 모임 세부 정보 */}
         <section className='flex flex-col gap-6 md:gap-8'>
-          <p className='text-small-01-sb md:text-body-01-sb lg:text-h5-sb text-gray-800'>
-            모임 세부 정보
-            <span className='text-small-02-r lg:text-small-01-r ml-1 font-normal text-gray-400'>(수정 가능)</span>
-          </p>
+          <p className='text-small-01-sb md:text-body-01-sb lg:text-h5-sb text-gray-800'>모임 세부 정보</p>
 
           <WeeklyPlanForm control={control} register={register} errors={errors} totalWeeks={totalWeeks} />
 

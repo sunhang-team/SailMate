@@ -8,6 +8,7 @@ import { gatheringQueries } from '@/api/gatherings/queries';
 import { mapGatheringDetailToFormValues } from '@/app/gatherings/new/CreateGatheringFunnel/mapGatheringDetailToFormValues';
 
 import { EditGatheringForm } from '../EditGatheringForm';
+import { InProgressEditForm } from '../InProgressEditForm';
 
 import type { Category } from '@/api/gatherings/types';
 
@@ -36,5 +37,9 @@ export function EditGatheringContent({ gatheringId }: EditGatheringContentProps)
 
   if (isCompleted) return null;
 
-  return <EditGatheringForm gatheringId={gatheringId} initialValues={initialValues} gatheringStatus={detail.status} />;
+  if (detail.status === 'IN_PROGRESS') {
+    return <InProgressEditForm gatheringId={gatheringId} initialValues={initialValues} />;
+  }
+
+  return <EditGatheringForm gatheringId={gatheringId} initialValues={initialValues} />;
 }
