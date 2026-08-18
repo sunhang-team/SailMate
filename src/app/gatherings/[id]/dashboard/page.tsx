@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
-import { fetchGatheringDetail } from '@/api/gatherings';
+import { fetchCachedGatheringDetail } from '@/api/gatherings/server';
 import { SuspenseBoundary } from '@/components/SuspenseBoundary';
 import { getUserIdFromToken } from '@/lib/getUserIdFromToken';
 import { isMswEnabled } from '@/lib/msw';
@@ -38,15 +38,13 @@ export default async function DashboardPage({ params, searchParams }: DashboardP
   const userId = getUserIdFromToken(accessToken);
 
   // accessToken 없지만 refreshToken 있으면 클라이언트에서 리프레시 처리 → 검증 스킵
-  if (userId !== null) {
+  if (userId !== null && !isMswEnabled) {
     try {
-      const gathering = await fetchGatheringDetail(gatheringId);
+      const gathering = await fetchCachedGatheringDetail(gatheringId);
       const isMember = gathering.members.some((m) => m.userId === userId);
       if (!isMember) redirect(`/gatherings/${gatheringId}`);
     } catch {
-      // TEMP: 백엔드 재배포 전까지 Vercel production MSW 배포에서도 대시보드 시연을 허용한다.
-      // MSW 환경 — Next.js 16 + Turbopack에서 msw/node가 서버 fetch를 못 잡는 경우가 있음.
-      if (!isMswEnabled) redirect(`/gatherings/${gatheringId}`);
+      redirect(`/gatherings/${gatheringId}`);
     }
   } else if (!hasRefreshToken && !isMswEnabled) {
     redirect(`/gatherings/${gatheringId}`);

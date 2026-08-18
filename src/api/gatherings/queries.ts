@@ -10,7 +10,6 @@ import {
   fetchCategories,
   getApplicationStatus,
   fetchMainGatherings,
-  fetchGatheringDetail,
   getGatheringDetail,
   getGatherings,
   createGathering,
@@ -24,6 +23,7 @@ import {
   GATHERING_TAGS,
   getMainGatherings,
 } from './index';
+import { fetchCachedGatheringDetail } from './server';
 
 import type { UseMutationOptions } from '@tanstack/react-query';
 import type {
@@ -69,7 +69,7 @@ export const gatheringQueries = {
   detail: (gatheringId: number) =>
     queryOptions({
       queryKey: gatheringKeys.detail(gatheringId),
-      queryFn: () => (isServer ? fetchGatheringDetail(gatheringId) : getGatheringDetail(gatheringId)),
+      queryFn: () => (isServer ? fetchCachedGatheringDetail(gatheringId) : getGatheringDetail(gatheringId)),
       // 404는 리소스가 실제로 없다는 확정적 응답이므로 재시도하지 않음 (삭제 직후 잔여 구독자로 인한 재요청 낭비 방지)
       retry: (failureCount, error) => {
         if (axios.isAxiosError(error) && error.response?.status === 404) return false;
