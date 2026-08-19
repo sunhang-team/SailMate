@@ -2,6 +2,7 @@ import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
 
 import { gatheringQueries } from '@/api/gatherings/queries';
 import { getQueryClient } from '@/lib/getQueryClient';
+import { isMswEnabled } from '@/lib/msw';
 
 import { AnchorTabNav } from '../AnchorTabNav';
 import { FloatingActionBar } from '../ApplySection/FloatingActionBar';
@@ -17,7 +18,9 @@ interface GatheringDetailContainerProps {
 export async function GatheringDetailContainer({ gatheringId }: GatheringDetailContainerProps) {
   const queryClient = getQueryClient();
 
-  await queryClient.prefetchQuery(gatheringQueries.detail(gatheringId));
+  if (!isMswEnabled) {
+    await queryClient.prefetchQuery(gatheringQueries.detail(gatheringId));
+  }
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>

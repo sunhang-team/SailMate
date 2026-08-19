@@ -2,9 +2,10 @@
 
 import { useRouter } from 'next/navigation';
 
-import { useLogout } from '@/api/auth/queries';
+import { useLogin, useLogout } from '@/api/auth/queries';
 import { useAuth } from '@/hooks/useAuth';
 import { cn } from '@/lib/cn';
+import { isMswEnabled } from '@/lib/msw';
 import { revokeFcmTokenOnLogout } from '@/lib/pushNotification';
 import { Dropdown } from '@/components/ui/Dropdown';
 import { NotificationDropdown } from './NotificationDropdown';
@@ -14,6 +15,12 @@ import { Button } from '@/components/ui/Button';
 export function AuthSection() {
   const router = useRouter();
   const { user, isLoggedIn, isLoading } = useAuth();
+
+  const { mutate: loginAsGuest, isPending: isGuestLoginPending } = useLogin({
+    onSuccess: () => {
+      router.refresh();
+    },
+  });
 
   const { mutate: logout, isPending: isLogoutPending } = useLogout({
     onSuccess: () => {
@@ -25,11 +32,20 @@ export function AuthSection() {
   const handleMoveLogin = () => router.push('/login');
   const handleMoveRegister = () => router.push('/register');
   const handleMoveMyPage = () => router.push('/my');
+  const handleGuestLogin = () => loginAsGuest({ email: 'tester@sailmate.dev', password: 'password123' });
 
   if (isLoading) {
     return <div className='h-[42px] w-[154px]' aria-hidden />;
   }
   if (!isLoggedIn) {
+    if (isMswEnabled) {
+      return (
+        <Button variant='primary' size='join-sm' onClick={handleGuestLogin} disabled={isGuestLoginPending}>
+          체험하기
+        </Button>
+      );
+    }
+
     return (
       <div className='flex items-center gap-2 lg:gap-2'>
         <Button variant='login-outline' size='login-sm' onClick={handleMoveLogin}>
