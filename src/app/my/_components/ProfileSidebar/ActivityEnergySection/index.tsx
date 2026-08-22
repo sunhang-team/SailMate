@@ -3,6 +3,10 @@
 import { IllustrationIcon, InfoIcon } from '@/components/ui/Icon';
 import { ProgressBar } from '@/components/ui/Progress';
 import { Tag } from '@/components/ui/Tag';
+import { Tooltip } from '@/components/ui/Tooltip';
+import { getEnergyGradeVariant } from '@/lib/energyGrade';
+
+import { ActivityEnergyInfoTooltip } from './ActivityEnergyInfoTooltip';
 
 interface ActivityEnergySectionProps {
   reputationScore: number;
@@ -13,18 +17,25 @@ interface ActivityEnergySectionProps {
 
 export function ActivityEnergySection({ reputationScore, reputationLabel, variant }: ActivityEnergySectionProps) {
   const labelText = reputationLabel || '참여 메이트';
+  const gradeVariant = getEnergyGradeVariant(reputationScore);
 
   if (variant === 'tablet') {
     return (
       <div className='flex flex-col pb-7'>
-        <div className='text-body-02-sb md:text-body-01-sb mb-5 flex items-center gap-2 text-gray-900 md:mb-6'>
+        <div className='text-body-01-sb md:text-body-01-sb mb-5 flex items-center gap-2 text-gray-900 md:mb-6'>
           <span>내 활동 에너지</span>
-          <InfoIcon className='size-4 shrink-0 text-gray-400 md:size-6' aria-label='활동 에너지 안내' />
+          <Tooltip
+            triggerLabel='활동 에너지 안내'
+            trigger={<InfoIcon className='size-4 shrink-0 text-gray-400 md:size-6' aria-hidden />}
+            panelClassName='h-[min(464px,calc(100vh-2rem))] w-[min(442px,calc(100vw-2rem))] overflow-y-auto'
+          >
+            <ActivityEnergyInfoTooltip />
+          </Tooltip>
         </div>
         <div className='mb-2 flex items-center justify-between gap-2'>
           <div className='flex items-center gap-2'>
             <span className='text-body-02-sb md:text-body-01-sb text-blue-300'>{reputationScore}점</span>
-            <IllustrationIcon variant='fire' className='size-5 shrink-0 md:size-7' aria-hidden />
+            <IllustrationIcon variant={gradeVariant} className='size-5 shrink-0 md:size-7' aria-hidden />
           </div>
           <Tag variant='mate' className='shrink-0'>
             {labelText}
@@ -39,12 +50,18 @@ export function ActivityEnergySection({ reputationScore, reputationLabel, varian
     <div className='border-gray-150 mt-6 flex flex-col border-t pt-7'>
       <div className='text-body-01-sb mb-6 flex items-center gap-2 text-gray-900'>
         <span>내 활동 에너지</span>
-        <InfoIcon className='size-6 shrink-0 text-gray-400' aria-label='활동 에너지 안내' />
+        <Tooltip
+          triggerLabel='활동 에너지 안내'
+          trigger={<InfoIcon className='size-6 shrink-0 text-gray-400' aria-hidden />}
+          panelClassName='h-[min(464px,calc(100vh-2rem))] w-[min(442px,calc(100vw-2rem))] overflow-y-auto'
+        >
+          <ActivityEnergyInfoTooltip />
+        </Tooltip>
       </div>
       <div className='mb-2 flex items-center justify-between gap-2'>
         <div className='flex items-center gap-2'>
           <span className='text-h5-sb text-blue-300'>{reputationScore}점</span>
-          <IllustrationIcon variant='fire' className='size-8 shrink-0' aria-hidden />
+          <IllustrationIcon variant={gradeVariant} className='size-8 shrink-0' aria-hidden />
         </div>
         <Tag variant='mate' className='shrink-0'>
           {labelText}
