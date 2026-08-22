@@ -21,7 +21,7 @@ export function Toggle({ checked, onChange, disabled, className, 'aria-label': a
       onClick={() => onChange(!checked)}
       className={cn(
         'relative h-7 w-12 shrink-0 rounded-full transition-colors disabled:cursor-not-allowed disabled:opacity-50',
-        checked ? 'bg-gradient-primary' : 'bg-gray-300',
+        checked ? 'bg-blue-300' : 'bg-gray-300',
         className,
       )}
     >

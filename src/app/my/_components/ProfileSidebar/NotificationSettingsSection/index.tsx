@@ -2,7 +2,6 @@
 
 import { useEffect } from 'react';
 
-import { AlarmIcon, AlarmOnIcon } from '@/components/ui/Icon';
 import { useToastStore } from '@/components/ui/Toast/useToastStore';
 import { Toggle } from '@/components/ui/Toggle';
 import { usePushNotificationSetting } from '@/hooks/usePushNotificationSetting';
@@ -39,12 +38,9 @@ export function NotificationSettingsSection({ variant }: NotificationSettingsSec
   if (variant === 'tablet') {
     return (
       <div className='border-gray-150 border-t pt-6 md:pt-7'>
-        <p className='text-body-02-sb md:text-body-01-sb mb-5 text-gray-900 md:mb-6'>알림 설정</p>
+        <p className='text-body-01-sb md:text-body-01-sb mb-5 text-gray-900 md:mb-6'>알림 설정</p>
         <div className='flex items-center justify-between gap-2'>
-          <div className='flex items-center gap-2 text-gray-800'>
-            {isEnabled ? <AlarmOnIcon className='size-5' /> : <AlarmIcon className='size-5' />}
-            <span className='text-small-02-m md:text-small-01-m'>푸시 알림 받기</span>
-          </div>
+          <span className='text-body-02-m md:text-body-01-m text-gray-800'>푸시 알림 받기</span>
           <Toggle
             checked={isEnabled}
             onChange={handleChange}
@@ -61,10 +57,7 @@ export function NotificationSettingsSection({ variant }: NotificationSettingsSec
     <div className='border-gray-150 mt-6 border-t pt-7'>
       <p className='text-body-01-sb mb-6 text-gray-900'>알림 설정</p>
       <div className='flex items-center justify-between gap-2'>
-        <div className='flex items-center gap-2 text-gray-800'>
-          {isEnabled ? <AlarmOnIcon className='size-6' /> : <AlarmIcon className='size-6' />}
-          <span className='text-body-02-m'>푸시 알림 받기</span>
-        </div>
+        <span className='text-body-02-m text-gray-800'>푸시 알림 받기</span>
         <Toggle
           checked={isEnabled}
           onChange={handleChange}

@@ -26,20 +26,36 @@ export const useFCMToken = (enabled: boolean): UseFCMTokenResult => {
   const [isSupported, setIsSupported] = useState<boolean | null>(null);
   const [error, setError] = useState<Error | null>(null);
 
-  const requestPermission = () => Notification.requestPermission();
+  // Notification이 아예 없는 환경(구형 iOS Safari, Safari 사설/iframe 컨텍스트, 일부 인앱 웹뷰)에서
+  // 호출하면 그대로 터지므로 존재 여부를 먼저 확인한다.
+  const requestPermission = (): Promise<NotificationPermission> =>
+    typeof Notification === 'undefined' ? Promise.resolve('denied') : Notification.requestPermission();
+
+  // 지원 여부는 enabled와 무관하게 마운트 시 한 번만 판별한다.
+  // 과거에는 이 판별을 enabled(=권한이 이미 granted된 상태)에 종속된 이펙트 안에서만 했는데,
+  // 그 경우 미지원 브라우저에서는 토글을 켜기 전까지 isSupported가 계속 null로 남아
+  // 섹션이 숨겨지지 않고, 토글을 켜는 순간 requestPermission 호출이 그대로 실패했다.
+  useEffect(() => {
+    let cancelled = false;
+
+    getFirebaseMessaging().then((messaging) => {
+      if (!cancelled) setIsSupported(messaging !== null);
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
-    if (!enabled) return;
+    if (!enabled || !isSupported) return;
 
     let unsubscribe: (() => void) | undefined;
     let cancelled = false;
 
     const subscribe = async () => {
       const messaging = await getFirebaseMessaging();
-      if (cancelled) return;
-
-      setIsSupported(messaging !== null);
-      if (!messaging) return;
+      if (cancelled || !messaging) return;
 
       const vapidKey = process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY;
       if (!vapidKey) {
@@ -67,7 +83,7 @@ export const useFCMToken = (enabled: boolean): UseFCMTokenResult => {
       cancelled = true;
       unsubscribe?.();
     };
-  }, [enabled]);
+  }, [enabled, isSupported]);
 
   return { token: enabled ? token : null, isSupported, error, requestPermission };
 };
