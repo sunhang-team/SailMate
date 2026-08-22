@@ -6,7 +6,7 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { todoKeys, useDeleteTodo, useUpdateTodo } from '@/api/todos/queries';
 import { Dropdown } from '@/components/ui/Dropdown';
-import { CheckIcon, MoreIcon, IllustrationIcon, CloseIcon } from '@/components/ui/Icon';
+import { CheckIcon, MoreIcon, IllustrationIcon } from '@/components/ui/Icon';
 import { cn } from '@/lib/cn';
 
 import type { MyTodoListResponse, Todo } from '@/api/todos/types';
@@ -15,15 +15,14 @@ interface TodoItemProps {
   gatheringId: number;
   week: number;
   todo: Todo;
+  streakDays: number;
 }
 
 interface OptimisticContext {
   prev?: MyTodoListResponse;
 }
 
-const STREAK_PLACEHOLDER = 3;
-
-export function TodoItem({ gatheringId, week, todo }: TodoItemProps) {
+export function TodoItem({ gatheringId, week, todo, streakDays }: TodoItemProps) {
   const queryClient = useQueryClient();
 
   const queryKey = useMemo(() => todoKeys.myList(gatheringId, { week }), [gatheringId, week]);
@@ -153,14 +152,10 @@ export function TodoItem({ gatheringId, week, todo }: TodoItemProps) {
         )}
       </div>
 
-      {todo.isCompleted && (
-        <div className='flex items-center gap-1 text-gray-600'>
-          <span aria-hidden>
-            <IllustrationIcon variant='fire' size={24} className='md:size-8' />
-          </span>
-          <span className='text-small-02-r md:text-body-02-r'>
-            <CloseIcon size={12} className='md:size-4' /> {STREAK_PLACEHOLDER}
-          </span>
+      {todo.isCompleted && streakDays > 0 && (
+        <div className='bg-gray-150 flex items-center gap-1 rounded-lg px-6 py-3'>
+          <IllustrationIcon variant='fire' size={20} className='md:size-6' aria-hidden />
+          <span className='text-small-02-sb md:text-body-02-sb text-blue-300'>{streakDays}</span>
         </div>
       )}
 
