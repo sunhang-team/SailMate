@@ -58,16 +58,17 @@ export function GatheringActionButtons({ gatheringId, gatheringStatus }: Gatheri
       >
         정보 수정
       </Button>
-      <Button
-        type='button'
-        variant='mypage-edit'
-        size={undefined}
-        onClick={handleDelete}
-        disabled={!canDelete}
-        className='text-small-01-sb md:text-body-02-m h-14 w-32.5 shrink-0 border border-gray-200 bg-white text-gray-700 disabled:opacity-50'
-      >
-        모임 삭제
-      </Button>
+      {canDelete && (
+        <Button
+          type='button'
+          variant='mypage-edit'
+          size={undefined}
+          onClick={handleDelete}
+          className='text-small-01-sb md:text-body-02-m h-14 w-32.5 shrink-0 border border-gray-200 bg-white text-gray-700'
+        >
+          모임 삭제
+        </Button>
+      )}
     </div>
   );
 }
