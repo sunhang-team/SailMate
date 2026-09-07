@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 
 import { EmptyState } from '@/components/EmptyState';
 import { MainGatheringCard } from '@/components/MainGatheringCard';
@@ -10,13 +9,8 @@ import { Pagination } from '@/components/ui/Pagination';
 import { useDeadlineGatherings } from './useDeadlineGatherings';
 
 export function DeadlineGatheringList() {
-  const router = useRouter();
   const { page, setPage, totalPages, visibleGatherings } = useDeadlineGatherings();
   const isEmpty = visibleGatherings.length === 0;
-
-  const handleJoin = (id: number) => {
-    router.push(`/gatherings/${id}?source=recommendation`);
-  };
 
   return (
     <div>
@@ -47,12 +41,7 @@ export function DeadlineGatheringList() {
             <MainGatheringCard
               key={gathering.id}
               gathering={gathering}
-              joinButtonLabel='참여하기'
-              joinButtonClassName=''
-              isJoinDisabled={false}
-              initialFavorite={false}
-              onJoin={() => handleJoin(gathering.id)}
-              className=''
+              href={`/gatherings/${gathering.id}?source=recommendation`}
             />
           ))}
         </div>

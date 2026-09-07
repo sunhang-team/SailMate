@@ -2,8 +2,6 @@
 
 import { startTransition, useEffect, useRef } from 'react';
 
-import { useRouter } from 'next/navigation';
-
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 
 import { EmptyState } from '@/components/EmptyState';
@@ -18,7 +16,6 @@ import { trackGatheringSearch } from '@/lib/analytics/gathering';
 const PAGE_LIMIT = 12;
 
 export function GatheringList() {
-  const router = useRouter();
   const { query, type, categoryIds, sort, status, page, setParams } = useGatheringSearchParams();
 
   const { data } = useSuspenseQuery(
@@ -41,10 +38,6 @@ export function GatheringList() {
     startTransition(() => {
       setParams({ page: newPage }, { history: 'push' });
     });
-  };
-
-  const handleJoin = (id: number) => {
-    router.push(`/gatherings/${id}?source=search`);
   };
 
   // query / category 조합이 변경되어 새 결과가 도착할 때 1회 search 이벤트 발사.
@@ -86,7 +79,11 @@ export function GatheringList() {
       <GatheringFilterBar totalCount={data.totalCount} />
       <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
         {data.gatherings.map((gathering) => (
-          <MainGatheringCard key={gathering.id} gathering={gathering} onJoin={() => handleJoin(gathering.id)} />
+          <MainGatheringCard
+            key={gathering.id}
+            gathering={gathering}
+            href={`/gatherings/${gathering.id}?source=search`}
+          />
         ))}
       </div>
       {data.totalPages > 1 && (

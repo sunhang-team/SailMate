@@ -79,7 +79,7 @@ export function MyTodoSection({ gatheringId }: MyTodoSectionProps) {
       <div className='px-7'>
         <ul className='flex flex-col gap-3'>
           {sortedTodos.map((todo) => (
-            <TodoItem key={todo.id} gatheringId={gatheringId} week={week} todo={todo} />
+            <TodoItem key={todo.id} gatheringId={gatheringId} week={week} todo={todo} streakDays={data.streakDays} />
           ))}
         </ul>
 

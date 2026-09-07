@@ -16,6 +16,9 @@ export const ENERGY_GRADE_LEVELS: EnergyGradeLevel[] = [
 ];
 
 export const getEnergyGradeVariant = (score: number): IllustrationIconVariant => {
+  // 유효하지 않은 점수는 최하 등급으로
+  if (score < 0 || !Number.isFinite(score)) return ENERGY_GRADE_LEVELS[0].variant;
+
   const matched = [...ENERGY_GRADE_LEVELS].reverse().find((level) => score >= level.min);
-  return matched?.variant ?? ENERGY_GRADE_LEVELS[0].variant;
+  return matched!.variant; // score >= 0이면 항상 매칭됨
 };

@@ -1,9 +1,10 @@
+'use client';
+
 import { differenceInDays, startOfDay } from 'date-fns';
 
 import { cn } from '@/lib/cn';
 import { AvatarGroup } from '@/components/ui/AvatarGroup';
 import { GatheringCard } from '@/components/ui/GatheringCard';
-import { ProjectIcon, StudyIcon } from '@/components/ui/Icon';
 import { ProgressBar } from '@/components/ui/Progress';
 import { Tag } from '@/components/ui/Tag';
 
@@ -14,11 +15,6 @@ interface MyGatheringCardProps {
   onClick?: () => void;
   className?: string;
 }
-
-const TYPE_ICON = {
-  스터디: StudyIcon,
-  프로젝트: ProjectIcon,
-} as const;
 
 export function MyGatheringCard({ gathering, members = [], onClick, className }: MyGatheringCardProps) {
   const now = startOfDay(new Date());
@@ -31,20 +27,12 @@ export function MyGatheringCard({ gathering, members = [], onClick, className }:
   const passedDays = differenceInDays(now, startDate);
   const progressRate = totalDays > 0 ? Math.min(100, Math.max(0, Math.floor((passedDays / totalDays) * 100))) : 0;
 
-  const dDayText = dDay > 0 ? `D-${dDay}` : dDay === 0 ? 'D-Day' : `D+${Math.abs(dDay)}`;
+  const goalLabel = dDay > 0 ? `목표 D-${dDay}` : dDay === 0 ? '목표 D-Day' : '목표달성';
 
   return (
     <GatheringCard onClick={onClick} className={cn('flex h-full cursor-pointer flex-col', className)}>
       <GatheringCard.Header className='items-center'>
-        <Tag
-          variant='category'
-          icon={(() => {
-            const Icon = TYPE_ICON[gathering.type as keyof typeof TYPE_ICON] || StudyIcon;
-            return <Icon size={14} className='text-blue-200' />;
-          })()}
-          label={gathering.type}
-          sublabel={gathering.categories.join(', ')}
-        />
+        <Tag variant='category' label={gathering.type} sublabel={gathering.categories.join(', ')} />
         <AvatarGroup max={4} avatars={members.map((m) => ({ id: m.userId, imageUrl: m.profileImage }))} size='sm' />
       </GatheringCard.Header>
       <GatheringCard.Body className='flex-1'>
@@ -63,7 +51,7 @@ export function MyGatheringCard({ gathering, members = [], onClick, className }:
         <div className='mb-1.5 flex gap-1'>
           <Tag variant='duration'>총 {totalWeeks}주</Tag>
           <Tag variant='deadline' state='goal'>
-            목표 {dDayText}
+            {goalLabel}
           </Tag>
         </div>
       </GatheringCard.Body>

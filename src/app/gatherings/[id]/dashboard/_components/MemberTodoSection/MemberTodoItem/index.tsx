@@ -41,9 +41,13 @@ export function MemberTodoItem({ content, isCompleted }: MemberTodoItemProps) {
       <button
         type='button'
         onClick={() => setIsFired((prev) => !prev)}
-        className='flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-lg md:h-12 md:w-12'
+        className={cn(
+          'text-small-02-sb md:text-body-02-sb flex h-8 shrink-0 cursor-pointer items-center gap-1 rounded-lg px-2 text-blue-300 transition-colors md:h-12 md:px-4',
+          isFired ? 'bg-gray-200 text-gray-500' : 'bg-blue-100 text-blue-300',
+        )}
       >
-        <FireButtonIcon variant={isFired ? 'disabled' : 'active'} className='h-8 w-8 md:h-12 md:w-12' />
+        <FireButtonIcon variant={isFired ? 'disabled' : 'active'} className='h-5 w-5 md:h-7 md:w-7' />
+        {isFired ? '응원완료' : '응원하기'}
       </button>
     </div>
   );

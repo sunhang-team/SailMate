@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import { setAuthCookies } from '@/lib/authCookies';
+import { isMswEnabled } from '@/lib/msw';
 import { extractTokens } from '@/lib/tokenUtils';
 
 const PROTECTED_ROUTES = ['/my', '/gatherings/new'];
@@ -64,7 +65,7 @@ export const proxy = async (request: NextRequest) => {
     }
 
     // 갱신 실패: 보호 라우트면 로그인으로
-    if (isProtectedRoute) {
+    if (isProtectedRoute && !isMswEnabled) {
       return NextResponse.redirect(new URL('/login', request.url));
     }
     // 공개 라우트면 그냥 진행 (비로그인 상태로)
@@ -72,7 +73,7 @@ export const proxy = async (request: NextRequest) => {
   }
 
   // 보호 라우트: 토큰 하나도 없으면 로그인으로
-  if (isProtectedRoute && !hasAccessToken) {
+  if (isProtectedRoute && !hasAccessToken && !isMswEnabled) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
 

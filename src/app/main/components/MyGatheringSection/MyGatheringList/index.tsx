@@ -15,8 +15,10 @@ export function MyGatheringList() {
   const { page, setPage, totalPages, visibleGatherings, memberQueries } = useMyGatheringList();
   const isEmpty = visibleGatherings.length === 0;
 
-  const handleCardClick = (id: number) => {
-    router.push(`/gatherings/${id}/dashboard`);
+  const handleCardClick = (gathering: MembershipGathering) => {
+    const path =
+      gathering.status === 'RECRUITING' ? `/gatherings/${gathering.id}` : `/gatherings/${gathering.id}/dashboard`;
+    router.push(path);
   };
 
   return (
@@ -46,7 +48,7 @@ export function MyGatheringList() {
               key={gathering.id}
               gathering={gathering}
               members={memberQueries[index].data.members}
-              onClick={() => handleCardClick(gathering.id)}
+              onClick={() => handleCardClick(gathering)}
             />
           ))}
         </div>

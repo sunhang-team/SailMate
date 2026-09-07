@@ -100,12 +100,12 @@ export function DatePicker({
           <span
             className={cn(
               'text-small-02-r md:text-body-02-r lg:text-body-01-r',
-              displayValue ? 'text-gray-900' : 'text-gray-400',
+              disabled || !displayValue ? 'text-gray-400' : 'text-gray-900',
             )}
           >
             {displayValue || placeholder}
           </span>
-          <CalendarIcon className='size-4 text-gray-800 md:size-5' />
+          <CalendarIcon className={cn('size-4 md:size-5', disabled ? 'text-gray-400' : 'text-gray-800')} />
         </button>
       ) : (
         <div className={fieldGradientFocusWrapperClass}>
@@ -123,12 +123,12 @@ export function DatePicker({
             <span
               className={cn(
                 'text-small-02-r md:text-body-02-r lg:text-body-01-r',
-                displayValue ? 'text-gray-900' : 'text-gray-400',
+                disabled || !displayValue ? 'text-gray-400' : 'text-gray-900',
               )}
             >
               {displayValue || placeholder}
             </span>
-            <CalendarIcon className='size-4 text-gray-800 md:size-5' />
+            <CalendarIcon className={cn('size-4 md:size-5', disabled ? 'text-gray-400' : 'text-gray-800')} />
           </button>
         </div>
       )}

@@ -23,7 +23,7 @@ interface ErrorFallbackProps {
  *     <ErrorFallback message='카테고리를 불러올 수 없습니다.' onRetry={reset} />
  *   )}
  * >
- *   <CategoryMultiSelectContainer />
+ *   <AsyncContent />
  * </ErrorBoundary>
  */
 export function ErrorFallback({ message, onRetry, retryLabel = '다시 시도', className }: ErrorFallbackProps) {

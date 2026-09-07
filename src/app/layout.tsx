@@ -14,6 +14,7 @@ import { OverlayProvider } from '@/providers/OverlayProvider';
 import { FooterWrapper } from '@/components/Footer/FooterWrapper';
 import { ToastProvider } from '@/components/ui/Toast/ToastProvider';
 import { JsonLd } from '@/components/seo/JsonLd';
+import { isMswEnabled } from '@/lib/msw';
 import {
   SITE_NAME,
   SITE_TITLE_DEFAULT,
@@ -27,6 +28,8 @@ import {
 } from '@/lib/seo';
 
 import type { Metadata } from 'next';
+
+const shouldUseSerwist = !isMswEnabled;
 
 export const generateMetadata = async (): Promise<Metadata> => {
   const siteUrl = getSiteUrl();
@@ -72,6 +75,23 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const app = (
+    <MSWProvider>
+      <QueryProvider>
+        <QueryParamsProvider>
+          <ToastProvider>
+            <NetworkStatusToast />
+            <Header />
+            {children}
+            <FooterWrapper />
+            <OverlayProvider />
+            <div id='modal-root' />
+          </ToastProvider>
+        </QueryParamsProvider>
+      </QueryProvider>
+    </MSWProvider>
+  );
+
   return (
     <html lang='ko' className={`${pretendard.variable} relative`}>
       <body className='font-pretendard relative'>
@@ -85,26 +105,13 @@ export default function RootLayout({
             });
           `}
         </Script>
-        <SerwistProvider swUrl='/serwist/sw.js'>
-          <MSWProvider>
-            <QueryProvider>
-              <QueryParamsProvider>
-                <ToastProvider>
-                  <NetworkStatusToast />
-                  <Header />
-                  {children}
-                  <FooterWrapper />
-                  <OverlayProvider />
-                  <div id='modal-root' />
-                </ToastProvider>
-              </QueryParamsProvider>
-            </QueryProvider>
-          </MSWProvider>
+        {shouldUseSerwist ? <SerwistProvider swUrl='/serwist/sw.js'>{app}</SerwistProvider> : app}
+        <>
           <JsonLd data={buildOrganizationJsonLd()} />
           <JsonLd data={buildWebSiteJsonLd()} />
           <AnalyticsScripts />
           <BeusableScript />
-        </SerwistProvider>
+        </>
       </body>
     </html>
   );

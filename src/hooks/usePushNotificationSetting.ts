@@ -58,6 +58,11 @@ export const usePushNotificationSetting = (
   }, [token, registerToken]);
 
   const enable = async () => {
+    if (isSupported === false) {
+      options?.onDenied?.();
+      return;
+    }
+
     const result = permission === 'granted' ? permission : await requestPermission();
     setPermissionOverride(result);
 

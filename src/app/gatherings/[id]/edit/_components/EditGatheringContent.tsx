@@ -5,28 +5,12 @@ import { useRouter } from 'next/navigation';
 import { useSuspenseQueries } from '@tanstack/react-query';
 
 import { gatheringQueries } from '@/api/gatherings/queries';
-import { CreateGatheringForm } from '@/app/gatherings/new/CreateGatheringForm';
+import { mapGatheringDetailToFormValues } from '@/app/gatherings/new/CreateGatheringFunnel/mapGatheringDetailToFormValues';
 
-import type { Category, GatheringDetail, GatheringForm } from '@/api/gatherings/types';
+import { EditGatheringForm } from '../EditGatheringForm';
+import { InProgressEditForm } from '../InProgressEditForm';
 
-export const toFormValues = (detail: GatheringDetail, nameToId: Record<string, number>): Partial<GatheringForm> => ({
-  type: detail.type,
-  categoryIds: detail.categories.map((name) => nameToId[name]).filter((id): id is number => typeof id === 'number'),
-  title: detail.title,
-  shortDescription: detail.shortDescription,
-  description: detail.description,
-  tags: detail.tags,
-  goal: detail.goal,
-  maxMembers: detail.maxMembers,
-  recruitDeadline: detail.recruitDeadline,
-  startDate: detail.startDate,
-  endDate: detail.endDate,
-  weeklyGuides: detail.weeklyPlans.map((plan) => ({
-    week: plan.week,
-    title: plan.title,
-    details: plan.details ?? [],
-  })),
-});
+import type { Category } from '@/api/gatherings/types';
 
 interface EditGatheringContentProps {
   gatheringId: number;
@@ -43,7 +27,7 @@ export function EditGatheringContent({ gatheringId }: EditGatheringContentProps)
     [categoriesData.categories],
   );
 
-  const initialValues = useMemo(() => toFormValues(detail, nameToId), [detail, nameToId]);
+  const initialValues = useMemo(() => mapGatheringDetailToFormValues(detail, nameToId), [detail, nameToId]);
 
   const isCompleted = detail.status === 'COMPLETED';
 
@@ -53,12 +37,9 @@ export function EditGatheringContent({ gatheringId }: EditGatheringContentProps)
 
   if (isCompleted) return null;
 
-  return (
-    <CreateGatheringForm
-      mode='edit'
-      gatheringId={gatheringId}
-      initialValues={initialValues}
-      gatheringStatus={detail.status}
-    />
-  );
+  if (detail.status === 'IN_PROGRESS') {
+    return <InProgressEditForm gatheringId={gatheringId} initialValues={initialValues} />;
+  }
+
+  return <EditGatheringForm gatheringId={gatheringId} initialValues={initialValues} />;
 }

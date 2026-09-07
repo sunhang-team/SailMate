@@ -1,8 +1,6 @@
-import { Suspense } from 'react';
-
-import { ErrorBoundary } from '@/components/ErrorBoundary';
-import { fetchGatheringDetail } from '@/api/gatherings';
 import { JsonLd } from '@/components/seo/JsonLd';
+import { fetchCachedGatheringDetail } from '@/api/gatherings/server';
+import { isMswEnabled } from '@/lib/msw';
 import {
   OG_IMAGES,
   SITE_DESCRIPTION,
@@ -11,9 +9,7 @@ import {
   buildGatheringEventJsonLd,
   getDefaultOpenGraph,
 } from '@/lib/seo';
-import { GatheringHero } from './_components/GatheringHero';
 import { GatheringDetailContainer } from './_components/GatheringDetailContainer';
-import { GatheringDetailSkeleton } from './_components/GatheringDetailSkeleton';
 import { GatheringDetailTracker } from './_components/GatheringDetailTracker';
 import { MainGatheringStreaming } from './_components/GatheringStreaming';
 
@@ -34,12 +30,12 @@ export const generateMetadata = async ({ params }: GatheringDetailPageProps): Pr
   const { id } = await params;
   const gatheringId = Number(id);
 
-  if (Number.isNaN(gatheringId)) {
+  if (Number.isNaN(gatheringId) || isMswEnabled) {
     return { title: '모임', robots: { index: false, follow: false } };
   }
 
   try {
-    const detail = await fetchGatheringDetail(gatheringId);
+    const detail = await fetchCachedGatheringDetail(gatheringId);
     const description = truncateDescription(detail.shortDescription || detail.description || SITE_DESCRIPTION);
     const heroImage = detail.images?.[0]?.url;
     const canonical = `/gatherings/${gatheringId}`;
@@ -74,9 +70,9 @@ export default async function GatheringDetailPage({ params }: GatheringDetailPag
   const gatheringId = Number(id);
 
   let detail: GatheringDetail | null = null;
-  if (!Number.isNaN(gatheringId)) {
+  if (!Number.isNaN(gatheringId) && !isMswEnabled) {
     try {
-      detail = await fetchGatheringDetail(gatheringId);
+      detail = await fetchCachedGatheringDetail(gatheringId);
     } catch {
       // SSR fetch 실패 시 클라이언트 스트리밍 컴포넌트가 자체 fallback 렌더
     }

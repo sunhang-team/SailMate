@@ -29,6 +29,26 @@ export const formatDday = (targetDateString: string): string => {
   return `D+${Math.abs(diff)}`;
 };
 
+/** 모집 마감일까지의 D-day 텍스트 반환 ("D-3" | "D-day" | "마감") */
+export const formatRecruitDeadlineDday = (targetDateString: string): string => {
+  const today = startOfDay(new Date());
+  const target = startOfDay(new Date(targetDateString));
+
+  if (Number.isNaN(target.getTime())) return targetDateString.slice(0, 10);
+
+  const diff = differenceInDays(target, today);
+
+  if (diff > 0) return `D-${diff}`;
+  if (diff === 0) return 'D-day';
+  return '마감';
+};
+
+/** 모집 마감 라벨 반환 ("모집 마감 D-3" | "모집 마감 D-day" | "모집 마감") */
+export const formatRecruitDeadlineLabel = (targetDateString: string): string => {
+  const dday = formatRecruitDeadlineDday(targetDateString);
+  return dday === '마감' ? '모집 마감' : `모집 마감 ${dday}`;
+};
+
 /** 시작일과 종료일 사이의 총 주차 반환 */
 export const getTotalWeeks = (startDate: string, endDate: string): number => {
   const start = startOfDay(new Date(startDate));

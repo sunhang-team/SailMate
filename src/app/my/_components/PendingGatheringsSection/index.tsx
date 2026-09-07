@@ -78,9 +78,7 @@ export function PendingGatheringsSection({ pendingSort }: PendingGatheringsSecti
   );
 
   const detailQueries = useQueries({
-    queries: uniqueGatheringIds.map((id) => ({
-      ...gatheringQueries.detail(id),
-    })),
+    queries: uniqueGatheringIds.map((id) => gatheringQueries.detail(id)),
   });
 
   const gatheringIdToQueryIndex = useMemo(() => {

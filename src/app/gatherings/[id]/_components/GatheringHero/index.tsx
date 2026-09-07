@@ -6,7 +6,7 @@ import { StudyIcon, ProjectIcon, ArrowIcon } from '@/components/ui/Icon';
 import { gatheringQueries } from '@/api/gatherings/queries';
 import { useAuth } from '@/hooks/useAuth';
 
-import { LeaderActionDropdown } from '../LeaderActionDropdown';
+import { GatheringActionButtons } from '../GatheringActionButtons';
 
 import type { GatheringType } from '@/api/gatherings/types';
 
@@ -41,7 +41,7 @@ export function GatheringHero({ gatheringId }: GatheringHeroProps) {
           </p>
           <h1 className='text-h5-b md:text-h3-b xl:text-h2-b text-blue-500'>{data.title}</h1>
         </div>
-        {isLeader && <LeaderActionDropdown gatheringId={gatheringId} gatheringStatus={data.status} />}
+        {isLeader && <GatheringActionButtons gatheringId={gatheringId} gatheringStatus={data.status} />}
       </div>
     </section>
   );

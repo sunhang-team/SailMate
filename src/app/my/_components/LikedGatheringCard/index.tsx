@@ -7,32 +7,17 @@ import { GatheringCard } from '@/components/ui/GatheringCard';
 import { HeartIcon, PersonIcon, StudyIcon, ProjectIcon } from '@/components/ui/Icon';
 import { Tag } from '@/components/ui/Tag';
 import { cn } from '@/lib/cn';
+import { formatRecruitDeadlineLabel } from '@/lib/formatGatheringDate';
 import { getGatheringDisplayStatus } from '@/lib/gatheringStatus';
 
 import type { GatheringListItem } from '@/api/gatherings/types';
 
 const MILLISECONDS_IN_A_DAY = 1000 * 60 * 60 * 24;
 
-const formatDate = (isoDate: string) => isoDate.slice(0, 10);
-
 const TYPE_ICON = {
   스터디: StudyIcon,
   프로젝트: ProjectIcon,
 } as const;
-
-const toDeadlineDdayLabel = (recruitDeadline: string) => {
-  const today = new Date();
-  const todayMidnight = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-
-  const deadline = new Date(recruitDeadline);
-  if (Number.isNaN(deadline.getTime())) {
-    return `모집 마감 ${formatDate(recruitDeadline)}`;
-  }
-  const deadlineMidnight = new Date(deadline.getFullYear(), deadline.getMonth(), deadline.getDate());
-  const diffDays = Math.ceil((deadlineMidnight.getTime() - todayMidnight.getTime()) / MILLISECONDS_IN_A_DAY);
-
-  return `모집 마감 D-${Math.max(0, diffDays)}`;
-};
 
 const toWeeksLabel = (startDate: string, endDate: string) => {
   const start = new Date(startDate);
@@ -67,7 +52,7 @@ export function LikedGatheringCard({
   });
 
   const totalWeeksLabel = toWeeksLabel(gathering.startDate, gathering.endDate);
-  const deadlineLabel = toDeadlineDdayLabel(gathering.recruitDeadline);
+  const deadlineLabel = formatRecruitDeadlineLabel(gathering.recruitDeadline);
 
   const CategoryIcon = TYPE_ICON[gathering.type as keyof typeof TYPE_ICON] ?? StudyIcon;
 

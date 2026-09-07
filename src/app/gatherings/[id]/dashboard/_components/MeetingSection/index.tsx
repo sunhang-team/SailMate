@@ -58,10 +58,10 @@ export function MeetingSection({ gatheringId }: MeetingSectionProps) {
   };
 
   return (
-    <section className='px-4 py-10 md:px-7 xl:px-30'>
+    <section className='px-4 py-6 md:px-7 md:py-10 xl:px-30'>
       <div className='mx-auto max-w-[1680px]'>
-        <div className='group border-gray-150 relative overflow-hidden rounded-3xl border bg-white p-12 shadow-xl transition-all hover:shadow-2xl'>
-          <div className='absolute -top-20 -right-20 h-64 w-64 rounded-full bg-blue-50 opacity-50 blur-3xl transition-all group-hover:scale-110' />
+        <div className='group border-gray-150 relative overflow-hidden rounded-2xl border bg-white p-4 shadow-xl transition-all hover:shadow-2xl md:rounded-3xl md:p-8 lg:p-12'>
+          <div className='absolute -top-20 -right-20 h-40 w-40 rounded-full bg-blue-50 opacity-50 blur-3xl transition-all group-hover:scale-110 md:h-64 md:w-64' />
           <Suspense fallback={<MeetingLobby.Skeleton />}>
             <MeetingContent
               status={status}

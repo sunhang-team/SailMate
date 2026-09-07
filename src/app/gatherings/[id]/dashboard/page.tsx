@@ -1,9 +1,10 @@
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
-import { fetchGatheringDetail } from '@/api/gatherings';
+import { fetchCachedGatheringDetail } from '@/api/gatherings/server';
 import { SuspenseBoundary } from '@/components/SuspenseBoundary';
 import { getUserIdFromToken } from '@/lib/getUserIdFromToken';
+import { isMswEnabled } from '@/lib/msw';
 
 import { DashboardContent } from './_components/DashboardContent';
 import { DashboardHeader } from './_components/DashboardHeader';
@@ -36,21 +37,16 @@ export default async function DashboardPage({ params, searchParams }: DashboardP
   const hasRefreshToken = cookieStore.has('refreshToken');
   const userId = getUserIdFromToken(accessToken);
 
-  // prod에서 가드가 우회되지 않도록 NODE_ENV로 이중 체크.
-  const isMswDev = process.env.NODE_ENV !== 'production' && process.env.NEXT_PUBLIC_MSW_ENABLED === 'true';
-
   // accessToken 없지만 refreshToken 있으면 클라이언트에서 리프레시 처리 → 검증 스킵
-  if (userId !== null) {
+  if (userId !== null && !isMswEnabled) {
     try {
-      const gathering = await fetchGatheringDetail(gatheringId);
+      const gathering = await fetchCachedGatheringDetail(gatheringId);
       const isMember = gathering.members.some((m) => m.userId === userId);
       if (!isMember) redirect(`/gatherings/${gatheringId}`);
     } catch {
-      // MSW dev — Next.js 16 + Turbopack에서 msw/node가 서버 fetch를 못 잡는 경우가 있음.
-      // 프로덕션은 정상 동작하므로 dev 한정으로만 catch 시 가드를 스킵해 대시보드를 진입 가능하게 한다.
-      if (!isMswDev) redirect(`/gatherings/${gatheringId}`);
+      redirect(`/gatherings/${gatheringId}`);
     }
-  } else if (!hasRefreshToken && !isMswDev) {
+  } else if (!hasRefreshToken && !isMswEnabled) {
     redirect(`/gatherings/${gatheringId}`);
   }
 

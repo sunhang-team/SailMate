@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useSuspenseQuery, useSuspenseQueries } from '@tanstack/react-query';
+import axios from 'axios';
 
 import { membershipQueries } from '@/api/memberships/queries';
 import { usePerPage } from '@/app/main/hooks/usePerPage';
@@ -20,7 +21,14 @@ export const useMyGatheringList = () => {
   const visibleGatherings = gatherings.slice(startIndex, startIndex + perPage);
 
   const memberQueries = useSuspenseQueries({
-    queries: visibleGatherings.map((gathering) => membershipQueries.members(gathering.id)),
+    queries: visibleGatherings.map((gathering) => ({
+      ...membershipQueries.members(gathering.id),
+      // 목록 갱신이 아직 반영되기 전, 이미 삭제된 모임의 멤버 조회는 재시도해도 계속 404이므로 즉시 포기
+      retry: (failureCount: number, error: unknown) => {
+        if (axios.isAxiosError(error) && error.response?.status === 404) return false;
+        return failureCount < 3;
+      },
+    })),
   });
 
   return {
