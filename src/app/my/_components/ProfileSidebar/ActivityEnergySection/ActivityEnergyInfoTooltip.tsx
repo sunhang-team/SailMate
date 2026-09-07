@@ -6,27 +6,24 @@ const DESCRIPTION =
 
 export function ActivityEnergyInfoTooltip() {
   return (
-    <div className='flex flex-col gap-6'>
-      <div className='flex flex-col gap-4'>
-        <p className='text-body-01-sb text-gray-0'>활동 에너지란?</p>
-        <p className='text-body-02-r whitespace-pre-line text-gray-100'>{DESCRIPTION}</p>
+    <div className='flex flex-col gap-5 md:gap-6'>
+      <div className='flex flex-col gap-2 md:gap-4'>
+        <p className='text-small-01-sb md:text-body-01-sb text-gray-0'>활동 에너지란?</p>
+        <p className='text-small-02-r md:text-body-02-r whitespace-pre-line text-gray-100'>{DESCRIPTION}</p>
       </div>
       <div className='bg-gray-0 overflow-hidden rounded-xl'>
-        <div className='text-body-02-m border-gray-150 bg-gray-0 flex items-center justify-between border-b px-5 py-3 text-gray-900 min-[475px]:justify-normal min-[475px]:gap-35'>
-          <span className='min-[475px]:w-26.5 min-[475px]:shrink-0'>등급</span>
-          <span>기준</span>
+        <div className='border-gray-150 bg-gray-0 flex items-center justify-between border-b px-4 py-2 text-gray-900 md:justify-normal md:gap-35 md:py-3'>
+          <span className='text-small-02-m md:text-body-02-m md:w-26.5 md:shrink-0'>등급</span>
+          <span className='text-small-02-m md:text-body-02-m'>기준</span>
         </div>
-        <div className='flex flex-col gap-6 px-5 py-4'>
+        <div className='flex flex-col gap-4 px-4 py-2 md:gap-6 md:py-3'>
           {ENERGY_GRADE_LEVELS.map((grade) => (
-            <div
-              key={grade.variant}
-              className='flex items-center justify-between min-[475px]:justify-normal min-[475px]:gap-35'
-            >
-              <div className='flex min-w-0 items-center gap-2 min-[475px]:w-26.5 min-[475px]:shrink-0'>
-                <IllustrationIcon variant={grade.variant} className='size-6 shrink-0' aria-hidden />
-                <span className='text-body-02-r text-gray-800'>{grade.label}</span>
+            <div key={grade.variant} className='flex items-center justify-between md:justify-normal md:gap-35'>
+              <div className='flex min-w-0 items-center gap-2 md:w-26.5 md:shrink-0'>
+                <IllustrationIcon variant={grade.variant} className='size-4 shrink-0 md:size-6' aria-hidden />
+                <span className='text-small-02-r md:text-body-02-r text-gray-800'>{grade.label}</span>
               </div>
-              <span className='text-body-02-r text-gray-800'>{grade.rangeText}</span>
+              <span className='text-small-02-r md:text-body-02-r text-gray-800'>{grade.rangeText}</span>
             </div>
           ))}
         </div>

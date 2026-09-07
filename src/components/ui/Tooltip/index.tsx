@@ -169,7 +169,7 @@ export function Tooltip({ triggerLabel, trigger, children, className, panelClass
           )}
           <div
             className={cn(
-              'w-[min(320px,calc(100vw-2rem))] overflow-hidden rounded-2xl bg-blue-500 p-8 shadow-(--shadow-03)',
+              'w-[min(320px,calc(100vw-2rem))] overflow-hidden rounded-2xl bg-blue-500 p-6 shadow-(--shadow-03) md:p-8',
               panelClassName,
             )}
           >
