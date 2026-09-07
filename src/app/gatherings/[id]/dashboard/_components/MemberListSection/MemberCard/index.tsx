@@ -2,6 +2,7 @@ import { cn } from '@/lib/cn';
 import { Profile } from '@/components/ui/Profile';
 import { HandIcon } from '@/components/ui/Icon';
 import { Button } from '@/components/ui/Button';
+import { Tag } from '@/components/ui/Tag';
 
 import { ReviewButton } from '../ReviewButton';
 import { MemberBadge } from '../../MemberBadge';
@@ -43,9 +44,9 @@ export function MemberCard({
   return (
     <article
       className={cn(
-        'shadow-02 rounded-2xl border bg-white',
+        'shadow-02 rounded-2xl bg-white',
         'p-6 md:p-7',
-        isMe ? 'border-focus-100' : 'border-gray-150',
+        isMe ? 'border-gradient-primary' : 'border-gray-150',
       )}
     >
       <div className='flex items-start gap-2 md:gap-4'>
@@ -56,7 +57,15 @@ export function MemberCard({
         />
         <div className='min-w-0 flex-1'>
           <div className='flex items-center gap-1.5'>
-            <span className='text-body-02-sb md:text-h5-sb truncate text-gray-900'>{member.nickname}</span>
+            <span className={cn('text-body-02-sb md:text-h5-sb truncate text-gray-900', isMe ? 'text-blue-300' : '')}>
+              {member.nickname}
+              {isMe ? <span className='text-blue-300'> (나)</span> : null}
+            </span>
+            {member.role === 'LEADER' && (
+              <Tag variant='coreFeatureSmall' className='text-gray-0 text-small-02-m bg-blue-300 px-3 py-1'>
+                모임장
+              </Tag>
+            )}
             {badgeType && <MemberBadge type={badgeType} label={badgeLabel} />}
           </div>
           <p className='text-small-02-r md:text-body-01-r mt-0.5 text-gray-800'>{goalText}</p>
@@ -64,17 +73,17 @@ export function MemberCard({
 
         <div className='shrink-0'>
           {isMe ? (
-            <MeBadge />
+            ''
           ) : isGatheringEnded ? (
             <ReviewButton hasReviewed={hasReviewed} onClick={onReviewClick} />
           ) : (
             <Button
               variant='icon-hand'
-              size='icon-hand'
               onClick={onPokeClick}
               aria-label={`${member.nickname}에게 콕 찌르기`}
+              className='text-small-02-sb md:text-body-02-sb h-auto w-fit shrink-0 items-center gap-1 bg-blue-100 px-5 py-2.5 text-blue-300'
             >
-              <HandIcon />
+              콕 찌르기
             </Button>
           )}
         </div>

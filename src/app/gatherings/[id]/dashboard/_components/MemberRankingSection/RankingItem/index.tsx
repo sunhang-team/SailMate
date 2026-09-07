@@ -25,7 +25,7 @@ export function RankingItem({ item, isMe, streakDays, currentWeek }: RankingItem
 
   return (
     <div
-      className={`flex items-center gap-3 rounded-2xl bg-gray-100 px-7 py-5 ${isMe ? 'border-gradient-primary' : ''}`}
+      className={`border-gray-150 flex items-center gap-3 rounded-2xl border bg-gray-100 px-7 py-5 ${isMe ? 'border-gradient-primary' : ''}`}
     >
       <RankBadge rank={item.rank} />
 
@@ -37,7 +37,9 @@ export function RankingItem({ item, isMe, streakDays, currentWeek }: RankingItem
         <ProgressBar value={item.overallRate}>
           <div className='flex items-center justify-between'>
             <div className='flex items-center gap-1 md:gap-2'>
-              <span className='text-small-02-m md:text-body-01-m text-gray-900'>{item.nickname}</span>
+              <span className={`text-small-02-m md:text-body-01-m ${isMe ? 'text-blue-300' : 'text-gray-900'}`}>
+                {isMe ? `${item.nickname}(나)` : item.nickname}
+              </span>
               {isWarning && <MemberBadge type='warning' label='주의' />}
               {!isWarning && streakDays > 0 && <MemberBadge type='streak' label={`${streakDays}일`} />}
             </div>
@@ -48,12 +50,6 @@ export function RankingItem({ item, isMe, streakDays, currentWeek }: RankingItem
           </div>
         </ProgressBar>
       </div>
-
-      {isMe && (
-        <Button variant='tag' size='tag' className='h-8 w-8 cursor-default md:h-12 md:w-12'>
-          나
-        </Button>
-      )}
 
       {!isMe && (
         <Button variant='icon-hand' size='icon-hand' className='h-8 w-8 md:h-12 md:w-12'>
