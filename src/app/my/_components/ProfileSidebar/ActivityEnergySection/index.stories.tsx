@@ -56,3 +56,19 @@ export const Sun: Story = {
     reputationLabel: '태양 메이트',
   },
 };
+
+export const Tablet: Story = {
+  name: '태블릿 레이아웃 (38.2점)',
+  args: {
+    variant: 'tablet',
+    reputationScore: 38.2,
+    reputationLabel: '불씨 메이트',
+  },
+  decorators: [
+    (Story) => (
+      <div style={{ width: 400 }}>
+        <Story />
+      </div>
+    ),
+  ],
+};

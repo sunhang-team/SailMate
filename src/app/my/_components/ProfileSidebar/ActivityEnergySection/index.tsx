@@ -27,7 +27,7 @@ export function ActivityEnergySection({ reputationScore, reputationLabel, varian
           <Tooltip
             triggerLabel='활동 에너지 안내'
             trigger={<InfoIcon className='size-4 shrink-0 text-gray-400 md:size-6' aria-hidden />}
-            panelClassName='h-[min(464px,calc(100vh-2rem))] w-[min(442px,calc(100vw-2rem))] overflow-y-auto'
+            panelClassName='h-[min(464px,calc(100vh-2rem))] w-[min(442px,calc(100vw-2rem))]'
           >
             <ActivityEnergyInfoTooltip />
           </Tooltip>
@@ -53,7 +53,7 @@ export function ActivityEnergySection({ reputationScore, reputationLabel, varian
         <Tooltip
           triggerLabel='활동 에너지 안내'
           trigger={<InfoIcon className='size-6 shrink-0 text-gray-400' aria-hidden />}
-          panelClassName='h-[min(464px,calc(100vh-2rem))] w-[min(442px,calc(100vw-2rem))] overflow-y-auto'
+          panelClassName='h-[min(346px,calc(100vh-2rem))] w-[calc(100vw-2rem)] md:h-[min(464px,calc(100vh-2rem))] md:w-[min(442px,calc(100vw-2rem))]'
         >
           <ActivityEnergyInfoTooltip />
         </Tooltip>
